@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_runs_the_merged_tree_and_removes_scratch (test_delivery_gate.MergeRunTests.test_runs_the_merged_tree_and_removes_scratch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 798, in test_runs_the_merged_tree_and_removes_scratch
+    self.assertEqual(list(self.scratch.iterdir()), [])
+AssertionError: Lists differ: [PosixPath('/var/folders/tm/dk0m7pgx4h3gxq[58 chars]k0')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz1lt0a_1/scratch/merge-result-ftbs6qk0')
+
+- [PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz1lt0a_1/scratch/merge-result-ftbs6qk0')]
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.298s
+
+FAILED (failures=1)

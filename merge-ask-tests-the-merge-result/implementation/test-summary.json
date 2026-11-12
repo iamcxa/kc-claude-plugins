@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Local unit suite",
+    "status": "passed",
+    "message": "1345 tests run: 1334 passed, 11 skipped; 24 scripts"
+  },
+  {
+    "name": "Pinned Spacedock integration",
+    "status": "passed",
+    "message": "all 3 scripts passed; 46 unittest cases plus CLI assertions"
+  },
+  {
+    "name": "Acceptance criteria and mutations",
+    "status": "passed",
+    "message": "AC-1 through AC-8; each required mutation caught"
+  }
+]

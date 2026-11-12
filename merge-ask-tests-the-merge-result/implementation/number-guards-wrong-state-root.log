@@ -1,0 +1,3 @@
+migration guard skipped: no migrations-path declared
+FAIL R8: docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md: 0078 is held by origin/spacedock-state/dev2:merge-ask-tests-the-merge-result.md; delete this task's ADR: line, run reserve again and renumber
+base 8ce0eb6050c8 head d79053d0836c merge-base 8ce0eb6050c8

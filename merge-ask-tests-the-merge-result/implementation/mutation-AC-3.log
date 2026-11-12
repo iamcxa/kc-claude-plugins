@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_another_trunk_head_or_command_cannot_satisfy (test_delivery_gate.MergeResultTests.test_another_trunk_head_or_command_cannot_satisfy) (key='trunk')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 711, in test_another_trunk_head_or_command_cannot_satisfy
+    self.assertEqual(self.check(result={key: value}).code, 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.655s
+
+FAILED (failures=1)

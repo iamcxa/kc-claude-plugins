@@ -1,0 +1,59 @@
+[
+  {
+    "name": "control",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "log": "replay-control.log"
+  },
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "message": "exit 1, expected 1",
+    "log": "replay-AC-1.log"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "log": "replay-AC-2.log"
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "message": "exit 1, expected 1",
+    "log": "replay-AC-3.log"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "message": "exit 1, expected 1",
+    "log": "replay-AC-4.log"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "log": "replay-AC-5.log"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "message": "exit 0, expected 0",
+    "log": "replay-AC-6.log"
+  },
+  {
+    "name": "AC-6 unchanged output",
+    "status": "passed",
+    "message": "187 words, equal to control"
+  },
+  {
+    "name": "AC-7 actual historical merge result",
+    "status": "passed",
+    "message": "red result tree 3ba409485baf; 1 failure in 226; earlier trunk passes"
+  },
+  {
+    "name": "AC-8 temporary directory cleanup",
+    "status": "passed",
+    "message": "controlled TMPDIR 0 entries after merge-run true; direct installed Git avoids launcher cache"
+  }
+]

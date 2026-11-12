@@ -1,0 +1,356 @@
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.844s
+
+OK
+1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+required ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+2 ADR file(s) checked, 0 legacy
+1 ADR file(s) checked, 0 legacy
+0002-first.md: Decision needs a '**Words:**' line
+0002-first.md: Decision needs a '**Options considered:**' line
+0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order
+0002-first.md: section 'Context' is empty
+0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'
+0002-first.md: superseded by 0009, which does not exist
+0002-first.md: first line must be '# 2. <title>'
+0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section
+2-first.md: file name must be NNNN-short-title.md
+0002-second.md: number 2 is also used by 0002-first.md
+2 ADR file(s) checked, 1 legacy
+required ADR 1 is a legacy record; a new ruling needs its own file
+required ADR 3 does not exist
+1 ADR file(s) checked, 0 legacy
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 6.600s
+
+OK
+.......not a directory: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4go7mmrh/nope
+................
+----------------------------------------------------------------------
+Ran 23 tests in 0.492s
+
+OK
+............................................................................................................s................................................................................................................
+----------------------------------------------------------------------
+Ran 221 tests in 122.219s
+
+OK (skipped=1)
+.........ssss........................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 229 tests in 14.051s
+
+OK (skipped=4)
+task.md: missing required body field: Non-goals
+task.md: missing required body field: Budget
+task.md: missing required body field: Stop condition
+task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: 'Surfaces:' has unknown value(s) api
+scope check not run: no frontmatter
+task.md: 'Surfaces:' combines 'none' with other values
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: no frontmatter
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+scope check not run: no frontmatter
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+scope check not run: no frontmatter
+task.md: surface 'ui' Preview 'missing.html' does not exist
+scope check not run: no frontmatter
+task.md: surface 'db' needs a 'Migration source:' line with a value
+scope check not run: no frontmatter
+task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+scope check not run: no frontmatter
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+task.md: surface 'ui' needs a 'Preview:' line
+scope check not run: no frontmatter
+task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Surfaces:' has unknown value(s) api
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+.......s.............../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1bcimwzu/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmps5w0av11/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4r1w77cn/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpms7fd516/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1ttp_dbj/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpn7ld1sjz/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8w6pmwpx/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpz8_9x9xr/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvnzi1037/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp75sv5a_a/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpajx37vo6/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp92822lie/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1mlkhxfw/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt8of8r83/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpte4aeg66/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpc6h2_jqc/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp5aalosvl/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpe0ygi45t/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjlmr31d_/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpj232_swu/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7yj92yfe/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp8fwf44b1/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpr7s8w5yj/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9_2eydvd/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp5qbqko0w/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpba1d9i4s/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpr8urnyy2/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpm3xr33qo/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxvp4_qmu/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfb12xcor/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxyvmgclh/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6c93x9ew/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpl0106tg_/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpblr3zohx/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpa906b762/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpd1xgj9s5/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp34e49_34/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpztewmr7f/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpol5qjqt2/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7bg2e5mu/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4no56b18/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpol1f_1mf/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp49tjzony/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzogz3ux2/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpzqri6bsq/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp283qnnny/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpw1uwcsj4/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7pg58kfy/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+....../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpseiias99/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpefww8zqu/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpe0p3faxm/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptfhhcb3l/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+......../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9nbeeh39/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7d24d6b9/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+................................................................./var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpymtdb13v/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.........../var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp0ygtv_8u/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjrwi__9m/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 136 tests in 110.390s
+
+OK (skipped=1)
+.................................................................................s..
+----------------------------------------------------------------------
+Ran 84 tests in 94.234s
+
+OK (skipped=1)
+test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed (__main__.LearningTests.test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed) ... ok
+test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled (__main__.LearningTests.test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled) ... ok
+test_closed_pr_settles_and_release_of_open_delivery_is_refused (__main__.LearningTests.test_closed_pr_settles_and_release_of_open_delivery_is_refused) ... ok
+test_completed_legacy_counts_remain_readable (__main__.LearningTests.test_completed_legacy_counts_remain_readable) ... ok
+test_concurrent_completion_publishes_one_whole_result (__main__.LearningTests.test_concurrent_completion_publishes_one_whole_result) ... ok
+test_count_pattern_thousands_derived_and_punctuation (__main__.LearningTests.test_count_pattern_thousands_derived_and_punctuation) ... ok
+test_delivery_claim_race_and_interrupted_remote_response (__main__.LearningTests.test_delivery_claim_race_and_interrupted_remote_response) ... ok
+test_delivery_recover_absent_refused_on_released_job (__main__.LearningTests.test_delivery_recover_absent_refused_on_released_job) ... ok
+test_delivery_recover_advance_refuses_different_pr (__main__.LearningTests.test_delivery_recover_advance_refuses_different_pr) ... ok
+test_delivery_recover_advance_refuses_regression_from_merged (__main__.LearningTests.test_delivery_recover_advance_refuses_regression_from_merged) ... ok
+test_delivery_recover_advances_own_open_observation_to_closed (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_closed) ... ok
+test_delivery_recover_advances_own_open_observation_to_merged (__main__.LearningTests.test_delivery_recover_advances_own_open_observation_to_merged) ... ok
+test_delivery_recover_already_sent_refuses_closed_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_closed_observation) ... ok
+test_delivery_recover_already_sent_refuses_different_owner (__main__.LearningTests.test_delivery_recover_already_sent_refuses_different_owner) ... ok
+test_delivery_recover_already_sent_refuses_existing_observation (__main__.LearningTests.test_delivery_recover_already_sent_refuses_existing_observation) ... ok
+test_delivery_recover_reconciles_already_sent_pr (__main__.LearningTests.test_delivery_recover_reconciles_already_sent_pr) ... ok
+test_delivery_recovery_and_observation_boundaries (__main__.LearningTests.test_delivery_recovery_and_observation_boundaries) ... ok
+test_delivery_reissue_refused_after_merged_stays_non_regressing (__main__.LearningTests.test_delivery_reissue_refused_after_merged_stays_non_regressing) ... ok
+test_delivery_reissue_refused_once_anything_is_observed (__main__.LearningTests.test_delivery_reissue_refused_once_anything_is_observed) ... ok
+test_delivery_reissue_requires_confirmed_absent_observation (__main__.LearningTests.test_delivery_reissue_requires_confirmed_absent_observation) ... ok
+test_delivery_reissue_to_same_owner_without_stopped_attestation (__main__.LearningTests.test_delivery_reissue_to_same_owner_without_stopped_attestation) ... ok
+test_distinct_jobs_cannot_both_claim (__main__.LearningTests.test_distinct_jobs_cannot_both_claim) ... ok
+test_every_wait_ends_on_a_state_a_restart_can_read (__main__.LearningTests.test_every_wait_ends_on_a_state_a_restart_can_read) ... ok
+test_evidence_count_refusal_leaves_pending_token_correctable (__main__.LearningTests.test_evidence_count_refusal_leaves_pending_token_correctable) ... ok
+test_follow_section_leaves_merge_to_the_captain (__main__.LearningTests.test_follow_section_leaves_merge_to_the_captain) ... ok
+test_follow_section_orders_ready_before_merge_ask (__main__.LearningTests.test_follow_section_orders_ready_before_merge_ask) ... ok
+test_foreign_token_evidence_change_and_path_traversal_refused (__main__.LearningTests.test_foreign_token_evidence_change_and_path_traversal_refused) ... ok
+test_head_check_guards_every_record_and_recovery (__main__.LearningTests.test_head_check_guards_every_record_and_recovery) ... ok
+test_ineligible_and_invalid_input_create_no_claim (__main__.LearningTests.test_ineligible_and_invalid_input_create_no_claim) ... ok
+test_interruption_requires_stopped_attestation_and_revokes_token (__main__.LearningTests.test_interruption_requires_stopped_attestation_and_revokes_token) ... ok
+test_invalid_completion_keeps_token_repairable_and_success_immutable (__main__.LearningTests.test_invalid_completion_keeps_token_repairable_and_success_immutable) ... ok
+test_linked_worktree_multiprocess_claim_race (__main__.LearningTests.test_linked_worktree_multiprocess_claim_race) ... ok
+test_new_claim_held_by_in_flight_sibling (__main__.LearningTests.test_new_claim_held_by_in_flight_sibling) ... ok
+test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait (__main__.LearningTests.test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait) ... ok
+test_no_change_and_mismatched_plan_cannot_claim_delivery (__main__.LearningTests.test_no_change_and_mismatched_plan_cannot_claim_delivery) ... ok
+test_notices_no_directory_creation_and_digest_ack (__main__.LearningTests.test_notices_no_directory_creation_and_digest_ack) ... ok
+test_open_delivery_with_lost_token_settles_from_github (__main__.LearningTests.test_open_delivery_with_lost_token_settles_from_github) ... ok
+test_process_crash_during_publication_preserves_uncertainty_or_prior_record (__main__.LearningTests.test_process_crash_during_publication_preserves_uncertainty_or_prior_record) ... ok
+test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit (__main__.LearningTests.test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit) ... ok
+test_reclaim_settled_job_bypasses_hold_despite_pending_sibling (__main__.LearningTests.test_reclaim_settled_job_bypasses_hold_despite_pending_sibling) ... ok
+test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers (__main__.LearningTests.test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers) ... ok
+test_release_refusals_and_irreversibility (__main__.LearningTests.test_release_refusals_and_irreversibility) ... ok
+test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message (__main__.LearningTests.test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message) ... ok
+test_same_job_reclaim_ignores_hold (__main__.LearningTests.test_same_job_reclaim_ignores_hold) ... ok
+test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery (__main__.LearningTests.test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery) ... ok
+test_settled_sibling_releases_hold (__main__.LearningTests.test_settled_sibling_releases_hold) ... ok
+test_still_open_delivery_is_resumed_by_actor_not_left_blocking (__main__.LearningTests.test_still_open_delivery_is_resumed_by_actor_not_left_blocking) ... ok
+test_three_outcomes_and_mixed_preserve_project_files (__main__.LearningTests.test_three_outcomes_and_mixed_preserve_project_files) ... ok
+test_torn_and_missing_record_are_uncertain_not_automatic_retries (__main__.LearningTests.test_torn_and_missing_record_are_uncertain_not_automatic_retries) ... ok
+test_torn_delivery_is_visible_and_requires_explicit_reconciliation (__main__.LearningTests.test_torn_delivery_is_visible_and_requires_explicit_reconciliation) ... ok
+
+----------------------------------------------------------------------
+Ran 50 tests in 43.988s
+
+OK
+test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines (__main__.RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines) ... ok
+test_a_chat_only_rule_the_workflow_no_longer_says_is_named (__main__.RouteMutationTests.test_a_chat_only_rule_the_workflow_no_longer_says_is_named) ... ok
+test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused) ... ok
+test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (__main__.RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way) ... ok
+test_a_listed_extension_that_is_not_required_is_named (__main__.RouteMutationTests.test_a_listed_extension_that_is_not_required_is_named) ... ok
+test_a_passage_copied_from_the_workflow_into_another_file (__main__.RouteMutationTests.test_a_passage_copied_from_the_workflow_into_another_file) ... ok
+test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment) ... ok
+test_a_required_extension_missing_from_the_template_line_is_named (__main__.RouteMutationTests.test_a_required_extension_missing_from_the_template_line_is_named) ... ok
+test_a_row_marked_required_that_the_template_omits_is_named (__main__.RouteMutationTests.test_a_row_marked_required_that_the_template_omits_is_named) ... ok
+test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not) ... ok
+test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed) ... ok
+test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path) ... ok
+test_agent_effort_cannot_drift_from_policy (__main__.RouteMutationTests.test_agent_effort_cannot_drift_from_policy) ... ok
+test_bare_script_name (__main__.RouteMutationTests.test_bare_script_name) ... ok
+test_brace_placeholder (__main__.RouteMutationTests.test_brace_placeholder) ... ok
+test_cli_exits_one_naming_the_file (__main__.RouteMutationTests.test_cli_exits_one_naming_the_file) ... ok
+test_cross_profile_route (__main__.RouteMutationTests.test_cross_profile_route) ... ok
+test_cross_stage_route (__main__.RouteMutationTests.test_cross_stage_route) ... ok
+test_design_director_keeps_its_declared_model (__main__.RouteMutationTests.test_design_director_keeps_its_declared_model) ... ok
+test_design_director_needs_its_skill (__main__.RouteMutationTests.test_design_director_needs_its_skill) ... ok
+test_documented_journey_probe_finds_regular_yaml_at_each_depth (__main__.RouteMutationTests.test_documented_journey_probe_finds_regular_yaml_at_each_depth) ... ok
+test_duplicate_profile (__main__.RouteMutationTests.test_duplicate_profile) ... ok
+test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used) ... ok
+test_extension_script_named_without_its_extension_path (__main__.RouteMutationTests.test_extension_script_named_without_its_extension_path) ... ok
+test_external_reference_symlink (__main__.RouteMutationTests.test_external_reference_symlink) ... ok
+test_machine_path_placeholder (__main__.RouteMutationTests.test_machine_path_placeholder) ... ok
+test_missing_markdown_table_separator (__main__.RouteMutationTests.test_missing_markdown_table_separator) ... ok
+test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... ok
+test_missing_principles (__main__.RouteMutationTests.test_missing_principles) ... ok
+test_missing_profile_reference (__main__.RouteMutationTests.test_missing_profile_reference) ... ok
+test_model_table_cannot_drift_from_agent_policy (__main__.RouteMutationTests.test_model_table_cannot_drift_from_agent_policy) ... ok
+test_observer_keeps_its_declared_model (__main__.RouteMutationTests.test_observer_keeps_its_declared_model) ... ok
+test_old_variant_invocation (__main__.RouteMutationTests.test_old_variant_invocation) ... ok
+test_package_placeholder_without_root_line (__main__.RouteMutationTests.test_package_placeholder_without_root_line) ... ok
+test_poc_cannot_declare_ideation_active (__main__.RouteMutationTests.test_poc_cannot_declare_ideation_active) ... ok
+test_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok
+test_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok
+test_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok
+test_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok
+test_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok
+test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok
+test_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok
+test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok
+test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok
+test_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok
+test_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok
+test_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 9.611s
+
+OK
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 11.310s
+
+OK
+......................................
+----------------------------------------------------------------------
+Ran 38 tests in 24.888s
+
+OK
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 5.682s
+
+OK
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 7.214s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 1.546s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3urzpzh9/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+........................................................................................................
+----------------------------------------------------------------------
+Ran 136 tests in 65.804s
+
+OK
+........
+----------------------------------------------------------------------
+Ran 8 tests in 4.244s
+
+OK
+removed /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpys3s9akb/runs/r1
+...............................................................
+----------------------------------------------------------------------
+Ran 63 tests in 68.838s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.480s
+
+OK
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 5.923s
+
+OK
+....................................
+----------------------------------------------------------------------
+Ran 36 tests in 0.004s
+
+OK
+...............
+----------------------------------------------------------------------
+Ran 15 tests in 0.000s
+
+OK
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 0.188s
+
+OK
+...................................................sss.......................................s............................
+----------------------------------------------------------------------
+Ran 122 tests in 6.000s
+
+OK (skipped=4)
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 1.730s
+
+OK

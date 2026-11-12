@@ -1,0 +1,5 @@
+{
+  "command": "bash -c 'for t in kc-dev-flow-2/scripts/test_*.py kc-dev-flow-2/extensions/*/test_*.py; do case \"$t\" in */test_dispatch_stage.py|*/test_sd_dispatch.py|*/test_observer_recovery.py) continue;; esac; python3 -B \"$t\" || exit; done'",
+  "exit": 0,
+  "seconds": 607.97
+}

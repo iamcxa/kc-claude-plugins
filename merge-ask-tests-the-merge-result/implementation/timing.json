@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Local unit suite",
+    "metrics": {
+      "seconds": 607.97
+    },
+    "status": "passed",
+    "context": "24 unit scripts; lint passed separately; local wall time, not hosted CI cost"
+  }
+]

@@ -1,0 +1,45 @@
+..................................................................................................F.........s....F...........................................................................................................
+======================================================================
+FAIL: test_the_class_line_carries_the_verdict_only_when_it_is_ask (test_delivery_gate.FoWriteRuleTests.test_the_class_line_carries_the_verdict_only_when_it_is_ask)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1503, in test_the_class_line_carries_the_verdict_only_when_it_is_ask
+    self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
+AssertionError: Lists differ: ['class', 'head', 'merge_result', 'model', 'necessity', 'next[47 chars]ict'] != ['class', 'head', 'model', 'necessity', 'next', 'points', 'pr[31 chars]ict']
+
+First differing element 2:
+'merge_result'
+'model'
+
+First list contains 1 additional elements.
+First extra element 10:
+'verdict'
+
+  ['class',
+   'head',
+-  'merge_result',
+   'model',
+   'necessity',
+   'next',
+   'points',
+   'pr',
+   'sufficiency',
+   'time',
+   'verdict']
+
+======================================================================
+FAIL: test_dropping_a_layer_turns_its_case_red (test_delivery_gate.InjectionTests.test_dropping_a_layer_turns_its_case_red)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1118, in test_dropping_a_layer_turns_its_case_red
+    module = variant_of("{tok(value)}", "{value}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 439, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {tok(value)}
+
+----------------------------------------------------------------------
+Ran 221 tests in 120.081s
+
+FAILED (failures=2, skipped=1)

@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_not_run_line_passes_and_is_saved (test_delivery_gate.MergeResultTests.test_not_run_line_passes_and_is_saved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 722, in test_not_run_line_passes_and_is_saved
+    self.assertEqual(done.code, 0, done.out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the trunk moved since this head (diverged, trunk bbbbbbbbbbbb) and no merge-result run is recorded at this head and trunk
+next: hold the ask; run `delivery_gate.py merge-run <task> --pr o/r#9 -- <test command>` on the merge result, using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.194s
+
+FAILED (failures=1)

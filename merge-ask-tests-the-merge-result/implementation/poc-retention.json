@@ -1,0 +1,14 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "poc_added": 109,
+    "retained": 81,
+    "changed_or_removed": 28
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "poc_added": 3,
+    "retained": 3,
+    "changed_or_removed": 0
+  }
+]

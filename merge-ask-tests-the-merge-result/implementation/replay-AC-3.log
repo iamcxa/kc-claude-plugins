@@ -1,0 +1,9 @@
+$ delivery_gate.py check (gate=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/delivery_gate.py, trunk=eeee002303aca7c14237258253cd9318a5b3248c, status=diverged, result=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/merge-ask-tests-the-merge-result/implementation/runtime-green/task/merge/result-1.json, not_run=False)
+exit=1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 3 unchecked
+unchecked count: Necessity: the fourteen files gh pr view 841 lists change against origin/main,
+unchecked count: Merge with main: git merge-tree --write-tree origin/main 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 exit 0 after PRs
+unchecked count: ADR 0077 records the bound
+the trunk moved since this head (diverged, trunk eeee002303ac) and no merge-result run is recorded at this head and trunk
+next: hold the ask; run `delivery_gate.py merge-run <task> --pr iamcxa/kc-claude-plugins#841 -- <test command>` on the merge result, using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.

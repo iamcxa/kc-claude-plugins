@@ -1,0 +1,8 @@
+{
+  "branch": "spacedock-ensign/merge-ask-tests-the-merge-result",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "candidate": "d79053d0836c558a9269f9cf1ba222933935b820",
+  "poc": "e348d05b7",
+  "product_pushed": false,
+  "pr_opened": false
+}
