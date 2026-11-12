@@ -199,3 +199,16 @@ Recommended order: 先交 Captain 裁定本任務是否由既有修補涵蓋；�
 - Check: python3 -B kc-dev-flow-2/scripts/probe_removed_scratch.py --state-root "$CASE_STATE" --state-commit 5e3a5110 --case-stem "$CASE_STEM" --output "$EVIDENCE/probe-counts.json"；exit 0，ideation/probe-run.log 與 probe-counts.json，11 斷言、0 失敗；首次 exit 1 另存 probe-counts-initial.json。
 - Blocked: 未有 Captain 對讀取範圍的裁定；完整 lifecycle 實際總字數未量；無真實本任務產品 PR 的外部驗收。實際載入 package workflow SHA-256 a884a1079841eeff80a0b3a27fecc21379562077ce8e783b70ccbce0cd5b6ca1。
 - Fired: premise overturned；a decision only the Captain can make（是否採納現行 S4 範圍與停止新修補）。其餘 boundary、Prod triggers、超出產品檔或預算的變更均 none；未進 implementation/validation cycle，未改任務狀態。
+
+## Scratch cleanup
+
+Evidence state commit: `10e586243`；在該提交後按以下精確路徑刪除並驗證不存在：
+
+- `/tmp/delivery-s4-probe-run.log`
+- `/tmp/delivery-s4-entity-read.json`
+- `/tmp/delivery-s4-render.log`
+- `/tmp/delivery-s4-render-authorized.log`
+- `/tmp/delivery-s4-remote-ref.log`
+- `/tmp/delivery-s4-prs.json`
+
+探針 context manager 的隨機暫存目錄已於結束時精確刪除；先前隨機名稱未留存，不能列成完整名稱清單，已確認這輪兩個專用前綴殘留目錄數為 0。原生測試自己的 TemporaryDirectory 亦隨測試結束清理。派工檔由 FO 建立，不刪除；本機探針工作樹及分支保留。
