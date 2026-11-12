@@ -1,0 +1,11 @@
+{
+  "expected_commands": 29,
+  "executed_commands": 29,
+  "unique_commands": 29,
+  "missing": [],
+  "extra": [],
+  "all_exit_zero": true,
+  "total_tests": 1417,
+  "skipped": 11,
+  "passed_tests": 1406
+}

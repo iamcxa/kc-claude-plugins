@@ -1,0 +1,37 @@
+usage: test_design_surfaces.py [-h] {check} ...
+test_design_surfaces.py: error: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+E
+======================================================================
+ERROR: test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback (__main__.SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1239, in main
+    path.read_text()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 987, in read_text
+    return f.read()
+           ~~~~~~^^
+  File "<frozen codecs>", line 325, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 515, in test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback
+    self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1241, in main
+    parser.error(str(exc))
+    ~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2958, in error
+    self.exit(2, fmt % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2940, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (errors=1)

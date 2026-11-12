@@ -1,0 +1,68 @@
+FFF
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (__main__.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1769, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     (explicit.returncode, explicit.stdout, explicit.stderr))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, '', 'usage: design_surfaces.py [-h] {c[103 chars]e\n') != (0, 'task.md: design surfaces presentable\[433 chars], '')
+
+First differing element 0:
+2
+0
+
+Diff is 718 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (__main__.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task.with.dots')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1769, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     (explicit.returncode, explicit.stdout, explicit.stderr))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, '', 'usage: design_surfaces.py [-h] {c[113 chars]e\n') != (0, 'task.with.dots.md: design surfaces pr[443 chars], '')
+
+First differing element 0:
+2
+0
+
+Diff is 738 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_resolving_a_name_preserves_a_failing_verdict (__main__.TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1798, in test_resolving_a_name_preserves_a_failing_verdict
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     (explicit.returncode, explicit.stdout, explicit.stderr))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (2, '', 'usage: design_surfaces.py [-h] {c[103 chars]e\n') != (1, "task.md: 'Surfaces:' has unknown valu[65 chars], '')
+
+First differing element 0:
+2
+1
+
+- (2,
++ (1,
++  "task.md: 'Surfaces:' has unknown value(s) unknown\n"
++  'scope check not run: backlog briefing unreadable\n',
+-  '',
+?    ^
+
++  '')
+?    ^
+
+-  'usage: design_surfaces.py [-h] {check} ...\n'
+-  'design_surfaces.py: error: task file not found: task; pass a task file or '
+-  'its suffixless name\n')
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.517s
+
+FAILED (failures=3)

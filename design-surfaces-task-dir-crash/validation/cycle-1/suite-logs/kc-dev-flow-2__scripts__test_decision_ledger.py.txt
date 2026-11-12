@@ -1,0 +1,6 @@
+.......not a directory: /tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/suite-temp/tmp6tju1tig/nope
+................
+----------------------------------------------------------------------
+Ran 23 tests in 0.549s
+
+OK

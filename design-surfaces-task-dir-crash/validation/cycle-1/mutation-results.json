@@ -1,0 +1,181 @@
+[
+  {
+    "name": "ac-1-no-fallback",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes",
+      "TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-1-no-fallback/run.txt"
+  },
+  {
+    "name": "ac-1-replace-dotted-suffix",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes",
+      "TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-1-replace-dotted-suffix/run.txt"
+  },
+  {
+    "name": "ac-1-force-success",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes",
+      "TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-1-force-success/run.txt"
+  },
+  {
+    "name": "ac-2-require-directory",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task",
+      "TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-2-require-directory/run.txt"
+  },
+  {
+    "name": "ac-2-override-exact-file",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task",
+      "TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-2-override-exact-file/run.txt"
+  },
+  {
+    "name": "ac-3-no-usage-guard",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-3-no-usage-guard/run.txt"
+  },
+  {
+    "name": "ac-3-encoding-as-usage",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-3-encoding-as-usage/run.txt"
+  },
+  {
+    "name": "ac-4-no-fallback",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/validation/cycle-1/run_probe.py",
+      "--source",
+      "/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant",
+      "--repository",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--scratch",
+      "/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutations/ac-4-no-fallback",
+      "--output",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/validation/cycle-1/ac-4-no-fallback",
+      "--adopter-state",
+      "$ADOPTER_STATE_1",
+      "--adopter-state",
+      "$ADOPTER_STATE_2",
+      "--adopter-state",
+      "$ADOPTER_STATE_3"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-4-no-fallback/run.txt"
+  },
+  {
+    "name": "ac-4-change-valid-file-rule",
+    "status": "passed",
+    "meaning": "falsifier detected",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/validation/cycle-1/run_probe.py",
+      "--source",
+      "/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant",
+      "--repository",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--scratch",
+      "/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutations/ac-4-change-valid-file-rule",
+      "--output",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/validation/cycle-1/ac-4-change-valid-file-rule",
+      "--adopter-state",
+      "$ADOPTER_STATE_1",
+      "--adopter-state",
+      "$ADOPTER_STATE_2",
+      "--adopter-state",
+      "$ADOPTER_STATE_3"
+    ],
+    "exit": 1,
+    "syntax_valid": true,
+    "source_restored": true,
+    "cleared_checker_cache_files": 0,
+    "output": "ac-4-change-valid-file-rule/run.txt"
+  }
+]

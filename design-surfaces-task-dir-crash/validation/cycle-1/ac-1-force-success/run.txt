@@ -1,0 +1,14 @@
+.F
+======================================================================
+FAIL: test_resolving_a_name_preserves_a_failing_verdict (__main__.TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1796, in test_resolving_a_name_preserves_a_failing_verdict
+    self.assertEqual(explicit.returncode, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.988s
+
+FAILED (failures=1)

@@ -1,0 +1,45 @@
+[
+  {
+    "name": "valid",
+    "status": "passed",
+    "subprocess_exits": [
+      0
+    ],
+    "seed_refusal_lines": 0,
+    "error_lines": 0
+  },
+  {
+    "name": "invalid-fields",
+    "status": "passed",
+    "subprocess_exits": [
+      1
+    ],
+    "seed_refusal_lines": 1,
+    "error_lines": 0
+  },
+  {
+    "name": "invalid-encoding",
+    "status": "passed",
+    "subprocess_exits": [
+      1
+    ],
+    "seed_refusal_lines": 1,
+    "error_lines": 0
+  },
+  {
+    "name": "missing",
+    "status": "passed",
+    "subprocess_exits": [],
+    "seed_refusal_lines": 0,
+    "error_lines": 1
+  },
+  {
+    "name": "removed-after-read",
+    "status": "passed",
+    "subprocess_exits": [
+      2
+    ],
+    "seed_refusal_lines": 0,
+    "error_lines": 1
+  }
+]

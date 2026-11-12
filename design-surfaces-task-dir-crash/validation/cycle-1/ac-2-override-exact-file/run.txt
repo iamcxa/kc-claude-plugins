@@ -1,0 +1,19 @@
+.F
+======================================================================
+FAIL: test_an_existing_file_wins_over_a_sibling_md_file (__main__.TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1786, in test_an_existing_file_wins_over_a_sibling_md_file
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: missing '## Acceptance criteria' section
+scope check not run: no frontmatter
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.293s
+
+FAILED (failures=1)

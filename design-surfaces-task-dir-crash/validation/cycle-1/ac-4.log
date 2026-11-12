@@ -1,0 +1,12 @@
+{
+  "synthetic_commands": 32,
+  "base_default_collision_traceback": true,
+  "probe_default_collision_passes": true,
+  "probe_seed_collision_passes": true,
+  "base_seed_collision_refused": true,
+  "explicit_outputs_unchanged": true,
+  "adopter_mode_checks": 108,
+  "adopter_explicit_unchanged": 108,
+  "adopter_alias_matches": 108,
+  "adopter_unavailable": 0
+}

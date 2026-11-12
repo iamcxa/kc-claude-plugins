@@ -1,0 +1,16 @@
+F.
+======================================================================
+FAIL: test_suffixless_name_without_a_directory_checks_the_task (__main__.TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1777, in test_suffixless_name_without_a_directory_checks_the_task
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : usage: design_surfaces.py [-h] {check} ...
+design_surfaces.py: error: task file not found: task; pass a task file or its suffixless name
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.279s
+
+FAILED (failures=1)

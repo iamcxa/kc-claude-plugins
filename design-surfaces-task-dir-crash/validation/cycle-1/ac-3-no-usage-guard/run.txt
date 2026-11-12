@@ -1,0 +1,180 @@
+FFFFFFFFFF
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ~~~~~~~~~~^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ~~~~~~~~~~^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ~~~~~~~~~~^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'directory.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : directory.md: cannot read task: [Errno 2] No such file or directory: 'directory.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ~~~~~~~~~~^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ~~~~~~~~~~^^^^^^
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 986, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '/'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.719s
+
+FAILED (failures=10)

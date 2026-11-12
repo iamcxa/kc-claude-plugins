@@ -1,0 +1,6 @@
+{
+  "mutants": 9,
+  "detected": 9,
+  "restored_sha256": "c83645d817295277d2d67f8357a5e308d329822139d5bdaa4ed885193a5da4b6",
+  "python_bytecode": "-B plus PYTHONDONTWRITEBYTECODE=1; checker pyc cleared before each mutation"
+}

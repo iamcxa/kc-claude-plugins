@@ -1,0 +1,16 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "sha256": "c83645d817295277d2d67f8357a5e308d329822139d5bdaa4ed885193a5da4b6",
+    "worktree_matches": true,
+    "candidate_export_matches": true,
+    "mutant_restored": true
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "sha256": "19be3f1e63045569ace26a3ef3b42467a10e1fca20183236495410814be9d906",
+    "worktree_matches": true,
+    "candidate_export_matches": true,
+    "mutant_restored": true
+  }
+]

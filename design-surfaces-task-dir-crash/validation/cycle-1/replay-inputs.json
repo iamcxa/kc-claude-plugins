@@ -1,0 +1,6 @@
+{
+  "suite": "python3 -B ../../implementation/round-2/run_suite.py --source <fresh export of candidate> --output <evidence> --temp <new empty temp directory> --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0",
+  "corpus": "python3 -B run_probe.py --source <fresh export of candidate> --repository <repository containing base> --base 8125e6d516d32abbf79c6772de10cde2c20900a8 --scratch <new empty temp directory> --output <evidence> --adopter-state $ADOPTER_STATE_1 --adopter-state $ADOPTER_STATE_2 --adopter-state $ADOPTER_STATE_3",
+  "mutations": "python3 -B run_mutations.py --source <separate fresh export of candidate> --repository <repository containing base> --base 8125e6d516d32abbf79c6772de10cde2c20900a8 --temp <new empty temp directory> --output <evidence with run_probe.py> --adopter-state $ADOPTER_STATE_1 --adopter-state $ADOPTER_STATE_2 --adopter-state $ADOPTER_STATE_3",
+  "note": "These document the full validator runs and need explicit private corpus inputs. Captain acceptance.md is the exact public five-step runnable command with no private or deleted-scratch dependency."
+}

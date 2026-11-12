@@ -1,0 +1,32 @@
+[
+  {
+    "file": "scripts/role_triggers.py",
+    "same_installed_bytes": true,
+    "sha256": "b323991c6c199d5b251f9232b0b7f27b5b425161841b3ac62a97f6dedbe06300"
+  },
+  {
+    "file": "scripts/adr_lint.py",
+    "same_installed_bytes": true,
+    "sha256": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f"
+  },
+  {
+    "file": "scripts/dispatch_records.py",
+    "same_installed_bytes": true,
+    "sha256": "322e6aa30a9a81041b5dbe8d2e4a6114cf1de899e0e26a6de1edd9804b59d244"
+  },
+  {
+    "file": "scripts/comment_ratio.py",
+    "same_installed_bytes": true,
+    "sha256": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0"
+  },
+  {
+    "file": "scripts/doc_impact.py",
+    "same_installed_bytes": true,
+    "sha256": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd"
+  },
+  {
+    "file": "references/sd/workflow.md",
+    "same_installed_bytes": false,
+    "sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb"
+  }
+]

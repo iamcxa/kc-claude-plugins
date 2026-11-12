@@ -1,0 +1,8 @@
+[
+  {"name":"AC-1: same-name and dotted directories preserve both verdicts","status":"passed","detail":"ac-1.log; three executed mutations caught"},
+  {"name":"AC-2: suffixless resolution and exact-file priority","status":"passed","detail":"ac-2.log; two executed mutations caught"},
+  {"name":"AC-3: usage exit 2 and encoding-error exit 1","status":"passed","detail":"ac-3.log; two executed mutations caught"},
+  {"name":"AC-4: current real collisions preserve output and bytes","status":"passed","detail":"probe-summary.json; two executed corpus mutations caught"},
+  {"name":"PR-watch handles the changed exit code","status":"passed","detail":"consumers.json: real subprocess; missing-before-read and removed-after-read differ deliberately"},
+  {"name":"Five-step fresh-shell acceptance","status":"passed","detail":"acceptance.log; exit 0; no removed scratch dependency"}
+]

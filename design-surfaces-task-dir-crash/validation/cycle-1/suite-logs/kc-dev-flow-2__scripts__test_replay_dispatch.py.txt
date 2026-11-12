@@ -1,0 +1,6 @@
+........
+----------------------------------------------------------------------
+Ran 8 tests in 3.802s
+
+OK
+removed /private/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d/suite-temp/tmp58m7bb0x/runs/r1
