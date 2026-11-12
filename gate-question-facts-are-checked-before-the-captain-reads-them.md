@@ -79,6 +79,13 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-12, host question dialog
+Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
+Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
+Supersedes: none
+
 ## Design
 
 Proof-of-concept branch: `poc/gate-question-facts-are-checked-before-the-captain-reads-them`, commit `e56b2e6c36f846349acc780175a0691b63a177ae` (parent `39fb7ccfa`, base origin/main `8ce0eb605`), local only, in the workflow checkout's `.worktrees/poc-gate-question-facts`. It adds one throwaway file, `kc-dev-flow-2/scripts/gate_facts.py`, with three readers: `state`, `effect` (one model call per sentence) and `scope`. Saved runs are under `gate-question-facts-are-checked-before-the-captain-reads-them/ideation-1/`; `ideation-1/run-evidence.sh <POC worktree> <state checkout>` reruns every deterministic criterion in about 5 seconds.
@@ -213,6 +220,10 @@ Every evidence command below was run once on 2026-11-12 (Asia/Taipei 13:34) at P
 - **ADR list:** one ADR draft extending ADR 0072. Its number is reserved by FO at dispatch, so it shares the index with every task that lands an ADR.
 
 Recommended order: held-and-closed-tasks-leave-the-design-queue first (it owns case 3), merge-ask-tests-the-merge-result before this task (both edit `delivery_gate.py check`; this task rebases onto it), then this task.
+
+## Number guards
+
+ADR: 0082
 
 ## Stage Report: ideation
 
