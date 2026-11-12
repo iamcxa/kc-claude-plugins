@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-12T05:16:48Z
 worktree: .worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them
-pr: iamcxa/kc-claude-plugins#855
+pr: pr-merge:855
 ---
 
 ## Scope
