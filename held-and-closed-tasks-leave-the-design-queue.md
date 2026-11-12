@@ -383,3 +383,43 @@ Evidence: implementation/continuation-1/role-triggers.log and preflight.json. No
 ### Summary
 
 This report supersedes all earlier implementation reports, including the held continuation: the unchanged candidate now passes the amended 32-of-48 word bound and the previously skipped clean base replay, with all named local checks green. Captain amendment 2 changes only acceptance, amendment 3 changes the task budget, and the program remains at 455846c6d30d4ab650c1c4503bc591722231586d; actual Held body edits, publication, RoboRev and hosted CI remain FO-owned and are not claimed complete.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #856 head 455846c6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED pending the design disposition F1 below; exact head 455846c6d30d4ab650c1c4503bc591722231586d, stacked base 77e240d46ced4980ec1f6f2dc61a692f27857af1. Evidence: validation/summary.json, recheck-results.json and native-summary.json.
+- DONE: This PR is stacked on PR #854's branch: judge only this task's own change on top of it. Captain amendments 1 to 3 are in scope: amendment 1 (ADR 0081 records only what he approved), amendment 2 (the added-words bound is 3 words for each held task plus a fixed 6; judge the bound and the count yourself), amendment 3 (budget). The Held sections on the held tasks are the First Officer's state step after delivery and are not in the candidate: judge the candidate's behaviour with and without them on a copy. Judge each item under 'Not provable now'
+  Three product paths only; ADR ruling quote matches; current fourteen-task bound passes, small-count bound needs F1 disposition; the entry role guard allows this first validation cycle under the amended 1 implementation / 2 validation budget. NP limits are below.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation/captain-steps.md gives four exact steps in captain-acceptance.sh, run by /bin/bash --noprofile --norc; observed exit 1 reproduces F1 after 11 held tests pass. adr-lint-dispatch-path.log exits 0 with --since 77e240d46ced4980ec1f6f2dc61a692f27857af1 --require 0081.
+- DONE: AC-1 and AC-2 native selection and scheduler exclusion
+  validation/ac1-query.log and ac2-next.log select exactly the original ten ideation holds and no held task among 56 scheduler rows; deleting a query row or injecting a held scheduler row is rejected in recheck-results.json.
+- DONE: AC-3 legacy gap
+  validation/legacy-native.log runs the unchanged 8ce0eb60 export against state eae5ea47, exit 0, 1353 words and zero of ten held names; adding one held name falsifies the gap predicate (native-summary.json).
+- DONE: AC-4 and AC-5 native dispatch and close limits
+  validation/ac4-dispatch.log builds a held dispatch (0); archive refuses (1). Initial close probes lacked historical objects; rerunning with the declared read-only Git object alternate reaches the required not-applicable refusal (both 1, ac5-*-history.log). Exit mutations are oracle checks, not upstream binary mutations.
+- DONE: AC-6 and AC-7 historical reopen and exact quotes
+  validation/recheck-results.json independently finds the same-stage successor and seven verbatim quotes; removing the successor or changing a quote character falsifies each assertion. This proves recorded history and quote membership, not semantic correctness of every Held label.
+- DONE: NP-1 and NP-2 real entrance, copy behavior and negative cases
+  validation/candidate-live.log exits 0, with one fact naming each of fourteen native held rows once. copy-without-held.log prompts all missing sections; copy-with-held.log accepts all copied sections. Six source removals/mutations fail the held tests (recheck-results.json), and candidate bytes were restored and hash-verified.
+- DONE: Related tests and package checks
+  validation/unit-tests.xml and scratch-tests.xml record 155 + 9 = 164 passed items, zero failures/errors; these are the two related files, not the full package suite. lint, ADR, fresh number guards, comment ratio (0.7% <= 5%), dispatch records and design surfaces exit 0; doc-impact.log names only ADR 0081, updated.
+- DONE: NP-3 current dataset under amendment 2
+  validation/wc-word-count.log and word-measurement.json measure 32 added words for fourteen held tasks, within 48 at startup and idle; a 49-word counterexample fails. The generic small-count bound is not established and is F1.
+- FAILED: Amendment 2's bound across supported held-task counts
+  validation/captain-acceptance.log reproduces one native held task, 17 words against maximum 9; current fourteen tasks pass 32/48. F1 is Needs decision, kind design: the fixed approved wording and a general 3N+6 bound conflict; validation cannot silently narrow the bound or change the program.
+- SKIPPED: NP-4 live state edits and NP-5 upstream plain status
+  FO-owned post-delivery edits remain outstanding: zero of fourteen live Held sections valid (recheck-results.json). The copy projection validates all fourteen with byte-identical frontmatter and a rejected frontmatter mutation. The approved default-status limitation remains upstream; no actual held task was edited.
+- DONE: Origin-less replay limit and proof of necessity
+  Both stacked-base and candidate full origin-less copy commands exit 2 because the inherited scratch scan requires origin; their held-output difference is 32 words (word-measurement.json). The normal real-workflow candidate exits 0. Removing this task's change fails held tests; substring validation is intentional provenance checking, not semantic approval.
+- DONE: Evidence publication, exact-path cleanup and unchanged candidate
+  Evidence commit 33730484329fe78f43f249c202829e8fcb5081d1 preceded removal of /tmp/validate-held-closed-c1vpl62a and the generated /tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md. validation/cleanup.json verifies absence and zero retained /tmp evidence copies; no worktree was created/removed and no product bytes changed.
+
+### Summary
+
+At 455846c6d30d4ab650c1c4503bc591722231586d the named current-data checks pass, but the amended word formula needs a scope/design disposition before a general pass can be claimed; this is not a demonstrated failure to distinguish held tasks. The actual Held body edits, gate decision and delivery remain FO/Captain work. Remote checks observed in validation/pr-final.json have six successes and one deploy skip; CI configuration was unchanged and CI cost was not measured.
+
+### Findings
+
+- F1 Needs decision — kind: design. Released user/workflow: FO reads the startup/idle line, including an adopter with one held task (already considered by the accepted design). Observable harm: 17 added words exceed the nine-word bound. Protected boundary: captain-ruling[2026-11-12] amendment 2, three words per held task plus six fixed words. Trigger: validation/captain-acceptance.log uses the native Spacedock query on an isolated copy of an existing public held task; see findings.json. FO must dispose whether the bound governs only the measured fourteen-task case or all supported counts; any wording/bound change requires the existing feedback/amendment route. No repair was made.

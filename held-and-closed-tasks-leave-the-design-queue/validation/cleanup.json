@@ -1,0 +1,11 @@
+{
+  "evidence_commit": "33730484329fe78f43f249c202829e8fcb5081d1",
+  "removed_scratch_directories": [
+    "/tmp/validate-held-closed-c1vpl62a"
+  ],
+  "removed_generated_dispatch_file": "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md",
+  "all_absent": true,
+  "retained_tmp_evidence_copies": 0,
+  "public_evidence_directory": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation",
+  "time": "2026-11-12T19:14:44.554043+08:00"
+}
