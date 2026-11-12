@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:merge-ask-tests-the-merge-result:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:merge-ask-tests-the-merge-result-validation-1
+              briefing:
+                id: briefing:merge-ask-tests-the-merge-result:validation:attempt-1:revision-1
+                digest: sha256:98169bf59741119086888f8a6544083eb8bacb1f938035a2fda66faaac8ba441
+                room-ref: ./merge-ask-tests-the-merge-result/review/validation/briefing-1
 started: 2026-11-12T05:16:52Z
 worktree: .worktrees/spacedock-ensign-merge-ask-tests-the-merge-result
 pr: iamcxa/kc-claude-plugins#853
