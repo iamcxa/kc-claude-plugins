@@ -10,10 +10,10 @@ Treat each `Follow-up:` line in Scope as a proposal, not accepted scope. Adopt i
 into the design only if no accepted criterion, Captain ruling or journey contract
 depends on the behaviour it changes; otherwise return it to FO as a Needs decision,
 and say in the design which, and why.
-Prefer the smallest working mechanism for the accepted goal. Before proposing an
-existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
-use or repair what exists before adding a replacement. Record its conclusion in
-the same design, with a proportional observation showing why the change is needed.
+Prefer the smallest working mechanism for the accepted goal. Before designing,
+apply [Before new work](../implementation/principles.md#before-new-work), then the
+bounded capability check there when applicable. Use or repair what exists before
+adding a replacement; record the conclusion and observation in this design.
 In `### Worth questions`, answer per scope part: which Captain words it serves; what breaks without it; which single premise would make the task unneeded and what cheap test checks it now. Name parts serving no Captain words for him to keep or cut.
 Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
 plan. Mermaid must match the prose's actors, order, alternatives and stops.
