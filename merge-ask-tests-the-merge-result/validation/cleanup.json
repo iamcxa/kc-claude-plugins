@@ -1,0 +1,18 @@
+{
+  "evidence_commit": "121adbf2c51178e2c9b1249a4ed6045decdd2eee",
+  "removed_after_evidence_commit": [
+    {
+      "path": "/tmp/validate-853-20261112-1752",
+      "existed_before_final_cleanup": true,
+      "absent_after": true
+    },
+    {
+      "path": "/tmp/merge-result-853-acceptance.fEAj7k",
+      "existed_before_final_cleanup": false,
+      "absent_after": true
+    }
+  ],
+  "acceptance_cleanup": "Acceptance shell already removed its exact scratch path through its EXIT trap.",
+  "private_repositories_inspected": 0,
+  "time": "2026-11-12T18:10:32.404241+08:00"
+}
