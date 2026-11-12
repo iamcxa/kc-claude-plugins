@@ -14,6 +14,14 @@ status: backlog
 - Shape proposed by the relaying FO (its wording, not the Captain's): when the README does not list `learn`, print no learn steps, or say learn is not enabled here.
 - Related: adoption-asks-which-extensions (adoption never asks which extensions to enable).
 - Upstream first: `observer_check.py` and its tests; how other scripts already read `extensions:` (dispatch_records.py).
+- Non-goals: to be set at ideation.
+- Trial (2026-11-13): admitted by the Captain's 「五張都准，授權代記設計關卡（建議）」 (host question dialog, 2026-11-13) as one of five tasks run by hand under the trial route rules: one worker builds a working probe during ideation and continues into implementation, a different worker validates, at most 3 build rounds counted by hand; stop for the Captain on an overturned premise, spent budget, two rounds without progress or a second validation rejection, a change of scope or criterion, or a component boundary or Prod trigger.
+
+## Budget
+1 implementation and 2 validation cycles, in one package PR.
+
+## Stop condition
+- On a workflow README that does not list learn under `extensions:`, the script prints no learn step for an archived task; on one that lists it, the steps print as today.
 
 ## FO alignment
 
