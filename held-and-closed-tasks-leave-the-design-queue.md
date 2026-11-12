@@ -3,7 +3,7 @@ title: A task the Captain held or closed at a gate no longer looks like work wai
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
