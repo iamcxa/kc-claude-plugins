@@ -34,6 +34,20 @@ gates:
                 id: briefing:pr-watch-tasks-foreign-worktree:ideation:attempt-1:revision-1
                 digest: sha256:8e8bfd9d6a0f20874cbc5f67ae59788fc8ac944d036ac9674b9873961da4a7d0
                 room-ref: ./pr-watch-tasks-foreign-worktree/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pr-watch-tasks-foreign-worktree:ideation:1
+                briefing: briefing:pr-watch-tasks-foreign-worktree:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-12T17:25:31.145872Z"
+                decision: approve
+                reason: 'Round 1 fired no stop condition (worker''s Trial round 1 line: none; Unresolved decisions for the Captain: none for the narrow Stop condition; the two other next: lines stay out of this PR). design_surfaces.py check exit 0 (FO run 2026-11-13). The probe on local branch poc/pr-watch-tasks-foreign-worktree at fea415791 reproduces the unsafe line on base 8125e6d51 and its acceptance script exits 0. Disclosed by the worker: the Before building answers were written after the probe was started, not before.'
+                conn:
+                    quote: 五張都准，授權代記設計關卡（建議）
+                    source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-12T17:03:02Z
 ---
 
