@@ -15,6 +15,10 @@ gates:
                 id: briefing:held-and-closed-tasks-leave-the-design-queue:backlog:attempt-1:revision-1
                 digest: sha256:cff2229580a5f7be6070bdcd4e21387458f05516df089eae064cacbff26a131d
                 room-ref: ./held-and-closed-tasks-leave-the-design-queue/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-12T05:11:32.038275Z"
+                reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
 ---
 
 ## Scope
