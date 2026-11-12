@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:pr-watch-tasks-foreign-worktree:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:pr-watch-tasks-foreign-worktree-backlog-1
+              briefing:
+                id: briefing:pr-watch-tasks-foreign-worktree:backlog:attempt-1:revision-1
+                digest: sha256:5783c0be460d444e9682a84792d956f027e99a56ec1d28917b381361e2972a80
+                room-ref: ./pr-watch-tasks-foreign-worktree/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-16), after FO's first run of the v0.23.0 lifecycle mod's idle step on this workflow.
