@@ -175,11 +175,16 @@ def sentences(text):
     return [s.strip(" ，,") for s in re.split(r"[。；;？?]|(?:[一二三四五六七八九十]、)", text) if len(s.strip()) > 6]
 
 
-def scope_flags(text):
+MARKED = re.compile(r"未驗證|未對過紀錄|\bunverified\b", re.I)
+
+
+def scope_flags(text, exists=None):
     out = []
     for s in sentences(text):
         if EXISTING.search(s) and EFFECT.search(s):
-            out.append({"sentence": s, "cited": CITED.findall(s), "flag": not CITED.search(s)})
+            cited = [c for c in CITED.findall(s) if exists is None or exists(c)]
+            marked = bool(MARKED.search(s))
+            out.append({"sentence": s, "cited": cited, "marked": marked, "flag": not cited and not marked})
     return out
 
 
@@ -191,7 +196,12 @@ def scope_check(args):
     total = flagged_q = 0
     report = []
     for q in items:
-        rows = scope_flags(q["question"])
+        exists = None
+        if args.state and q.get("task") and q.get("state_commit_before_ask"):
+            def exists(c, q=q):
+                path = c if c.startswith(q["task"] + "/") else f"{q['task']}/{c}"
+                return show(args.state, q["state_commit_before_ask"], path) is not None
+        rows = scope_flags(q["question"], exists)
         n = sum(r["flag"] for r in rows)
         total += len(sentences(q["question"]))
         flagged_q += bool(n)
