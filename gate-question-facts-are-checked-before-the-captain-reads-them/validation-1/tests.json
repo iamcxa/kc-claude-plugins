@@ -1,0 +1,26 @@
+[
+  {
+    "name": "delivery",
+    "discovered": 230,
+    "passed": 229,
+    "skipped": 1,
+    "failed": 0,
+    "exit": 0
+  },
+  {
+    "name": "learning",
+    "discovered": 50,
+    "passed": 50,
+    "skipped": 0,
+    "failed": 0,
+    "exit": 0
+  },
+  {
+    "name": "adr-doc",
+    "discovered": 9,
+    "passed": 9,
+    "skipped": 0,
+    "failed": 0,
+    "exit": 0
+  }
+]

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them/validation-1/replay.py", line 87, in <module>
+    text = q['question'].replace(q.get('task', '') + '/', 'task/')
+                                 ~~~~~~~~~~~~~~~~~~^~~~~
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'

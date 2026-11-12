@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "第 1 條驗收缺少相依候選版本重播",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them.md",
+    "line": 184,
+    "detail": "處置：Needs decision（需要範圍裁決）；類型：evidence or form（證據或形式）。已重現試作的 5/5 與 0/5，但正式相依候選版本及其反例尚未驗證；副官的略過指示沒有撤銷驗收條件。",
+    "fix": "副官補齊相依候選版本的重播與反例，或請船長明確修正第 1 條驗收。",
+    "status": "open"
+  }
+]

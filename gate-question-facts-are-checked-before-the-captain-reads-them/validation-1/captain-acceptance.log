@@ -1,0 +1,5 @@
+Step 1: pinned candidate and exported three revisions
+Step 2: replay assertions passed; AC-1 dependent candidate remains NOT RUN
+Step 3: nine scope tests passed
+Step 4: required decision-record lint passed
+Cleanup: acceptance scratch removed

@@ -1,0 +1,14 @@
+{
+  "verdict": "REJECTED",
+  "head": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+  "findings": [
+    {
+      "id": "F1",
+      "class": "Needs decision",
+      "kind": "evidence or form",
+      "criterion": "AC-1",
+      "observed_build_defect": false
+    }
+  ],
+  "start_asia_taipei": "2026-11-12T18:33:48+08:00"
+}

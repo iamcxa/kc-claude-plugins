@@ -281,3 +281,35 @@ Timing (Asia/Taipei): the proof of concept ran 13:23:51 to about 13:34 (about 11
 ### Summary
 
 The approved deterministic scope scan now writes its disclosure through check and question without a new content hold, reuses task-folder citation resolution and shares the Chinese-aware count split. All independent local checks pass at the candidate; AC-1's dependent listing replay and the two observational checks remain explicitly not run per FO. Publication, local RoboRev, hosted CI and workflow progression remain FO-owned.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #855 head 8d083d3b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`, compared only with prerequisite `d79053d0836c558a9269f9cf1ba222933935b820`; `validation-1/assessment.md`, `identity.json`, `replay.json` and `implementation-rerun.json` retain independent aggregate-only evidence and limits.
+- FAILED: AC-1 task-state replay against the dependent candidate and its hold-removal falsifier.
+  F1 Needs decision, kind evidence or form: prototype rerun is 5/5 held versus 0/5 control and loses detection without hold; the actual dependent candidate is still not supplied, so its replay is not met. FO's implementation skip instruction did not supersede AC-1; `validation-1/replay.json`.
+- DONE: Judge only this task's own change on top of PR #853; verify goal sufficiency and minimal necessity.
+  Four net files in `validation-1/identity.json`; prerequisite adds 0 marks, candidate 1 for each tested false claim, exit unchanged; no product edits. Sufficiency remains blocked by F1; retained scanner, shared count split, tests and authorized ADR each serve an accepted outcome.
+- DONE: Captain amendment 1 (one decision-record file, ADR 0082) records only what the Captain approved at the ideation gate.
+  Exact ruling quote and approved D1/D2 plus expansion item 3 checked against task records; one new ADR, no new decision; `validation-1/assessment.md`.
+- DONE: Replay the three questions the task's Bite names and three true ones yourself; judge every Not provable now item.
+  `validation-1/replay.json`: false effect questions mark 1 each; state-only false question marks 0, owned by dependent listing. True controls mark 0/1/0; the accepted false positive clears with an existing citation. Missing-file and English-only mutants lose warnings; actual question/summary writes and check path preserve exits and repeats.
+- DONE: AC-4 corpus replay and its falsifier; correct the implementation's measurement limits.
+  `validation-1/replay.json`: 111 questions, prototype 505 spans / candidate 549, 11 matches in 9 questions; 4 known false occurrences marked, English mutant 0/4. Two primary historical records re-read; no private text retained. No generalization or Captain-answer improvement inferred.
+- SKIPPED: Dependent listing candidate, independent second corpus, real Captain answers and plain-dialog enforcement.
+  F1 retains the first obligation. The others remain explicit unknowns or the accepted D2 path limit; the model reader was explicitly excluded, not silently treated as proven. `validation-1/assessment.md` judges all five Not provable now items and the initial implementation limits.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; ADR lint with its exit code; verdict and classified findings.
+  Four-step `validation-1/acceptance.sh`, fresh `/bin/bash --noprofile --norc`, exit 0; `captain-acceptance.log`, `captain-replay.json`, `captain-tests.log`, `captain-adr.log`. It explicitly says AC-1 remains NOT RUN; exact command and exclusions are in `assessment.md`.
+- DONE: Candidate affected suites and required stage checks.
+  `validation-1/tests.json`: delivery 230 discovered, 229 pass / 1 optional skip; learning 50 pass; ADR docs 9 pass. `checks.json`: lint, guards, design surfaces, dispatch records, document impact and diff check exit 0. Required ADR lint `docs/adr --since d79053d0836c558a9269f9cf1ba222933935b820 --require 0082` exits 0, 72 records / 0 legacy; fresh-ref number check retained after initial sandbox warning.
+- DONE: Affected-document dispositions, added comments, word cost and private evidence boundary.
+  All 7 `validation-1/doc-impact.json` documents checked against implementation dispositions; `assessment.md` gives each. `comments.log`: 2/163, 1.2%, maximum 5%. `replay.json` check words 89→89 without a match, 89→98 with one; CI cost not measured, no CI changed. Only aggregates retained from private inputs.
+- DONE: Record publication boundary and exact scratch cleanup.
+  `validation-1/pr-status.json`: pinned head still open/Draft; provider checks are observed only, not merge or delivery. Product push, reviews and merge remain FO-owned. `cleanup.json` records exact owned roots; candidate exports will be removed after evidence commit, with absence recorded in the cleanup commit.
+
+### Summary
+
+REJECTED for the whole task at `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`: owned behavior passes, but AC-1's explicitly required integration evidence is missing. F1 Needs decision (kind: evidence or form) returns the missing candidate/replay to FO or the acceptance amendment to the Captain; it is not authorization to add a state reader or repair product code. Checks, report and evidence are confined to this task; private source content is not published.
+
+- F1 Needs decision (kind: evidence or form): `value-ac[AC-1]` lacks the dependent-candidate listing replay and falsifier; supply that evidence or seek a Captain amendment. Primary trigger and boundary fields: `validation-1/assessment.md#finding`.
