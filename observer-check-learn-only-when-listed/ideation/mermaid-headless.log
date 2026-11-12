@@ -1,0 +1,16 @@
+Generating single mermaid chart
+
+Error: Failed to launch the browser process:  Code: null
+
+stderr:
+[1113/011450.621803:ERROR:base/power_monitor/thermal_state_observer_mac.mm:140] ThermalStateObserverMac unable to register to power notifications. Result: 9
+[1113/011450.645538:ERROR:net/dns/dns_config_service_posix.cc:138] DNS config watch failed to start.
+[1113/011450.647125:WARNING:net/dns/dns_config_service_posix.cc:197] Failed to read DnsConfig.
+[1113/011450.653686:FATAL:base/apple/mach_port_rendezvous_mac.cc:159] Check failed: kr == KERN_SUCCESS. bootstrap_check_in org.chromium.Chromium.MachPortRendezvousServer.87307: Permission denied (1100)
+
+TROUBLESHOOTING: https://pptr.dev/troubleshooting
+
+    at ChildProcess.onClose (file:///Users/kent/.npm/_npx/d62b6517736c1e35/node_modules/@puppeteer/browsers/lib/launch.js:346:24)
+    at ChildProcess.emit (node:events:521:24)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+

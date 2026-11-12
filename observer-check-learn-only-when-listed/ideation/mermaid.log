@@ -1,0 +1,15 @@
+Generating single mermaid chart
+
+Error: Failed to launch the browser process:  Code: null
+
+stderr:
+[1113/011404.321784:ERROR:base/power_monitor/thermal_state_observer_mac.mm:122] ThermalStateObserverMac unable to register to power notifications. Result: 9
+[1113/011404.323269:ERROR:net/dns/dns_config_service_posix.cc:139] DNS config watch failed to start.
+[1113/011404.323989:WARNING:net/dns/dns_config_service_posix.cc:198] Failed to read DnsConfig.
+
+TROUBLESHOOTING: https://pptr.dev/troubleshooting
+
+    at ChildProcess.onClose (file:///Users/kent/.npm/_npx/d62b6517736c1e35/node_modules/@puppeteer/browsers/lib/launch.js:346:24)
+    at ChildProcess.emit (node:events:521:24)
+    at ChildProcess._handle.onexit (node:internal/child_process:295:12)
+

@@ -1,0 +1,70 @@
+{
+  "source_base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "probe_commit": "5be1ed9695497d50d64f03f0a1d51b0157c25fe8",
+  "probe_branch": "poc/observer-check-learn-only-when-listed",
+  "checks": [
+    {
+      "output": "fixtures.json",
+      "exit": 0
+    },
+    {
+      "output": "historical-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "real-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "mutation.json",
+      "exit": 0
+    },
+    {
+      "output": "focused.log",
+      "exit": 0
+    },
+    {
+      "output": "pr-watch-final.log",
+      "exit": 0
+    },
+    {
+      "output": "laws-final.log",
+      "exit": 0
+    },
+    {
+      "output": "recovery.log",
+      "exit": 0
+    },
+    {
+      "output": "lint.log",
+      "exit": 0
+    },
+    {
+      "output": "words.json",
+      "exit": 0
+    },
+    {
+      "output": "design-check.log",
+      "exit": 0
+    },
+    {
+      "output": "stage-checklist.log",
+      "exit": 0
+    },
+    {
+      "output": "diff-check.log",
+      "exit": 0
+    },
+    {
+      "output": "mermaid-render.log",
+      "exit": 0
+    }
+  ],
+  "limits": [
+    "exact originally reported archive unavailable",
+    "laws optional external-source replay skipped",
+    "no full package suite or hosted CI",
+    "no code push or PR",
+    "independent validation and implementation remain after gate"
+  ]
+}

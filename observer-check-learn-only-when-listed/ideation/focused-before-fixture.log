@@ -1,0 +1,15 @@
+......................F
+======================================================================
+FAIL: test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace (__main__.RecoveryCommandQuotingTest.test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/observer-check-learn-only-when-listed/kc-dev-flow-2/scripts/test_observer_check.py", line 295, in test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace
+    self.assertEqual(code, 1, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : cannot tell whether the observer report is committed: no workflow README above the state checkout; supply --readme FILE. Hold and report the cause.
+
+
+----------------------------------------------------------------------
+Ran 23 tests in 7.971s
+
+FAILED (failures=1)

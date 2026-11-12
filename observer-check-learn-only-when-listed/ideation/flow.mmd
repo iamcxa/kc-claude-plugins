@@ -1,0 +1,15 @@
+flowchart TD
+    F[FO invokes observer check] --> T{Task exists at revision?}
+    T -->|No| E[Exit 2: hold and report cause]
+    T -->|Yes| A{Archived at revision?}
+    A -->|No| L[Check committed observer report]
+    L --> V[Exit 0 if nonblank, otherwise 1; existing live steps]
+    A -->|Yes| R[Read explicit workflow README or discover nearest workflow ancestor]
+    R --> K{Extension selection readable?}
+    K -->|No| E
+    K -->|Yes| C[Check committed observer report; preserve verdict and observer steps]
+    C --> S{README lists learn?}
+    S -->|Yes| Y[Append existing two learn steps]
+    S -->|No| N[Append no learn steps]
+    Y --> O[Print report and exit 0 or 1]
+    N --> O

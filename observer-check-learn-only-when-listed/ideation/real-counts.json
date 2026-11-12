@@ -1,0 +1,37 @@
+{
+  "corpora": [
+    {
+      "archived_tasks": 82,
+      "identical": 82,
+      "different": 0,
+      "base_exit_0": 12,
+      "base_exit_1": 70,
+      "base_exit_2": 0,
+      "probe_exit_0": 12,
+      "probe_exit_1": 70,
+      "probe_exit_2": 0
+    },
+    {
+      "archived_tasks": 86,
+      "identical": 86,
+      "different": 0,
+      "base_exit_0": 32,
+      "base_exit_1": 54,
+      "base_exit_2": 0,
+      "probe_exit_0": 32,
+      "probe_exit_1": 54,
+      "probe_exit_2": 0
+    },
+    {
+      "archived_tasks": 69,
+      "identical": 69,
+      "different": 0,
+      "base_exit_0": 8,
+      "base_exit_1": 61,
+      "base_exit_2": 0,
+      "probe_exit_0": 8,
+      "probe_exit_1": 61,
+      "probe_exit_2": 0
+    }
+  ]
+}
