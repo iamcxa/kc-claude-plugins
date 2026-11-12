@@ -3,4 +3,10 @@ unit tests (python3)	UNKNOWN STEP	2026-11-11T07:24:37.8992856Z HEAD is now at 64
 $ gh api repos/iamcxa/kc-claude-plugins/branches/main/protection --jq .required_status_checks.strict
 false
 $ gh api repos/iamcxa/kc-claude-plugins/rulesets
-[]
+[]$ gh run view 42983997272 --repo iamcxa/kc-claude-plugins --json event,createdAt,attempt,name  (2026-11-12; created after #843 merged at 07:55:20Z)
+{"attempt":1,"createdAt":"2026-11-11T08:03:16Z","event":"pull_request","name":"kc-dev-flow release gate"}
+$ gh run view 42983997272 --repo iamcxa/kc-claude-plugins --log | grep -m1 'HEAD is now at'
+multi-profile route gate (live Spacedock)	UNKNOWN STEP	2026-11-11T08:03:24.8615342Z HEAD is now at 6499e416c Merge 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 into 546a136386c94c58e430c91a6f3457b38bd73880
+$ gh pr view 849 / 784 --json mergedAt  (first and last of the 40 PRs)
+849 2026-11-11T15:39:05Z
+784 2026-11-05T09:00:02Z

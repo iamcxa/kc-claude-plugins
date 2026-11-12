@@ -78,7 +78,9 @@ compare call). Evidence is under `merge-ask-tests-the-merge-result/poc/`.
   `poc/ac_tree_and_scratch.log`).
 - **GitHub did test a merge result, against an old trunk.** The #841 PR run checked
   out `Merge 6da9a765 into 546a1363` at 07:24; #843 merged at 07:55, so CI never saw
-  the pair. Branch protection has `strict: false` and the repository has no ruleset
+  the pair. A later `pull_request` run on the same head, created at 08:03 after #843
+  merged, still checked out that same 07:24 merge commit (run 42983997272). Branch
+  protection has `strict: false` and the repository has no ruleset
   or merge queue (`poc/github-settings-and-pr-ci-base.txt`). Nothing in GitHub's
   current settings holds the ask.
 - **The #841 acceptance script would not have caught it.** It runs six named tests in
@@ -97,11 +99,15 @@ compare call). Evidence is under `merge-ask-tests-the-merge-result/poc/`.
   the ask at `eeee0023`; the red run at `eeee0023` holds with its exit shown.
 - **How often it fires.** Of the last 40 squash-merged feature PRs on main, 24 merged
   onto a trunk that was not an ancestor of their head (GitHub compare `diverged`),
-  16 onto one that was (`poc/trunk-moved-at-merge-40prs.txt`, 2026-11-12).
+  16 onto one that was (`poc/trunk-moved-at-merge-40prs.txt`, 2026-11-12; the 40
+  merged between 2026-11-05 and 2026-11-11).
 - **Cost of the run.** `test_design_surfaces.py` alone: about 15 s on the merge result.
   The full local unit-test list from `kc-dev-flow-2-tests.yml` (25 scripts, not the
-  three that need the pinned Spacedock): see `poc/runs/full-suite-result.json`. Local
-  FO minutes only; no CI minutes.
+  three that need the pinned Spacedock): 580 s on the #841 merge result, with only
+  `test_design_surfaces.py` failing, so the `git archive` extract (not a git checkout)
+  broke no other script (`poc/runs/full-suite-result.json`, `.log`; measured once, on a
+  machine running four other workers). Local FO minutes only; no CI minutes. At 24 of 40
+  PRs, that is roughly 6 minutes per PR on average if D1 names the full list.
 - **Existing tests.** `test_delivery_gate.py` on the PoC: 208 run, 2 failures, both the
   subtests of `test_required_check_read_adds_one_gh_call`, which count `gh` calls and see
   one more (`poc/test_delivery_gate-poc.log`).
@@ -150,10 +156,11 @@ flowchart TD
   No merge-result run anywhere (`git grep -i "merge result\|merge-tree" origin/main -- kc-dev-flow-2`: 0 hits).
 - **Adopters (read only):** qnow and subspace-relay carry Spacedock's `pr-merge.md`
   `merge-tree` step; no test run. subspace-web: no hit.
-- **GitHub (its own API):** required-checks `strict` and merge queue would make GitHub
+- **GitHub (its own API):** required-checks `strict` or a merge queue could make GitHub
   do it, but both are repository-setting changes (Stop condition: Captain), and
   `strict` forces an update-branch that changes the head, which breaks the dispatched
-  `Candidate:` match on 60% of PRs here.
+  `Candidate:` match on 60% of PRs here. How a merge queue would interact with the
+  `Candidate:` match was not checked.
 - Conclusion: repair the existing seam, `delivery_gate.py check`, which FO already runs
   before every merge ask; add one subcommand that writes the record. No new script.
 
@@ -189,14 +196,15 @@ flowchart TD
   Premise that would make it unneeded: semantic collisions between concurrently merged
   PRs are rare enough to fix after the fact. Cheap test now: the 40-PR count shows the
   trunk moved under 24 of 40 merges; the collision itself was observed once in that
-  window (this Bite), so the rule fires often and has caught one break in about two
-  weeks. The Captain may judge that rate not worth a run per ask; that is D1/D2's cost.
+  window (this Bite), so the rule fires often and would have caught one break in one
+  week (2026-11-05 to 2026-11-11). The Captain may judge that rate not worth a run per ask; that is D1/D2's cost.
 - **The `merge-run` subcommand and its record.** Serves the same scope. Without it the
   hold has nothing to read and FO's run is a claim in prose. Premise that would make it
   unneeded: GitHub could be made to run CI on the new merge result without changing the
-  head. Cheap test: a re-run of a `pull_request` run reuses its original merge commit
-  (checked: run 42979280852 merged into `546a1363`), so a new run needs a new event or
-  a setting change.
+  head. Cheap test: run 42983997272, a `pull_request` run created at 08:03 after #843
+  merged, still checked out the 07:24 merge commit into `546a1363`
+  (`poc/github-settings-and-pr-ci-base.txt`); a run on the new merge result needs a new
+  event or a setting change.
 - **The not-run line.** Serves the Outcome's "or the Captain is told in the question".
   Without it every moved-trunk ask in an adopter without `merge-test:` is blocked.
 
@@ -248,7 +256,8 @@ Recommended order: comment-check-reaches-delivery-gate and this task one at a ti
   per ask invites the narrow choice; your past rulings leaned the same way (an
   `Override:` chose refusing branch refs over the flexible option). What gets worse:
   each adopter adds one README line at its next sync, and until then every moved-trunk
-  ask there needs the not-run line. Alternative: FO names the command per ask, shown in
+  ask there needs the not-run line; and if the line names this package's full unit list,
+  each moved-trunk ask here costs FO about 10 minutes (580 s measured once). Alternative: FO names the command per ask, shown in
   the point line; no README key, weaker.
 - **D2. When the rule applies.** Recommend "main's tip is not an ancestor of the PR
   head". Why: that is exactly when the merged tree differs from the validated one, and
@@ -257,9 +266,31 @@ Recommended order: comment-check-reaches-delivery-gate and this task one at a ti
   whose base moved before validation was dispatched is included, because validation
   still tested only the head. Alternative: record main's tip in each validation dispatch
   and fire only when it moved after that; narrower, and misses the pre-dispatch case.
+- **D3. The Stop condition's pass half.** The Stop condition asks that "the same ask
+  with a recorded merge-result run passes". #841's honest run at its real ask trunk is
+  red (1 of 226), so on #841 the recorded run holds the ask, as it should. Recommend
+  accepting the pass half as shown on the same head at the trunk its CI saw
+  (`546a1363`, a real green run, AC-2) rather than on the ask's own trunk. What gets
+  worse: the pass case is proven on a trunk nobody asked at; a live green pass on a
+  real ask waits for the first moved-trunk PR after release.
 - Not recommended, no ruling needed unless you want it: turning on "require branches
-  to be up to date" or a merge queue (repository settings; both re-trigger validation
-  through a changed head).
+  to be up to date" (a repository setting that changes the head) or a merge queue (a
+  repository setting; its interaction with the `Candidate:` match was not checked).
+
+### Limits
+
+- Main can still move between the check and the merge; the record binds the trunk the
+  check saw, not the trunk at merge time.
+- Only the gate text file is read for the not-run line; the PR body is not
+  (`count_disclosure` returns the gate text alone), so a line in the PR body does not
+  count.
+- Under D1 the `merge-test:` key's only homes are the hold's `next:` line and the
+  `delivery_gate.py` docstring; no README or adoption text is added (about 15 more
+  words in the `next:` line, counted at implementation).
+- `poc/replay_841.py` hardcodes this machine's code-repository path; it is a replay
+  for this task, not a repository test.
+- The check trusts a record's `tree` and `exit` as written; it does not recompute the
+  merge tree.
 
 ## Acceptance criteria
 
@@ -336,3 +367,36 @@ Ran: exit 0, 0 entries left; `poc/ac_tree_and_scratch.log`.
   real PR whose trunk moved; first possible after the package release.
 - The three CI tests that need the pinned Spacedock were not run in the cost
   measurement; the local run does not equal CI.
+
+## Stage Report: ideation
+
+- DONE: The Captain's experiment for this task (his words are in the task's backlog gate record): ideation is a proof of concept plus an expansion plan. First build a working throwaway proof of concept of this task's outcome on a local branch poc/merge-ask-tests-the-merge-result in a worktree you create under the workflow checkout's .worktrees/ from origin/main, commit it locally, never push it and open no PR; run it against the real cases the task's Bite names and save what it showed in the task folder. Then write the design as what the proof of concept showed, the expansion plan (what it lacks to meet the Pilot bar and the task's Stop condition), and the acceptance criteria. Record the branch name and commit in the design so the implementation worker can start from it. For every acceptance criterion, run its evidence command or procedure once now and write beside the criterion the exact command, its exit and the path of its saved output in the task folder; a criterion whose proof cannot be run now is not written under Acceptance criteria but under a 'Not provable now' list with the reason, for the Captain to see at the design gate, run on the proof of concept
+  Branch `poc/merge-ask-tests-the-merge-result` at `e348d05b7` (local, unpushed) in `.worktrees/poc-merge-ask-tests-the-merge-result`; #841 replayed at state `b3e749c2`, its merge result rebuilt as the landed tree `3ba40948`; evidence in `merge-ask-tests-the-merge-result/poc/`; `### Expansion plan` and `### Not provable now` in the task file.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (merge-ask-tests-the-merge-result, held-and-closed-tasks-leave-the-design-queue, each-task-records-stage-time-revises-and-interruptions, dispatch-close-out-archives-evidence-and-removes-scratch, gate-question-facts-are-checked-before-the-captain-reads-them) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Shared `delivery_gate.py check`/`write_record` and `test_delivery_gate.py` with comment-check-reaches-delivery-gate; possible with gate-question-facts; ADR index with the two ADR tasks; Recommended order line given.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Merge ask on the #841 replay: base 187; trunk not moved 187; moved with run first 214; hold-run-recheck 331; not-run line 195; other moments unchanged (`poc/words.txt`).
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1..AC-8 each with command, exit, path and falsifier; D1 command source, D2 trigger condition, D3 Stop-condition pass half.
+- DONE: AC-1 #841 ask held for the merge result alone
+  base exit 0 `poc/replay-control-base.log`; candidate exit 1 `poc/replay-candidate-no-run.log`; outputs differ only by the new line and its next line.
+- DONE: AC-2 passing run at the asked trunk passes and shows the run
+  exit 0 `poc/replay-candidate-green-record-at-its-trunk.log` (real green run on `546a1363`).
+- DONE: AC-3 run on another trunk does not satisfy
+  exit 1 `poc/replay-candidate-stale-green-record.log`.
+- DONE: AC-4 failing run on the asked trunk holds and names the exit
+  exit 1 `poc/replay-candidate-red-record.log`.
+- DONE: AC-5 not-run line lets the ask through and shows it
+  exit 0 `poc/replay-candidate-not-run-line.log`.
+- DONE: AC-6 trunk an ancestor of the head adds nothing
+  exit 0, 187 words = base, `poc/replay-candidate-trunk-not-moved.log`.
+- DONE: AC-7 merge-run tests the landed tree and reproduces the break
+  `poc/ac_tree_and_scratch.sh` exit 0 (trees equal); merge-run exit 1, 1 of 226 failed, head alone 224 passed (`poc/runs/red-result.*`, `poc/runs/head-only-test_design_surfaces.log`).
+- DONE: AC-8 merge-run removes its temp directory
+  0 entries left in a fresh TMPDIR, `poc/ac_tree_and_scratch.log`.
+- DONE: design_surfaces.py check
+  `python3 <package>/scripts/design_surfaces.py check merge-ask-tests-the-merge-result.md` exit 0, "design surfaces presentable" (`merge-ask-tests-the-merge-result/design-surfaces-check.log`).
+
+### Summary
+
+The PoC adds a hold to `delivery_gate.py check` when main's tip is not an ancestor of the PR head and no passing run on that head-and-trunk merge result is recorded, plus a `merge-run` subcommand that builds the merge with `git merge-tree --write-tree` (Spacedock's own mechanism) and runs a command on it. It reproduces the #841 break exactly (1 of 226 on the landed tree, 224 of 224 on the head) and holds the replayed ask where origin/main passes it. Findings that shape the design: the #841 acceptance script would not have caught the break, GitHub's PR CI tested a merge onto a pre-#843 main, and the trunk had moved under 24 of the last 40 merges; the full unit list costs about 10 minutes per run. Three decisions go to the Captain (D1 command source, D2 trigger, D3 how the Stop condition's pass half is shown); no CI or repository setting change is proposed.
