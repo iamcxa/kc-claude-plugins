@@ -1,0 +1,146 @@
+[
+  {
+    "path": "ideation/ac1.log",
+    "sha256": "dfe125c7bd4500fb4ba9b19da1e9751f3f9359f954c4effa8cac43bb8c64f56b"
+  },
+  {
+    "path": "ideation/ac2.log",
+    "sha256": "54ccd430ea1395b51e8f199277c730588a094dd273eb33e84333ee1027e71032"
+  },
+  {
+    "path": "ideation/ac3-harness-failure.txt",
+    "sha256": "2416009eeea4a6eeee5aae1ca823763d5264902b0aff574ed220349e3446fb76"
+  },
+  {
+    "path": "ideation/ac3.json",
+    "sha256": "741747c02f00e3740c6cb1bf366843022657b9a0d0d05cb84c653c592f156009"
+  },
+  {
+    "path": "ideation/ac4.json",
+    "sha256": "d9f23225c2a2814e9fc7d2f4a4ec9caba423db15dd215aeb8fc798ac82624368"
+  },
+  {
+    "path": "ideation/accept-AC-1.log",
+    "sha256": "513bcc7e8303ca5c9769c008dbdb5767b6e771becd8b770314a3ab63da10c2e4"
+  },
+  {
+    "path": "ideation/accept-AC-2.log",
+    "sha256": "405a17b1d5db63df9ca9ec50d925e5c2e11e75871f1f03b2af3646aff3d335a6"
+  },
+  {
+    "path": "ideation/accept-AC-3.log",
+    "sha256": "a5c2332bda0a26f69c81b5299b6a8a115a2d63e694af5df77d18b862877edfd1"
+  },
+  {
+    "path": "ideation/accept-AC-4.log",
+    "sha256": "70d46b203e03824160cdb9774a20d29fa37de6b7e34ef7282b9c278aa9a3fba4"
+  },
+  {
+    "path": "ideation/accept.log",
+    "sha256": "b5731ee900521b1688bec3ded499544c6502fead4c349a537da44747cbadc866"
+  },
+  {
+    "path": "ideation/accept.sh",
+    "sha256": "9d2d3f1385c6c3cb33a2910e40a165f08c52da77f8796b74cdfe20d8485bbab3"
+  },
+  {
+    "path": "ideation/adopters.json",
+    "sha256": "6b9a2a6e694208c3bf03579a49b0dc8075f154f8fcc03e32ce24a9ae794d3f79"
+  },
+  {
+    "path": "ideation/baseline-ac1.log",
+    "sha256": "124757c1e94214590295ab7f4f4201158ae59d524f19ba5ccbdb336ce8862f4d"
+  },
+  {
+    "path": "ideation/baseline-ac3.json",
+    "sha256": "cf74b9ea849a0b0d20b8783aad64914c90f7222dd1c05a78f5d8e8b35d90b160"
+  },
+  {
+    "path": "ideation/commands.json",
+    "sha256": "e698b3fb8a80c44e08523f09ff7870162a12bc494ccb422da3352f05119d7c5c"
+  },
+  {
+    "path": "ideation/design-surfaces.log",
+    "sha256": "a6712b4df9c66e33545424001006a77ac045a3c968223e7127f51b0844f7e707"
+  },
+  {
+    "path": "ideation/doc-impact.log",
+    "sha256": "0593d4bec00fb143acac15d430a1407f0fb1497ada4b1a4dda16262948204e1a"
+  },
+  {
+    "path": "ideation/evidence-integrity.json",
+    "sha256": "af76116d3d227cad462cdec6e0b277f3205f599b5cdb13d4b2c549b50eea1e7e"
+  },
+  {
+    "path": "ideation/installed-workflow-diff.txt",
+    "sha256": "0a75b49a8d3bafe3c66fb199c52cbe37d6f42b2d8a2dbd93c3da67336a14ef33"
+  },
+  {
+    "path": "ideation/lint-skills.log",
+    "sha256": "848cfb80ab2120ae4c41be8eaa8d2624225e7952f66e9cc5d84276fa48f03682"
+  },
+  {
+    "path": "ideation/overlap-commands.json",
+    "sha256": "aaffdf9b63b5f5c3cff040485923e72109d68c0fb04f255f5c20ef61620149f2"
+  },
+  {
+    "path": "ideation/overlap-local.json",
+    "sha256": "55d6f072dba703f28f67ff480eeed3a3f6c4232b73817ffd2f0eea9c3bdcd61b"
+  },
+  {
+    "path": "ideation/overlap-pr-856.json",
+    "sha256": "9b507e8a21e08c7b28d506eda8fc45e1fef2654308705b431d477c7fc1109b30"
+  },
+  {
+    "path": "ideation/probe_checks.py",
+    "sha256": "05c83c924fd133b56ba0949ef0c8ea7de4a5eae671499ec022ee21a8d76fbfa0"
+  },
+  {
+    "path": "ideation/report-checklist.log",
+    "sha256": "8670b785f634ae4538a9cb27c9c198c0243642c2122f3679def841d6714a7b94"
+  },
+  {
+    "path": "ideation/run_suite.py",
+    "sha256": "cdd57c444707d12932b1a239659a79d0b5956462b44878293bd39da8fb325b1e"
+  },
+  {
+    "path": "ideation/scratch-AC-1-probe.json",
+    "sha256": "3fc2a48103e28177b5bb208d9f1eb46f24abc844bae0bcc347468d824d96de46"
+  },
+  {
+    "path": "ideation/scratch-AC-2-probe.json",
+    "sha256": "2ce529684770484e78f28f89b363e47f5b3a3de57ce651cc5c8888c834f65e9c"
+  },
+  {
+    "path": "ideation/scratch-AC-3-probe.json",
+    "sha256": "ff59d9c06afdaa114dd6659a4a819671ab35e6c4c1bdd5061510cae2fd7c8439"
+  },
+  {
+    "path": "ideation/scratch-AC-4-probe.json",
+    "sha256": "f21ef23462509f453a00e4b77414bc9d543f833ab9b0c680dd7979ced91cf22c"
+  },
+  {
+    "path": "ideation/source-pins.json",
+    "sha256": "c0e6df991533c7f8173625b2ef6e035fb044ab106279ce80c664d81a712550dc"
+  },
+  {
+    "path": "ideation/suite-cleanup.json",
+    "sha256": "a4b82071b426c13bf1a1226a8f13e3377f790c5bb00c92d9f3a966be4fa04aa5"
+  },
+  {
+    "path": "ideation/suite-result.json",
+    "sha256": "f1daa6088e223b510ffec4f2aa558cb509607808b16cb719895a4971471f6740"
+  },
+  {
+    "path": "ideation/test-pr-watch.log",
+    "sha256": "51443acf15f27159b8be4290f9874db8f3f92abdfa574ecd558766e02c90174a"
+  },
+  {
+    "path": "ideation/time-evidence.json",
+    "sha256": "53aeb13d070b2d7cd8834f4aa06354f092efcec25e1b52a6a06f9dd935956fd7"
+  },
+  {
+    "path": "ideation/verification.json",
+    "sha256": "bb7ddacebd58b8c9d4d94c4bdb30bba6e726acca03da03c63f89e4e0e6f34d37"
+  }
+]

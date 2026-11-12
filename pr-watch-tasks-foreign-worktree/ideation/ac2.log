@@ -1,0 +1,8 @@
+test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched) ... ok
+test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing) ... ok
+test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone (probe_tests.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 3.170s
+
+OK

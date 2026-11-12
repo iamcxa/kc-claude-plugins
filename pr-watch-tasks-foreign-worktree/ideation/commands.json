@@ -1,0 +1,140 @@
+[
+  {
+    "name": "ac1",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-1",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree"
+    ],
+    "exit": 0,
+    "output": "ideation/ac1.log"
+  },
+  {
+    "name": "ac2",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-2",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree"
+    ],
+    "exit": 0,
+    "output": "ideation/ac2.log"
+  },
+  {
+    "name": "ac3",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-3",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 1,
+    "output": "ideation/ac3-harness-failure.txt",
+    "note": "Harness matched unrelated gate-record advice; predicate narrowed to PR-record actions; product unchanged."
+  },
+  {
+    "name": "ac4",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-4",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree"
+    ],
+    "exit": 0,
+    "output": "ideation/ac4.json"
+  },
+  {
+    "name": "baseline-ac1",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-1",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--base"
+    ],
+    "exit": 1,
+    "output": "ideation/baseline-ac1.log"
+  },
+  {
+    "name": "baseline-ac3",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-3",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--base"
+    ],
+    "exit": 0,
+    "output": "ideation/baseline-ac3.json"
+  },
+  {
+    "name": "adopters",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "adopters",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--adopter",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2",
+      "--adopter",
+      "/Users/kent/conductor/workspaces/subspace-web/dev2-fo",
+      "--adopter",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2"
+    ],
+    "exit": 0,
+    "output": "ideation/adopters.json"
+  },
+  {
+    "name": "ac3-rerun",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "AC-3",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "ideation/ac3.json"
+  },
+  {
+    "name": "adopters-rerun",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py",
+      "adopters",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "--adopter",
+      "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2",
+      "--adopter",
+      "/Users/kent/conductor/workspaces/subspace-web/dev2-fo",
+      "--adopter",
+      "/Users/kent/conductor/repos/qnow-adopt-dev2"
+    ],
+    "exit": 0,
+    "output": "ideation/adopters.json"
+  }
+]

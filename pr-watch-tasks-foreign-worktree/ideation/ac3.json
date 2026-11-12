@@ -1,0 +1,34 @@
+{
+  "mode": "probe",
+  "scope_cases": [
+    {
+      "slug": "journey-server-host-pilot",
+      "entity": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/journey-server-host-pilot/index.md",
+      "sha256": "ee619cbb8139da173b4fc12a0f583d73250dbcb6682c722c50b4868a4d7b2a70",
+      "status": "validation",
+      "worktree": ".worktrees/spacedock-ensign-journey-server-host-pilot",
+      "pr": ""
+    },
+    {
+      "slug": "pr-review-lite-value-pilot",
+      "entity": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-review-lite-value-pilot.md",
+      "sha256": "dba5c690f28cc3bd86867532cb479f1087f6a4ab52877fed252eea1ed9e05340",
+      "status": "implementation",
+      "worktree": ".worktrees/spacedock-ensign-pr-review-lite-value-pilot-journey-map",
+      "pr": ""
+    }
+  ],
+  "task_selection": "only the two Scope cases; original files read in place",
+  "native_status": "/Users/kent/.local/bin/spacedock status --workflow-dir <workflow> --next --json",
+  "unrelated_archive_and_release_scans": "disabled; no provider queries permitted",
+  "exit": 0,
+  "watch_created": false,
+  "output": [
+    "fact: journey-server-host-pilot has no recorded PR; its worktree is not on this machine.",
+    "next: pr-review-lite-value-pilot has no dispatch record for completed implementation; hold advancement and gate preparation and report the gap to Captain.",
+    "fact: pr-review-lite-value-pilot has no recorded PR; its worktree is not on this machine.",
+    "next: journey-server-host-pilot has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.",
+    "next: journey-server-host-pilot has replacing amendment 6; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db) with the question \"do these amendments withdraw what the Captain approved, and what changes in the build?\" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.",
+    "next: pr-review-lite-value-pilot has 31 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question \"what is the smallest next step, given the findings so far?\" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> \u2014 <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead."
+  ]
+}

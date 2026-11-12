@@ -1,0 +1,52 @@
+{
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "probe": "fea415791256e5048bd3df11bb3ffe4490c3d927",
+  "released_package": "0.39.1",
+  "sources": [
+    {
+      "name": "dispatch-package-workflow",
+      "path": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md",
+      "sha256": "a884a1079841eeff80a0b3a27fecc21379562077ce8e783b70ccbce0cd5b6ca1"
+    },
+    {
+      "name": "codex-host-workflow",
+      "path": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md",
+      "sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb"
+    },
+    {
+      "name": "adopted-workflow",
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/README.md",
+      "sha256": "4dba9eddbeac701d38ae4396ba1a239c4efc16b5f2a30114d99e39061d0ef22f"
+    }
+  ],
+  "workflow_comparison_exit": 1,
+  "spacedock_cli": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "spacedock_source": "12e7bccb270ce30d6ba77c683074fac0a482cfe7",
+  "spacedock_source_limit": "source checkout inspected independently; not asserted to be installed CLI revision",
+  "rulings": [
+    {
+      "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+      "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+      "status": "Accepted"
+    },
+    {
+      "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+      "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+      "status": "Accepted"
+    },
+    {
+      "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+      "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+      "status": "Accepted"
+    },
+    {
+      "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+      "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "sha256": "d89bbda0d60ff5ba8649104b7025f5ec90a40a31ce0aa2fedba417bcacdc134c",
+      "status": "Accepted"
+    }
+  ]
+}

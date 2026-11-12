@@ -1,0 +1,14 @@
+{
+  "private_task_term_matches": 0,
+  "files_checked": 33,
+  "raw_private_logs_saved": false,
+  "manual_tmp_roots_created": [],
+  "registered_test_tmp_roots_remaining": 0,
+  "cleanup_lists": [
+    "ideation/suite-cleanup.json",
+    "ideation/scratch-AC-2-probe.json",
+    "ideation/scratch-AC-4-probe.json",
+    "ideation/scratch-AC-1-probe.json",
+    "ideation/scratch-AC-3-probe.json"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "start_utc": "2026-11-12T17:04:54.277Z",
+  "start_asia_taipei": "2026-11-13T01:04:54.277+08:00",
+  "start_source": "native Codex session_meta.payload.timestamp, session 01a1d0b8-2fdd-73d3-a216-d9abe6c62c6c",
+  "end_evidence_utc": "2026-11-12 17:20:52 UTC",
+  "end_evidence_asia_taipei": "2026-11-13T01:20:52+08:00",
+  "end_source": "clock.curr_time",
+  "conversion": "UTC +08:00"
+}

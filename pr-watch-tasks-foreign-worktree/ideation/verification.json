@@ -1,0 +1,53 @@
+{
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "probe": "fea415791256e5048bd3df11bb3ffe4490c3d927",
+  "suite": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/run_suite.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree"
+    ],
+    "exit": 0,
+    "output": "ideation/test-pr-watch.log",
+    "result": "ideation/suite-result.json"
+  },
+  "accept": {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/accept.sh",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "/Users/kent/.local/bin/spacedock"
+    ],
+    "exit": 0,
+    "output": "ideation/accept.log"
+  },
+  "lint": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree",
+    "exit": 0,
+    "output": "ideation/lint-skills.log"
+  },
+  "doc_impact": {
+    "exit": 0,
+    "output": "ideation/doc-impact.log"
+  },
+  "design_surfaces": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree.md"
+    ],
+    "exit": 0,
+    "output": "ideation/design-surfaces.log"
+  }
+}

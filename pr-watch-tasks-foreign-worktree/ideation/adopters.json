@@ -1,0 +1,36 @@
+{
+  "read_only": true,
+  "private_content": "counts only",
+  "counts": [
+    {
+      "adopter": 1,
+      "tasks": 65,
+      "recorded_pr": 4,
+      "missing_worktree_without_pr": 2,
+      "local_worktree_without_pr": 5,
+      "no_worktree_without_pr": 54,
+      "tracked_pr_watch_copies": 0,
+      "probe_exit": 0,
+      "fact_lines": 2,
+      "record_pr_actions": 0
+    },
+    {
+      "adopter": 2,
+      "tasks": 15,
+      "recorded_pr": 1,
+      "missing_worktree_without_pr": 0,
+      "local_worktree_without_pr": 0,
+      "no_worktree_without_pr": 14,
+      "tracked_pr_watch_copies": 0
+    },
+    {
+      "adopter": 3,
+      "tasks": 98,
+      "recorded_pr": 4,
+      "missing_worktree_without_pr": 0,
+      "local_worktree_without_pr": 3,
+      "no_worktree_without_pr": 91,
+      "tracked_pr_watch_copies": 0
+    }
+  ]
+}

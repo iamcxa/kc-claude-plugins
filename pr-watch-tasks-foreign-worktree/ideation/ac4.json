@@ -1,0 +1,121 @@
+{
+  "counter": "str.split whitespace words",
+  "common_sources": [
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/references/sd/workflow.md",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md"
+  ],
+  "limit": "paired bounded scenarios with two absent-worktree tasks; not full-fleet totals; merge-ask does not rerun tasks, so its tasks output is the carried idle result; unchanged observer/review/delivery passages have zero delta and are not included",
+  "rows": [
+    {
+      "moment": "startup",
+      "before": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 32,
+        "bounded_total": 6113,
+        "output": [
+          "next: record foreign-one's PR with status --set foreign-one pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "next: record foreign-two's PR with status --set foreign-two pr=<owner/repo>#<N>; its worktree is not on this machine."
+        ]
+      },
+      "after": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 26,
+        "bounded_total": 6107,
+        "output": [
+          "fact: foreign-one has no recorded PR; its worktree is not on this machine.",
+          "fact: foreign-two has no recorded PR; its worktree is not on this machine."
+        ]
+      }
+    },
+    {
+      "moment": "idle-open-pr",
+      "before": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 61,
+        "bounded_total": 6142,
+        "output": [
+          "next: record foreign-one's PR with status --set foreign-one pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "next: record foreign-two's PR with status --set foreign-two pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "fact: o/r#7 OPEN draft=False checks=green",
+          "next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmps7p4nsr3/watch.json wait` in the background, unless one is running.",
+          "next: when it exits, do the next: lines it prints."
+        ]
+      },
+      "after": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 55,
+        "bounded_total": 6136,
+        "output": [
+          "fact: foreign-one has no recorded PR; its worktree is not on this machine.",
+          "fact: foreign-two has no recorded PR; its worktree is not on this machine.",
+          "fact: o/r#7 OPEN draft=False checks=green",
+          "next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9cnjissi/watch.json wait` in the background, unless one is running.",
+          "next: when it exits, do the next: lines it prints."
+        ]
+      }
+    },
+    {
+      "moment": "idle-merged-pr",
+      "before": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 32,
+        "bounded_total": 6113,
+        "output": [
+          "next: record foreign-one's PR with status --set foreign-one pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "next: record foreign-two's PR with status --set foreign-two pr=<owner/repo>#<N>; its worktree is not on this machine."
+        ]
+      },
+      "after": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 26,
+        "bounded_total": 6107,
+        "output": [
+          "fact: foreign-one has no recorded PR; its worktree is not on this machine.",
+          "fact: foreign-two has no recorded PR; its worktree is not on this machine."
+        ]
+      }
+    },
+    {
+      "moment": "after-archive",
+      "before": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 32,
+        "bounded_total": 6113,
+        "output": [
+          "next: record foreign-one's PR with status --set foreign-one pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "next: record foreign-two's PR with status --set foreign-two pr=<owner/repo>#<N>; its worktree is not on this machine."
+        ]
+      },
+      "after": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 26,
+        "bounded_total": 6107,
+        "output": [
+          "fact: foreign-one has no recorded PR; its worktree is not on this machine.",
+          "fact: foreign-two has no recorded PR; its worktree is not on this machine."
+        ]
+      }
+    },
+    {
+      "moment": "merge-ask",
+      "before": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 32,
+        "bounded_total": 6113,
+        "output": [
+          "next: record foreign-one's PR with status --set foreign-one pr=<owner/repo>#<N>; its worktree is not on this machine.",
+          "next: record foreign-two's PR with status --set foreign-two pr=<owner/repo>#<N>; its worktree is not on this machine."
+        ]
+      },
+      "after": {
+        "common_workflow_and_mod_words": 6081,
+        "tasks_output_words": 26,
+        "bounded_total": 6107,
+        "output": [
+          "fact: foreign-one has no recorded PR; its worktree is not on this machine.",
+          "fact: foreign-two has no recorded PR; its worktree is not on this machine."
+        ]
+      }
+    }
+  ]
+}

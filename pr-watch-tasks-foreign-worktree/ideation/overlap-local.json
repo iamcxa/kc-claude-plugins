@@ -1,0 +1,33 @@
+[
+  {
+    "pr_number": 854,
+    "local_candidate": "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+    "merge_base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+    "changed_paths": [
+      "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+      "kc-dev-flow-2/scripts/dispatch_stage.py",
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/scratch.py",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "kc-dev-flow-2/scripts/test_scratch.py"
+    ],
+    "remote_state": "initially observed OPEN; final refresh unavailable; local commit is not fresh remote-state proof"
+  },
+  {
+    "pr_number": 856,
+    "local_candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+    "merge_base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+    "changed_paths": [
+      "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+      "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md",
+      "kc-dev-flow-2/scripts/dispatch_stage.py",
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/scratch.py",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "kc-dev-flow-2/scripts/test_scratch.py"
+    ],
+    "remote_state": "initially observed OPEN; final refresh unavailable; local commit is not fresh remote-state proof"
+  }
+]

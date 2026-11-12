@@ -1,0 +1,30 @@
+[
+  {
+    "command": [
+      "gh",
+      "pr",
+      "view",
+      "854",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "number,state,headRefOid,files"
+    ],
+    "exit": 1,
+    "output": "not saved: refresh stdout empty; same connection error observed in tool result"
+  },
+  {
+    "command": [
+      "gh",
+      "pr",
+      "view",
+      "856",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "number,state,headRefOid,files"
+    ],
+    "exit": 1,
+    "output": "ideation/overlap-pr-856.json"
+  }
+]

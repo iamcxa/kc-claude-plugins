@@ -1,0 +1,11 @@
+--- /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md	2026-11-12 00:15:37
++++ /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md	2026-11-13 00:09:19
+@@ -250,6 +250,8 @@
+ not completion.
+ 
+ ## Captain steps
++
++Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>"`; `python3 <package>/scripts/task_timeline.py <state> <task>` prints each stage's times and counts.
+ 
+ Before asking the Captain to run or look at anything (an acceptance script, a
+ command, a link, a sign-in, a file of steps), FO runs each step as written, in a

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py", line 178, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py", line 169, in main
+    real_cases(tests, args.workflow, args.base)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation/probe_checks.py", line 74, in real_cases
+    assert not any(line.startswith("next:") and slug in line and "record " in line for line in lines)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
