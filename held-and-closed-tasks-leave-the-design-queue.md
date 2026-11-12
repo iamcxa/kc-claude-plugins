@@ -75,6 +75,7 @@ worktree: .worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-que
 ## FO alignment
 
 Alignment: not needed: one observed defect with one outcome; the mechanism is compared in the design and ruled at the ideation gate.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 2 replaces only the added-words bound of the held-task line (30 words fixed, to 3 words for each held task plus a fixed 6), in the option the Captain chose after the count of 14 held tasks and 32 words was put to him; the line's content, the program and every acceptance criterion stand, and the validator is asked to judge the new bound.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
