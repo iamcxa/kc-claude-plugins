@@ -1,0 +1,184 @@
+{
+  "after_evidence_commit": "83f76a0a4581927d17dacfddb33607c909102323",
+  "exact_paths": [
+    {
+      "path": "/tmp/impl-pr-watch-tasks-foreign-worktree-tests-01a1d0b8",
+      "kind": "outside-git test fixtures",
+      "retain": false,
+      "result": "removed"
+    },
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp",
+      "kind": "first runner fixture root",
+      "retain": false,
+      "result": "removed"
+    },
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-pinned-sd",
+      "kind": "pinned Spacedock source export",
+      "retain": false,
+      "result": "removed"
+    },
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-mutations",
+      "kind": "disposable document mutation copies",
+      "retain": false,
+      "result": "removed"
+    },
+    {
+      "path": "/tmp/impl-pr-watch-tasks-foreign-worktree-pr.md",
+      "kind": "prepared PR title/body for First Officer",
+      "retain": true,
+      "result": "kept",
+      "sha256": "edfdc739f71d5ffacaa33349982e46fd14e61274c2c684703c7c85264703bd30"
+    }
+  ],
+  "test_managed_paths": [
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpinhgc8xf",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpyrrid89o",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpd0bci5of",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmphz3m1uxj",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpifsmudav",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfvk3l3kn",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpqt3thjqm",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2vxl84ah",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4khvh185",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvxh2_d44",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpo2fi64vr",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmps02gxw8t",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpcv2f5cd_",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpdh5ffj9r",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp3z6ppdln",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjd6dnm_p",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpauda31um",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpt6m3tcts",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpgs_q3w8s",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvvgedpnr",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfzqqs70b",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp2nsxymjs",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpewwjflac",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6d2627yr",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxm6o9elg",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpvyhux5e6",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpypg8epx1",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1cbu2zdy",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp7bqsh4z5",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpln3986ns",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp27zqnzes",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpfdblmj2n",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4ujt9egl",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjwv6ygdz",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpf9yn8ug5",
+      "result": "already removed by test cleanup"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp1njriern",
+      "result": "already removed by test cleanup"
+    }
+  ],
+  "remaining_disposable_roots": [],
+  "kept_pr_text": "/tmp/impl-pr-watch-tasks-foreign-worktree-pr.md"
+}

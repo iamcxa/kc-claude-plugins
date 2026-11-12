@@ -36,6 +36,10 @@
     "sha256": "3ed838aee9ee09b06cc94782c0e11aebe48cbe814de6ca8ee80dcad062e1a57a"
   },
   {
+    "path": "implementation/cleanup.json",
+    "sha256": "19f4b434b9b76a1e70667be1feb3056f8b8d3ba1df30c42f51ebed01bf43d277"
+  },
+  {
     "path": "implementation/comment-ratio.log",
     "sha256": "b7fa6dadf44c27405e83499956e08ddc367968b9309f3e15ba4425f6b462f846"
   },
