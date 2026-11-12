@@ -345,3 +345,40 @@ budget: Budget: 1 cycle per stage, in one package PR or none if the design finds
 ```
 
 Evidence: implementation/continuation-1/role-triggers.log and preflight.json. No /tmp scratch was created this round; the PR text file is not changed. State report committed locally only, with no push under the follow-up instruction.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch (77e240d46ced4980ec1f6f2dc61a692f27857af1) implementing the approved design and acceptance criteria in the task file; decisions D1 and D2 as the design recommends and the Captain approved at the ideation gate, plus Captain amendment 1 (one decision-record file, ADR 0081, recording only what he approved at the ideation gate); this branch is stacked on the branch of the close-out task's PR #854, which changes the same idle check in kc-dev-flow-2/scripts/pr_watch.py: build on top of it and do not redo its change; the state edits the design names for the held tasks (a Held section quoting the Captain's words) are the First Officer's to make, not yours; the items under 'Not provable now' become checks you run and report; only the files the design names
+  No PR opened: no product push grant. Branch spacedock-ensign/held-and-closed-tasks-leave-the-design-queue remains local at 455846c6d30d4ab650c1c4503bc591722231586d, stacked on 77e240d46ced4980ec1f6f2dc61a692f27857af1; only the original three candidate files changed. Updated PR title/body retained at /tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md; publication is FO-owned.
+- DONE: ADR 0081 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0081 and its original quote proof remain unchanged; continuation-2/source-identity.json verifies the same source hashes as the first round, and continuation-2/adr-lint.log requires 0081 and exits 0.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1 through AC-7 and worker-owned NP-1 through NP-3 pass at the unchanged candidate under amendment 2. Clean native AC-3 is now proved; current unit tests and the new bound falsifier pass. Prior behavior mutations remain applicable to the identical source bytes; NP-4 live state and NP-5 are explicitly skipped below.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> --require 0081 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  All named local checks rerun and exit 0: repository lint-skills, ADR lint since 77e240d4 requiring 0081, refreshed number guards and comment ratio (0.7% <= 5%); design-surfaces and doc-impact also exit 0. PR text is prepared; product push, Draft PR, RoboRev and hosted CI remain delegated/not run. CI cost not measured; no CI configuration changed.
+- DONE: Captain amendment 2 of this task (2026-11-12, in the task file under Captain amendments) replaces the 30-word bound: the line keeps naming every held task, and the bound becomes at most 3 added words for each held task plus a fixed 6 words; the program does not change
+  Captain amendment 2 was read with its bound question and recorded FO reviewer decline. Product identity is unchanged at 455846c6d30d4ab650c1c4503bc591722231586d; no program or ADR edit was made.
+- DONE: Rerun the word count for the current 14 held tasks against that bound and report it under the item it belongs to (the 'Not provable now' item about added words), using only the Captain's words for the new bound; if the candidate's line exceeds the new bound, say so and stop
+  NP-3 evidence is reported below under its own item; 14 tasks give 32 measured words, within the amended 48-word bound, so no over-bound stop is owed.
+- DONE: Append a complete new stage report that supersedes the earlier one; run the package checks the first record names that you skipped; commit locally, do not push
+  This complete report supersedes both earlier implementation reports. Named local package checks and the previously blocked native base replay now pass; evidence and this report are committed path-scoped locally only, with no push by this worker.
+- DONE: AC-1 and AC-2 native status checks
+  continuation-2/acceptance-results.json: ten ideation holds, exactly matching the original set; none of 56 scheduler rows is held. Original row-removal and held-row injection falsifiers remain retained in implementation/falsifiers.json.
+- DONE: AC-3 previously skipped clean base entrance
+  continuation-2/ac3-legacy-tasks.log: original 8ce0eb60 on origin-less state eae5ea47 exits 0, 1353 words, zero of ten held names. GitHub access was public/read-only. Adding a held name makes the original evidence predicate exit 1; the earlier connectivity failure remains history.
+- DONE: AC-4 through AC-7 and original falsifiers
+  Original native evidence remains: held dispatch builds (0), all three unforced closes refuse (1), the real archive has a same-stage successor, seven quotes match. implementation/falsifiers.json retains rejected mutations of exit observations, removed successors and one-character quote changes; these are evidence-oracle mutations, not upstream binary changes.
+- DONE: NP-1 and NP-2 current native candidate and related tests
+  continuation-2/real-workflow-tasks.log exits 0 with one fact naming exactly all 14 query rows; its fact equals the all-Held scratch projection. 164 pytest items pass (250 JUnit cases with subtests). Original five source mutations and candidate removal each exit 1 in implementation/mutation-tests.json; identical source hashes preserve their applicability.
+- DONE: NP-3 added words, Amended by Captain, amendment 2
+  Captain: 「照列名稱，上限隨張數算（建議）」; the bound in his approved Asked is 「每張擱置的任務最多多 3 個字，另加固定 6 個字」. continuation-2/amended-word-count.json and wc-words.log measure 32 words for 14 held tasks, maximum 48 at startup and idle. word-mutated.json records the 49-word counterexample exiting 1; actual 32 words exits 0.
+- SKIPPED: NP-4 actual Held task-body edits
+  FO-owned live state work remains: 0 of 14 held tasks have valid sections at this read; this worker edits none of them. continuation-2/projection.json proves all 14 synthetic scratch sections are accepted with byte-identical frontmatter; it is not claimed as live-state acceptance. Journey-canvas stays unchanged under its own ruling.
+- SKIPPED: NP-5 plain upstream status display
+  The approved D2 retains closed tasks at their current stage without force-archiving. Changing Spacedock's plain status table is outside this package scope; no upstream change or archive is performed.
+- DONE: Latest scope, affected documents and cleanup
+  Amendment 3 records Budget: 1 implementation and 2 validation cycles; the latest role guard exits 0 and names no owed next line, and design-surfaces passes. doc-impact.json lists only ADR 0081: updated. Evidence commit 74b87d410 precedes exact-path removal of /tmp/impl-held-amendment2-jdjv483t; cleanup.json verifies absence and retention of the requested PR text.
+
+### Summary
+
+This report supersedes all earlier implementation reports, including the held continuation: the unchanged candidate now passes the amended 32-of-48 word bound and the previously skipped clean base replay, with all named local checks green. Captain amendment 2 changes only acceptance, amendment 3 changes the task budget, and the program remains at 455846c6d30d4ab650c1c4503bc591722231586d; actual Held body edits, publication, RoboRev and hosted CI remain FO-owned and are not claimed complete.

@@ -1,0 +1,9 @@
+{
+  "evidence_commit_before_cleanup": "74b87d4106bf6ac66466730768ad72a2d69d9724",
+  "removed": [
+    "/tmp/impl-held-amendment2-jdjv483t"
+  ],
+  "all_absent": true,
+  "retained_pr_text": "/tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md",
+  "no_push_by_worker": true
+}
