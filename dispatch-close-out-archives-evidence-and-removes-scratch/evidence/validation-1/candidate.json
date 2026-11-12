@@ -1,0 +1,41 @@
+{
+  "head": "223dbb6d1b5e895a45d11537b9494aa08610c8f8",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "files": [
+    {
+      "path": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+      "sha256": "8ff5f5e9cea6b1d5ec2ce5107dd008426d50089ecbbcb440fe537ffb160fa2bd",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+      "sha256": "10963ccf27fc8197df86896b4b010494e03b787c01b633ed9c764a7972a1790f",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/pr_watch.py",
+      "sha256": "10645f4750d1cd263a25b40baf1898d1c7b75d2e450d9fc5de5ba5890cb3050e",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/scratch.py",
+      "sha256": "494b83aa7746fd46f7b1901ec3dda92b3a5a37d533df3ed1d893e2880d225892",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "sha256": "aa46aab8203fda351391cbe7bea985aca7a2acb83d761ec031addeb16597c492",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "sha256": "9ea467bd108e6ba825c8c47bb21219ac01d288cfd41cf8cf46c9f35d076f9a9e",
+      "matches_candidate_blob": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_scratch.py",
+      "sha256": "d624002823405639887549d6b3921f363f43d06845e35b033f8977ca15993924",
+      "matches_candidate_blob": true
+    }
+  ]
+}

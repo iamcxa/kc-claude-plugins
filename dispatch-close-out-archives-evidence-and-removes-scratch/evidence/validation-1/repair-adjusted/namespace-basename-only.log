@@ -1,0 +1,52 @@
+test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) ... 
+  test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/another-owner/scratch-381ecfe1f6c24c0482fb9a45676b2d0c.git') ... ERROR
+  test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/fixtures/scratch-381ecfe1f6c24c0482fb9a45676b2d0c.git') ... ERROR
+
+======================================================================
+ERROR: test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/another-owner/scratch-381ecfe1f6c24c0482fb9a45676b2d0c.git')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 77, in claim_root
+    root.mkdir(parents=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1116, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/private/tmp/dev2/scratch-381ecfe1f6c24c0482fb9a45676b2d0c/task/validation-1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 186, in test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees
+    peer = scratch.claim_root(other, folder, 'validation-1')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 79, in claim_root
+    check_owner(root, owner)
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 69, in check_owner
+    raise ValueError(f'scratch ownership missing or differs: {root}')
+ValueError: scratch ownership missing or differs: /private/tmp/dev2/scratch-381ecfe1f6c24c0482fb9a45676b2d0c/task/validation-1
+
+======================================================================
+ERROR: test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/fixtures/scratch-381ecfe1f6c24c0482fb9a45676b2d0c.git')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 77, in claim_root
+    root.mkdir(parents=True)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1116, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/private/tmp/dev2/scratch-381ecfe1f6c24c0482fb9a45676b2d0c/task/validation-1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 186, in test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees
+    peer = scratch.claim_root(other, folder, 'validation-1')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 79, in claim_root
+    check_owner(root, owner)
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 69, in check_owner
+    raise ValueError(f'scratch ownership missing or differs: {root}')
+ValueError: scratch ownership missing or differs: /private/tmp/dev2/scratch-381ecfe1f6c24c0482fb9a45676b2d0c/task/validation-1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.651s
+
+FAILED (errors=2)

@@ -1,0 +1,14 @@
+test_foreign_root_owner_refuses_before_build_or_notes_write (test_dispatch_stage.DispatchStageTests.test_foreign_root_owner_refuses_before_build_or_notes_write) ... FAIL
+
+======================================================================
+FAIL: test_foreign_root_owner_refuses_before_build_or_notes_write (test_dispatch_stage.DispatchStageTests.test_foreign_root_owner_refuses_before_build_or_notes_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 412, in test_foreign_root_owner_refuses_before_build_or_notes_write
+    self.assertIn('ownership', result.stderr)
+AssertionError: 'ownership' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-44232e0b3ea2e31b/dispatch-fixture-6e305a4bec56473c9cf783b3312dbab1/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.657s
+
+FAILED (failures=1)

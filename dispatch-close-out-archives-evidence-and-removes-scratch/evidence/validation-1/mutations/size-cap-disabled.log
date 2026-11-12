@@ -1,0 +1,14 @@
+test_evidence_size_limit_preserves_scratch_and_restorable_evidence (test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence) ... FAIL
+
+======================================================================
+FAIL: test_evidence_size_limit_preserves_scratch_and_restorable_evidence (test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 133, in test_evidence_size_limit_preserves_scratch_and_restorable_evidence
+    with self.assertRaisesRegex(ValueError, 'exceeds 1 MiB'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.267s
+
+FAILED (failures=1)

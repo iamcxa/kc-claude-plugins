@@ -1,0 +1,1 @@
+close CLI: exit 0; owned root absent; registered worktrees 0; restored digest matches; truncated archive rejected

@@ -1,0 +1,10 @@
+{
+  "root": "/private/tmp/dev2/close-4a30bdcd8dda481080c457cb09017bbc-d1c7226007ab4318/task/validation-1",
+  "namespace": "/private/tmp/dev2/close-4a30bdcd8dda481080c457cb09017bbc-d1c7226007ab4318",
+  "root_absent": true,
+  "namespace_absent": true,
+  "worktrees_under_root": 0,
+  "uncommitted_files_removed": 2,
+  "restored_sha256": "24d5d3316b285aca4517f4aa04afd03011ec0296c28fbc2114a0bbf5a6331faf",
+  "truncated_archive_rejected": true
+}

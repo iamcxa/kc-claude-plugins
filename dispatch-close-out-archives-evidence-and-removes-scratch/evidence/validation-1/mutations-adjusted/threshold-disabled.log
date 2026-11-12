@@ -1,0 +1,14 @@
+test_threshold_restore_and_idempotence (test_scratch.ScratchTests.test_threshold_restore_and_idempotence) ... FAIL
+
+======================================================================
+FAIL: test_threshold_restore_and_idempotence (test_scratch.ScratchTests.test_threshold_restore_and_idempotence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 64, in test_threshold_restore_and_idempotence
+    self.assertFalse((self.evidence / 'large.txt').exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.259s
+
+FAILED (failures=1)

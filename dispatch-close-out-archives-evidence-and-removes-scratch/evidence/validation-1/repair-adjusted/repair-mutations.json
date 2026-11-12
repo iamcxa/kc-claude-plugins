@@ -1,0 +1,17 @@
+[
+  {
+    "name": "namespace-basename-only",
+    "status": "passed",
+    "message": "mutation rejected"
+  },
+  {
+    "name": "close-ownership-bypassed",
+    "status": "passed",
+    "message": "mutation rejected"
+  },
+  {
+    "name": "build-ownership-bypassed",
+    "status": "passed",
+    "message": "mutation rejected"
+  }
+]

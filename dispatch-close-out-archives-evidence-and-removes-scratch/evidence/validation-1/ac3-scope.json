@@ -1,0 +1,11 @@
+{
+  "closed_dispatch_root_absent": true,
+  "other_dispatch_root_survives": true,
+  "whole_repo_registered_dev2_worktrees": 1,
+  "literal_AC3_pass": false,
+  "scoped_deletion_pass": true,
+  "owned_roots": [
+    "/private/tmp/dev2/scratch-a46c1e3edc454503bf7444a3633b6e4a-1895250bd1cf9aec/task/validation-1",
+    "/private/tmp/dev2/scratch-a46c1e3edc454503bf7444a3633b6e4a-1895250bd1cf9aec/task/implementation-1"
+  ]
+}

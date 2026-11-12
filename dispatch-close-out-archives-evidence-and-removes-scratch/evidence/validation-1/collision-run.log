@@ -1,0 +1,1 @@
+[{"case": "same-basename", "roots_distinct": true, "peer_uncommitted_file_survives": true, "peer_worktree_registered": true}, {"case": "same-origin-clones", "roots_distinct": true, "peer_uncommitted_file_survives": true, "peer_worktree_registered": true}]

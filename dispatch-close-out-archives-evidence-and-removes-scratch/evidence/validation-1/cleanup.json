@@ -1,0 +1,9 @@
+{
+  "phase": "evidence prepared; final scratch cleanup follows the evidence commit",
+  "primary_owned_roots": [
+    "/tmp/validate-close-854-20261112-183201",
+    "/tmp/close-854-accept.MzY6yB"
+  ],
+  "acceptance_root_already_removed": true,
+  "fixture_cleanup": "Existing test fixtures self-delete with registered unittest cleanup; explicit CLI/collision/AC3 roots and exact cleanup logs are retained in their JSON/log evidence. No test invoked close on another dispatch folder."
+}

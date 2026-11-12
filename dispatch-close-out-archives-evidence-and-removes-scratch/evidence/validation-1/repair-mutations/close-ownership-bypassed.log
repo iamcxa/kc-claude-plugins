@@ -1,0 +1,30 @@
+test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) ... 
+  test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker=None) ... FAIL
+  test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker='{"repository":"other","task":"task","record":"validation-1"}') ... ERROR
+
+======================================================================
+ERROR: test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker='{"repository":"other","task":"task","record":"validation-1"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 205, in test_foreign_or_unowned_root_refuses_notes_reuse_and_close
+    marker.write_text(content)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1078, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/dev2/scratch-6fabdb06778b498fbea61e730ba0da40-ee1e0e9804bef9ea/task/validation-1/.owner.json'
+
+======================================================================
+FAIL: test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 210, in test_foreign_or_unowned_root_refuses_notes_reuse_and_close
+    with self.assertRaisesRegex(ValueError, 'ownership'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.357s
+
+FAILED (failures=1, errors=1)

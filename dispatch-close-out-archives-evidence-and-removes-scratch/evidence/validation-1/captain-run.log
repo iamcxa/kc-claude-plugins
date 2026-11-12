@@ -1,0 +1,6 @@
+Scratch removed: /private/tmp/dev2/scratch-5f77851943c54798b70e72f4e6dde4dc-d6a6752a7aa13d4c/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)
+Existing decisive checks: passed
+Preparing worktree (detached HEAD 3038c63)
+close CLI: exit 0; owned root absent; registered worktrees 0; restored digest matches; truncated archive rejected
+private-repository instruction: MISSING; emitted rule excludes secrets and personal data only

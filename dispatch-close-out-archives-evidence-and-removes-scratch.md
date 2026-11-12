@@ -380,3 +380,26 @@ This report supersedes the earlier implementation stop report: Captain amendment
 ### Summary
 
 This complete report supersedes the earlier implementation reports: the High finding is real, and the new local commit isolates clone/workflow roots and refuses unowned reuse/deletion within the approved design. Current-round evidence includes 201 passing regression tests, 19 fresh-shell results, preserved peer files in both collision replays and thirteen rejected mutations; owned scratch is removed and product push/review/CI remain with FO.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #854 head 223dbb6d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at 223dbb6d1b5e895a45d11537b9494aa08610c8f8; assessment.md maps every criterion, 337 distinct passed checks after a disclosed fixture-only adaptation, raw export failures, and 13 rejected mutations; AC-3 literal scope fails. Paths below are in evidence/validation-1/.
+- DONE: Captain amendment 1 (one decision-record file, ADR 0079) is in scope: judge that the ADR records only what the Captain approved at the ideation gate. Judge each item the design lists under 'Not provable now' as proven now, still not provable, or wrong. Run the close command on a scratch folder you create and show that cited evidence is restorable and the folder is gone; judge the repair of the local review's finding (scratch roots of two repositories or two clones must not collide, and a close-out must not remove a root it does not own) and whether the path form now differs from the approved design's
+  ADR 0079 records the approved D1-D4 only; close CLI removes its owned root and restores committed gzip, while old-head collision loss becomes peer survival. assessment.md individually judges all eight Not provable now items; the post-release stop condition remains unproven.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  acceptance.sh has four steps and was run unchanged under bash --noprofile --norc: 19 decisive checks pass, actual close/restore passes, privacy check yields expected exit 1 (captain-run.log). Package adr_lint.py docs/adr --since 8ce0eb6050c889b21baccf50fec35231bc888d66 --require 0079 exits 0 (adr-lint.log).
+- DONE: Candidate identity, primary reruns, required checks and report limits
+  candidate.json binds all seven files; pr-live.json confirms OPEN Draft #854 at that head. required-checks.json plus number-guards-live.log establish the exact commands and fresh-ref rerun; no product change or external PR write. CI cost per PR not measured; triggers unchanged.
+- DONE: Evidence restoration and owned scratch accounting
+  committed-implementation-restore.json independently restores 87/87 manifested files from the fetched state ref; captain/close-restore.json proves the validator's own CLI close, SHA-256 restore and rejected truncation. cleanup.json records the exact final cleanup separately; no /tmp copy is retained as evidence.
+
+### Summary
+
+REJECTED. F1 Material, kind build: the emitted worker instruction excludes secrets/personal data but drops the Captain's all-private-repository evidence ban (scratch.py:106-107; captain/privacy.json). F2 Needs decision, kind aim or scope: two owned dispatch fixtures show correct isolated deletion leaves the whole-repo AC-3 count at one; changing that by deleting another dispatch would violate D4 (ac3-scope.json). Both findings carry the four disposition fields in assessment.md and are individually listed below.
+
+- F1 Material: kind=build; captain-ruling[2026-11-12] private repository evidence must never be archived; the emitted archive instruction omits that boundary. Restore the approved instruction; no actual private exposure is claimed.
+- F2 Needs decision: kind=aim or scope; value-ac[AC-3] whole-repository zero conflicts with captain-ruling[2026-11-12] owned-root-only deletion; FO must route the criterion correction, not broaden deletion.
+
+The collision repair is independently effective for both same-basename repositories and same-origin clones, and its `<repo>-<16-hex identity>` path difference is disclosed. Raw /tmp-export tests and the original acceptance runner failed because Package root metadata was itself refused; the retained adapter changes only three fixture input strings, with candidate bytes/assertions unchanged. The fresh script is a reproducible rejection, not delivery acceptance; release, post-release adoption and the final gate remain FO/Captain responsibilities.

@@ -1,0 +1,5 @@
+docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md	review	kc-dev-flow-2/scripts/dispatch_stage.py
+docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md	review	kc-dev-flow-2/scripts/dispatch_stage.py
+docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md	review	kc-dev-flow-2/scripts/dispatch_stage.py
+docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md	updated	kc-dev-flow-2/scripts/scratch.py, notes_for
+4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "high",
+    "title": "F1: 派工指示漏掉私人 repo 的全面禁存規則",
+    "file": "kc-dev-flow-2/scripts/scratch.py",
+    "line": 106,
+    "detail": "Material; kind: build. 艦長核准私人 repo 證據一律不存；實際派工只禁止秘密及個資。一般私人技術輸出仍被要求複製至公開 state 任務資料夾。僅用合成資料檢查，未讀取或發布私人資料。",
+    "fix": "讓產生的派工指示保留艦長的完整禁存規則；不需要新增私人證據掃描機制。",
+    "status": "open"
+  },
+  {
+    "severity": "medium",
+    "title": "F2: AC-3 的全儲存庫零工作樹條件與隔離邊界衝突",
+    "file": "dispatch-close-out-archives-evidence-and-removes-scratch.md",
+    "line": 248,
+    "detail": "Needs decision; kind: aim or scope. 同一 repo 的兩個自建派工 root 中，close 正確刪除自己並保留另一個，AC-3 的全域 grep 卻仍計為 1。擴大刪除會違反不得碰其他派工的邊界。",
+    "fix": "請 FO 路由裁示，將檢查界定為本次派工 root；不可為湊全域零而刪除其他 root。",
+    "status": "open"
+  }
+]

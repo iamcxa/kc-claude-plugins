@@ -1,0 +1,8 @@
+{
+  "ref": "origin/spacedock-state/dev2",
+  "ref_sha": "86aeda1cb52b5fd06f7a2fc45e191dcb15f6beb5",
+  "manifested_files": 87,
+  "matched": 87,
+  "missing": [],
+  "first_dispatch_gzip_restored": "235be0a3b0431f5f6c27bd0eaab2c12c6674b6258b9ad4d18def98d57a697887"
+}

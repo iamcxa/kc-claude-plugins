@@ -1,0 +1,51 @@
+test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) ... 
+  test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/x') ... FAIL
+  test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/private/tmp/x') ... FAIL
+  test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/dev2/dispatch-code-c96688ca30db3fb0/dispatch-fixture-fed26352319a42f9b6795613e79357bb/ideation-1/../escape') ... FAIL
+
+======================================================================
+FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 396, in test_scope_notes_outside_scratch_refuse_before_record_and_build
+    result = self.build(extra=('--spacedock', self.spy), expected=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/tmp/validate-close-854-20261112-183201/out/mutations-adjusted/scope-mutant.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2/.spacedock-state/dispatch-fixture-fed26352319a42f9b6795613e79357bb.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/spy')], '{\n  "schema_version": 2,\n  "subagent_type": "spacedock:ensign",\n  "description": "Synthetic dispatch: ideation",\n  "fetch_commands": [\n    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2 --stage ideation"\n  ],\n  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md",\n  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md and treat its content as your assignment.",\n  "model": null,\n  "name": "spacedock-ensign-dispatch-fixture-fed26352319a42-ideation"\n}\n', "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n")
+
+======================================================================
+FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/private/tmp/x')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 396, in test_scope_notes_outside_scratch_refuse_before_record_and_build
+    result = self.build(extra=('--spacedock', self.spy), expected=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/tmp/validate-close-854-20261112-183201/out/mutations-adjusted/scope-mutant.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2/.spacedock-state/dispatch-fixture-fed26352319a42f9b6795613e79357bb.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/spy')], '{\n  "schema_version": 2,\n  "subagent_type": "spacedock:ensign",\n  "description": "Synthetic dispatch: ideation",\n  "fetch_commands": [\n    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2 --stage ideation"\n  ],\n  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md",\n  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md and treat its content as your assignment.",\n  "model": null,\n  "name": "spacedock-ensign-dispatch-fixture-fed26352319a42-ideation"\n}\n', "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n")
+
+======================================================================
+FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/dev2/dispatch-code-c96688ca30db3fb0/dispatch-fixture-fed26352319a42f9b6795613e79357bb/ideation-1/../escape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 396, in test_scope_notes_outside_scratch_refuse_before_record_and_build
+    result = self.build(extra=('--spacedock', self.spy), expected=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 0 != 1 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/tmp/validate-close-854-20261112-183201/out/mutations-adjusted/scope-mutant.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2/.spacedock-state/dispatch-fixture-fed26352319a42f9b6795613e79357bb.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/spy')], '{\n  "schema_version": 2,\n  "subagent_type": "spacedock:ensign",\n  "description": "Synthetic dispatch: ideation",\n  "fetch_commands": [\n    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0wjdtxa2/code/docs/dev2 --stage ideation"\n  ],\n  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md",\n  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fed26352319a42-ideation.md and treat its content as your assignment.",\n  "model": null,\n  "name": "spacedock-ensign-dispatch-fixture-fed26352319a42-ideation"\n}\n', "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n")
+
+----------------------------------------------------------------------
+Ran 1 test in 3.287s
+
+FAILED (failures=3)

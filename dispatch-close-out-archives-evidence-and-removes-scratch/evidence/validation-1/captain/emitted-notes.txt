@@ -1,0 +1,3 @@
+
+Scratch: /tmp/dev2/scratch-798c789a8998485a99f349926082e27a-1b72016e5186bd08/task/validation-1
+Put every file or checkout you create outside the task worktree and the state checkout under that folder. Copy what your report cites into evidence/validation-1/ in the task folder, and nothing that holds a secret or a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. Before your report, run `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/scratch.py close /private/tmp/close-854-accept.MzY6yB/tmp/scratch-test-oahm3qkx/task validation-1` and paste the lines it prints.

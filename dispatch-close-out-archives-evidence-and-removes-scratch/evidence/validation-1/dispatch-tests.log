@@ -1,0 +1,1140 @@
+FFFFFFFFFF.FFF.FEE...FFFFFFFFF..E.F.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.FFF.FFF.
+======================================================================
+ERROR: test_lf_record_matches_legacy_input_reading (test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading) (role=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 375, in test_lf_record_matches_legacy_input_reading
+    before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py", line 103, in record_text
+    notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 101, in notes_for
+    raise ValueError(f'scope notes name a /tmp path outside {root}: {raw}')
+ValueError: scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-389cde045c337ea5/dispatch-fixture-5f5767e264974a71b731dd42ba94c56f/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2
+
+======================================================================
+ERROR: test_lf_record_matches_legacy_input_reading (test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading) (role=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 375, in test_lf_record_matches_legacy_input_reading
+    before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py", line 103, in record_text
+    notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/scratch.py", line 101, in notes_for
+    raise ValueError(f'scope notes name a /tmp path outside {root}: {raw}')
+ValueError: scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-389cde045c337ea5/dispatch-fixture-5f5767e264974a71b731dd42ba94c56f/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2
+
+======================================================================
+ERROR: test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed (test_dispatch_stage.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 276, in test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed
+    calls = [json.loads(line) for line in argv_log.read_text().splitlines()]
+                                          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-z96gy8wn/role-argv.jsonl'
+
+======================================================================
+FAIL: test_a_missing_role_checker_refuses_before_build (test_dispatch_stage.DispatchStageTests.test_a_missing_role_checker_refuses_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 539, in test_a_missing_role_checker_refuses_before_build
+    self.assertIn("role_triggers.py", held.stderr)
+AssertionError: 'role_triggers.py' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-322ad702ae17c509/dispatch-fixture-ac560c7592ed4dd4933d5417ad2f1574/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_advance_commits_record_and_withholds_envelope_on_commit_failure (test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 998, in test_advance_commits_record_and_withholds_envelope_on_commit_failure
+    result = self.build("implementation", ("--advance",))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4y2yccrl/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4y2yccrl/code/docs/dev2/.spacedock-state/dispatch-fixture-9f1cd943c0674425af8889f655564735.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4y2yccrl/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4y2yccrl/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--advance'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-ddab86695f255b13/dispatch-fixture-9f1cd943c0674425af8889f655564735/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_an_unresolvable_committed_task_holds_on_exit_two (test_dispatch_stage.DispatchStageTests.test_an_unresolvable_committed_task_holds_on_exit_two)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 524, in test_an_unresolvable_committed_task_holds_on_exit_two
+    self.assertIn("no task file", held.stderr)
+AssertionError: 'no task file' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-4bff5f8fedd8cf94/dispatch-fixture-5d993aa167b646ed8ade033401c4d2c0/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_budget_hold_removes_record_and_skips_build_until_amended (test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 182, in test_budget_hold_removes_record_and_skips_build_until_amended
+    self.build("implementation", ("--symptom", "none"))
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-fc8kbaw2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-fc8kbaw2/code/docs/dev2/.spacedock-state/dispatch-fixture-51a2af9d95e641efb88649eceeadeea5.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-fc8kbaw2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-fc8kbaw2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-ccc92224964b2d45/dispatch-fixture-51a2af9d95e641efb88649eceeadeea5/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) (value='One cycle per stage.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 131, in test_budget_line_and_spent_cycles_are_printed_before_build
+    result = self.build("implementation", ("--symptom", "none"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-e29cd36o/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-e29cd36o/code/docs/dev2/.spacedock-state/dispatch-fixture-0faafb7a2f2e4e1d90810aee2bc7e423.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-e29cd36o/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-e29cd36o/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-9e453611d769cf14/dispatch-fixture-0faafb7a2f2e4e1d90810aee2bc7e423/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_candidates_and_feedback_flags_reach_real_build (test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 547, in test_candidates_and_feedback_flags_reach_real_build
+    self.build("validation", ("--candidate", sha, "--candidate", "a" * 40))
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2fc7cv1r/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2fc7cv1r/code/docs/dev2/.spacedock-state/dispatch-fixture-32a3571a40634e90b5ccc2cdf0dbb0ff.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2fc7cv1r/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2fc7cv1r/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--candidate', 'bbc76d6f128ea58e8efbfb5d4c1134e3746a9696', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-18015029730aebdf/dispatch-fixture-32a3571a40634e90b5ccc2cdf0dbb0ff/validation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_changed_checklist_creates_next_committed_record (test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 987, in test_changed_checklist_creates_next_committed_record
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-iwy04fo1/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-iwy04fo1/code/docs/dev2/.spacedock-state/dispatch-fixture-6d48a4b8a2e5477f87f660ecc4ca9ce8.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-iwy04fo1/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-iwy04fo1/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-6201ceebeed5ca86/dispatch-fixture-6d48a4b8a2e5477f87f660ecc4ca9ce8/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_committed_then_assembly_failure_keeps_record_for_retry (test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 913, in test_committed_then_assembly_failure_keeps_record_for_retry
+    held = self.build(extra=("--spacedock", failing), expected=8)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 8 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-d9hm5h4j/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-d9hm5h4j/code/docs/dev2/.spacedock-state/dispatch-fixture-f7ee1ebdd5cf417bb5e051d93cd3b7e5.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-d9hm5h4j/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-d9hm5h4j/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-d9hm5h4j/commit-then-fail')], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-5e0e500dafbfe73e/dispatch-fixture-f7ee1ebdd5cf417bb5e051d93cd3b7e5/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_failed_build_removes_its_staged_record (test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 581, in test_failed_build_removes_its_staged_record
+    held = self.build(extra=("--spacedock", failing), expected=7)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 7 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bomc25ko/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bomc25ko/code/docs/dev2/.spacedock-state/dispatch-fixture-507f7f4f80e84fa39b0fbe3455ac0d4a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bomc25ko/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bomc25ko/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bomc25ko/stage-and-fail')], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-b8ca73c437a88a36/dispatch-fixture-507f7f4f80e84fa39b0fbe3455ac0d4a/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_failed_stamp_removes_uncommitted_record_and_passes_error (test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 559, in test_failed_stamp_removes_uncommitted_record_and_passes_error
+    self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
+AssertionError: False is not true : dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-bac17a773f8b0973/dispatch-fixture-74822242d16d42aaaef64696983a1842/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.
+
+
+======================================================================
+FAIL: test_ideation_builds_even_when_a_call_is_owed (test_dispatch_stage.DispatchStageTests.test_ideation_builds_even_when_a_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 500, in test_ideation_builds_even_when_a_call_is_owed
+    self.build(extra=("--spacedock", self.spy))
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ait7of8p/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ait7of8p/code/docs/dev2/.spacedock-state/dispatch-fixture-6aa9c20b48334932b5f0f327fcc25221.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ait7of8p/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ait7of8p/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ait7of8p/spy')], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-82b6412e00a6d8d1/dispatch-fixture-6aa9c20b48334932b5f0f327fcc25221/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_identical_retry_reuses_only_at_adding_commit (test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 564, in test_identical_retry_reuses_only_at_adding_commit
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0tqvybhc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0tqvybhc/code/docs/dev2/.spacedock-state/dispatch-fixture-a1d3d3ecf5764565a80158afc32f681a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0tqvybhc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0tqvybhc/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-04cf097cea10e32a/dispatch-fixture-a1d3d3ecf5764565a80158afc32f681a/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 493, in test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 478, in assert_role_hold_then_release
+    self.assertIn("next:", held.stderr)
+AssertionError: 'next:' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-05f1d93d4ca813a4/dispatch-fixture-321be328fc38431cab3619960652033c/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_inline_scope_uses_the_real_commit_unit (test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 945, in test_inline_scope_uses_the_real_commit_unit
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k6ip4u75/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k6ip4u75/code/docs/dev2/dispatch-fixture-145c118ddbaf4c3d9cc0470de2a8653c.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k6ip4u75/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k6ip4u75/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-aa0be841c207bfee/dispatch-fixture-145c118ddbaf4c3d9cc0470de2a8653c/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 862, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-zqfh1akl/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-zqfh1akl/code/docs/dev2/.spacedock-state/dispatch-fixture-2014acefa8be4fd9965557ce06475306.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-zqfh1akl/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-zqfh1akl/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-b042660e403f627d/dispatch-fixture-2014acefa8be4fd9965557ce06475306/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 862, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0mw7nnsd/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0mw7nnsd/code/docs/dev2/.spacedock-state/dispatch-fixture-a37d79cb1bc34db5a761dfb755243faf/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0mw7nnsd/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0mw7nnsd/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-8ca4c3cd9fb72656/dispatch-fixture-a37d79cb1bc34db5a761dfb755243faf/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_retry_preserves_staged_record_with_worktree_at_head (test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 798, in test_retry_preserves_staged_record_with_worktree_at_head
+    stage, extra = self.scope_seed(route="retry")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-z02r9bma/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-z02r9bma/code/docs/dev2/.spacedock-state/dispatch-fixture-e0f8179efe514a95bbc871ac63d9a07a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-z02r9bma/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-z02r9bma/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-6e5051828052d03e/dispatch-fixture-e0f8179efe514a95bbc871ac63d9a07a/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 284, in test_role_checks_the_opus_model_floor
+    self.assertIn("opus", held.stderr)
+AssertionError: 'opus' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-58d99c4aed1267e6/dispatch-fixture-1e1308648cf24c8eadf756d24e50301b/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 250, in test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record
+    self.assertIn("fixture state commit refused", held.stderr)
+AssertionError: 'fixture state commit refused' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-60337e16ba3514b1/dispatch-fixture-0dcda39545e8466d8c23b15244f36c83/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 216, in test_role_commits_complete_record_before_printing_exact_inputs
+    result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-w886olfr/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-w886olfr/code/docs/dev2/.spacedock-state/dispatch-fixture-2ba1b422f69a46db9fbb6375d0c03bcb.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-w886olfr/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-w886olfr/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--roster', 'fixture roster', '--note', 'role fixture'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-889a88113c4916dc/dispatch-fixture-2ba1b422f69a46db9fbb6375d0c03bcb/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_role_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 354, in test_role_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\r\n")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-9f1179645d8f549f/dispatch-fixture-7d8d263209a848d492d2b75271f47bbe/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 360, in test_role_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\n")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-e129182ae4066345/dispatch-fixture-5b26dd3f9cb943508a52705b3efcc686/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_numbering_is_per_role_and_retries_reuse_the_latest_record (test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 306, in test_role_numbering_is_per_role_and_retries_reuse_the_latest_record
+    first = self.role()
+            ^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-y_x57ynz/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-y_x57ynz/code/docs/dev2/.spacedock-state/dispatch-fixture-92c70e49872840f7bc5640e60ba4c6a1.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-y_x57ynz/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-y_x57ynz/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-892454284423ffbc/dispatch-fixture-92c70e49872840f7bc5640e60ba4c6a1/engineering-reviewer-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_notes_inside_scratch_are_kept (test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 403, in test_scope_notes_inside_scratch_are_kept
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gcyiixq9/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gcyiixq9/code/docs/dev2/.spacedock-state/dispatch-fixture-8de3cad765fe4509a268bc6e9c97487e.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gcyiixq9/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gcyiixq9/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-3df65148cfe0d7b3/dispatch-fixture-8de3cad765fe4509a268bc6e9c97487e/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-deb27jch/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-deb27jch/code/docs/dev2/.spacedock-state/dispatch-fixture-662c601937b44fdea076d666e6515c35.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-deb27jch/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-deb27jch/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-b8a4129a2869dd19/dispatch-fixture-662c601937b44fdea076d666e6515c35/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lv5suqqc/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lv5suqqc/code/docs/dev2/.spacedock-state/dispatch-fixture-9a7766574aff491b8b37bccbc1f7b6a6.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lv5suqqc/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lv5suqqc/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-8a371cafe0faac74/dispatch-fixture-9a7766574aff491b8b37bccbc1f7b6a6/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-arubdoyo/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-arubdoyo/code/docs/dev2/.spacedock-state/dispatch-fixture-7ec1268d63a7472d97bec6d6ab8afabd.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-arubdoyo/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-arubdoyo/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-1843f1557885e3de/dispatch-fixture-7ec1268d63a7472d97bec6d6ab8afabd/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-o5plg1kk/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-o5plg1kk/code/docs/dev2/.spacedock-state/dispatch-fixture-1ffd2894408b465189b9df22eb956034.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-o5plg1kk/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-o5plg1kk/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-9ea3b8c32d90f363/dispatch-fixture-1ffd2894408b465189b9df22eb956034/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qa8f8lcp/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qa8f8lcp/code/docs/dev2/.spacedock-state/dispatch-fixture-d74219fa46374edd921fcdc2e78efd46.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qa8f8lcp/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qa8f8lcp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-72584878b738fc5e/dispatch-fixture-d74219fa46374edd921fcdc2e78efd46/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4vtrdns2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4vtrdns2/code/docs/dev2/.spacedock-state/dispatch-fixture-8323c3795b2e41fe890108befa6b48fd.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4vtrdns2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-4vtrdns2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-b5d5bc514d4382e0/dispatch-fixture-8323c3795b2e41fe890108befa6b48fd/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k_jd7v45/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k_jd7v45/code/docs/dev2/.spacedock-state/dispatch-fixture-cb65d7d9413a448a8a52b746e5a391b1.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k_jd7v45/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-k_jd7v45/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-ee2bd403ca87991e/dispatch-fixture-cb65d7d9413a448a8a52b746e5a391b1/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ejc4qayv/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ejc4qayv/code/docs/dev2/.spacedock-state/dispatch-fixture-eab4ca224e8e431ba634933ff81e63cc.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ejc4qayv/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ejc4qayv/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-f8f7057e68e82f01/dispatch-fixture-eab4ca224e8e431ba634933ff81e63cc/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hho04xlg/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hho04xlg/code/docs/dev2/.spacedock-state/dispatch-fixture-e15ac62ade1740bb87684a12aea78a34.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hho04xlg/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hho04xlg/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-62b23562ed98a38b/dispatch-fixture-e15ac62ade1740bb87684a12aea78a34/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-466nudxn/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-466nudxn/code/docs/dev2/.spacedock-state/dispatch-fixture-939996f1e90a4255859080d5f623f0e0.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-466nudxn/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-466nudxn/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-ecb7f69782b0676e/dispatch-fixture-939996f1e90a4255859080d5f623f0e0/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lxo4yede/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lxo4yede/code/docs/dev2/.spacedock-state/dispatch-fixture-945460f2a7a24d52b2a9819d48a2004e.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lxo4yede/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-lxo4yede/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-625d3c5567616d32/dispatch-fixture-945460f2a7a24d52b2a9819d48a2004e/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n780sj66/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n780sj66/code/docs/dev2/.spacedock-state/dispatch-fixture-08106c1d8d3f4666982f404b55455b66.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n780sj66/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n780sj66/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-f0d3d64df111423f/dispatch-fixture-08106c1d8d3f4666982f404b55455b66/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nxlswia2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nxlswia2/code/docs/dev2/.spacedock-state/dispatch-fixture-c811b24ea39c459b99893df26aeb34c6.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nxlswia2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nxlswia2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-511a2bc22bf1185b/dispatch-fixture-c811b24ea39c459b99893df26aeb34c6/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-8i8pic1g/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-8i8pic1g/code/docs/dev2/.spacedock-state/dispatch-fixture-ffb5f11548a3470eb79d8a6706dfd1c2.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-8i8pic1g/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-8i8pic1g/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-04244574548315e1/dispatch-fixture-ffb5f11548a3470eb79d8a6706dfd1c2/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qvexmxy6/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qvexmxy6/code/docs/dev2/.spacedock-state/dispatch-fixture-01eb908904e743f4af3c744c1df59e72.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qvexmxy6/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-qvexmxy6/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-213cc4f5962865d3/dispatch-fixture-01eb908904e743f4af3c744c1df59e72/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-95x7ifc6/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-95x7ifc6/code/docs/dev2/.spacedock-state/dispatch-fixture-2ad4f8457d7b4307a25040e847511e2a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-95x7ifc6/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-95x7ifc6/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-9f2f5cd2a65f4441/dispatch-fixture-2ad4f8457d7b4307a25040e847511e2a/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nkwovfsb/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nkwovfsb/code/docs/dev2/.spacedock-state/dispatch-fixture-cfc7368a729046a08383e43702cc4c63.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nkwovfsb/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-nkwovfsb/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-ff6eda07e0513877/dispatch-fixture-cfc7368a729046a08383e43702cc4c63/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-h_yig5ww/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-h_yig5ww/code/docs/dev2/.spacedock-state/dispatch-fixture-67464d44d29d4a3994c8270dd59bb9f0.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-h_yig5ww/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-h_yig5ww/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-eebb89f5af624cf0/dispatch-fixture-67464d44d29d4a3994c8270dd59bb9f0/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-kjp5d70d/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-kjp5d70d/code/docs/dev2/.spacedock-state/dispatch-fixture-5d236035853247e1bd5d3920aad0a7f4.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-kjp5d70d/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-kjp5d70d/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-c68c646120c4576f/dispatch-fixture-5d236035853247e1bd5d3920aad0a7f4/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vwysnibr/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vwysnibr/code/docs/dev2/.spacedock-state/dispatch-fixture-458f60d319ab4b2487b288a99a7cb025.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vwysnibr/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vwysnibr/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-8b11cd5e89acff21/dispatch-fixture-458f60d319ab4b2487b288a99a7cb025/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 842, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 792, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-52jnr2rr/code/docs/dev2/.spacedock-state/dispatch-fixture-cd4e1f5e49ad443d899418f205874f82/dispatch/ideation-1.md'" not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-5d9971a9db6843cc/dispatch-fixture-cd4e1f5e49ad443d899418f205874f82/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-mf226gcs/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-mf226gcs/code/docs/dev2/.spacedock-state/dispatch-fixture-9c7dd327daae456bbbf8e93818579ec9/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-mf226gcs/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-mf226gcs/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-c0b2bf5e062f92f0/dispatch-fixture-9c7dd327daae456bbbf8e93818579ec9/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-i_jraw09/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-i_jraw09/code/docs/dev2/.spacedock-state/dispatch-fixture-c2b21ef455024a92be0cd582eaf484f3/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-i_jraw09/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-i_jraw09/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-0f86aed079c66bd4/dispatch-fixture-c2b21ef455024a92be0cd582eaf484f3/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n8db7on9/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n8db7on9/code/docs/dev2/.spacedock-state/dispatch-fixture-e493ec98ee394627b2677bb446c7a145/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n8db7on9/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-n8db7on9/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-a841ec6619cd1f2c/dispatch-fixture-e493ec98ee394627b2677bb446c7a145/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hj40t2tz/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hj40t2tz/code/docs/dev2/.spacedock-state/dispatch-fixture-9755fa30e59b43b08b3121e4a0a36b56/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hj40t2tz/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-hj40t2tz/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-621519423ea04c50/dispatch-fixture-9755fa30e59b43b08b3121e4a0a36b56/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0q00mqh8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0q00mqh8/code/docs/dev2/.spacedock-state/dispatch-fixture-9cabc1ee31714d14bec162e480044bbf/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0q00mqh8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0q00mqh8/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-08ac4aa74914e19c/dispatch-fixture-9cabc1ee31714d14bec162e480044bbf/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-sd86mydi/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-sd86mydi/code/docs/dev2/.spacedock-state/dispatch-fixture-0f0548bdb33d4aabb492a50ff0d12761/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-sd86mydi/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-sd86mydi/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-5a8a063b13d8b2e9/dispatch-fixture-0f0548bdb33d4aabb492a50ff0d12761/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-9uvcr3tw/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-9uvcr3tw/code/docs/dev2/.spacedock-state/dispatch-fixture-59aaaddf395240bdb7ae4771de21ccf3/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-9uvcr3tw/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-9uvcr3tw/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-2d4013d69a516aac/dispatch-fixture-59aaaddf395240bdb7ae4771de21ccf3/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-3_enn20g/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-3_enn20g/code/docs/dev2/.spacedock-state/dispatch-fixture-1732fe16014c4f44a454a308fd11ca60/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-3_enn20g/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-3_enn20g/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-d07c8065a5aa3cb9/dispatch-fixture-1732fe16014c4f44a454a308fd11ca60/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0hrm86_x/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0hrm86_x/code/docs/dev2/.spacedock-state/dispatch-fixture-264e6ba2989d451099ef6da91916c812/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0hrm86_x/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0hrm86_x/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-253e9a32217b3c2a/dispatch-fixture-264e6ba2989d451099ef6da91916c812/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vhaj43tx/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vhaj43tx/code/docs/dev2/.spacedock-state/dispatch-fixture-11607bbfb4fa428bafb229aa4390645a/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vhaj43tx/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-vhaj43tx/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-585fcb40e7fea366/dispatch-fixture-11607bbfb4fa428bafb229aa4390645a/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bbefkhq_/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bbefkhq_/code/docs/dev2/.spacedock-state/dispatch-fixture-7cfa596892b14ad890ffc356052ecbeb/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bbefkhq_/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-bbefkhq_/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-3d3b20298848f6fb/dispatch-fixture-7cfa596892b14ad890ffc356052ecbeb/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-7znvbnc8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-7znvbnc8/code/docs/dev2/.spacedock-state/dispatch-fixture-02aebf5d75df49ff8508ef8481a617a9/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-7znvbnc8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-7znvbnc8/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-905e270df7532f61/dispatch-fixture-02aebf5d75df49ff8508ef8481a617a9/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-r60eo77g/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-r60eo77g/code/docs/dev2/.spacedock-state/dispatch-fixture-cd98d45d9caf4e0b89a2bdf53db0f21a/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-r60eo77g/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-r60eo77g/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-fdc8e94628925694/dispatch-fixture-cd98d45d9caf4e0b89a2bdf53db0f21a/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-v8rlkc0t/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-v8rlkc0t/code/docs/dev2/.spacedock-state/dispatch-fixture-b008ae17b0df4ebdbe7a49b468496921/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-v8rlkc0t/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-v8rlkc0t/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-6b0668b51c1aea30/dispatch-fixture-b008ae17b0df4ebdbe7a49b468496921/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-x_h1bp9z/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-x_h1bp9z/code/docs/dev2/.spacedock-state/dispatch-fixture-f3895f39e376482d8c7a21718cd8aeb9/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-x_h1bp9z/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-x_h1bp9z/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-4f482f2c37808f05/dispatch-fixture-f3895f39e376482d8c7a21718cd8aeb9/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 691, in scope_seed
+    self.build()
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ewjsxivd/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ewjsxivd/code/docs/dev2/.spacedock-state/dispatch-fixture-2e7afd9d193940da961ae51d07840806/index.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ewjsxivd/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ewjsxivd/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-124029a4324d4e40/dispatch-fixture-2e7afd9d193940da961ae51d07840806/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-31mm_87q/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-31mm_87q/code/docs/dev2/.spacedock-state/dispatch-fixture-ab79a84a94654becb3135a565f230dc9/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-31mm_87q/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-31mm_87q/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-81617dbe9e286834/dispatch-fixture-ab79a84a94654becb3135a565f230dc9/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0gayxz13/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0gayxz13/code/docs/dev2/.spacedock-state/dispatch-fixture-d70ef3e180ac47cfbc1d27cc880bc747/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0gayxz13/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-0gayxz13/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-601b9e35527c6e28/dispatch-fixture-d70ef3e180ac47cfbc1d27cc880bc747/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ow9jt0cu/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ow9jt0cu/code/docs/dev2/.spacedock-state/dispatch-fixture-963b9cc98d7f4f2091de46f2d6a05f79/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ow9jt0cu/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-ow9jt0cu/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-b7431a886b128432/dispatch-fixture-963b9cc98d7f4f2091de46f2d6a05f79/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 825, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 688, in scope_seed
+    self.build("implementation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2cwabyu3/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2cwabyu3/code/docs/dev2/.spacedock-state/dispatch-fixture-71df8f61ad464e2cbb8ff6b8c7912fef/index.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2cwabyu3/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-2cwabyu3/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-460080924aa441ec/dispatch-fixture-71df8f61ad464e2cbb8ff6b8c7912fef/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 842, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 792, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-df2tqwbq/code/docs/dev2/.spacedock-state/dispatch-fixture-26f508ad286e4c35960c19c7c9f7f923/dispatch/ideation-1.md'" not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-277c0c5ed664f13b/dispatch-fixture-26f508ad286e4c35960c19c7c9f7f923/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 381, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    result = self.build()
+             ^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-67q6l5km/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-67q6l5km/code/docs/dev2/.spacedock-state/dispatch-fixture-cea1d688141f460e9344413dbc868998.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-67q6l5km/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-67q6l5km/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-d06b0307833b9f18/dispatch-fixture-cea1d688141f460e9344413dbc868998/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_stage_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 357, in test_stage_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\r\n")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-47e2e4948548ad4b/dispatch-fixture-e90e8133169840b898f02ba0d0aab548/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_stage_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 363, in test_stage_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\n")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-5cca30e016e9f295/dispatch-fixture-2e5593802e6f4549a5d8b71b0688f9ea/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 425, in test_stamp_commits_complete_record_and_exact_inputs
+    result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-10z91u80/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-10z91u80/code/docs/dev2/.spacedock-state/dispatch-fixture-7bd23705486f4266ac5bc740af0ce9d2.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-10z91u80/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-10z91u80/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--roster', 'fixture roster', '--note', 'README fixture'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-c7fc35952d317258/dispatch-fixture-7bd23705486f4266ac5bc740af0ce9d2/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_successful_checks_keep_distinct_other_stage_warnings (test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 616, in test_successful_checks_keep_distinct_other_stage_warnings
+    self.build("validation", validation)
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p7ulk17a/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p7ulk17a/code/docs/dev2/.spacedock-state/dispatch-fixture-d2084123c8e64b4795d62cca5dc80525.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p7ulk17a/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p7ulk17a/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'previous failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-c64f7186f7a00131/dispatch-fixture-d2084123c8e64b4795d62cca5dc80525/validation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_successful_same_symptom_forwards_one_reminder_before_real_build (test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 588, in test_successful_same_symptom_forwards_one_reminder_before_real_build
+    first = self.build("implementation", ("--symptom", "same failure"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-c47lw3na/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-c47lw3na/code/docs/dev2/.spacedock-state/dispatch-fixture-162d33dc867a416f9fb5fb3bc4c56f47.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-c47lw3na/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-c47lw3na/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--symptom', 'same failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-76a7d5cb2eb28406/dispatch-fixture-162d33dc867a416f9fb5fb3bc4c56f47/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_the_third_dispatch_counts_before_it_is_committed (test_dispatch_stage.DispatchStageTests.test_the_third_dispatch_counts_before_it_is_committed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 505, in test_the_third_dispatch_counts_before_it_is_committed
+    self.build("implementation", ("--symptom", "same failure"))
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gb0ocjir/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gb0ocjir/code/docs/dev2/.spacedock-state/dispatch-fixture-eff86708419a4e6595b27aa6bae28807.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gb0ocjir/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-gb0ocjir/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--symptom', 'same failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-c4a7c5691ff76ea2/dispatch-fixture-eff86708419a4e6595b27aa6bae28807/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_total_cap_holds_before_build_and_keeps_existing_results (test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 202, in test_total_cap_holds_before_build_and_keeps_existing_results
+    first = self.build("implementation", ("--symptom", "none"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p21s0aq2/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p21s0aq2/code/docs/dev2/.spacedock-state/dispatch-fixture-447425e724bd49889f133bef167c7050.md'), '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p21s0aq2/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-p21s0aq2/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-98308d884c6cfe26/dispatch-fixture-447425e724bd49889f133bef167c7050/implementation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_uncountable_budget_stdout_is_forwarded (test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 139, in test_uncountable_budget_stdout_is_forwarded
+    result = self.build("validation", ("--candidate", "a" * 40, "--symptom", "none"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-xgxsr6gp/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-xgxsr6gp/code/docs/dev2/.spacedock-state/dispatch-fixture-22dd5bb9970148fdb0c19915c2556659.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-xgxsr6gp/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-xgxsr6gp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-313e15f481b7a3ac/dispatch-fixture-22dd5bb9970148fdb0c19915c2556659/validation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_unsupported_companion_and_dangling_target_are_preserved (test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved) (kind='dangling')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 982, in test_unsupported_companion_and_dangling_target_are_preserved
+    fixture.assert_scope_refusal("unsupported-" + kind, path, "ideation", ())
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 792, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'/private/tmp/validate-close-854-20261112-183201/tmp/dispatch-stage-loh60p64/code/docs/dev2/.spacedock-state/dispatch-fixture-3578fb398cd04b5a82b7e6784f3316ea/dispatch/ideation-1.md'" not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-a7f2fe5268f9cd7f/dispatch-fixture-3578fb398cd04b5a82b7e6784f3316ea/ideation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_validation_candidate_is_required_before_build (test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 457, in test_validation_candidate_is_required_before_build
+    self.assertIn("no 'Candidate: <40-hex head>' line", held.stderr)
+AssertionError: "no 'Candidate: <40-hex head>' line" not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-20d2161bf2b45adc/dispatch-fixture-34790b6e0c1a4c86b4ff8ea1400e7fe7/validation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 496, in test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("validation")
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 478, in assert_role_hold_then_release
+    self.assertIn("next:", held.stderr)
+AssertionError: 'next:' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-a238fefd259a45f4/dispatch-fixture-e6795ada586648e391441a1d1640f2cb/validation-1: /private/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+----------------------------------------------------------------------
+Ran 50 tests in 91.096s
+
+FAILED (failures=78, errors=3)

@@ -1,0 +1,18 @@
+test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel) ... FAIL
+
+======================================================================
+FAIL: test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel)
+----------------------------------------------------------------------
+ValueError: scratch ownership missing or differs: /private/tmp/validate-close-854-20261112-183201/tmp/scratch-test-tn2flksk/sentinel
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/validate-close-854-20261112-183201/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 110, in test_symlink_root_and_parent_leave_sentinel
+    with self.assertRaisesRegex(ValueError, 'symlinked'):
+AssertionError: "symlinked" does not match "scratch ownership missing or differs: /private/tmp/validate-close-854-20261112-183201/tmp/scratch-test-tn2flksk/sentinel"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.249s
+
+FAILED (failures=1)
