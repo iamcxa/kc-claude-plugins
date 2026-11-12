@@ -107,17 +107,17 @@ sequenceDiagram
 
 - **Spacedock 0.27.2** (`spacedock --help`, `docs/site/reference/command-reference.md` in plugin 0.27.3, `internal/cli/gate_ceremony.go` and `internal/cli/cli.go`, read 2026-11-12): no timeline or duration command. It writes the exact `dispatch: <slug> entering <stage>` commit (`dispatch build --stamp`), `gate: record <slug> <stage> <decision>` and `gate: consume <slug> -> <stage>` commits, `at` on each resolution and withdrawal, and `started`/`completed`/`archived` once per task. `gate prepare` writes no time; the caller's commit of the room is the only record of when a gate opened.
 - **kc-dev-flow-2 0.39.1** (origin/main `8ce0eb60`): `decision_ledger.py` parses gate resolutions and withdrawals (reused, `gate_entries`, `split_task`); `role_triggers.py` counts implementation and validation dispatches spent against a budget (`STAGE_RECORD`, reused); `dispatch_records.py` and `pr_watch.py` count no time. Nothing reads stage times. kc-dev-flow version 1's `poc-close-guard.py` recorded `decision_ready_elapsed_seconds`, `captain_interventions_before_decision_ready` and `captain_wait_seconds` in a close receipt written by hand; the design keeps its split of Captain wait from work and does not copy its hand-written receipt.
-- **Adopters** (read-only): the qnow dev2 state checkout carries the same commit subjects (181 `entering` commits, `git log --format=%s | grep -c ' entering '`), and the proof of concept read one of its archived tasks, whose 21 dispatches all ran Codex workers, with exit 0. That shows Codex workers do not change the records; it does not show a Codex First Officer, because the commits are FO's. The hand-kept Codex FO time file the Scope mentions was searched for and not found (`find` for `*timing*`, `*time-log*`, `times.*` under qnow, relay and bridge state, 2026-11-12); only an unrelated test-timing file turned up.
+- **Adopters** (read-only): the qnow dev2 state checkout carries the same commit subjects (181 `entering` commits, `git log --format=%s | grep -c ' entering '`), and the proof of concept at `89568e48` read one of its archived tasks, whose 21 dispatch records all name Codex workers: 4 stages printed, exit 0 (rerun 2026-11-12; output not saved, as that adopter is private and this state branch is public). That shows Codex workers do not change the records; it does not show a Codex First Officer, because the commits are FO's. The hand-kept Codex FO time file the Scope mentions was searched for and not found (`find` for `*timing*`, `*time-log*`, `times.*` under qnow, relay and bridge state, 2026-11-12); only an unrelated test-timing file turned up.
 
 ### Existing-code check
 
-Use or repair first: `role_triggers.py` already holds the revise count for implementation and validation, but only for tasks with a budget line (64 of 157 archived) and not ideation or times; `decision_ledger.py` already parses every gate close. The helper imports both rather than parsing again (`from decision_ledger import gate_entries, split_task`, `from role_triggers import STAGE_RECORD`), so a change to either parser reaches it. Observation showing a new script is needed: for #849 the stage times had to be read from `git log` by hand (`poc/pr-849-hand-log.txt`); no packaged script prints them.
+Use or repair first: `role_triggers.py` already holds the revise count for implementation and validation, but only for tasks with a budget line (64 of 157 archived) and not ideation or times; `decision_ledger.py` already parses every gate close. The helper imports both rather than parsing again (`from decision_ledger import gate_entries, split_task`, `from role_triggers import STAGE_RECORD`), so a change to either parser reaches it. `lint-skills.py` and `test_lint_skills.py` pass on the proof-of-concept worktree (exit 0, 47 tests; "package script paths" PASS, workflow.md 6008 of 6008 words), so a new script needs no registration beyond the CI test line. Observation showing a new script is needed: for #849 the stage times had to be read from `git log` by hand (`poc/pr-849-hand-log.txt`); no packaged script prints them.
 
 ### What the proof of concept showed
 
 - **#849's task** (`poc/pr-849-task.txt`): backlog 5.3 min, ideation 21.7, implementation 15.7, validation 42.8; every boundary equals the author date in the hand log (`poc/pr-849-hand-log.txt`). Both read the same commits, so this shows the reading is right, not that the source is.
-- **This task and its four batch siblings, live** (`poc/live-batch.txt`): each prints its backlog gate (two attempts, one withdrawn) and a running ideation stage. This task's ideation start, 05:16:44Z, is 57 seconds before this worker's own clock read at its first command (13:17:41 Asia/Taipei, 05:17:41Z), the one comparison against a clock outside the records.
-- **Archive sweep** (`poc/archive-sweep.txt`): 157 archived tasks, 0 errors, 135 with at least one timed stage; the 22 without are tasks closed with no dispatch (mostly `*-followups`). 91 have a repeat dispatch, 24 a withdrawn gate attempt, 54 an amendment outside a gate, 0 an `asks.jsonl`.
+- **This task and its four batch siblings, live** (`poc/live-batch.txt`): each prints its backlog gate (two attempts, one withdrawn) and a running ideation stage. Session-only, not reproducible from the task folder: this task's ideation start, 05:16:44Z, is 57 seconds before this worker's own clock read at its first command (13:17:41 Asia/Taipei, 05:17:41Z), the one comparison against a clock outside the records.
+- **Archive sweep** (`poc/archive-sweep.txt`): 157 archived tasks, 0 errors, 135 with at least one timed stage; each of the 22 without has no `started:` in its frontmatter and no `dispatch/` folder (checked one by one, 2026-11-12), so none was dispatched. No ` entering ` subject in the state history fails the helper's pattern (0 of 269). 91 have a repeat dispatch, 24 a withdrawn gate attempt, 54 an amendment outside a gate, 0 an `asks.jsonl`.
 - **Revise counts against the budget counter** (`poc/compare-spent.txt`): 62 of 62 equal; 2 tasks listed apart because a stage has no dispatch record at all (role_triggers counts 0, the helper counts the `entering` commit). Counting record files instead of the highest number gives 2 differences (`poc/falsifiers.txt`).
 - **The ask record** (`poc/ask-smoke.txt`): two asks on a throwaway git repository read back as 2; an empty question is refused; the scratch directory removes itself.
 
@@ -145,10 +145,12 @@ Counted with `len(text.split())` on origin/main `8ce0eb60` for before and on the
 |---|---|---|---|
 | Startup (adopted README) | 6008 | 6033 | `references/sd/workflow.md` + the 25-word sentence |
 | Idle on an open PR, idle on a merged PR, after the archive, the merge ask | unchanged | unchanged | helper not wired to these moments |
-| Asking the Captain outside a gate | 0 | 9 | the `recorded ask N in <path>` line |
+| Asking the Captain outside a gate | 0 | 5 | the `recorded ask N in <path>` line |
 | When FO or the Captain wants a task's times | hand `git log` | 124 | `poc/pr-849-task.txt` minus its command and exit lines, `wc -w` |
 
 ### Decisions for the Captain
+
+Past rulings (`decision_ledger.py <state>`, 10 override rows of 524, 2026-11-12): one is in this area. fo-batch-sittings D1 recommended deriving a count of the Captain's answers from the gate record times, and the Captain chose no sitting counter (area: sitting measurement); FO counts answers from the ledger by hand at batch close. D2 differs: his words of 2026-11-12 ask for an interruption count by name, and the record is FO's at the time of the ask, the route ADR 0054 (FO records the steps it runs before asking) and fo-tries-what-it-asks-the-captain (FO-written records over host hooks) already chose.
 
 - **D1. A revise is each dispatch of a stage after the first, by highest record number.** Recommended. Worse under it: a correction sent to a reused worker (`<stage>-<N>-message-<M>.md`) is not counted, and a fresh dispatch after a worker died counts as a revise.
 - **D2. An interruption is each question FO puts to the Captain outside a gate, recorded by `ask` when asked; amendments and withdrawn gates are shown apart.** Recommended. Worse under it: a missed `ask` undercounts with no warning, and a message the Captain sends unprompted counts only if it becomes an amendment. The alternative, counting from host session transcripts, is machine-local (the Bite's 3 of 10 match).
@@ -183,9 +185,9 @@ Falsifiers ran on mutated copies by `bash poc/falsifiers.sh <TT> <pkg> <state> p
 
 **AC-3** — `ask` appends one UTC-stamped question to `<task>/asks.jsonl`, the timeline counts it, and an empty question is refused. Evidence: `bash poc/ask_smoke.sh <TT>`, exit 0, `poc/ask-smoke.txt`. Falsifier: removing the `asks.jsonl` read fails the `asks_outside_gate == 2` assertion with exit 1 (`poc/falsifiers.txt`).
 
-**AC-4** — The helper reads every archived task without error and names how many have a timed stage. Evidence: `python3 -B <TT> <state> --all`, exit 0, `poc/archive-sweep.txt` (157 tasks, 135 timed, 22 named untimed). Falsifier: a task whose frontmatter or history the parser cannot read stops the sweep with a traceback and a nonzero exit.
+**AC-4** — The helper reads every archived task without error and times every task that was dispatched. Evidence: `python3 -B <TT> <state> --all`, exit 0, `poc/archive-sweep.txt` (157 tasks, 135 timed, 22 named untimed, each with no `started:` and no `dispatch/` folder). Falsifier: a task whose frontmatter or history the parser cannot read stops the sweep with a traceback and a nonzero exit.
 
-**AC-5** — A running stage prints as running with minutes to now, and its start falls within five minutes of a clock outside the records. Evidence: the five batch tasks via `python3 -B <TT> <state> <task>`, five exit 0, `poc/live-batch.txt`; this task's ideation start 05:16:44Z against this worker's first-command clock 05:17:41Z (57 s). Falsifier: ending a running stage at its start prints 0.0 min (`poc/falsifiers.txt`); a start more than five minutes off the outside clock fails it.
+**AC-5** — A running stage prints as running with minutes from its start to now. Evidence: the five batch tasks via `python3 -B <TT> <state> <task>`, five exit 0, `poc/live-batch.txt`. Falsifier: ending a running stage at its start prints 0.0 min (`poc/falsifiers.txt`).
 
 ## Not provable now
 
@@ -206,8 +208,8 @@ Falsifiers ran on mutated copies by `bash poc/falsifiers.sh <TT> <pkg> <state> p
   AC-1 run now: exit 0, poc/pr-849-task.txt matches poc/pr-849-hand-log.txt; falsifier (no archive match) bites, committer-date falsifier does not bite on this task and is owed by the fixture test.
   AC-2 run now: exit 0, poc/compare-spent.txt 62 same, 0 differ; falsifier gives 2 differ, exit 1.
   AC-3 run now: exit 0, poc/ask-smoke.txt; falsifier fails the assertion, exit 1.
-  AC-4 run now: exit 0, poc/archive-sweep.txt 157 tasks, 135 timed; falsifier not run (a parse failure would raise).
-  AC-5 run now: five exit 0, poc/live-batch.txt, start 57 s from the outside clock; falsifier prints 0.0 min.
+  AC-4 run now: exit 0, poc/archive-sweep.txt 157 tasks, 135 timed, 22 untimed each without `started:` or `dispatch/`; falsifier not run (a parse failure would raise).
+  AC-5 run now: five exit 0, poc/live-batch.txt; falsifier prints 0.0 min.
   D1 to D4 each carry a recommendation and what gets worse; `design_surfaces.py check` exit 0, "design surfaces presentable".
 
 ### Summary
