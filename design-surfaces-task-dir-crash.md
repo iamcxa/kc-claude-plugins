@@ -3,7 +3,7 @@ title: design_surfaces.py check <task> crashes when a same-named task directory 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -47,7 +47,7 @@ gates:
                     source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-12T17:02:31Z
 ---
 
