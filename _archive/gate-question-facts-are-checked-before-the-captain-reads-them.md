@@ -3,7 +3,7 @@ title: A factual claim in a question FO puts to the Captain has been checked aga
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-12), answering 「決定：合併 #855（我問你的問題裡，「這個改動會不會影響現有任務或設計」這類句子沒附根據時，自動標上「未對過紀錄」，不擋任何問題）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；它只認這一類句子，這兩天的資料上 11 個標記有 7 個標在其實沒錯的句子上；我自己編數字那種錯它抓不到，今天就發生過兩次；用另一個模型判讀的做法試過行不通、沒做；只有 Codex 審過，Copilot 因額度不足沒有審；它原本疊在 #853 上，#853 已合併，我把它接到主線，內容和驗證過的版本相同；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit 8d083d3b9b2c48c10e32cee3e5ef693b374c6183, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T05:16:48Z
 worktree: .worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them
 pr: pr-merge:855
+verdict: PASSED
+completed: 2026-11-12T16:31:25Z
+archived: 2026-11-12T16:31:25Z
 ---
 
 ## Scope
