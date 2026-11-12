@@ -1,0 +1,127 @@
+[
+  {
+    "artifact": "role-triggers.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "new-work-checks-what-exists-first"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:25.825725+00:00"
+  },
+  {
+    "artifact": "adr-lint.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--require",
+      "0083"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:25.942499+00:00"
+  },
+  {
+    "artifact": "dispatch-records.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:26.037443+00:00"
+  },
+  {
+    "artifact": "comment-ratio.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:26.102000+00:00"
+  },
+  {
+    "artifact": "doc-impact.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:26.178361+00:00"
+  },
+  {
+    "artifact": "adopter-counts.json",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/new_work_check.py",
+      "siblings",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+      "--adopter",
+      "<authorized-adopter-1>"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T18:27:28.799331+00:00"
+  },
+  {
+    "artifact": "acceptance.log",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation/acceptance.sh"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 1,
+    "limit": "Sandbox blocked the reservation fetch; retained as environment evidence."
+  },
+  {
+    "artifact": "acceptance-authorized.log",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation/acceptance.sh"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "limit": "Same exact script with authorized metadata/network access."
+  },
+  {
+    "artifact": "pr-snapshot.json",
+    "command": [
+      "gh",
+      "pr",
+      "view",
+      "859",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "number,state,isDraft,headRefOid,baseRefName,url,statusCheckRollup"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "limit": "Read-only authorized network; sandbox failure separately retained."
+  }
+]

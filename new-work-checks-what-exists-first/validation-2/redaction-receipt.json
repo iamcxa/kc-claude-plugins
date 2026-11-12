@@ -1,0 +1,33 @@
+{
+  "private_input_metadata_removed": true,
+  "replacement": "ordinal placeholder only",
+  "files_redacted": [
+    {
+      "path": "commands.json",
+      "replacements": 1,
+      "original_sha256": "2c0a7cdbf916f41f8be2c895aa2ad928bc84dcac501645c6ad64613d9d864d27",
+      "public_sha256": "8544e5b1a69022d6e67b526d8dfb617a3d6af4bb1deb67c11056c33f059df9d2"
+    },
+    {
+      "path": "dispatch.md",
+      "replacements": 1,
+      "original_sha256": "a1c82674e40d11eea9aabe0b38842eaa40af13c3a6f7cf3418b5aaa190dcd551",
+      "public_sha256": "bd64e6bb6229ec38b88e4b42bb1c47412facb9fafef986b9e4370173e986fc58"
+    },
+    {
+      "path": "scope.txt",
+      "replacements": 1,
+      "original_sha256": "2b66cc251bfc8b5da5653a59db6c278f6314bcf2254c8a8e36d3162f9123a768",
+      "public_sha256": "2f970a035087f19ba047b2a5d34154ab79b81a396534321d24248ce4e498f7a8"
+    },
+    {
+      "path": "setup.py",
+      "replacements": 1,
+      "original_sha256": "e4967dd1457e2d98421b6f5a144e5a08088f0d49dcdd1acdce4a6306db261685",
+      "public_sha256": "0dfb0ad92941d21f070257e0af4265215379614afec494c6829b45f0309c4a8f"
+    }
+  ],
+  "original_harness": "Ran before public redaction; unchanged native dispatch and original scope stay only in owned scratch until cleanup. Public copies are explicitly sanitized, not claimed byte-identical dispatch text. Candidate package hashes and observed checked/found/proposal artifacts are unaffected.",
+  "setup_recipe": "Public setup.py now requires VALIDATION_ADOPTER_ROOT privately and redacts it in output. The original executed script hash is retained in files_redacted; this is a sanitized reproducibility recipe, not a claim of rerunning the cold subject.",
+  "private_task_content_published": false
+}

@@ -1,0 +1,9 @@
+{
+  "task_name": "/root/cold_subject",
+  "history": "none; fork_turns=none",
+  "role": "test subject executing ideation; not a validator",
+  "attempt": 1,
+  "retry_used": false,
+  "model": "inherited Codex runtime; exact runtime model identifier not exposed",
+  "completed": true
+}

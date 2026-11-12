@@ -1,0 +1,32 @@
+{
+  "head": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "seed_state_commit": "353e835dd199fe02e0c1dc174be95cb75da79080",
+  "command": [
+    "/Users/kent/.local/bin/spacedock",
+    "dispatch",
+    "build",
+    "--workflow-dir",
+    "/tmp/validate-new-work-cycle2-20261113-022341/wf",
+    "--entity-path",
+    "/tmp/validate-new-work-cycle2-20261113-022341/wf/.spacedock-state/design-surfaces-task-dir-crash.md",
+    "--stage",
+    "ideation",
+    "--host",
+    "codex",
+    "--checklist-file",
+    "/tmp/validate-new-work-cycle2-20261113-022341/checklist.txt",
+    "--scope-notes-file",
+    "/tmp/validate-new-work-cycle2-20261113-022341/scope.txt"
+  ],
+  "exit": 0,
+  "package_root": "/tmp/validate-new-work-cycle2-20261113-022341/candidate/kc-dev-flow-2",
+  "package_skill_exists": true,
+  "source_files": 1597,
+  "candidate_write_bits_removed": true,
+  "generated_dispatch": "/tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md",
+  "generated_dispatch_sha256": "a1c82674e40d11eea9aabe0b38842eaa40af13c3a6f7cf3418b5aaa190dcd551",
+  "scratch": "/tmp/validate-new-work-cycle2-20261113-022341",
+  "history": "none",
+  "neutral_prompt": "No criterion wording or desired checked/found sequence added to the subject prompt.",
+  "mutation_controls": "none on cold export"
+}

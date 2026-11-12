@@ -1,0 +1,15 @@
+[
+  {
+    "id": "F1",
+    "prior_class": "Needs decision",
+    "prior_report": "validation/stage-report.md",
+    "status": "resolved by new evidence",
+    "evidence": [
+      "observed-file-events.json",
+      "first-observations.md",
+      "cold-subject/proposal.md",
+      "archive-after.json"
+    ],
+    "limit": "Only the missing one-observation proof is supplied. No general compliance or delivery claim."
+  }
+]

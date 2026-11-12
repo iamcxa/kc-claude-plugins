@@ -1,0 +1,52 @@
+{
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "prior_state_commit": "0dc8ff2622b66835aa65cfd418297116090d58ad",
+  "authority": "Captain amendment 1 and validation-2 dispatch explicitly permit reliance on unchanged-head source, lint, ADR and acceptance-script evidence.",
+  "read_not_rerun": [
+    {
+      "path": "validation/identity.json",
+      "sha256": "ba348620503e9a68620b5b31f90651b43aabf4ef4fb4ee55d5065209df7380ee"
+    },
+    {
+      "path": "validation/candidate-routing.json",
+      "sha256": "9a4ebcaca810e879802fd8e56dc2011f4db9404b0dd366b44a7010bd3e37c90a"
+    },
+    {
+      "path": "validation/base-routing.json",
+      "sha256": "2bf8dbea5eb72203ed7bb58643759a9962dc5d13b9ae6fc62e062b2b944aa430"
+    },
+    {
+      "path": "validation/product-scope.json",
+      "sha256": "9647b043e01b376712be57462c38d1a5c0bd3d2623e0a84aa7b2a65a32c6f5c2"
+    },
+    {
+      "path": "validation/reading-cost.json",
+      "sha256": "3b5d55e7b2322c6f1186f4249312349847051fdc4bcc9190c272dcb64112e720"
+    },
+    {
+      "path": "validation/controls.json",
+      "sha256": "accf0720e655fb80f82403b7d33712a9d82c8b3c11e76bf23c3975c814f8c193"
+    },
+    {
+      "path": "validation/negative-controls.log",
+      "sha256": "630e146741336b8e31900ddb31b20240583a304229134a3f3308dd83648c4393"
+    },
+    {
+      "path": "validation/archive-integrity.json",
+      "sha256": "4b5a0cd3c7c7d0b79a586c731f87dee440dda0103cf6349bf8b770b0ce74d404"
+    },
+    {
+      "path": "validation/sd-dispatch-integration.log",
+      "sha256": "46791e1ea3384be189aa91774047dff33d9d349b7895c937de0afd47bc5de98f"
+    },
+    {
+      "path": "validation/adr-source-check.json",
+      "sha256": "7ab4239878e15ef3a1f2f5900ea0bca2a970002d1138aa9d00920bc7806e95c9"
+    },
+    {
+      "path": "validation/adopter-reproduction.json",
+      "sha256": "89e211aa3e3d36fd064378ad320ac05dd37c210f0414b6c0cc83fb7ad9525b22"
+    }
+  ],
+  "cold_evidence": "Not inherited; prior two observations unusable."
+}

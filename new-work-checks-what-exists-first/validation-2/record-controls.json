@@ -1,0 +1,54 @@
+[
+  {
+    "name": "original",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/evidence_guard.py",
+      "replay",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation-2/record-controls/original.json"
+    ]
+  },
+  {
+    "name": "proposal-first",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/evidence_guard.py",
+      "replay",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation-2/record-controls/proposal-first.json"
+    ]
+  },
+  {
+    "name": "sibling-as-contract",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/evidence_guard.py",
+      "replay",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation-2/record-controls/sibling-as-contract.json"
+    ]
+  },
+  {
+    "name": "undisclosed-source",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/evidence_guard.py",
+      "replay",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation-2/record-controls/undisclosed-source.json"
+    ]
+  }
+]

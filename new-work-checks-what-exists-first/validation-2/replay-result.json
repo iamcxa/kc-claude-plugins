@@ -1,0 +1,30 @@
+{
+  "events": [
+    {
+      "kind": "checked_found",
+      "observed_at": "2026-11-12T18:29:08.591694+00:00",
+      "artifact": "cold-subject/observations.md",
+      "own_repository": true,
+      "primary_tool_contract": true,
+      "governing_adrs": [
+        "0083",
+        "0041",
+        "0027"
+      ],
+      "relevant_sibling": "authorized adopter 1, read-only count probe",
+      "required_inaccessible": [
+        "adopter task corpus at bounded filesystem location"
+      ],
+      "disclosed_inaccessible": [
+        "adopter task corpus at bounded filesystem location"
+      ]
+    },
+    {
+      "kind": "proposal",
+      "observed_at": "2026-11-12T18:30:18.985032+00:00",
+      "artifact": "cold-subject/proposal.md",
+      "integration": "change existing CLI entrance; reuse content validators; no replacement resolver"
+    }
+  ],
+  "limit": "Parent observed two filesystem artifacts in order. This is one history-free model observation, not causal old/new comparison, cross-host compliance, sustained-use proof or enforcement."
+}

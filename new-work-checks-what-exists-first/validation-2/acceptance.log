@@ -1,0 +1,14 @@
+STEP 1 PASS: pinned 1fc2f05f88b18a62d4eda598158ffa385df9fae8; clean code tree; archive created
+STEP 2 PASS: candidate routing 0; base routing 1; bounded package scope 0
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 6033 of 6033 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+new-work-checks-what-exists-first.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+STEP 3 PASS: repository lint and accepted-design parsing
+74 ADR file(s) checked, 0 legacy
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 8125e6d516d3 head 1fc2f05f88b1 merge-base 8125e6d516d3
+FAIL: reservation freshness unverified

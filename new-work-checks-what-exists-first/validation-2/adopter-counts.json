@@ -1,0 +1,16 @@
+{
+  "rows": [
+    {
+      "adopter": 1,
+      "readmes_read": 1,
+      "state_files_read": 152,
+      "current_files": 66,
+      "archived_files": 86,
+      "state_read_from_committed_branch": 1,
+      "readme_explicit_upstream_check": 0,
+      "files_mentioning_upstream": 4,
+      "files_mentioning_adr": 126
+    }
+  ],
+  "limit": "Read-only presence counts; not execution or adoption compliance. Private names, titles, rulings and logs are never emitted."
+}

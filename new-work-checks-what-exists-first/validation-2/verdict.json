@@ -1,0 +1,19 @@
+{
+  "verdict": "PASSED",
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "cycle": 2,
+  "cold_attempts": 1,
+  "retry_used": false,
+  "criterion_status": {
+    "AC-1": "passed within documented limits",
+    "AC-2": "passed within documented limits",
+    "AC-3": "passed within documented limits",
+    "AC-4": "passed within documented limits",
+    "AC-5": "passed within documented limits"
+  },
+  "new_findings": [],
+  "prior_finding": "F1 resolved by the new independent observation",
+  "gate_approval": false,
+  "delivery": false
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "path": "reproduction/task.md",
+    "observed_at": "2026-11-12T18:28:00.188688+00:00",
+    "mtime_ns": 1794508071010137278,
+    "bytes": 440,
+    "sha256": "74dd531f713c51fedeb3fb13f7a2bde4af61bd3e2c5dc1b51bd5e62628fcce36"
+  },
+  {
+    "path": "reproduction.json",
+    "observed_at": "2026-11-12T18:28:00.189018+00:00",
+    "mtime_ns": 1794508071416707819,
+    "bytes": 3602,
+    "sha256": "11189440020f6aace94370ec81ea0edb28191296523fe71986433ad9b28c8d9a"
+  },
+  {
+    "path": "reproduction.log",
+    "observed_at": "2026-11-12T18:28:00.189169+00:00",
+    "mtime_ns": 1794508071416889695,
+    "bytes": 3029,
+    "sha256": "0b48d9af198580f184cbfac020e983b9650af2cfc949353ee2dd135b7d4fb9d0"
+  },
+  {
+    "path": "source-identity.json",
+    "observed_at": "2026-11-12T18:28:00.189291+00:00",
+    "mtime_ns": 1794508071417195071,
+    "bytes": 117,
+    "sha256": "c34e50fbf800f63e363bc7622f610b2e60aa8c8f50a26b32c6a0980b8f3a5651"
+  },
+  {
+    "path": "adopter-counts.json",
+    "observed_at": "2026-11-12T18:28:04.800487+00:00",
+    "mtime_ns": 1794508084426245647,
+    "bytes": 177,
+    "sha256": "47a4a29332a3ee472c334715a188fbe2096291f563a3a2182c037738ce28e501"
+  },
+  {
+    "path": "observations.md",
+    "observed_at": "2026-11-12T18:29:08.591694+00:00",
+    "mtime_ns": 1794508148285477603,
+    "bytes": 5096,
+    "sha256": "d64ba876f88c4e73c19a695c80be649a006a083d693607885486a7521f1ceac3"
+  },
+  {
+    "path": "proposal-check.log",
+    "observed_at": "2026-11-12T18:30:18.984685+00:00",
+    "mtime_ns": 1794508218875383353,
+    "bytes": 77,
+    "sha256": "0e7ec641b4ea6f17f26de310023144a55eb83159dba2581122490b41d572c696"
+  },
+  {
+    "path": "proposal.md",
+    "observed_at": "2026-11-12T18:30:18.985032+00:00",
+    "mtime_ns": 1794508218810884477,
+    "bytes": 8411,
+    "sha256": "4f448fd1298ee47164fd04d7547898e47aa2dc692c5650efdc6d4ea5a788a273"
+  }
+]
