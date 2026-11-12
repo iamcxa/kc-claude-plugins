@@ -14,5 +14,9 @@
   "PR_created": false,
   "PR_text": "/tmp/impl-design-surfaces-task-dir-crash-pr.md",
   "CI_cost_per_PR": "not measured; triggers and jobs unchanged",
-  "roborev": "not run; FO owns this review"
+  "roborev": "not run; FO owns this review",
+  "selected_launcher": "/Users/kent/.local/bin/spacedock",
+  "python_executable": "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+  "Python_version": "3.11.14",
+  "platform": "macOS; hosted CI environment not reproduced"
 }

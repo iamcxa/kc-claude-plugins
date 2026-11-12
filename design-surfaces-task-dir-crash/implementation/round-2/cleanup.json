@@ -1,0 +1,22 @@
+{
+  "time_Asia_Taipei": "2026-11-13 01:51:01",
+  "time_source": "host system clock, Python datetime.now(timezone(+08:00)); cross-checked with clock.curr_time",
+  "evidence_commit_before_cleanup": "2f1195ddb",
+  "removed": [
+    {
+      "path": "/tmp/design-surfaces-task-dir-crash-implementation",
+      "removed": true
+    },
+    {
+      "path": "/tmp/design-surfaces-task-dir-crash-tests",
+      "removed": true
+    },
+    {
+      "path": "/tmp/design-surfaces-task-dir-crash-mutations",
+      "removed": true
+    }
+  ],
+  "kept_PR_text": "/tmp/impl-design-surfaces-task-dir-crash-pr.md",
+  "kept_code_branch": "spacedock-ensign/design-surfaces-task-dir-crash",
+  "kept_probe_branch": "poc/design-surfaces-task-dir-crash"
+}

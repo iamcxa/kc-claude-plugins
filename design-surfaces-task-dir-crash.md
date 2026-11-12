@@ -239,3 +239,50 @@ The current-release failure is reproduced at the actual CLI; a four-line local r
 ### Trial round 1
 
 Premise: current-release suffixless task commands fail beside dispatch-evidence directories; goal check: unchanged base default CLI raises IsADirectoryError and seed refuses, while probe matches explicit `.md`. Start 2026-11-13 01:04:58 Asia/Taipei; end 2026-11-13 01:22:00 Asia/Taipei. Start source `clock.curr_time` UTC converted +08:00; end source host system clock via Python `datetime.now(timezone(+08:00))`, cross-checked with `clock.curr_time`. Base `8125e6d516d32abbf79c6772de10cde2c20900a8`; probe `54424755e201fbb39363835e8dbabb971caa67a1`. Check command: AC-4's `run_probe.py` command; saved `evidence/probe-run.txt`, exit 0, 32 synthetic commands and 94 real mode comparisons. Blocked/limits: historical identity, four undeclared history fixtures, renderer/full FO-runtime totals; none blocks the reproduced local seam. Fired: none (no overturned premise, Captain-only scope/criterion/trade-off choice, new component contract, Production trigger or file/budget expansion). This is build round 1; no implementation or validation cycle has been claimed.
+
+## Stage Report: implementation
+
+- DONE: Build the approved design from the local probe, on the assigned branch off origin/main; only the files the design names.
+  Base `8125e6d516d32abbf79c6772de10cde2c20900a8`; branch `spacedock-ensign/design-surfaces-task-dir-crash`; candidate `ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8`, cherry-picked from probe `54424755e` with identical tree. Only `design_surfaces.py` and `test_design_surfaces.py` change.
+- DONE: AC-1 — same-name and dotted directories use the sibling task file in both modes, preserving refusing verdicts.
+  Candidate rerun exit 0 (`implementation/round-2/ac-1.txt`); no-fallback, suffix-replacement and force-success mutations each fail the named tests, exit 1.
+- DONE: AC-2 — suffixless names resolve without a directory; an exact regular file retains priority.
+  Candidate rerun exit 0 (`implementation/round-2/ac-2.txt`); require-directory and override-exact-file mutations each fail the named tests, exit 1.
+- DONE: AC-3 — unresolved input produces usage exit 2; invalid UTF-8 seed input retains read-error exit 1.
+  Candidate rerun exit 0 (`implementation/round-2/ac-3.txt`); removing the usage guard and converting encoding failure to usage each make the test run exit 1 (the latter exposes SystemExit 2 instead of the promised return 1).
+- DONE: AC-4 — real same-name state-root collisions preserve explicit-file and suffixless output/verdicts, with stable task bytes.
+  Exit 0 (`implementation/round-2/ac-4.txt`): 47 tasks / 94 mode comparisons, all stable, explicit unchanged and aliases equal, 0 unavailable. Removing the four-line entrance repair or adding a valid-file refusal makes the same corpus command exit 1; private outputs saved as counts only.
+- DONE: Every acceptance criterion green with its named evidence; each falsifier shown failing by an executed mutation (python3 -B, caches cleared).
+  Exact commands are in `implementation/round-2/commands.json`; `mutation-results.json` / `mutation-summary.json`: 9 of 9 valid Python mutations detected, each child exits 1, checker pyc cleared, original bytes restored; final five entrance tests exit 0 (`restored-tests.txt`).
+- DONE: Run the package workflow's complete Python check list locally.
+  29 of 29 commands exit 0; 1,417 unittest cases (1,406 passed, 11 conditional skips), plus 11 native-dispatch PASS groups and one observer-recovery group. Initial runner missed the `python3 -B` timeline line; it was run separately and the final command mapping checked complete/unique (`suite-summary.json`, `suite-results.json`).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs).
+  Exit 0 (`implementation/round-2/lint-skills.txt`); workflow remains 6033 words. No rule, dependency or abstraction was added; every changed line belongs to input selection or its named regression/falsifier.
+- DONE: adr_lint.py docs/adr --since base; ADRs added or changed.
+  Exit 0, 73 ADR files checked, 0 legacy (`adr-lint.txt`). ADRs: none added or changed; this is the approved CLI repair, with no new product ruling or reservation.
+- DONE: number_guards.py check exit 0.
+  Exit 0 with fresh refs (`number-guards.txt`), base 8125e6d51 / head ef9aaffcbc48; no findings, migration guard inapplicable with no migrations-path. The earlier local-ref fetch warning is retained separately, not hidden.
+- DONE: comment_ratio.py within its maximum.
+  Exit 0 (`comment-ratio.txt`): 64 added code lines, 0 comment lines, 0.0% against a 5% maximum.
+- DONE: doc_impact.py base candidate; every listed document disposition.
+  Exit 0 (`doc-impact.txt`); full reasons in `document-dispositions.txt`:
+  `docs/adr/0041-seed-admission-enforces-required-fields.md` — unaffected: seed fields and checks unchanged.
+  `docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md` — unaffected: added_words/amendment comparison unchanged.
+  `docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md` — unaffected: story/extension rules unchanged and see the same selected file.
+  `docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md` — unaffected: Budget grammar, Worth questions and cycle guards unchanged.
+- DONE: Commit locally, no product push; PR title and text written for FO; no version bump.
+  Candidate ef9aaffcbc48 is committed/clean. `/tmp/impl-design-surfaces-task-dir-crash-pr.md` first line is `fix(kc-dev-flow-2): resolve task files beside evidence directories`; body/hash recorded in `verification.json`; this file is kept.
+- SKIPPED: One Draft PR; FO pushes, opens the Draft PR, runs RoboRev and reads CI.
+  No PR opened: no push grant for this worker. `roborev not run: FO runs RoboRev after this report`; hosted CI and independent validation are not run and not reported clean. Local SD source 0.28.0/runtime 0.27.2 differs from hosted CI's pin, so local success is not hosted equivalence.
+- DONE: CI cost measured or stated as not measured; owned scratch removed only after evidence commit.
+  CI cost per PR: not measured; triggers/jobs unchanged. Evidence committed at `2f1195ddb` before exact-path deletion of `/tmp/design-surfaces-task-dir-crash-implementation`, `/tmp/design-surfaces-task-dir-crash-tests`, `/tmp/design-surfaces-task-dir-crash-mutations`; `cleanup.json` records removal and the kept PR file/worktrees.
+- DONE: Required design check, role prerequisite and loaded workflow identity.
+  `design-check.txt` and `role-triggers.txt` exit 0; role output records implementation 1 / validation 0 within Budget. Loaded Codex `references/sd/workflow.md` sha256 remains `075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb` (`provenance.json`).
+
+### Summary
+
+The approved four-line entrance repair and its regression tests are committed locally at the exact candidate above, with fresh criterion, mutation and complete local package evidence. FO owns product publication, RoboRev, hosted CI and the independent validator; no gate or stage was advanced by this worker.
+
+### Trial round 2
+
+Premise: the released suffixless entrance fails beside a same-named evidence directory; goal check: base default CLI raises IsADirectoryError and seed refuses, while candidate matches explicit .md. Start 2026-11-13 01:25:19 Asia/Taipei; end 2026-11-13 01:51:01 Asia/Taipei. Start source `clock.curr_time` UTC +08:00; end source host `datetime.now(timezone(+08:00))`, cross-checked with `clock.curr_time`. Base `8125e6d516d32abbf79c6772de10cde2c20900a8`; candidate `ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8`. Check: AC-4's `run_probe.py` command, rerun with candidate source and the new owned scratch path; saved `implementation/round-2/ac-4.txt`, exit 0, 32 synthetic commands and 94 real comparisons. Since round 1: approved probe carried unchanged into the assigned implementation branch; all four criteria rerun, all nine falsifiers caught, complete 29-command local package evidence and prepared PR text added. Blocked/delegated: product push/PR, RoboRev, hosted CI and independent validation remain FO-owned; exact historical task identity and conditional historical fixtures remain unproved. Stop fired: none; no changed premise, criterion, scope, component contract, Production trigger, named file or Budget expansion. This is trial build round 2 and implementation cycle 1; no validation verdict is claimed.
