@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:pr-watch-tasks-foreign-worktree:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:pr-watch-tasks-foreign-worktree-ideation-1
+              briefing:
+                id: briefing:pr-watch-tasks-foreign-worktree:ideation:attempt-1:revision-1
+                digest: sha256:8e8bfd9d6a0f20874cbc5f67ae59788fc8ac944d036ac9674b9873961da4a7d0
+                room-ref: ./pr-watch-tasks-foreign-worktree/review/ideation/briefing-1
 started: 2026-11-12T17:03:02Z
 ---
 
