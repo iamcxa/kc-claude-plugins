@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Print one task's per-stage times, repeat dispatches and out-of-gate Captain asks.
+"""Print one task's per-stage times, dispatch counts and Captain asks; record an ask outside a gate.
 
-Reads only records written at the time: the state checkout's git history (author
-dates of Spacedock's own commits) and the gate records in the task frontmatter.
-Never writes. POC: proof of concept for task each-task-records-stage-time-revises-and-interruptions.
+  task_timeline.py <state checkout> <task slug> [--json]   print the timeline
+  task_timeline.py <state checkout> --all                  one summary line over every archived task
+  task_timeline.py <state checkout> <task slug> ask TEXT   append one ask outside a gate, stamped now (UTC)
+
+Times come from records written at the time: author dates of the state checkout's commits
+(`dispatch|advance: <slug> entering <stage>`, the commit adding each dispatch record and each
+gate room's index.json, `archive <slug>`), the `at` of each gate resolution or withdrawal, and
+`<task>/asks.jsonl`. Author dates are used because `pull --rebase` rewrites committer dates.
+POC for task each-task-records-stage-time-revises-and-interruptions.
 """
 import argparse
 import json
@@ -13,10 +19,13 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from decision_ledger import gate_entries, split_task  # noqa: E402
+from role_triggers import STAGE_RECORD  # noqa: E402
+
 ENTERING = re.compile(r"^(?:dispatch|advance): (?P<slug>\S+) entering (?P<stage>\S+)$")
 ARCHIVE = re.compile(r"^archive (?P<slug>\S+)")
-BRIEFING = re.compile(r"(?:^|/)review/(?P<stage>[^/]+)/briefing-(?P<n>\d+)/index\.json$")
-DISPATCH_RECORD = re.compile(r"(?:^|/)dispatch/(?P<stage>[a-z-]+)-(?P<n>\d+)\.md$")
+ROOM = re.compile(r"(?:^|/)review/(?P<stage>[^/]+)/briefing-(?P<n>\d+)/index\.json$")
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2}),\s*(.+)$", re.M)
 
 
@@ -24,150 +33,165 @@ def when(text):
     return datetime.fromisoformat(text.replace("Z", "+00:00")).astimezone(timezone.utc)
 
 
-def task_paths(state, slug):
-    return [f"{slug}.md", slug, f"_archive/{slug}.md", f"_archive/{slug}"]
+def mins(a, b):
+    return round((b - a).total_seconds() / 60, 1) if a and b else None
 
 
-def history(state, slug):
-    # Author date survives `pull --rebase`; committer date does not.
-    out = subprocess.run(
-        ["git", "-C", str(state), "log", "--reverse", "--no-renames", "--name-status",
-         "--format=\x1e%H\x1f%aI\x1f%s", "--", *task_paths(state, slug)],
-        capture_output=True, text=True, check=True).stdout
-    for chunk in out.split("\x1e")[1:]:
-        head, _, body = chunk.partition("\n")
-        sha, date, subject = head.split("\x1f")
-        files = [line.split("\t") for line in body.splitlines() if "\t" in line]
-        yield sha, when(date), subject, files
-
-
-def gate_records(text):
-    """Return [(stage, kind, at, decision)] from the frontmatter gate records."""
-    front = text.split("\n---", 1)[0]
-    rows, stage, kind = [], None, None
-    for line in front.splitlines():
-        stripped = line.strip()
-        m = re.match(r"^stage: (\S+)$", stripped)
-        if m and line.startswith("          stage:"):
-            stage = m[1]
-            continue
-        if stripped in ("resolution:", "withdrawal:"):
-            kind = stripped[:-1]
-            rows.append([stage, kind, None, None])
-            continue
-        if kind and stripped.startswith("at:"):
-            rows[-1][2] = when(stripped.split(":", 1)[1].strip().strip('"'))
-        elif kind and stripped.startswith("decision:"):
-            rows[-1][3] = stripped.split(":", 1)[1].strip()
-        elif stripped.startswith(("application:", "- id:")):
-            kind = None
-    return [tuple(r) for r in rows if r[2]]
+def iso(t):
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ") if t else None
 
 
 def find_task(state, slug):
-    for rel in (f"{slug}.md", f"{slug}/index.md", f"_archive/{slug}.md", f"_archive/{slug}/index.md"):
+    for rel in (f"{slug}/index.md", f"{slug}.md", f"_archive/{slug}/index.md", f"_archive/{slug}.md"):
         if (state / rel).is_file():
             return state / rel
     raise SystemExit(f"task_timeline: no task file for {slug} under {state}")
 
 
-def minutes(a, b):
-    return None if a is None or b is None else round((b - a).total_seconds() / 60, 1)
+def folder(task):
+    return task.parent if task.name == "index.md" else task.with_suffix("")
+
+
+def history(state, slug):
+    out = subprocess.run(
+        ["git", "-C", str(state), "log", "--reverse", "--no-renames", "--name-status",
+         "--format=\x1e%aI\x1f%s", "--", f"{slug}.md", slug, f"_archive/{slug}.md", f"_archive/{slug}"],
+        capture_output=True, text=True, check=True).stdout
+    for chunk in out.split("\x1e")[1:]:
+        head, _, body = chunk.partition("\n")
+        date, subject = head.split("\x1f", 1)
+        added = [line.split("\t")[-1] for line in body.splitlines() if line.startswith("A\t")]
+        yield when(date), subject, added
 
 
 def timeline(state, slug):
-    text = find_task(state, slug).read_text(encoding="utf-8")
-    stages, order, opened, records, done = {}, [], {}, {}, None
-    for sha, at, subject, files in history(state, slug):
+    task = find_task(state, slug)
+    text = task.read_text(encoding="utf-8")
+    fm, body = split_task(text)
+    entering, records, rooms, done = {}, {}, {}, None
+    for at, subject, added in history(state, slug):
         m = ENTERING.match(subject)
         if m and m["slug"] == slug:
-            st = stages.setdefault(m["stage"], {"dispatches": [], "gates": []})
-            st["dispatches"].append(at)
-            order.append((at, m["stage"]))
-        if ARCHIVE.match(subject):
-            done = done or at
-        for status, *paths in files:
-            for path in paths:
-                b = BRIEFING.search(path)
-                if b and status.startswith("A"):
-                    opened.setdefault((b["stage"], int(b["n"])), at)
-                d = DISPATCH_RECORD.search(path)
-                if d and status.startswith("A"):
-                    records.setdefault(d["stage"], {}).setdefault(int(d["n"]), at)
-    gates = gate_records(text)
-    for (stage, n), at in sorted(opened.items()):
-        stages.setdefault(stage, {"dispatches": [], "gates": []})["gates"].append({"attempt": n, "opened": at})
-    for stage, recs in records.items():
-        st = stages.setdefault(stage, {"dispatches": [], "gates": []})
-        if len(recs) >= len(st["dispatches"]):
-            # A repeat dispatch of the same stage writes a record but no `entering` commit.
-            first = st["dispatches"][:1]
-            st["dispatches"] = sorted(first + [t for n, t in sorted(recs.items())][len(first):])
-            order.extend((t, stage) for t in st["dispatches"][len(first):])
-    by_stage = {}
-    for stage, kind, at, decision in gates:
-        by_stage.setdefault(stage, []).append((kind, at, decision))
-    for stage, st in stages.items():
-        for gate, (kind, at, decision) in zip(st["gates"], by_stage.get(stage, [])):
-            gate.update(closed=at, outcome=decision or kind)
-    order = sorted(set(order))
-    ends = [t for t, _ in order[1:]] + [done]
+            entering.setdefault(m["stage"], []).append(at)
+        if ARCHIVE.match(subject) and done is None:
+            done = at
+        for path in added:
+            name = path.rsplit("/", 1)[-1]
+            r = STAGE_RECORD.fullmatch(name)
+            if "/dispatch/" in f"/{path}" and r and not r[3]:
+                records.setdefault(r[1], {}).setdefault(int(r[2]), at)
+            g = ROOM.search(path)
+            if g:
+                rooms.setdefault((g["stage"], int(g["n"])), at)
+    closes = {}
+    for e in gate_entries(fm or []):
+        if e.get("at"):
+            closes.setdefault(e["stage"], []).append(
+                (when(e["at"]), e.get("decision") if e["kind"] == "resolution" else "withdrawn"))
+    # A repeat dispatch of a stage writes a record but no `entering` commit.
+    starts = {}
+    for stage in set(entering) | set(records):
+        first = entering.get(stage, [])[:1]
+        rec = [t for _, t in sorted(records.get(stage, {}).items())]
+        starts[stage] = first + rec[len(first):] if len(rec) >= len(first) else entering[stage]
+    segments = sorted((t, s) for s, ts in starts.items() for t in ts)
+    ends = [t for t, _ in segments[1:]] + [done]
     rows = {}
-    for (start, stage), end in zip(order, ends):
-        row = rows.setdefault(stage, {"stage": stage, "start": start, "end": end, "elapsed_min": 0.0})
+    now = datetime.now(timezone.utc)
+    for (start, stage), end in zip(segments, ends):
+        row = rows.setdefault(stage, {"stage": stage, "start": start, "end": end, "elapsed": 0.0})
         row["end"] = end
-        row["elapsed_min"] = round(row["elapsed_min"] + (minutes(start, end) or 0), 1)
-    for stage, row in rows.items():
-        st = stages[stage]
-        gates_in = st["gates"]
-        wait = round(sum(minutes(g["opened"], g.get("closed")) or 0 for g in gates_in), 1)
-        closed = [g["closed"] for g in gates_in if g.get("closed")]
-        after = minutes(max(closed), row["end"]) if closed and row["end"] and max(closed) < row["end"] else 0.0
-        row.update(
-            start=row["start"].isoformat(), end=row["end"].isoformat() if row["end"] else None,
-            agent_min=round(row["elapsed_min"] - wait - after, 1), captain_wait_min=wait, after_gate_min=after,
-            dispatches=len(st["dispatches"]), repeat_dispatches=max(len(st["dispatches"]) - 1, 0),
-            dispatch_records=len(records.get(stage, ())),
-            gate_attempts=[{"attempt": g["attempt"], "opened": g["opened"].isoformat(),
-                            "closed": g["closed"].isoformat() if g.get("closed") else None,
-                            "outcome": g.get("outcome")} for g in gates_in])
-    rows = sorted(rows.values(), key=lambda r: r["start"])
-    backlog = [(k, at, d) for k, at, d in by_stage.get("backlog", [])]
-    amendments = [{"n": int(n), "date": d, "place": p.strip()} for n, d, p in AMENDMENT.findall(text)]
+        row["elapsed"] += mins(start, end or now) or 0
+    for (stage, _), opened in sorted(rooms.items()):
+        if stage not in rows:  # a gate with no dispatch, such as backlog: the stage is its gate
+            last = max((t for t, _ in closes.get(stage, [])), default=None)
+            rows[stage] = {"stage": stage, "start": opened, "end": last, "elapsed": mins(opened, last or now)}
+    out = []
+    for stage, row in sorted(rows.items(), key=lambda kv: kv[1]["start"]):
+        attempts = []
+        for (st, n), opened in sorted(rooms.items()):
+            if st == stage:
+                close = closes.get(stage, [])[n - 1] if n <= len(closes.get(stage, [])) else (None, "open")
+                attempts.append({"attempt": n, "opened": opened, "closed": close[0], "outcome": close[1]})
+        wait = sum(mins(a["opened"], a["closed"] or row["end"] or now) or 0 for a in attempts)
+        last = max((a["closed"] for a in attempts if a["closed"]), default=None)
+        after = mins(last, row["end"]) if last and row["end"] and last < row["end"] else 0.0
+        # Record numbers are FO's dispatch count; a gap means a record was never written, not no dispatch.
+        n = max(len(starts.get(stage, [])), max(records.get(stage, {}), default=0))
+        out.append({
+            "stage": stage, "start": iso(row["start"]), "end": iso(row["end"]),
+            "elapsed_min": round(row["elapsed"], 1),
+            "before_gate_min": round(row["elapsed"] - wait - after, 1),
+            "captain_wait_min": round(wait, 1), "after_gate_min": after,
+            "dispatches": n, "repeat_dispatches": max(n - 1, 0), "dispatch_records": len(records.get(stage, {})),
+            "gate_attempts": [{**a, "opened": iso(a["opened"]), "closed": iso(a["closed"])} for a in attempts],
+        })
+    asks_file = folder(task) / "asks.jsonl"
+    asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
+    gates = [o for v in closes.values() for _, o in v]
     return {
-        "task": slug,
-        "backlog_gate": [{"outcome": d or k, "closed": at.isoformat()} for k, at, d in backlog],
-        "stages": rows,
-        "done": done.isoformat() if done else None,
-        "re_asks": sum(1 for _, k, _, _ in gates if k == "withdrawal"),
-        "revise_decisions": sum(1 for _, _, _, d in gates if d == "revise"),
-        "out_of_gate_amendments": [a for a in amendments if "gate" not in a["place"].lower()],
-        "interruptions_recorded": False,
+        "task": slug, "stages": out, "done": iso(done),
+        "re_asks": gates.count("withdrawn"), "revise_decisions": gates.count("revise"),
+        "amendments_outside_gate": sum(1 for _, _, place in AMENDMENT.findall(body) if "gate" not in place.lower()),
+        "asks_outside_gate": len(asks) if asks_file.is_file() else None,
     }
 
 
 def show(t):
     print(f"task: {t['task']}")
     for r in t["stages"]:
-        print(f"  {r['stage']}: {r['start']} -> {r['end']}  elapsed {r['elapsed_min']} min, "
-              f"agent {r['agent_min']} min, captain wait {r['captain_wait_min']} min, after gate {r['after_gate_min']} min, "
-              f"dispatches {r['dispatches']} (repeat {r['repeat_dispatches']}, records {r['dispatch_records']})")
-        for g in r["gate_attempts"]:
-            print(f"    gate attempt {g['attempt']}: opened {g['opened']} closed {g['closed']} {g['outcome']}")
-    print(f"  done: {t['done']}")
-    print(f"  re-asks (withdrawn gate attempts): {t['re_asks']}; revise decisions: {t['revise_decisions']}")
-    print(f"  amendments outside a gate: {len(t['out_of_gate_amendments'])}")
-    print("  interruptions: not recorded (no record of a question outside a gate exists)")
+        print(f"  {r['stage']}: {r['start']} -> {r['end'] or 'running'}  {r['elapsed_min']} min "
+              f"(before gate {r['before_gate_min']}, Captain wait {r['captain_wait_min']}, after gate {r['after_gate_min']}); "
+              f"dispatches {r['dispatches']}, repeats {r['repeat_dispatches']}")
+        for a in r["gate_attempts"]:
+            print(f"    gate attempt {a['attempt']}: opened {a['opened']}, closed {a['closed'] or '-'}, {a['outcome']}")
+    print(f"  done: {t['done'] or '-'}")
+    asks = t["asks_outside_gate"]
+    print(f"  asks outside a gate: {'not recorded (no asks.jsonl)' if asks is None else asks}; "
+          f"withdrawn gate attempts: {t['re_asks']}; revise decisions: {t['revise_decisions']}; "
+          f"amendments outside a gate: {t['amendments_outside_gate']}")
+
+
+def record_ask(state, slug, text, clock=None):
+    path = folder(find_task(state, slug)) / "asks.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    entry = {"at": iso(clock or datetime.now(timezone.utc)), "asked": text}
+    with path.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    print(f"recorded ask {sum(1 for _ in path.open())} in {path}")
+
+
+def sweep(state):
+    rows = [timeline(state, f.stem) for f in sorted((state / "_archive").glob("*.md"))]
+    timed = [r for r in rows if r["stages"]]
+    print(f"archived tasks: {len(rows)}; at least one stage timed: {len(timed)}; "
+          f"with a repeat dispatch: {sum(any(s['repeat_dispatches'] for s in r['stages']) for r in rows)}; "
+          f"with a withdrawn gate attempt: {sum(r['re_asks'] > 0 for r in rows)}; "
+          f"with an amendment outside a gate: {sum(r['amendments_outside_gate'] > 0 for r in rows)}; "
+          f"with asks.jsonl: {sum(r['asks_outside_gate'] is not None for r in rows)}")
+    print("no stage timed: " + " ".join(r["task"] for r in rows if not r["stages"]))
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("task")
-    ap.add_argument("--state", required=True, type=Path)
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("state", type=Path)
+    ap.add_argument("task", nargs="?")
+    ap.add_argument("action", nargs="?", choices=["ask"])
+    ap.add_argument("text", nargs="?")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--all", action="store_true")
     a = ap.parse_args(argv)
-    t = timeline(a.state, a.task)
-    print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
+    if a.all:
+        sweep(a.state)
+    elif a.action == "ask":
+        if not (a.text or "").strip():
+            ap.error("ask needs the question text")
+        record_ask(a.state, a.task, a.text)
+    elif a.task:
+        t = timeline(a.state, a.task)
+        print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
+    else:
+        ap.error("name a task or pass --all")
     return 0
 
 
