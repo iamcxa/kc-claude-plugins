@@ -1,0 +1,11 @@
+{
+  "roots": [
+    "/tmp/stage-time-acceptance-2.ItuhXX",
+    "/tmp/stage-time-acceptance-2.oMF07E",
+    "/tmp/stage-time-validation-2-188ba44f-20261112",
+    "/tmp/tt-ask-smoke.8jdiox",
+    "/tmp/tt-falsify.CkPSc1"
+  ],
+  "nested_fixtures": "Test-created directories under the owned scratch roots are removed with those roots; TemporaryDirectory also self-cleans.",
+  "legacy_ask_root": "The old falsifier filters the ask-smoke removal line. Its EXIT trap removes the exact mktemp path; verify no /tmp/tt-ask-smoke.* directories remain, without deleting any unknown directory."
+}

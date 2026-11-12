@@ -1,0 +1,10 @@
+{
+  "suites": {
+    "tests.log": 12,
+    "lint-tests.log": 47,
+    "ledger-tests.log": 23,
+    "role-tests.log": 63
+  },
+  "passed": 145,
+  "failed": 0
+}

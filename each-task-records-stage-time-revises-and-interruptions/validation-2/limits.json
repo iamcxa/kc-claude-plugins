@@ -1,0 +1,22 @@
+[
+  {
+    "item": "Three post-release finished tasks against independent hand timing and ask tally",
+    "judgment": "still not provable",
+    "reason": "No post-release tasks or contemporaneous hand records are available; historical comparisons do not satisfy the Stop condition."
+  },
+  {
+    "item": "A real Codex First Officer writes the same records",
+    "judgment": "still not provable",
+    "reason": "No qualifying Codex FO session was identified; worker model provenance does not prove the FO host."
+  },
+  {
+    "item": "FO records every question before asking outside gates",
+    "judgment": "still not provable",
+    "reason": "Needs post-adoption FO session versus asks.jsonl comparison; fixture persistence proves only helper behavior."
+  },
+  {
+    "item": "New helper tests in CI and lint with word-budget increase",
+    "judgment": "proven on this head",
+    "reason": "Hosted run 43202173161 completed success at the candidate, including helper tests; local skill lint is 6033/6033."
+  }
+]

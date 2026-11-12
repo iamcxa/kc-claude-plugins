@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_repeat_without_entering_uses_highest_record_number_and_excludes_messages (test_task_timeline.TimelineTests.test_repeat_without_entering_uses_highest_record_number_and_excludes_messages)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/stage-time-validation-2-188ba44f-20261112/checks/mutant/test_task_timeline.py", line 97, in test_repeat_without_entering_uses_highest_record_number_and_excludes_messages
+    self.assertEqual((row["dispatches"], row["repeat_dispatches"], row["dispatch_records"]), (3, 2, 2))
+AssertionError: Tuples differ: (2, 1, 2) != (3, 2, 2)
+
+First differing element 0:
+2
+3
+
+- (2, 1, 2)
++ (3, 2, 2)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.229s
+
+FAILED (failures=1)

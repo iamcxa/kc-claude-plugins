@@ -1,0 +1,43 @@
+707c1431a581a98bb8ec871d6b1c379783cfa7f6 2026-11-11T09:14:41+08:00 state: update denied-command-denies-only-that-command
+d6578c7d07acdba1190e74c4a980a8591a46f9eb 2026-11-11T09:15:22+08:00 state: update denied-command-denies-only-that-command
+13ab8217e7fd26b03f8eb8a5ed8017c431b84bd9 2026-11-11T09:18:55+08:00 gate: record denied-command-denies-only-that-command backlog approve
+ec7b530acd95be7b6c141eceb8c84ed1e2b21b04 2026-11-11T09:18:58+08:00 gate: consume denied-command-denies-only-that-command -> ideation
+608a0d2af7218707c62b7426419d52dc4f2d15ea 2026-11-11T09:19:20+08:00 dispatch: denied-command-denies-only-that-command entering ideation
+7262203bedd13fc46519b53d66ead6dbfed00715 2026-11-11T09:40:45+08:00 ideation: denied-command-denies-only-that-command design and report
+1750d2ba507c9503f9b24085995aa5132a6ce7d8 2026-11-11T10:17:00+08:00 state: update denied-command-denies-only-that-command
+20be0690d61cd7db493aa4b005b4662349222cea 2026-11-11T10:20:10+08:00 state: update denied-command-denies-only-that-command
+df79ebc958bb0abf578ed6112989c641419d399a 2026-11-11T10:51:14+08:00 state: update denied-command-denies-only-that-command
+76e89c2374463d38395458afccc5a006adbe9856 2026-11-11T10:54:31+08:00 gate: record denied-command-denies-only-that-command ideation approve
+a75c27529bfaf07a0e939c8d788f89227b18ddf2 2026-11-11T10:54:35+08:00 gate: consume denied-command-denies-only-that-command -> implementation
+82f9d8c32c8f3b8ec5672a5a4495a10373fda5e0 2026-11-11T11:59:51+08:00 dispatch: denied-command-denies-only-that-command entering implementation
+6ea0519acb5baf61f275a0266743f9141fd6789d 2026-11-11T12:18:36+08:00 docs(dev2): record refusal-rule implementation and replay hold
+d52824cf3691e9855a03585b2d475bd8fdf92c9c 2026-11-11T12:20:21+08:00 docs(dev2): record final local checks and replay cleanup
+80bbdf4115a03cc11da2eae88727aa4985c7a34b 2026-11-11T12:45:06+08:00 state: update denied-command-denies-only-that-command
+1c5c83bf35799d4d8b783d09cd3745bfdcf0ecaa 2026-11-11T12:45:25+08:00 state: update denied-command-denies-only-that-command
+36e74c070c7d87e9faa2f2e05736d32207fa4fcd 2026-11-11T12:56:11+08:00 docs(dev2): apply denial-reason amendment and prepare FO replay
+46de1dc206cdf57d080675b475067e986d7b0d73 2026-11-11T13:07:19+08:00 state: update denied-command-denies-only-that-command
+228f6247775de6d7491132d097b93c26a4a5ccbe 2026-11-11T13:17:47+08:00 docs(dev2): score FO denial replay and retain same-turn hold
+0f313484a235901f6d8e134c31036a90d55548c2 2026-11-11T14:15:36+08:00 state: update denied-command-denies-only-that-command
+f342c58d84ffe837b623a0535a2d62800d1e4d04 2026-11-11T14:37:16+08:00 docs(dev2): re-score denial replay from native turn evidence
+8f7d342bcdd15e57e9101fe849cef877f15b0752 2026-11-11T14:39:06+08:00 state: update denied-command-denies-only-that-command
+fa54385adc807f390d1c22cebe94cfdb3d3f67f3 2026-11-11T14:39:32+08:00 state: update denied-command-denies-only-that-command
+090deb621d6875b0cd11d8ff7d5b4322fb325655 2026-11-11T14:39:53+08:00 state: update denied-command-denies-only-that-command
+e3e7426631e897a7b7922bdf3541cf8c04a0762c 2026-11-11T14:40:01+08:00 dispatch: denied-command-denies-only-that-command entering validation
+d93887b6a00679ae21ccaf9197457de1ca85663c 2026-11-11T14:52:12+08:00 state: update denied-command-denies-only-that-command
+6977fa45c8144f996a5829f9b343bdeabcdb824a 2026-11-11T14:56:04+08:00 state: update denied-command-denies-only-that-command
+26ce52b4d8eee1c29a9e810a786e3d70ec8255cc 2026-11-11T14:56:11+08:00 state: update denied-command-denies-only-that-command
+ab879a14639923588df440e25d40fe316bf282a8 2026-11-11T15:03:49+08:00 gate: record denied-command-denies-only-that-command validation revise
+04b1a9133f972f689055157fe28570c40e642824 2026-11-11T15:04:12+08:00 state: update denied-command-denies-only-that-command
+82aa6626a4f3305536d99546c18208592cb49012 2026-11-11T15:15:02+08:00 docs(dev2): record default-send denial correction
+03cbbf985293653a209975d99af3cc459e7f0694 2026-11-11T15:16:18+08:00 docs(dev2): answer amendment step-back reminder
+bf3b894ea60b528dfff5b2c8b95ceb9bf694e1c3 2026-11-11T15:17:21+08:00 docs(dev2): trim evidence file trailing blank
+eb86de334049e487b0fd84ee8572c3a004b8f0b3 2026-11-11T15:26:28+08:00 state: update denied-command-denies-only-that-command
+1b89f44c428f87020de1a1095be6b053e45d1b97 2026-11-11T15:26:59+08:00 dispatch: denied-command-denies-only-that-command entering validation
+c08fe98c1af3b60432eb92877675c6fa58894a34 2026-11-11T15:38:26+08:00 state: update denied-command-denies-only-that-command
+497b9f328396f587141bc2da36a03c61de4393c3 2026-11-11T15:39:04+08:00 state: update denied-command-denies-only-that-command
+897cd40163e87c62e76dc1a66e95152e4a544193 2026-11-11T15:58:42+08:00 state: update denied-command-denies-only-that-command
+5f7a2da393cc0abbfed7a614c23d88465620acdc 2026-11-11T15:58:46+08:00 state: update denied-command-denies-only-that-command
+f99630408b49a358bdae9dd248c3b614e2ed0d05 2026-11-11T15:59:46+08:00 gate: record denied-command-denies-only-that-command validation approve
+242e916e8e46463c5b4ca897ec723c4fcaf0a62e 2026-11-11T16:06:38+08:00 state: update denied-command-denies-only-that-command
+fb6a5b003baf04708b065da49d062dc0eaab81e4 2026-11-11T16:06:43+08:00 state: update denied-command-denies-only-that-command
+6a6c18ac09be4cc2a827f09f398347b26cb940c4 2026-11-11T16:06:49+08:00 archive denied-command-denies-only-that-command (merge guard)

@@ -1,0 +1,30 @@
+F
+======================================================================
+FAIL: test_finished_boundaries_use_author_dates_even_after_rebase (test_task_timeline.TimelineTests.test_finished_boundaries_use_author_dates_even_after_rebase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/stage-time-validation-2-188ba44f-20261112/checks/mutant/test_task_timeline.py", line 87, in test_finished_boundaries_use_author_dates_even_after_rebase
+    self.assertEqual([(r["start"], r["end"], r["elapsed_min"]) for r in result["stages"]],
+AssertionError: Lists differ: [('2026-01-01T01:40:00Z', '2026-01-01T01:50:00Z', 10.0),[52 chars]0.0)] != [('2026-01-01T00:10:00Z', '2026-01-01T00:30:00Z', 20.0),[51 chars]0.0)]
+
+First differing element 0:
+('2026-01-01T01:40:00Z', '2026-01-01T01:50:00Z', 10.0)
+('2026-01-01T00:10:00Z', '2026-01-01T00:30:00Z', 20.0)
+
+- [('2026-01-01T01:40:00Z', '2026-01-01T01:50:00Z', 10.0),
+?                 --                     ^ ^        ^
+
++ [('2026-01-01T00:10:00Z', '2026-01-01T00:30:00Z', 20.0),
+?                ++                      ^ ^        ^
+
+-  ('2026-01-01T01:50:00Z', '2026-01-01T01:00:00Z', -50.0)]
+?                ^ ^                                ^^
+
++  ('2026-01-01T00:30:00Z', '2026-01-01T01:00:00Z', 30.0)]
+?                ^ ^                                ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.240s
+
+FAILED (failures=1)

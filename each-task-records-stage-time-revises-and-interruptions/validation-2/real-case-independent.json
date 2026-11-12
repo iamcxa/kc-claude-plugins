@@ -1,0 +1,21 @@
+{
+  "git_author_starts": [
+    "2026-11-11T14:40:01+08:00",
+    "2026-11-11T15:26:59+08:00"
+  ],
+  "gate_closes_from_raw_yaml": [
+    "2026-11-11T07:03:48.07088Z",
+    "2026-11-11T07:59:45.912526Z"
+  ],
+  "archive_author_end": "2026-11-11T16:06:49+08:00",
+  "parts_min": [
+    23.2,
+    7.1
+  ],
+  "expected_after_min": 30.3,
+  "observed": {
+    "control": 7.1,
+    "candidate": 30.3
+  },
+  "matched": true
+}

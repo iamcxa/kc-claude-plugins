@@ -1,0 +1,10 @@
+[
+  {
+    "severity": "high",
+    "title": "Repeated-stage after-gate attribution (prior F1)",
+    "file": "kc-dev-flow-2/scripts/task_timeline.py",
+    "line": 130,
+    "detail": "kind: build; prior Material finding independently reproduced on control and fixed on candidate using raw author-date/gate evidence and 20/20/40 probe.",
+    "status": "fixed"
+  }
+]

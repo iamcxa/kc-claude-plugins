@@ -1,0 +1,50 @@
+[
+  {
+    "name": "test_task_timeline.TimelineTests.test_ask_cli_appends_utc_questions_and_rejects_empty_without_write",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_finished_boundaries_use_author_dates_even_after_rebase",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_folder_form_archived_task_is_in_sweep",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_gate_close_matches_attempt_number_even_with_missing_room",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_gate_only_stage_has_no_before_gate_minutes",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_repeat_without_entering_uses_highest_record_number_and_excludes_messages",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_repeated_stage_preserves_each_cycles_after_gate_time",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_running_stage_minutes_reach_now",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_sweep_reports_missing_stage_start_without_refusing",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_unreadable_frontmatter_stops_sweep_with_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_task_timeline.TimelineTests.test_withdrawn_then_approved_gate_has_each_open_close_and_wait",
+    "status": "passed"
+  }
+]

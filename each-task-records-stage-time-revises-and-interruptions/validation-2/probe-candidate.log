@@ -1,0 +1,19 @@
+{
+  "intervals": [
+    "10..20 before, 20..30 Captain wait, 30..60 after",
+    "80..90 before, 90..100 Captain wait, 100..110 after"
+  ],
+  "expected": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 20.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 40.0
+  },
+  "observed": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 20.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 40.0
+  },
+  "fixture": "/tmp/stage-time-validation-2-188ba44f-20261112/timeline-test-32n7f9ut"
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation-2/acceptance.sh"
+  ],
+  "exit": 0,
+  "steps": 4,
+  "log": "acceptance.log",
+  "script_sha256": "dda6d5a23646a3f1116c7bdf4778e235181cb8ab778fcc125583abf4163b7b49",
+  "expected_helper_tests": 12
+}

@@ -1,0 +1,19 @@
+task: demo
+  ideation: 2026-11-12T05:00:00Z -> running  342.8 min (before gate 342.8, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+recorded ask 1 in /tmp/tt-ask-smoke.8jdiox/demo/asks.jsonl
+recorded ask 2 in /tmp/tt-ask-smoke.8jdiox/demo/asks.jsonl
+task: demo
+  ideation: 2026-11-12T05:00:00Z -> running  342.8 min (before gate 342.8, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: 2
+      2026-11-12T10:42:48Z: Push to the relay repo needs your yes: may I push?
+      2026-11-12T10:42:48Z: 上一題答完了，這題：要不要先合併 #850？
+  done: -
+  asks outside a gate: 2; withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+asks_outside_gate == 2
+empty ask refused
+removed /tmp/tt-ask-smoke.8jdiox
+usage: task_timeline.py [-h] [--json] [--all] state [task] [{ask}] [text]
+task_timeline.py: error: ask needs the question text

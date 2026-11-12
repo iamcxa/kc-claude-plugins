@@ -1,0 +1,12 @@
+[
+  {
+    "label": "control",
+    "exit": 1,
+    "expected": 1
+  },
+  {
+    "label": "candidate",
+    "exit": 0,
+    "expected": 0
+  }
+]

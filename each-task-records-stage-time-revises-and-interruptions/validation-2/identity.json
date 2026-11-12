@@ -1,0 +1,10 @@
+{
+  "start_asia_taipei": "2026-11-12 18:40:22",
+  "head": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+  "control": "a3266ec91c7d46d36864c471c0cc26b389130b3c",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "state_head": "86aeda1cb52b5fd06f7a2fc45e191dcb15f6beb5",
+  "scratch": "/tmp/stage-time-validation-2-188ba44f-20261112"
+}

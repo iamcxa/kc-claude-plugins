@@ -1,0 +1,147 @@
+[
+  {
+    "task": "each-task-records-stage-time-revises-and-interruptions",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/stage-time-validation-2-188ba44f-20261112/candidate/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "each-task-records-stage-time-revises-and-interruptions",
+      "--json"
+    ],
+    "exit": 0,
+    "running": [
+      {
+        "stage": "validation",
+        "start": "2026-11-12T09:42:21Z",
+        "end": null,
+        "elapsed_min": 64.7,
+        "before_gate_min": 64.7,
+        "captain_wait_min": 0,
+        "after_gate_min": 0.0,
+        "dispatches": 2,
+        "repeat_dispatches": 1,
+        "dispatch_records": 2,
+        "gate_attempts": [],
+        "asks": [],
+        "asks_outside_gate": null
+      }
+    ]
+  },
+  {
+    "task": "merge-ask-tests-the-merge-result",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/stage-time-validation-2-188ba44f-20261112/candidate/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "merge-ask-tests-the-merge-result",
+      "--json"
+    ],
+    "exit": 0,
+    "running": [
+      {
+        "stage": "validation",
+        "start": "2026-11-12T09:51:46Z",
+        "end": null,
+        "elapsed_min": 55.2,
+        "before_gate_min": 55.2,
+        "captain_wait_min": 0,
+        "after_gate_min": 0.0,
+        "dispatches": 1,
+        "repeat_dispatches": 0,
+        "dispatch_records": 1,
+        "gate_attempts": [],
+        "asks": [],
+        "asks_outside_gate": null
+      }
+    ]
+  },
+  {
+    "task": "held-and-closed-tasks-leave-the-design-queue",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/stage-time-validation-2-188ba44f-20261112/candidate/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "held-and-closed-tasks-leave-the-design-queue",
+      "--json"
+    ],
+    "exit": 0,
+    "running": [
+      {
+        "stage": "implementation",
+        "start": "2026-11-12T10:03:05Z",
+        "end": null,
+        "elapsed_min": 43.9,
+        "before_gate_min": 43.9,
+        "captain_wait_min": 0,
+        "after_gate_min": 0.0,
+        "dispatches": 1,
+        "repeat_dispatches": 0,
+        "dispatch_records": 1,
+        "gate_attempts": [],
+        "asks": [],
+        "asks_outside_gate": null
+      }
+    ]
+  },
+  {
+    "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/stage-time-validation-2-188ba44f-20261112/candidate/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "dispatch-close-out-archives-evidence-and-removes-scratch",
+      "--json"
+    ],
+    "exit": 0,
+    "running": [
+      {
+        "stage": "validation",
+        "start": "2026-11-12T10:03:00Z",
+        "end": null,
+        "elapsed_min": 44.0,
+        "before_gate_min": 44.0,
+        "captain_wait_min": 0,
+        "after_gate_min": 0.0,
+        "dispatches": 2,
+        "repeat_dispatches": 1,
+        "dispatch_records": 1,
+        "gate_attempts": [],
+        "asks": [],
+        "asks_outside_gate": null
+      }
+    ]
+  },
+  {
+    "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/stage-time-validation-2-188ba44f-20261112/candidate/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "gate-question-facts-are-checked-before-the-captain-reads-them",
+      "--json"
+    ],
+    "exit": 0,
+    "running": [
+      {
+        "stage": "validation",
+        "start": "2026-11-12T10:33:21Z",
+        "end": null,
+        "elapsed_min": 13.6,
+        "before_gate_min": 13.6,
+        "captain_wait_min": 0,
+        "after_gate_min": 0.0,
+        "dispatches": 1,
+        "repeat_dispatches": 0,
+        "dispatch_records": 1,
+        "gate_attempts": [],
+        "asks": [],
+        "asks_outside_gate": null
+      }
+    ]
+  }
+]

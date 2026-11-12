@@ -1,0 +1,14 @@
+task: worth-questions-asked-only-before-the-design-gate
+  backlog: 2026-11-11T14:18:48Z -> 2026-11-11T14:24:06Z  5.3 min (before gate 0.0, Captain wait 5.3, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-11T14:18:48Z, closed 2026-11-11T14:24:06Z, approve
+  ideation: 2026-11-11T14:24:19Z -> 2026-11-11T14:46:03Z  21.7 min (before gate 19.9, Captain wait 1.5, after gate 0.3); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-11T14:44:13Z, closed 2026-11-11T14:45:43Z, approve
+  implementation: 2026-11-11T14:46:03Z -> 2026-11-11T15:01:44Z  15.7 min (before gate 15.7, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+  validation: 2026-11-11T15:01:44Z -> 2026-11-11T15:44:32Z  42.8 min (before gate 36.2, Captain wait 1.0, after gate 5.6); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-11T15:37:56Z, closed 2026-11-11T15:38:55Z, approve
+  done: 2026-11-11T15:44:32Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0

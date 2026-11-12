@@ -1,0 +1,596 @@
+diff --git a/.github/workflows/kc-dev-flow-2-tests.yml b/.github/workflows/kc-dev-flow-2-tests.yml
+index a2952a1d1..1b7dc7e01 100644
+--- a/.github/workflows/kc-dev-flow-2-tests.yml
++++ b/.github/workflows/kc-dev-flow-2-tests.yml
+@@ -82,6 +82,9 @@ jobs:
+       - name: test_replay_dispatch.py
+         run: python3 kc-dev-flow-2/scripts/test_replay_dispatch.py
+ 
++      - name: test_task_timeline.py
++        run: python3 -B kc-dev-flow-2/scripts/test_task_timeline.py
++
+       - name: test_decision_ledger.py
+         run: python3 kc-dev-flow-2/scripts/test_decision_ledger.py
+ 
+diff --git a/docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md b/docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+new file mode 100644
+index 000000000..73ef5dc7e
+--- /dev/null
++++ b/docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+@@ -0,0 +1,58 @@
++# 0080. Stage times come from state records and outside-gate questions are recorded when asked
++
++Date: 2026-11-12
++
++## Status
++
++Accepted
++
++## Context
++
++The First Officer could recover stage times only by reading state commits by hand,
++and questions outside gates had no record. The local proof of concept read times
++for 135 of 157 archived tasks and matched the budget counter on all 62 comparable
++tasks. The ideation gate of each-task-records-stage-time-revises-and-interruptions
++accepted its four recommended decisions; Captain amendment 1 permitted this record.
++
++## Decision
++
++**Words:** 「五份都核准（建議）」 — Captain, 2026-11-12, host question dialog,
++ideation gate of each-task-records-stage-time-revises-and-interruptions.
++
++The timing portion of the bound question was 「一、計時紀錄：「重做」算同一階段第二次以後的派工；「打斷」算我在關卡以外問你的每一題，由我在問的當下記一筆；工具只報告缺漏、不擋任務；流程說明多 25 個字。」.
++
++**Options considered:**
++- Read stage boundaries from existing state records; count each dispatch after the
++  first by the highest plain dispatch-record number, including gaps (chosen).
++- Count gate revise decisions or follow-up messages as revises instead; those are
++  different events and do not match the existing per-stage budget counter.
++- Record each First Officer question outside a scheduled gate when asked (chosen),
++  rather than infer interruptions from machine-local host transcripts or amendments.
++- Report missing times without refusing work (chosen), rather than add a time gate.
++- Add 25 workflow words for the ask-and-read commands (chosen), rather than leave
++  the recording step outside the document the First Officer reads at that moment.
++
++**Recommended:** The four chosen options, as the design recommended and the Captain approved.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/task_timeline.py` — revise count, ask recording and missing-record reporting
++- `kc-dev-flow-2/scripts/lint-skills.py` — the approved 25-word workflow budget step
++
++Stage times use author dates of state commits and gate resolution or withdrawal
++stamps. Before-gate time includes First Officer idle and is not a measurement of
++worker execution alone. Each question outside a scheduled gate is appended to
++`<task>/asks.jsonl` when asked. Gate revise decisions, withdrawn attempts and
++amendments remain separate from the interruption count. A missing ask file means
++unknown, not zero. The helper reports missing records; it imposes no work hold.
++The workflow budget rises by 25 words under ADR 0020. ADR 0077's cycle budgets
++remain in force; minutes do not spend them.
++
++## Consequences
++
++One command recovers stage times and counts on either host from shared state.
++A dispatch after worker failure counts as a revise; follow-up messages do not.
++An omitted ask silently undercounts, and unprompted Captain messages are not asks.
++Startup reading grows by 25 words. Comparison against hand records for three
++post-release tasks, a real Codex First Officer and its questions remains owed.
++Reopen if those observations show that the shared records cannot supply reliable
++boundaries or that manual ask recording misses the approved interruption measure.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index 016e3e736..d830d3532 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -251,6 +251,8 @@ not completion.
+ 
+ ## Captain steps
+ 
++Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>"`; `python3 <package>/scripts/task_timeline.py <state> <task>` prints each stage's times and counts.
++
+ Before asking the Captain to run or look at anything (an acceptance script, a
+ command, a link, a sign-in, a file of steps), FO runs each step as written, in a
+ fresh shell or a real browser, as far as it goes without his credentials, and
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index d5fdf8761..4e7bc09f4 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -75,6 +75,10 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=69, why="countable task budgets hold the first overrun, show gate-specific content and default to preserving results before stopping",
+          captain='「照建議核准（建議）」 (Captain, host question dialog, 2026-11-11), answering 「決定：要不要核准「預算是什麼」（已併入第一性原理）的設計並開始實作。我建議照設計的建議核准：預算改用可數的輪數寫，新任務必須用這個寫法；每次實作與驗證派工顯示預算和已花幾輪，第一次超過就停下來，由我帶著三個「值不值得」的問題的答案來問你；同樣三題在每份設計裡必答，檢查會擋缺漏；原本的退一步提醒對這類任務取消，不另外加重大發現的規則。核准即接受這三項；它的代價是你會被問得比現在多。」; Captain amendment 3 「加總次數和停止句，分鐘另談（建議）」, answering 「預算的寫法要不要照你的例子擴大？目前核准的設計只認「每階段幾輪」兩種寫法，實作工人已在做。我建議：這一張先加上「派工總次數上限」這種寫法，並把「到上限就保留成果、回報剩餘工作並停止加碼」當成停下來時的預設結果；「累計代理分鐘」因為現在沒有可靠的時間來源，另外記成一張要先查證的任務，不塞進這張。」; Captain amendment 4 「兩處都同意（建議）」, answering 「「預算」這張任務的實作停在兩處等更正，要不要都同意？一、第七項驗收條件把三個值不值得的問題寫成放進「待辦關卡」，更正為你核准的「設計關卡」，待辦關卡只呈現預算。二、允許多改兩個設計沒列的測試檔（pr_watch 和 delivery_gate 的測試），只更新 4 處還在比對舊版退一步提醒文字的預期值，產品程式不動。我建議兩處都同意。」; Captain amendment 5 「只算修正的訊息（建議）」, answering 「預算的「派工總次數上限」裡，我在同一個階段追加給工人的訊息要怎麼算？我建議：只有要工人回去修東西的訊息（紀錄上有寫問題名稱的）算一次派工，回答工人提問或轉達你裁示的訊息不算。以「發版鋪開」為例，這樣是 7 次；每則都算是 11 次，都不算是 2 次。」',
+          loaded="startup and resume of the First Officer, backlog admission, ideation gate preparation, repair dispatch and Captain amendment recording"),
++    # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
++    dict(delta=25, why="record outside-gate questions when asked and read stage times and counts on demand",
++         captain='「五份都核准（建議）」 (Captain, ideation gate, 2026-11-12), answering the bound question: 「一、計時紀錄：「重做」算同一階段第二次以後的派工；「打斷」算我在關卡以外問你的每一題，由我在問的當下記一筆；工具只報告缺漏、不擋任務；流程說明多 25 個字。」',
++         loaded="startup and resume of the First Officer, and before each outside-gate Captain question"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/task_timeline.py b/kc-dev-flow-2/scripts/task_timeline.py
+new file mode 100644
+index 000000000..8d0a36ae1
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/task_timeline.py
+@@ -0,0 +1,254 @@
++#!/usr/bin/env python3
++"""Print one task's per-stage times, dispatch counts and Captain asks; record an ask outside a gate.
++
++  task_timeline.py <state checkout> <task slug> [--json]   print the timeline
++  task_timeline.py <state checkout> --all                  one summary line over every archived task
++  task_timeline.py <state checkout> <task slug> ask TEXT   append one ask outside a gate, stamped now (UTC)
++
++Times come from records written at the time: author dates of the state checkout's commits
++(`dispatch|advance: <slug> entering <stage>`, the commit adding each dispatch record and each
++gate room's index.json, `archive <slug>`), the `at` of each gate resolution or withdrawal, and
++`<task>/asks.jsonl`. Author dates are used because `pull --rebase` rewrites committer dates.
++A revise is a dispatch after the first, by highest plain dispatch-record number, including gaps;
++follow-up messages are excluded. An interruption is an FO question outside a scheduled gate,
++recorded by `ask` when asked. Gate revise decisions, withdrawals and amendments are separate.
++Missing records are reported, never a work hold. Before-gate minutes include FO idle, not just
++agent work. No asks.jsonl means unknown, not zero. `ask` appends locally; FO commits the record.
++"""
++import argparse
++import json
++import re
++import subprocess
++import sys
++from datetime import datetime, timezone
++from pathlib import Path
++
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from decision_ledger import gate_entries, split_task  # noqa: E402
++from role_triggers import STAGE_RECORD  # noqa: E402
++
++ENTERING = re.compile(r"^(?:dispatch|advance): (?P<slug>\S+) entering (?P<stage>\S+)$")
++ARCHIVE = re.compile(r"^archive (?P<slug>\S+)")
++ROOM = re.compile(r"(?:^|/)review/(?P<stage>[^/]+)/briefing-(?P<n>\d+)/index\.json$")
++AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2}),\s*(.+)$", re.M)
++
++
++def when(text):
++    return datetime.fromisoformat(text.replace("Z", "+00:00")).astimezone(timezone.utc)
++
++
++def mins(a, b):
++    return round((b - a).total_seconds() / 60, 1) if a and b else None
++
++
++def iso(t):
++    return t.strftime("%Y-%m-%dT%H:%M:%SZ") if t else None
++
++
++def find_task(state, slug):
++    for rel in (f"{slug}/index.md", f"{slug}.md", f"_archive/{slug}/index.md", f"_archive/{slug}.md"):
++        if (state / rel).is_file():
++            return state / rel
++    raise SystemExit(f"task_timeline: no task file for {slug} under {state}")
++
++
++def folder(task):
++    return task.parent if task.name == "index.md" else task.with_suffix("")
++
++
++def history(state, slug):
++    out = subprocess.run(
++        ["git", "-C", str(state), "log", "--reverse", "--no-renames", "--name-status",
++         "--format=\x1e%aI\x1f%s", "--", f"{slug}.md", slug, f"_archive/{slug}.md", f"_archive/{slug}"],
++        capture_output=True, text=True, check=True).stdout
++    for chunk in out.split("\x1e")[1:]:
++        head, _, body = chunk.partition("\n")
++        date, subject = head.split("\x1f", 1)
++        added = [line.split("\t")[-1] for line in body.splitlines() if line.startswith("A\t")]
++        yield when(date), subject, added
++
++
++def timeline(state, slug):
++    task = find_task(state, slug)
++    text = task.read_text(encoding="utf-8")
++    fm, body = split_task(text)
++    if fm is None:
++        raise ValueError(f"{task}: missing or unclosed frontmatter")
++    entering, records, rooms, done = {}, {}, {}, None
++    for at, subject, added in history(state, slug):
++        m = ENTERING.match(subject)
++        if m and m["slug"] == slug:
++            entering.setdefault(m["stage"], []).append(at)
++        archived = ARCHIVE.match(subject)
++        if archived and archived["slug"] == slug and done is None:
++            done = at
++        for path in added:
++            name = path.rsplit("/", 1)[-1]
++            r = STAGE_RECORD.fullmatch(name)
++            if "/dispatch/" in f"/{path}" and r and not r[3]:
++                records.setdefault(r[1], {}).setdefault(int(r[2]), at)
++            g = ROOM.search(path)
++            if g:
++                rooms.setdefault((g["stage"], int(g["n"])), at)
++    closes = {}
++    for e in gate_entries(fm or []):
++        if e.get("at"):
++            closes.setdefault(e["stage"], []).append(
++                (int(e["attempt"].rsplit("-", 1)[1]), when(e["at"]),
++                 e.get("decision") if e["kind"] == "resolution" else "withdrawn"))
++    # A repeat dispatch of a stage writes a record but no `entering` commit.
++    starts = {}
++    for stage in set(entering) | set(records):
++        first = entering.get(stage, [])
++        rec = [t for n, t in sorted(records.get(stage, {}).items()) if n > len(first)]
++        starts[stage] = first + rec
++    segments = sorted((t, s) for s, ts in starts.items() for t in ts)
++    ends = [t for t, _ in segments[1:]] + [done]
++    rows = {}
++    now = datetime.now(timezone.utc)
++    for (start, stage), end in zip(segments, ends):
++        row = rows.setdefault(stage, {"stage": stage, "start": start, "end": end, "elapsed": 0.0})
++        row["end"] = end
++        row["elapsed"] += mins(start, end or now) or 0
++    for (stage, _), opened in sorted(rooms.items()):
++        if stage not in rows:  # A gate-only stage starts at its first room.
++            stage_rooms = [t for (s, _), t in rooms.items() if s == stage]
++            stage_closes = {n: t for n, t, _ in closes.get(stage, [])}
++            last = max(stage_closes.values(), default=None) if all(
++                n in stage_closes for (s, n) in rooms if s == stage) else None
++            opened = min(stage_rooms)
++            rows[stage] = {"stage": stage, "start": opened, "end": last, "elapsed": mins(opened, last or now)}
++    out = []
++    for stage, row in sorted(rows.items(), key=lambda kv: kv[1]["start"]):
++        attempts = []
++        for (st, n), opened in sorted(rooms.items()):
++            if st == stage:
++                close = next(((t, outcome) for number, t, outcome in closes.get(stage, []) if number == n),
++                             (None, "open"))
++                attempts.append({"attempt": n, "opened": opened, "closed": close[0], "outcome": close[1]})
++        wait = sum(mins(a["opened"], a["closed"] or row["end"] or now) or 0 for a in attempts)
++        after = 0.0
++        for (start, st), end in zip(segments, ends):
++            if st != stage:
++                continue
++            end = end or now
++            last = max((a["closed"] for a in attempts if a["closed"] and start <= a["closed"] <= end), default=None)
++            after += mins(last, end) or 0.0
++        after = round(after, 1)
++        before = round(row["elapsed"] - wait - after, 1)
++        if stage not in starts:
++            before, after = 0.0, round(row["elapsed"] - wait, 1)
++        # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
++        n = max(len(starts.get(stage, [])), max(records.get(stage, {}), default=0))
++        out.append({
++            "stage": stage, "start": iso(row["start"]), "end": iso(row["end"]),
++            "elapsed_min": round(row["elapsed"], 1),
++            "before_gate_min": before,
++            "captain_wait_min": round(wait, 1), "after_gate_min": after,
++            "dispatches": n, "repeat_dispatches": max(n - 1, 0), "dispatch_records": len(records.get(stage, {})),
++            "gate_attempts": [{**a, "opened": iso(a["opened"]), "closed": iso(a["closed"])} for a in attempts],
++        })
++    asks_file = folder(task) / "asks.jsonl"
++    asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
++    unassigned = []
++    for row in out:
++        row["asks"] = []
++        row["asks_outside_gate"] = 0 if asks_file.is_file() else None
++    for ask in asks:
++        at = when(ask["at"])
++        stage = next((s for (start, s), end in zip(segments, ends)
++                      if start <= at < (end or now)), None)
++        if stage is None:
++            stage = next((r["stage"] for r in out if when(r["start"]) <= at < (when(r["end"]) if r["end"] else now)), None)
++        if stage is None:
++            unassigned.append(ask)
++        else:
++            row = next(r for r in out if r["stage"] == stage)
++            row["asks"].append(ask)
++            row["asks_outside_gate"] += 1
++    gates = [o for v in closes.values() for _, _, o in v]
++    known = set(starts) | set(closes) | {s for s, _ in rooms}
++    return {
++        "task": slug, "stages": out, "done": iso(done),
++        "withdrawn_gate_attempts": gates.count("withdrawn"), "gate_revise_decisions": gates.count("revise"),
++        "stages_without_start": sorted(known - set(rows)), "unassigned_asks": unassigned,
++        "amendments_outside_gate": sum(1 for _, _, place in AMENDMENT.findall(body) if "gate" not in place.lower()),
++        "asks_outside_gate": len(asks) if asks_file.is_file() else None,
++    }
++
++
++def show(t):
++    print(f"task: {t['task']}")
++    for r in t["stages"]:
++        print(f"  {r['stage']}: {r['start']} -> {r['end'] or 'running'}  {r['elapsed_min']} min "
++              f"(before gate {r['before_gate_min']}, Captain wait {r['captain_wait_min']}, after gate {r['after_gate_min']}); "
++              f"dispatches {r['dispatches']}, repeats {r['repeat_dispatches']}")
++        print(f"    asks outside a gate: {r['asks_outside_gate'] if r['asks_outside_gate'] is not None else 'not recorded'}")
++        for ask in r["asks"]:
++            print(f"      {ask['at']}: {ask['asked']}")
++        for a in r["gate_attempts"]:
++            print(f"    gate attempt {a['attempt']}: opened {a['opened']}, closed {a['closed'] or '-'}, {a['outcome']}")
++    print(f"  done: {t['done'] or '-'}")
++    if t["stages_without_start"]:
++        print("  stages without start: " + ", ".join(t["stages_without_start"]))
++    for ask in t["unassigned_asks"]:
++        print(f"  ask with no stage start: {ask['at']}: {ask['asked']}")
++    asks = t["asks_outside_gate"]
++    print(f"  asks outside a gate: {'not recorded (no asks.jsonl)' if asks is None else asks}; "
++          f"withdrawn gate attempts: {t['withdrawn_gate_attempts']}; revise decisions: {t['gate_revise_decisions']}; "
++          f"amendments outside a gate: {t['amendments_outside_gate']}")
++
++
++# see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
++def record_ask(state, slug, text, clock=None):
++    path = folder(find_task(state, slug)) / "asks.jsonl"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    entry = {"at": iso(clock or datetime.now(timezone.utc)), "asked": text}
++    with path.open("a", encoding="utf-8") as fh:
++        fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
++    with path.open(encoding="utf-8") as fh:
++        print(f"recorded ask {sum(1 for _ in fh)} in {path}")
++
++
++# see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
++def sweep(state):
++    archive = state / "_archive"
++    slugs = {p.stem for p in archive.glob("*.md")} | {p.parent.name for p in archive.glob("*/index.md")}
++    rows = [timeline(state, slug) for slug in sorted(slugs)]
++    timed = [r for r in rows if r["stages"]]
++    print(f"archived tasks: {len(rows)}; at least one stage timed: {len(timed)}; "
++          f"with a repeat dispatch: {sum(any(s['repeat_dispatches'] for s in r['stages']) for r in rows)}; "
++          f"with a withdrawn gate attempt: {sum(r['withdrawn_gate_attempts'] > 0 for r in rows)}; "
++          f"with an amendment outside a gate: {sum(r['amendments_outside_gate'] > 0 for r in rows)}; "
++          f"with asks.jsonl: {sum(r['asks_outside_gate'] is not None for r in rows)}")
++    print("no stage timed: " + " ".join(r["task"] for r in rows if not r["stages"]))
++    for row in rows:
++        if row["stages_without_start"]:
++            print(f"stages without start: {row['task']}: {', '.join(row['stages_without_start'])}")
++
++
++def main(argv=None):
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    ap.add_argument("state", type=Path)
++    ap.add_argument("task", nargs="?")
++    ap.add_argument("action", nargs="?", choices=["ask"])
++    ap.add_argument("text", nargs="?")
++    ap.add_argument("--json", action="store_true")
++    ap.add_argument("--all", action="store_true")
++    a = ap.parse_args(argv)
++    if a.all:
++        sweep(a.state)
++    elif a.action == "ask":
++        if not (a.text or "").strip():
++            ap.error("ask needs the question text")
++        record_ask(a.state, a.task, a.text)
++    elif a.task:
++        t = timeline(a.state, a.task)
++        print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
++    else:
++        ap.error("name a task or pass --all")
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/kc-dev-flow-2/scripts/test_task_timeline.py b/kc-dev-flow-2/scripts/test_task_timeline.py
+new file mode 100644
+index 000000000..f66810d1b
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/test_task_timeline.py
+@@ -0,0 +1,224 @@
++#!/usr/bin/env python3
++"""Exercise timelines through real state commits, persisted asks and the CLI."""
++import contextlib
++import io
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++from datetime import datetime, timezone
++from unittest.mock import patch
++
++import task_timeline as tt
++
++
++class TimelineTests(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory(prefix="timeline-test-")
++        self.addCleanup(self.tmp.cleanup)
++        self.state = Path(self.tmp.name)
++        self.git("init", "-q")
++        self.task = self.state / "demo.md"
++        self.task.write_text("---\ntitle: demo\nstatus: ideation\n---\n\n## Scope\n")
++
++    def git(self, *args, env=None):
++        return subprocess.run(["git", "-C", str(self.state), "-c", "user.name=Test",
++                               "-c", "user.email=test@example.invalid", "-c", "core.hooksPath=/dev/null",
++                               *args], env=env, text=True, capture_output=True, check=True).stdout
++
++    def commit(self, subject, minute, committer=None):
++        self.git("add", "--all")
++        env = {**os.environ, "GIT_AUTHOR_DATE": self.stamp(minute),
++               "GIT_COMMITTER_DATE": self.stamp(minute if committer is None else committer)}
++        self.git("commit", "-qm", subject, env=env)
++
++    @staticmethod
++    def stamp(minute):
++        return f"2026-01-01T{minute // 60:02}:{minute % 60:02}:00Z"
++
++    def write(self, relative, text="record\n"):
++        path = self.state / relative
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(text)
++
++    def dispatch(self, stage, number, minute, entering=False, committer=None):
++        self.write(f"demo/dispatch/{stage}-{number}.md")
++        self.commit(f"dispatch: demo entering {stage}" if entering else "record repeat dispatch",
++                    minute, committer)
++
++    def gates(self, stage, attempts):
++        lines = ["gates:", "    version: 1", "    records:", f"        - stage: {stage}", "          attempts:"]
++        for number, kind, minute in attempts:
++            lines += [f"            - id: gate-attempt:demo-{stage}-{number}"]
++            if kind:
++                key = "withdrawal" if kind == "withdrawn" else "resolution"
++                lines += [f"              {key}:", f"                at: \"{self.stamp(minute)}\""]
++                if key == "resolution":
++                    lines += [f"                decision: {kind}"]
++        self.task.write_text("---\ntitle: demo\nstatus: ideation\n" + "\n".join(lines) + "\n---\n")
++
++    def room(self, stage, number, minute):
++        self.write(f"demo/review/{stage}/briefing-{number}/index.json", "{}")
++        self.commit("prepare gate", minute)
++
++    def finish(self, minute):
++        self.git("mv", "demo.md", "_archive/demo.md")
++        if (self.state / "demo").exists():
++            self.git("mv", "demo", "_archive/demo")
++        self.task = self.state / "_archive/demo.md"
++        self.commit("archive demo (merge guard)", minute)
++
++    def cli(self, *args):
++        return subprocess.run([sys.executable, "-B", tt.__file__, str(self.state), *args],
++                              capture_output=True, text=True)
++
++    def test_finished_boundaries_use_author_dates_even_after_rebase(self):
++        (self.state / "_archive").mkdir()
++        self.dispatch("ideation", 1, 10, entering=True, committer=100)
++        self.dispatch("implementation", 1, 30, entering=True, committer=110)
++        self.finish(60)
++        run = self.cli("demo", "--json")
++        self.assertEqual(run.returncode, 0, run.stderr)
++        result = json.loads(run.stdout)
++        self.assertEqual(result["done"], self.stamp(60))
++        self.assertEqual([(r["start"], r["end"], r["elapsed_min"]) for r in result["stages"]],
++                         [(self.stamp(10), self.stamp(30), 20.0), (self.stamp(30), self.stamp(60), 30.0)])
++
++    def test_repeat_without_entering_uses_highest_record_number_and_excludes_messages(self):
++        self.dispatch("implementation", 1, 10, entering=True)
++        self.dispatch("implementation", 3, 20)
++        self.write("demo/dispatch/implementation-3-message-1.md")
++        self.commit("follow-up message", 25)
++        self.dispatch("validation", 1, 40, entering=True)
++        row = tt.timeline(self.state, "demo")["stages"][0]
++        self.assertEqual((row["dispatches"], row["repeat_dispatches"], row["dispatch_records"]), (3, 2, 2))
++        self.assertEqual((row["end"], row["elapsed_min"]), (self.stamp(40), 30.0))
++
++    def test_withdrawn_then_approved_gate_has_each_open_close_and_wait(self):
++        self.dispatch("ideation", 1, 10, entering=True)
++        self.room("ideation", 1, 20)
++        self.room("ideation", 2, 30)
++        self.gates("ideation", [(1, "withdrawn", 25), (2, "approve", 40)])
++        self.commit("gate: record demo ideation approve", 40)
++        self.dispatch("implementation", 1, 50, entering=True)
++        result = tt.timeline(self.state, "demo")
++        row = result["stages"][0]
++        self.assertEqual([(a["opened"], a["closed"], a["outcome"]) for a in row["gate_attempts"]],
++                         [(self.stamp(20), self.stamp(25), "withdrawn"),
++                          (self.stamp(30), self.stamp(40), "approve")])
++        self.assertEqual((row["before_gate_min"], row["captain_wait_min"], row["after_gate_min"]), (15.0, 15.0, 10.0))
++        self.assertEqual((result["withdrawn_gate_attempts"], result["gate_revise_decisions"]), (1, 0))
++
++    def test_repeated_stage_preserves_each_cycles_after_gate_time(self):
++        (self.state / "_archive").mkdir()
++        self.dispatch("validation", 1, 10, entering=True)
++        self.room("validation", 1, 20)
++        self.gates("validation", [(1, "revise", 30)])
++        self.commit("gate: record demo validation revise", 30)
++        self.dispatch("implementation", 1, 60, entering=True)
++        self.dispatch("validation", 2, 80)
++        self.room("validation", 2, 90)
++        self.gates("validation", [(1, "revise", 30), (2, "approve", 100)])
++        self.commit("gate: record demo validation approve", 100)
++        self.finish(110)
++        result = json.loads(self.cli("demo", "--json").stdout)
++        row = next(r for r in result["stages"] if r["stage"] == "validation")
++        self.assertEqual({key: row[key] for key in (
++            "elapsed_min", "before_gate_min", "captain_wait_min", "after_gate_min")},
++            {"elapsed_min": 80.0, "before_gate_min": 20.0,
++             "captain_wait_min": 20.0, "after_gate_min": 40.0})
++
++    def test_gate_only_stage_has_no_before_gate_minutes(self):
++        self.room("backlog", 1, 0)
++        self.room("backlog", 2, 10)
++        self.gates("backlog", [(1, "withdrawn", 2), (2, "approve", 12)])
++        self.commit("gate: record demo backlog approve", 12)
++        row = tt.timeline(self.state, "demo")["stages"][0]
++        self.assertEqual((row["before_gate_min"], row["captain_wait_min"], row["after_gate_min"]), (0.0, 4.0, 8.0))
++
++    def test_gate_close_matches_attempt_number_even_with_missing_room(self):
++        self.room("backlog", 2, 10)
++        self.gates("backlog", [(1, "withdrawn", 2), (2, "revise", 12)])
++        self.commit("gate close", 12)
++        result = tt.timeline(self.state, "demo")
++        self.assertEqual(result["stages"][0]["gate_attempts"][0]["closed"], self.stamp(12))
++        self.assertEqual(result["gate_revise_decisions"], 1)
++
++    def test_running_stage_minutes_reach_now(self):
++        self.dispatch("implementation", 1, 10, entering=True)
++        with patch.object(tt, "datetime", wraps=datetime) as clock:
++            clock.now.return_value = tt.when(self.stamp(40))
++            row = tt.timeline(self.state, "demo")["stages"][0]
++        self.assertIsNone(row["end"])
++        self.assertEqual(row["elapsed_min"], 30.0)
++        output = io.StringIO()
++        with contextlib.redirect_stdout(output):
++            tt.show({**tt.timeline(self.state, "demo"), "stages": [row]})
++        self.assertIn("running  30.0 min", output.getvalue())
++
++    def test_folder_form_archived_task_is_in_sweep(self):
++        self.task.unlink()
++        self.task = self.state / "_archive/demo/index.md"
++        self.write("_archive/demo/index.md", "---\ntitle: demo\nstatus: done\n---\n")
++        self.commit("advance: demo entering validation", 20)
++        self.write("_archive/demo/result.txt")
++        self.commit("archive demo", 30)
++        self.assertEqual(tt.timeline(self.state, "demo")["stages"][0]["elapsed_min"], 10.0)
++        run = self.cli("--all")
++        self.assertEqual(run.returncode, 0, run.stderr)
++        self.assertIn("archived tasks: 1; at least one stage timed: 1", run.stdout)
++
++    def test_ask_cli_appends_utc_questions_and_rejects_empty_without_write(self):
++        self.dispatch("ideation", 1, 0, entering=True)
++        self.assertIsNone(tt.timeline(self.state, "demo")["asks_outside_gate"])
++        before = datetime.now(timezone.utc).replace(microsecond=0)
++        for question in ("May I continue?", "要先處理哪件事？"):
++            run = self.cli("demo", "ask", question)
++            self.assertEqual(run.returncode, 0, run.stderr)
++        path = self.state / "demo/asks.jsonl"
++        saved = path.read_bytes()
++        self.assertEqual(self.cli("demo", "ask", "  ").returncode, 2)
++        self.assertEqual(path.read_bytes(), saved)
++        entries = [json.loads(line) for line in saved.decode().splitlines()]
++        self.assertEqual([e["asked"] for e in entries], ["May I continue?", "要先處理哪件事？"])
++        self.assertTrue(all(e["at"].endswith("Z") and before <= tt.when(e["at"]) <= datetime.now(timezone.utc) for e in entries))
++        result = tt.timeline(self.state, "demo")
++        self.assertEqual(result["asks_outside_gate"], 2)
++        self.assertEqual(result["stages"][0]["asks_outside_gate"], 2)
++
++    def test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage(self):
++        self.dispatch("ideation", 1, 10, entering=True)
++        self.dispatch("implementation", 1, 30, entering=True)
++        with contextlib.redirect_stdout(io.StringIO()):
++            for minute in (5, 15, 30):
++                tt.record_ask(self.state, "demo", f"question {minute}", tt.when(self.stamp(minute)))
++        result = tt.timeline(self.state, "demo")
++        self.assertEqual([r["asks_outside_gate"] for r in result["stages"]], [1, 1])
++        self.assertEqual(len(result["unassigned_asks"]), 1)
++        run = self.cli("demo")
++        self.assertIn(f"{self.stamp(30)}: question 30", run.stdout)
++
++    def test_sweep_reports_missing_stage_start_without_refusing(self):
++        self.gates("validation", [(1, "approve", 10)])
++        self.write("_archive/demo.md", self.task.read_text())
++        self.task.unlink()
++        self.commit("import legacy task", 0)
++        run = self.cli("--all")
++        self.assertEqual(run.returncode, 0, run.stderr)
++        self.assertIn("no stage timed: demo", run.stdout)
++        self.assertIn("stages without start: demo: validation", run.stdout)
++
++    def test_unreadable_frontmatter_stops_sweep_with_error(self):
++        self.task.unlink()
++        self.write("_archive/demo.md", "---\ntitle: unclosed\n")
++        self.commit("import broken task", 0)
++        run = self.cli("--all")
++        self.assertNotEqual(run.returncode, 0)
++        self.assertIn("missing or unclosed frontmatter", run.stderr)
++
++
++if __name__ == "__main__":
++    unittest.main()

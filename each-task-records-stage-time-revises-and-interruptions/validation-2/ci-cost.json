@@ -1,0 +1,16 @@
+{
+  "candidate": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+  "added_step": {
+    "completedAt": "2026-11-12T10:41:48Z",
+    "conclusion": "success",
+    "name": "test_task_timeline.py",
+    "number": 20,
+    "startedAt": "2026-11-12T10:41:47Z",
+    "status": "completed"
+  },
+  "measured_hosted_step_seconds": 1,
+  "measured_runs": 1,
+  "monetary_cost_per_PR": "not measured",
+  "trigger_change": "none; existing package path filters retained",
+  "repair_CI_changes": 0
+}
