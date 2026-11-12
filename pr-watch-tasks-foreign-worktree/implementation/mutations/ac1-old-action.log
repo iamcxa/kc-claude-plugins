@@ -1,0 +1,24 @@
+MUTATION ac1-old-action criterion AC-1
+test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent (probe_tests.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent) ... FAIL
+
+======================================================================
+FAIL: test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent (probe_tests.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/test_pr_watch.py", line 1448, in test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent
+    self.assertEqual((code, lines), (0, ["fact: gone has no recorded PR; its worktree is not on this machine."]))
+AssertionError: Tuples differ: (0, ["next: record gone's PR with status --set[61 chars]e."]) != (0, ['fact: gone has no recorded PR; its workt[25 chars]e.'])
+
+First differing element 1:
+["next: record gone's PR with status --set[60 chars]ne."]
+['fact: gone has no recorded PR; its workt[24 chars]ne.']
+
++ (0, ['fact: gone has no recorded PR; its worktree is not on this machine.'])
+- (0,
+-  ["next: record gone's PR with status --set gone pr=<owner/repo>#<N>; its "
+-   'worktree is not on this machine.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.699s
+
+FAILED (failures=1)

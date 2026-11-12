@@ -1,0 +1,14 @@
+{
+  "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+  "scripts": 28,
+  "passed": 28,
+  "failed": 0,
+  "reported_unittest_total": 1412,
+  "reported_skips": 11,
+  "separate_cli_checks": [
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "kc-dev-flow-2/scripts/test_observer_recovery.py"
+  ],
+  "limit": "The canonical-/private/tmp matrix exited 1: 27 pass and one macOS path-spelling assertion. Its unchanged replay command passed all 8 tests with TMPDIR spelled /tmp. This join preserves both outputs; it is not a single all-green matrix invocation.",
+  "completeness": "Every CI test command occurs once; rerun replaces only the named failed command, without double-counting."
+}

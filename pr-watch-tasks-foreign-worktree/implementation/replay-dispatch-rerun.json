@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+  ],
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+  "env": {
+    "TMPDIR": "/tmp/impl-pr-watch-tasks-foreign-worktree-tests-01a1d0b8/suite",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "exit": 0,
+  "output": "replay-dispatch-rerun.log",
+  "reason": "Preserve /tmp spelling: test scope.replace(\"/private\", \"\") removes macOS prefix on only one side; runner.resolve changed the fixture path spelling."
+}

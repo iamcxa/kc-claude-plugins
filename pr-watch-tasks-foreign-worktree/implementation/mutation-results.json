@@ -1,0 +1,296 @@
+[
+  {
+    "name": "ac1-old-action",
+    "criterion": "AC-1",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac1-old-action"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac1-old-action.log"
+  },
+  {
+    "name": "ac1-remove-fact",
+    "criterion": "AC-1",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac1-remove-fact"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac1-remove-fact.log"
+  },
+  {
+    "name": "ac1-create-watch",
+    "criterion": "AC-1",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac1-create-watch"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac1-create-watch.log"
+  },
+  {
+    "name": "ac2-guard-recorded-pr",
+    "criterion": "AC-2",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac2-guard-recorded-pr"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac2-guard-recorded-pr.log"
+  },
+  {
+    "name": "ac2-suppress-local-lookup",
+    "criterion": "AC-2",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac2-suppress-local-lookup"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac2-suppress-local-lookup.log"
+  },
+  {
+    "name": "ac2-remove-status-step",
+    "criterion": "AC-2",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac2-remove-status-step"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac2-remove-status-step.log"
+  },
+  {
+    "name": "ac2-remove-commit-step",
+    "criterion": "AC-2",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac2-remove-commit-step"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac2-remove-commit-step.log"
+  },
+  {
+    "name": "ac3-revert-first-case",
+    "criterion": "AC-3",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac3-revert-first-case"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac3-revert-first-case.log"
+  },
+  {
+    "name": "ac3-revert-second-case",
+    "criterion": "AC-3",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac3-revert-second-case"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac3-revert-second-case.log"
+  },
+  {
+    "name": "ac3-add-lookup",
+    "criterion": "AC-3",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac3-add-lookup"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac3-add-lookup.log"
+  },
+  {
+    "name": "ac3-add-record-command",
+    "criterion": "AC-3",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac3-add-record-command"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac3-add-record-command.log"
+  },
+  {
+    "name": "ac4-grow-output",
+    "criterion": "AC-4",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac4-grow-output"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac4-grow-output.log"
+  },
+  {
+    "name": "ac4-change-workflow",
+    "criterion": "AC-4",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac4-change-workflow"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac4-change-workflow.log"
+  },
+  {
+    "name": "ac4-change-mod",
+    "criterion": "AC-4",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock",
+      "--one",
+      "ac4-change-mod"
+    ],
+    "exit": 1,
+    "status": "passed",
+    "meaning": "falsifier rejected",
+    "output": "mutations/ac4-change-mod.log"
+  }
+]

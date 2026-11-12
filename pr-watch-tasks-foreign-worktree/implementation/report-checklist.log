@@ -1,0 +1,14 @@
+stage=implementation
+status=DONE start=233 end=234 text=Build the approved design only in the assigned worktree and branch, off origin/main, starting from the local probe.
+status=DONE start=235 end=236 text=Every acceptance criterion as written, with its evidence command rerun on the candidate.
+status=DONE start=237 end=238 text=AC-1 — absent worktree is a fact, with no PR-recording next action/watch entry; no-worktree-field remains silent.
+status=DONE start=239 end=240 text=AC-2 — local PR discovery, closed-only filtering and recorded bare-PR fallback keep working.
+status=DONE start=241 end=242 text=AC-3 — both real Scope records produce facts, without PR lookup/record commands or a new watch list.
+status=DONE start=243 end=244 text=AC-4 — no lifecycle-loading text added and no paired output growth at any named moment.
+status=DONE start=245 end=246 text=Each falsifier shown failing by an executed mutation, python3 -B with caches cleared.
+status=DONE start=247 end=248 text=Repository lint-skills.py, assigned-package ADR lint and number guards exit 0.
+status=DONE start=249 end=250 text=Comment ratio within its maximum and retained-document impact accounted for.
+status=DONE start=251 end=252 text=Run the package CI test-command matrix and disclose every failed attempt and skip.
+status=DONE start=253 end=254 text=Commit locally, prepare Conventional Commit PR title/body, preserve scope and budget.
+status=SKIPPED start=255 end=256 text=One Draft PR / product push, RoboRev and hosted-CI reading by this worker.
+status=DONE start=257 end=258 text=Preserve stage authority, package pins, reproducible evidence and exact scratch paths.

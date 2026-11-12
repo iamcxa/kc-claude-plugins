@@ -1,0 +1,8 @@
+{
+  "cleared_before_final_mutations": [
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/__pycache__"
+  ],
+  "bytecode_disabled": "python3 -B and PYTHONDONTWRITEBYTECODE=1",
+  "mutated_source": "compiled from explicit text; no cached mutant code",
+  "prior_document_mutation_copies_removed": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-mutations"
+}

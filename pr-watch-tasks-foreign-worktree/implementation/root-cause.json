@@ -1,0 +1,44 @@
+{
+  "hypothesis": "Workspace TMPDIR inherited parent Git history; worktree-looking ancestor also made native SD reject fixture entity paths. Only fixture placement changed.",
+  "observations": [
+    {
+      "case": "inside",
+      "command": [
+        "git",
+        "-C",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp/root-detection-probe",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "exit": 0,
+      "stdout": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree\n",
+      "stderr": ""
+    },
+    {
+      "case": "outside",
+      "command": [
+        "git",
+        "-C",
+        "/tmp/impl-pr-watch-tasks-foreign-worktree-tests-01a1d0b8/root-detection-probe",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "exit": 128,
+      "stdout": "",
+      "stderr": "fatal: not a git repository (or any of the parent directories): .git\n"
+    },
+    {
+      "case": "outside-control",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_adr_doc_checks.AdrLintTests.test_since_requires_every_record_changed_after_the_base_and_no_other"
+      ],
+      "exit": 0,
+      "output": "root-cause-control.log"
+    }
+  ],
+  "scratch_root": "/tmp/impl-pr-watch-tasks-foreign-worktree-tests-01a1d0b8"
+}

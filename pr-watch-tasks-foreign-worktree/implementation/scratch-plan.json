@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/tmp/impl-pr-watch-tasks-foreign-worktree-tests-01a1d0b8",
+    "kind": "outside-git test fixtures",
+    "retain": false
+  },
+  {
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp",
+    "kind": "first runner fixture root",
+    "retain": false
+  },
+  {
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-pinned-sd",
+    "kind": "pinned Spacedock source export",
+    "retain": false
+  },
+  {
+    "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-mutations",
+    "kind": "disposable document mutation copies",
+    "retain": false
+  },
+  {
+    "path": "/tmp/impl-pr-watch-tasks-foreign-worktree-pr.md",
+    "kind": "prepared PR title/body for First Officer",
+    "retain": true
+  }
+]

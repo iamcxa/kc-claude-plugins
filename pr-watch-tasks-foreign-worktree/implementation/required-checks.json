@@ -1,0 +1,135 @@
+[
+  {
+    "name": "lint-skills",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "lint-skills.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "adr-lint.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree.md",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--head",
+      "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "number-guards.log",
+    "initial_output": "number-guards-initial.log",
+    "rerun": "same argv with authorized Git filesystem/network access; exit 0, no fetch warning"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "HEAD",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "doc-impact.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "design-surfaces.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "diff",
+      "--check",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "HEAD"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "diff-check.log"
+  },
+  {
+    "name": "probe-byte-parity",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "diff",
+      "--exit-code",
+      "fea415791256e5048bd3df11bb3ffe4490c3d927",
+      "HEAD",
+      "--",
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+    "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+    "exit": 0,
+    "output": "probe-byte-parity.log"
+  }
+]

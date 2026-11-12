@@ -1,0 +1,30 @@
+MUTATION ac2-remove-status-step criterion AC-2
+test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched) ... FAIL
+test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing) ... FAIL
+test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone (probe_tests.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone) ... ok
+
+======================================================================
+FAIL: test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/test_pr_watch.py", line 1263, in test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched
+    self.assertEqual(lines[0], f"next: run `spacedock status --workflow-dir {self.workflow.resolve()} --set some-task pr=o/r#7`.")
+AssertionError: 'next[16 chars] state commit some-task --workflow-dir /privat[74 chars]v2`.' != 'next[16 chars] status --workflow-dir /private/var/folders/tm[83 chars]#7`.'
+- next: run `spacedock state commit some-task --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4ujt9egl/repo/docs/dev2`.
+?                          ^^^^^^^^^ --------
++ next: run `spacedock status --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4ujt9egl/repo/docs/dev2 --set some-task pr=o/r#7`.
+?                          ^                                                                                                    +++++++++++++++++++++++++
+
+
+======================================================================
+FAIL: test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/kc-dev-flow-2/scripts/test_pr_watch.py", line 1273, in test_a_branch_whose_only_pr_is_closed_records_nothing
+    self.assertIn("pr=o/r#8", lines[0])
+AssertionError: 'pr=o/r#8' not found in 'next: run `spacedock state commit some-task --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpjwv6ygdz/repo/docs/dev2`.'
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.873s
+
+FAILED (failures=2)

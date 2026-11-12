@@ -1,0 +1,16 @@
+{
+  "scripts": 28,
+  "passed": 20,
+  "failed": 8,
+  "reported_unittest_total": 1412,
+  "scripts_without_unittest_count": [
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "kc-dev-flow-2/scripts/test_observer_recovery.py"
+  ],
+  "pinned_sd_source_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "temporary_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp",
+  "remaining_fixture_children": [
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp/dev-flow-2-sd-_ds7uyu5",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree/.context/pr-watch-suite-tmp/xcrun_db"
+  ]
+}

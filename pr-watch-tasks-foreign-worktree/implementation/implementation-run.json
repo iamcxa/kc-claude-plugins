@@ -1,0 +1,61 @@
+{
+  "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "branch": "spacedock-ensign/pr-watch-tasks-foreign-worktree",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+  "accept": {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/accept.sh",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "/Users/kent/.local/bin/spacedock"
+    ],
+    "exit": 0,
+    "output": "accept.log"
+  },
+  "mutations": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/mutations.py",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "--workflow",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--sd-bin",
+      "/Users/kent/.local/bin/spacedock"
+    ],
+    "exit": 0,
+    "output": "mutations.log",
+    "results": "mutation-results.json"
+  },
+  "full_suite": {
+    "raw_matrix_exit": 1,
+    "raw_results": "full-suite-results.json",
+    "narrow_rerun": "replay-dispatch-rerun.json",
+    "join_command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/implementation/finalize_suite.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree"
+    ],
+    "join_exit": 0,
+    "joined_results": "final-suite-results.json",
+    "summary": "final-suite-summary.json"
+  },
+  "pr_text": {
+    "path": "/tmp/impl-pr-watch-tasks-foreign-worktree-pr.md",
+    "sha256": "edfdc739f71d5ffacaa33349982e46fd14e61274c2c684703c7c85264703bd30",
+    "retained": true
+  },
+  "delegated": {
+    "product_push": "not run: First Officer owns",
+    "draft_pr": "not run: First Officer owns",
+    "roborev": "not run: First Officer runs it after report; sandbox cannot reach daemon",
+    "hosted_ci": "not read: First Officer owns",
+    "ci_cost_per_pr": "not measured; CI configuration unchanged"
+  }
+}

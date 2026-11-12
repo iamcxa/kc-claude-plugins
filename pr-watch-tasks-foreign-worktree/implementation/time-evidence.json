@@ -1,0 +1,7 @@
+{
+  "start_utc": "2026-11-12 17:26:00 UTC",
+  "start_asia_taipei": "2026-11-13T01:26:00+08:00",
+  "end_verification_utc": "2026-11-12 17:46:39 UTC",
+  "end_verification_asia_taipei": "2026-11-13T01:46:39+08:00",
+  "source": "clock.curr_time; UTC converted +08:00"
+}
