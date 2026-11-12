@@ -509,14 +509,12 @@ class SeedBoundsTests(unittest.TestCase):
     def test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback(self):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d, "task.md")
-            for raw in (None, b"\xff"):
-                if raw is not None:
-                    path.write_bytes(raw)
-                stream = io.StringIO()
-                with contextlib.redirect_stdout(stream):
-                    self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
-                self.assertIn("cannot read task:", stream.getvalue())
-                self.assertNotIn("Traceback", stream.getvalue())
+            path.write_bytes(b"\xff")
+            stream = io.StringIO()
+            with contextlib.redirect_stdout(stream):
+                self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
+            self.assertIn("cannot read task:", stream.getvalue())
+            self.assertNotIn("Traceback", stream.getvalue())
 
     def test_fence_length_and_kind_keep_impostors_hidden(self):
         for fence, short in (("````", "```"), ("~~~~", "~~~"), ("~~~", "```")):
@@ -1750,6 +1748,67 @@ class AskFormTests(unittest.TestCase):
                         self.assertTrue(done.stdout.splitlines()[-1].startswith("scope check not run:"))
                     if seed:
                         self.assertIn("unknown value(s) unknown", done.stdout.splitlines()[-1])
+
+
+class TaskArgumentTests(unittest.TestCase):
+    def cli(self, directory, argument, seed=False):
+        return subprocess.run([sys.executable, "-B", ds.__file__, "check",
+                               *(["--seed"] if seed else []), argument],
+                              cwd=directory, capture_output=True, text=True)
+
+    def test_same_named_directory_checks_the_sibling_task_in_both_modes(self):
+        for name in ("task", "task.with.dots"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as d:
+                path = Path(d, name + ".md")
+                path.write_text(GATED)
+                Path(d, name).mkdir()
+                for seed in (False, True):
+                    explicit = self.cli(d, path.name, seed)
+                    bare = self.cli(d, name, seed)
+                    self.assertEqual(explicit.returncode, 0, explicit.stdout + explicit.stderr)
+                    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+                                     (explicit.returncode, explicit.stdout, explicit.stderr))
+
+    def test_suffixless_name_without_a_directory_checks_the_task(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "task.md").write_text(GATED)
+            for seed in (False, True):
+                done = self.cli(d, "task", seed)
+                self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+                self.assertIn("task.md:", done.stdout)
+
+    def test_an_existing_file_wins_over_a_sibling_md_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "task").write_text(GATED)
+            Path(d, "task.md").write_text("invalid task\n")
+            for seed in (False, True):
+                done = self.cli(d, "task", seed)
+                self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+                self.assertIn("task:", done.stdout)
+
+    def test_resolving_a_name_preserves_a_failing_verdict(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "task.md").write_text(GATED.replace("Surfaces: none", "Surfaces: unknown"))
+            Path(d, "task").mkdir()
+            for seed in (False, True):
+                explicit = self.cli(d, "task.md", seed)
+                bare = self.cli(d, "task", seed)
+                self.assertEqual(explicit.returncode, 1)
+                self.assertIn("unknown value(s) unknown", explicit.stdout)
+                self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+                                 (explicit.returncode, explicit.stdout, explicit.stderr))
+
+    def test_unresolved_names_and_directories_are_usage_errors(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "directory").mkdir()
+            for argument in ("missing", "missing.md", "directory", ".", "/"):
+                for seed in (False, True):
+                    with self.subTest(argument=argument, seed=seed):
+                        done = self.cli(d, argument, seed)
+                        self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+                        self.assertIn("usage:", done.stderr)
+                        self.assertIn("task file not found:", done.stderr)
+                        self.assertNotIn("Traceback", done.stderr)
 
 
 class ScopeCheckTests(unittest.TestCase):
