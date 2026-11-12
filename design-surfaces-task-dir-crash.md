@@ -3,7 +3,7 @@ title: design_surfaces.py check <task> crashes when a same-named task directory 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
