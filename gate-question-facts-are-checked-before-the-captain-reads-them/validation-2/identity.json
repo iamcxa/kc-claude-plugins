@@ -1,0 +1,28 @@
+{
+  "candidate": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+  "base": "d79053d0836c558a9269f9cf1ba222933935b820",
+  "trunk_observed": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "files": [
+    {
+      "path": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+      "sha256": "ef25c345cd2cad9ac275207a30e9e32d2c6388f34b717847b82f4fcda7807aad",
+      "export_and_worktree_match": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/count_tokens.py",
+      "sha256": "04b4bd99912bc2b888cbc9d0aaec257af80ae9d5d8bc9add20bd1e1e268923ad",
+      "export_and_worktree_match": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "sha256": "bc9f97f228dbd51c40d504f43526787ee2f7432040129bbbe2b64dc9d7dc845f",
+      "export_and_worktree_match": true
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "sha256": "3cc54be60027e538347e9e130aa1ac175b527ef6ab768e2b376f59d73f2f0065",
+      "export_and_worktree_match": true
+    }
+  ],
+  "package_scripts_match_dispatch_install": true
+}

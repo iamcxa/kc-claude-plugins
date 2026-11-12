@@ -1,0 +1,17 @@
+[
+  {
+    "name": "delivery",
+    "exit": 0,
+    "log": "delivery-tests.log"
+  },
+  {
+    "name": "learning",
+    "exit": 0,
+    "log": "learning-tests.log"
+  },
+  {
+    "name": "adr-doc",
+    "exit": 0,
+    "log": "adr-doc-tests.log"
+  }
+]

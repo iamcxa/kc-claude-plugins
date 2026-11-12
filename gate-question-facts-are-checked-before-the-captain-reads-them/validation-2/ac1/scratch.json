@@ -1,0 +1,9 @@
+{
+  "scratch_roots": [
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1-complete"
+  ],
+  "created_tmp_roots": [
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1-complete"
+  ],
+  "remove_after_evidence_commit": true
+}

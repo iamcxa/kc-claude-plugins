@@ -1,0 +1,30 @@
+{
+  "verdict": "PASSED",
+  "head": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+  "listing_head": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "acceptance": [
+    {
+      "name": "AC-1",
+      "status": "passed"
+    },
+    {
+      "name": "AC-2",
+      "status": "passed"
+    },
+    {
+      "name": "AC-3",
+      "status": "passed"
+    },
+    {
+      "name": "AC-4",
+      "status": "passed"
+    }
+  ],
+  "rejection_findings": [],
+  "previous_finding": {
+    "id": "F1",
+    "kind": "evidence or form",
+    "class": "Needs decision",
+    "status": "resolved"
+  }
+}

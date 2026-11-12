@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them/validation-2/replay.py", line 40, in <module>
+    gf = module(a.poc / 'kc-dev-flow-2/scripts/gate_facts.py', 'poc_gate_facts')
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them/validation-2/replay.py", line 33, in module
+    spec.loader.exec_module(obj)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "<frozen importlib._bootstrap_external>", line 747, in exec_module
+  File "<frozen importlib._bootstrap>", line 549, in _call_with_frames_removed
+  File "/tmp/gate-facts-validation2-ghuxn5s7/poc/kc-dev-flow-2/scripts/gate_facts.py", line 19, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'

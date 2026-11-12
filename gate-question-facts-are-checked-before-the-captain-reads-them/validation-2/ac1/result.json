@@ -1,0 +1,66 @@
+{
+  "candidate": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+  "listing_candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "listing_sha256": "a7cd0741e604248dd31e33e39cd8d1a675a2d5fb520d3bcea915a243d1ceee1a",
+  "spacedock_sha256": "86974bf3eb974087bf47ab2fee5a5a026405651744ccf1a34a8525891be8050a",
+  "scope": "original five task files per historical question, byte-identical; no other tasks copied; no GitHub/model calls",
+  "configuration": "copied candidate workflow; extensions disabled to omit unrelated review/learning work; gate/stage configuration unchanged",
+  "fixtures": {
+    "case3-five-tasks": {
+      "state_commit": "c59bfffd6c8eaafd05b9c86c36dafeb9e2c51ad6",
+      "offered": 5,
+      "original_files_verified": 5,
+      "held_query_exit": 0,
+      "native_held": 5,
+      "tasks_command_exit": 0,
+      "held_fact_lines": 1,
+      "offered_named_held": 5,
+      "flag_adapter_exit": 1,
+      "runtime_error_lines": 0
+    },
+    "control-five-new-tasks": {
+      "state_commit": "2c60d50f365a09beb6e614a87c70060cca8917a0",
+      "offered": 5,
+      "original_files_verified": 5,
+      "held_query_exit": 0,
+      "native_held": 0,
+      "tasks_command_exit": 0,
+      "held_fact_lines": 0,
+      "offered_named_held": 0,
+      "flag_adapter_exit": 0,
+      "runtime_error_lines": 0
+    }
+  },
+  "mutation": {
+    "description": "scratch-only held_rows excludes hold-resolution rows from the real native query result; upstream binary unchanged",
+    "mutant_sha256": "7657cb0572b02afce4e48245be7d061dc53ed93aff267dd6f2917a93e49ca993",
+    "case": {
+      "state_commit": "c59bfffd6c8eaafd05b9c86c36dafeb9e2c51ad6",
+      "offered": 5,
+      "original_files_verified": 5,
+      "held_query_exit": 0,
+      "native_held": 5,
+      "tasks_command_exit": 0,
+      "held_fact_lines": 0,
+      "offered_named_held": 0,
+      "flag_adapter_exit": 0,
+      "runtime_error_lines": 0
+    },
+    "control": {
+      "state_commit": "2c60d50f365a09beb6e614a87c70060cca8917a0",
+      "offered": 5,
+      "original_files_verified": 5,
+      "held_query_exit": 0,
+      "native_held": 0,
+      "tasks_command_exit": 0,
+      "held_fact_lines": 0,
+      "offered_named_held": 0,
+      "flag_adapter_exit": 0,
+      "runtime_error_lines": 0
+    },
+    "acceptance_exit": 1,
+    "acceptance_rejected": true
+  },
+  "product_unchanged": true,
+  "assertions_passed": true
+}

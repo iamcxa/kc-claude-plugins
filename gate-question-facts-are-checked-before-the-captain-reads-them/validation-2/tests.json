@@ -1,0 +1,26 @@
+[
+  {
+    "name": "delivery",
+    "status": "passed",
+    "total": 230,
+    "passed": 229,
+    "skipped": 1,
+    "message": "229 passed; 1 skipped; selected affected suite"
+  },
+  {
+    "name": "learning",
+    "status": "passed",
+    "total": 50,
+    "passed": 50,
+    "skipped": 0,
+    "message": "50 passed; 0 skipped; selected affected suite"
+  },
+  {
+    "name": "adr-doc",
+    "status": "passed",
+    "total": 9,
+    "passed": 9,
+    "skipped": 0,
+    "message": "9 passed; 0 skipped; selected affected suite"
+  }
+]

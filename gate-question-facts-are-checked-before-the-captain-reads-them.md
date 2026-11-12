@@ -355,3 +355,29 @@ REJECTED for the whole task at `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`: owned
 ### Summary
 
 This complete report supersedes the earlier implementation report. The missing AC-1 replay and hold-removal falsifier now pass their acceptance assertions against sibling head 455846c6d; the product remains 8d083d3b9 with no code defect or repair established. The two observational unknowns and plain-dialog limit remain explicit, and FO must dispatch the second independent validation before acceptance.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #855 head 8d083d3b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 8d083d3b9b2c48c10e32cee3e5ef693b374c6183; validation-2/assessment.md distinguishes all four criteria, their falsifiers and observational limits.
+- DONE: Recheck after Feedback Cycle 1, allowed by Captain amendment 2 (budget 1 implementation and 2 validation cycles; AC-1 kept): the product head is unchanged; judge the AC-1 replay and falsifier the implementation has now run against PR #856's head 455846c6d (task folder implementation-1/ac1-followup), rerunning them yourself; this PR stays stacked on PR #853; Captain amendment 1 (ADR 0082) stays in scope
+  validation-2/ac1/result.json and captain-ac1/result.json record 5/5 versus 0/5 held offers at pinned sibling head 455846c6d; removing hold rows makes the unchanged acceptance fail. Prior F1 (Needs decision, kind evidence or form) is resolved.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-2/acceptance.sh ran unchanged in /bin/bash --noprofile --norc: four steps, exit 0 (captain-acceptance.log). ADR lint --since d79053d0836c558a9269f9cf1ba222933935b820 --require 0082 exits 0; loaded-package and dispatch-package script bytes match (identity.json).
+- DONE: Reproduce the false asks, controls and corpus, including a known-error mutation per criterion.
+  validation-2/captain-replay.json: one new mark per false ask; English-only matching loses both; missing-file acceptance loses its warning; corpus catches 4/4 false occurrences, English-only 0/4. Candidate spans 549 versus prototype 505.
+- DONE: Rerun affected suites, required guards, comment review and document dispositions.
+  validation-2/tests.json: delivery 230 discovered (229 passed, one optional skip), learning 50 passed, ADR-documentation nine passed. checks.json and number-guards-fresh.log exit 0; comments.log is 2/163, 1.2%; doc-verdicts.json covers seven documents.
+- DONE: Assess bounded goal sufficiency and minimal necessity against the approved design and both amendments.
+  validation-2/assessment.md: disclosure and sibling-listing integration pass; base emits no scope mark; count-necessity.json changes 0 to 4 Chinese count sentences. Output words remain 89 without a match and change 89 to 98 with one; CI cost per PR unmeasured, CI definition unchanged.
+- SKIPPED: Second independent corpus, actual Captain-answer effects, plain-dialog enforcement and model-reader trials.
+  Remain not verified or excluded by approval; no broader accuracy, truth guarantee or observed adopter improvement is claimed.
+- DONE: Prepare aggregate-only public evidence and commit it before owned-scratch cleanup.
+  validation-2/scratch.json names the sole owned root; privacy-check.json retains no historical private source. Post-commit removal and verified absence are recorded in validation-2/cleanup.json.
+- SKIPPED: Product push, PR comments, review requests, ready/merge/release, gate progression and RoboRev.
+  validation-2/pr-status.json and sibling-pr-status.json show both open Drafts at their pinned heads; FO/Captain own subsequent delivery work.
+
+### Summary
+
+This cycle-2 report supersedes the earlier validation report: PASSED at unchanged head 8d083d3b9b2c48c10e32cee3e5ef693b374c6183. The missing sibling-listing replay is now independently observed and its hold-removal mutant rejected; no product repair was established or made. Historical private evidence is retained only as counts; second-corpus, Captain-behavior and plain-dialog limits remain explicit.

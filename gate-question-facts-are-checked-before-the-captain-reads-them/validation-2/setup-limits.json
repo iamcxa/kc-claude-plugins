@@ -1,0 +1,17 @@
+{
+  "initial_failures": [
+    {
+      "stage": "historical replay",
+      "cause": "PATH python3 lacks PyYAML; declared /usr/bin/python3 has 6.0.1",
+      "product_changed": false
+    },
+    {
+      "stage": "listing in archive export",
+      "cause": "scratch reporting needs Git root and origin metadata; standalone fixture repository initialized from exported bytes with inert local origin",
+      "product_changed": false
+    }
+  ],
+  "source_changes": 0,
+  "expected_values_changed": 0,
+  "raw_private_output_retained_in_public_evidence": 0
+}

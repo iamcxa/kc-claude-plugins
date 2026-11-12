@@ -1,0 +1,106 @@
+{
+  "scratch_removed": "/tmp/gate-facts-validation2-ghuxn5s7/impl-gate-question-facts-akjugi51",
+  "fixtures": {
+    "case1-843": {
+      "claims_needing_mark": 1,
+      "marks_written": 1,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "case2-841": {
+      "claims_needing_mark": 1,
+      "marks_written": 1,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "control-839": {
+      "claims_needing_mark": 0,
+      "marks_written": 0,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "control-849": {
+      "claims_needing_mark": 1,
+      "marks_written": 1,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "control-849-cited": {
+      "claims_needing_mark": 0,
+      "marks_written": 0,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "control-849-badcite": {
+      "claims_needing_mark": 1,
+      "marks_written": 1,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    "case2-841-marked": {
+      "claims_needing_mark": 0,
+      "marks_written": 0,
+      "question_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    }
+  },
+  "mutations": {
+    "missing_file": {
+      "candidate_marks": 1,
+      "mutant_marks": 0,
+      "acceptance_failures": 1,
+      "killed": true
+    },
+    "english_only": {
+      "candidate_marks": 1,
+      "mutant_marks": 0,
+      "acceptance_failures": 1,
+      "killed": true
+    }
+  },
+  "corpus": {
+    "questions": 111,
+    "poc_sentences": 505,
+    "candidate_sentences": 549,
+    "claims": 11,
+    "flagged_questions": 9,
+    "known_false_questions": 4,
+    "known_false_marked": 4,
+    "english_mutant_known_false_marked": 0
+  },
+  "check_pr_body": {
+    "candidate_exit": 0,
+    "baseline_exit": 0,
+    "marks_written": 1
+  },
+  "reading_words": {
+    "no_match": {
+      "base": 89,
+      "candidate": 89,
+      "delta": 0,
+      "base_marks": 0,
+      "candidate_marks": 0
+    },
+    "marked_claim": {
+      "base": 89,
+      "candidate": 98,
+      "delta": 9,
+      "base_marks": 0,
+      "candidate_marks": 1
+    }
+  },
+  "not_run": {
+    "AC-1": "FO: held-and-closed candidate will not exist in this dispatch; it waits for another task merge",
+    "second_corpus": "No authorized independent corpus; FO confirms not verified",
+    "captain_answers": "No observed use; FO confirms not verified",
+    "plain_dialog": "No script on that path; owned by held-and-closed listing",
+    "model_reader": "Excluded by approved design, not rerun"
+  }
+}

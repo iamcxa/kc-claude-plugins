@@ -1,0 +1,5 @@
+Step 1: pinned candidate; three source exports ready
+Step 2: disclosure replay passed; 4 of 4 known false claims marked
+Step 3: held listing 5 of 5; control 0 of 5; hold-removal mutant rejected
+Step 4: nine scope tests and required ADR lint passed
+Scratch retained for post-commit cleanup: /tmp/gate-facts-validation2-ghuxn5s7/captain

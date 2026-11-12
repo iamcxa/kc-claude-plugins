@@ -1,0 +1,143 @@
+{
+  "historical_state": [
+    {
+      "offered": 5,
+      "held": 5,
+      "poc_exit": 1,
+      "without_hold_exit": 0
+    },
+    {
+      "offered": 5,
+      "held": 0,
+      "poc_exit": 0,
+      "without_hold_exit": 0
+    }
+  ],
+  "question_replays": [
+    {
+      "case": "case1-843",
+      "marks": 1,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "case2-841",
+      "marks": 1,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "control-839",
+      "marks": 0,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "control-849",
+      "marks": 1,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "control-five-new-tasks",
+      "marks": 0,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "case3-five-tasks",
+      "marks": 0,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "control-849-cited",
+      "marks": 0,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "control-849-badcite",
+      "marks": 1,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    },
+    {
+      "case": "case2-841-marked",
+      "marks": 0,
+      "question_and_summary_exit": 0,
+      "baseline_exit": 0,
+      "idempotent": true
+    }
+  ],
+  "falsifiers": {
+    "AC-1": {
+      "poc_hold_removal_detected": true,
+      "dependent_candidate_result": "ac1/result.json (separate command)"
+    },
+    "AC-2": {
+      "candidate_marks": 1,
+      "english_only_marks": 0
+    },
+    "AC-3": {
+      "candidate_marks": 1,
+      "missing_file_mutant_marks": 0
+    },
+    "AC-4": {
+      "candidate_false_marks": 4,
+      "english_only_false_marks": 0
+    }
+  },
+  "scope": "aggregate-only; no source sentences or private identifiers",
+  "corpus": {
+    "questions": 111,
+    "poc_spans": 505,
+    "candidate_spans": 549,
+    "matches": 11,
+    "marked_questions": 9,
+    "known_false": 4,
+    "known_false_marked": 4,
+    "english_only_false_marks": 0
+  },
+  "original_scope_commands": {
+    "run": 8,
+    "expected_exit_matched": 8
+  },
+  "record_checks": {
+    "contradicting_primary_records_read": 2,
+    "confirmations": 2,
+    "raw_content_retained": 0
+  },
+  "check_path": [
+    {
+      "source": "ask",
+      "candidate_marks": 1,
+      "base_marks": 0,
+      "exit": 0
+    },
+    {
+      "source": "pr_body",
+      "candidate_marks": 1,
+      "base_marks": 0,
+      "exit": 0
+    }
+  ],
+  "words": [
+    {
+      "base": 89,
+      "candidate": 89
+    },
+    {
+      "base": 89,
+      "candidate": 98
+    }
+  ]
+}

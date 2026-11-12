@@ -1,0 +1,103 @@
+[
+  {
+    "name": "lint",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/gate-facts-validation2-ghuxn5s7/candidate/kc-dev-flow-2/scripts/lint-skills.py"
+    ]
+  },
+  {
+    "name": "adr-lint",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "--require",
+      "0082"
+    ]
+  },
+  {
+    "name": "number-guards",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them.md",
+      "--base",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "--head",
+      "8d083d3b9b2c48c10e32cee3e5ef693b374c6183"
+    ]
+  },
+  {
+    "name": "comments",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ]
+  },
+  {
+    "name": "design-surfaces",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them.md"
+    ]
+  },
+  {
+    "name": "dispatch-records",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-question-facts-are-checked-before-the-captain-reads-them"
+    ]
+  },
+  {
+    "name": "doc-impact",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "8d083d3b9b2c48c10e32cee3e5ef693b374c6183"
+    ]
+  },
+  {
+    "name": "diff-check",
+    "exit": 0,
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them",
+      "diff",
+      "--check",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "8d083d3b9b2c48c10e32cee3e5ef693b374c6183"
+    ]
+  }
+]
