@@ -11,6 +11,7 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
+from test_scratch import ScratchTests
 
 spec = importlib.util.spec_from_file_location("pr_watch", Path(__file__).with_name("pr_watch.py"))
 watch = importlib.util.module_from_spec(spec)
@@ -759,6 +760,9 @@ class TasksTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
+        scratch_base = mock.patch.object(watch.scratch, 'BASE', self.root.resolve() / 'dev2')
+        scratch_base.start()
+        self.addCleanup(scratch_base.stop)
         (self.root / "bin").mkdir()
         stub = self.root / "bin/gh"
         stub.write_text(GH_STUB)
@@ -773,6 +777,7 @@ class TasksTests(unittest.TestCase):
         self.state = self.workflow / ".spacedock-state"
         self.state.mkdir(parents=True)
         self.git(self.repo, "init", "-q", "-b", "main")
+        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
         self.git(self.state, "init", "-q", "-b", "main")
         (self.state / "README.md").write_text("state\n")
         self.watch = self.root / "watch.json"
@@ -1004,6 +1009,69 @@ class TasksTests(unittest.TestCase):
             self.assertEqual(self.tasks({}), (0, []))
         self.assertEqual(calls, [])
 
+    def scratch_dispatch(self, slug, record):
+        folder = self.state / slug / 'dispatch'
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / (record + '.md')).write_text('# dispatch\n')
+        self.git(self.state, 'add', str(folder))
+        self.git(self.state, 'commit', '-qm', 'test: dispatch')
+
+    def scratch_root(self, slug, record):
+        root = watch.scratch.BASE / 'r' / slug / record
+        root.mkdir(parents=True, exist_ok=True)
+        return root
+
+    def test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown(self):
+        self.readme('')
+        self.task('live', worktree=False)
+        self.scratch_dispatch('live', 'validation-1')
+        self.scratch_dispatch('live', 'validation-2')
+        self.scratch_dispatch('live', 'validation-2-message-1')
+        self.scratch_root('live', 'validation-1')
+        current = self.scratch_root('live', 'validation-2')
+        self.archive('archived')
+        self.scratch_root('archived', 'implementation-1')
+        unknown = self.scratch_root('unknown', 'implementation-1')
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        closes = [line for line in lines if 'scripts/scratch.py close ' in line]
+        self.assertEqual(len(closes), 2, lines)
+        self.assertTrue(any(' live' not in line and '/live validation-1`' in line for line in closes), closes)
+        self.assertTrue(any('/_archive/archived implementation-1`' in line for line in closes), closes)
+        self.assertTrue(current.exists())
+        self.assertTrue(unknown.exists())
+        self.assertTrue(any(line.startswith('fact: scratch ') and 'unknown' in line for line in lines), lines)
+
+    def test_merged_scratch_prompt_precedes_merge_record(self):
+        self.readme('learn')
+        self.task('merged', pr='o/r#7', worktree=False)
+        self.report('merged')
+        self.scratch_dispatch('merged', 'validation-1')
+        self.scratch_root('merged', 'validation-1')
+        code, lines = self.tasks({}, look=lambda *a, **k: snap(state='MERGED'))
+        self.assertEqual(code, 0, lines)
+        close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
+        self.assertLess(close, lines.index('next: let pr-merge record merged.'))
+
+    def test_post_archive_removal_record_preserves_learn_and_observer_results(self):
+        self.readme('learn')
+        self.archive('finished')
+        (self.state / '_archive/finished').mkdir(exist_ok=True)
+        (self.state / '_archive/finished/observer.md').write_text('ok | rule: x\n')
+        self.git(self.state, 'add', '_archive/finished')
+        self.git(self.state, 'commit', '-qm', 'test: observer')
+        before = self.tasks({})
+        command = [sys.executable, '-B', str(watch.SCRIPTS / 'observer_check.py'), str(self.state), 'finished']
+        observer_before = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(observer_before.returncode, 0, observer_before.stdout + observer_before.stderr)
+        (self.state / '_archive/finished/scratch-removed.txt').write_text('validation-1 removed 0\n')
+        self.git(self.state, 'add', '_archive/finished/scratch-removed.txt')
+        self.git(self.state, 'commit', '-qm', 'test: post-archive removal record')
+        self.assertEqual(self.tasks({}), before)
+        observer_after = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual((observer_after.returncode, observer_after.stdout, observer_after.stderr),
+                         (observer_before.returncode, observer_before.stdout, observer_before.stderr))
+
     def test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats(self):
         self.readme("learn")
         self.archive("one", extra="id: unrelated-id\n")
@@ -1136,7 +1204,6 @@ class TasksTests(unittest.TestCase):
 
     def test_archive_provider_reads_only_state_and_preserves_qualified_repository(self):
         self.readme("learn")
-        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
         for slug, pr in (("bare", "#7"), ("qualified", "else/where#8"), ("open", "o/r#9"),
                          ("closed", "o/r#10"), ("local", "local-merge:abc"), ("sentinel", "pr-merge:11"),
                          ("failure", "o/r#12")):
@@ -1429,7 +1496,6 @@ class TasksTests(unittest.TestCase):
 
     def test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone(self):
         self.readme("roborev")
-        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
         for slug, pr in (("hash", "#7"), ("number", "7")):
             self.task(slug, pr=pr)
             shutil.rmtree(self.repo / ".worktrees" / slug)

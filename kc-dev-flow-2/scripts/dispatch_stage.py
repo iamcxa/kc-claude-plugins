@@ -13,6 +13,7 @@ import sys
 from design_surfaces import task_folder
 from number_guards import Misconfigured, frontmatter
 from role_triggers import budget_text, rank
+from scratch import notes_for, root_for
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -99,6 +100,8 @@ def check_task_scope(state, scope):
 
 
 def record_text(args, number, dispatched, checklist, notes):
+    notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
+                      f"{args.stage}-{number}", notes, SCRIPTS.parent)
     annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
     header = [f"# {args.stage}-{number}", f"Dispatched: {dispatched} ({annotation})", f"Model: {args.model}"]
     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
@@ -132,9 +135,10 @@ def select_record(args, folder, dispatched, checklist, notes):
     path = directory / f"{args.stage}-{newest + 1}.md"
     if git(state, "ls-files", "--", path.relative_to(state).as_posix()):
         raise FileExistsError(f"record already exists in index: {path}")
+    text = record_text(args, newest + 1, dispatched, checklist, notes)
     directory.mkdir(parents=True, exist_ok=True)
     with path.open("xb") as output:
-        output.write(record_text(args, newest + 1, dispatched, checklist, notes).encode("utf-8"))
+        output.write(text.encode("utf-8"))
     return path, True
 
 
@@ -246,8 +250,12 @@ def main(argv=None):
         sys.stdout.buffer.write(path.read_bytes())
         return 0
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
+    scratch = root_for(args.workflow_dir, folder.name, path.stem)
+    scratch.mkdir(parents=True, exist_ok=True)
+    scoped = scratch / "scope-notes.md"
+    scoped.write_bytes(notes_for(args.workflow_dir, folder, path.stem, notes, SCRIPTS.parent).encode("utf-8"))
     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
-        value = getattr(args, name)
+        value = scoped if name == "scope_notes_file" else getattr(args, name)
         if value is not None:
             command += ["--" + name.replace("_", "-"), str(value)]
     command += ["--" + name.replace("_", "-") for name in ("feedback_reflow", "bare_mode") if getattr(args, name)]

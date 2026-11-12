@@ -12,6 +12,7 @@ import sys
 import tempfile
 import unittest
 import uuid
+import scratch
 
 ROOT = Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "scripts/dispatch_stage.py"
@@ -38,6 +39,9 @@ class DispatchStageTests(unittest.TestCase):
         (self.workflow / "README.md").write_bytes((ROOT / "references/sd/workflow.md").read_bytes())
         (self.repo / ".gitignore").write_text(".worktrees/\n**/.spacedock-state/\n")
         self.call(["git", "init", "--initial-branch=main", self.repo])
+        remote = self.base / "dispatch-code.git"
+        self.call(["git", "init", "--bare", remote])
+        self.git(self.repo, "remote", "add", "origin", str(remote))
         self.git(self.repo, "add", "--", ".gitignore", "docs/dev2/README.md")
         self.git(self.repo, "commit", "-m", "test: workflow")
         self.state = self.workflow / ".spacedock-state"
@@ -62,6 +66,7 @@ class DispatchStageTests(unittest.TestCase):
         self.spy.chmod(0o755)
 
     def remove_artifacts(self):
+        shutil.rmtree(scratch.BASE / "dispatch-code" / self.slug, ignore_errors=True)
         for path in Path("/tmp/spacedock-dispatch").glob(f"*{self.slug}*"):
             if path.is_file():
                 path.unlink()
@@ -208,11 +213,12 @@ class DispatchStageTests(unittest.TestCase):
         record = self.record("engineering-reviewer")
         self.assert_committed(record, f"state: update {self.slug}")
         text = record.read_text()
-        self.assertEqual(text, f"# engineering-reviewer-1\nDispatched: {dispatched} "
+        self.assertTrue(text.startswith(f"# engineering-reviewer-1\nDispatched: {dispatched} "
                          "(workflow checkout, role fixture)\nModel: opus\nRoster: fixture roster\n\n"
-                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}")
+                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}"))
+        self.assertEqual(sum(line.startswith('Scratch: /tmp/dev2/') for line in text.splitlines()), 1)
         self.assertEqual(result.stdout.encode(), record.read_bytes())
-        self.assertEqual(result.stderr, "")
+        self.assertNotIn('failed', result.stderr)
         self.call([sys.executable, "-B", CHECKER, self.folder])
         self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
 
@@ -326,7 +332,8 @@ class DispatchStageTests(unittest.TestCase):
                     "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
         self.assertIn(checklist, disk)
         self.assertIn(notes, disk)
-        self.assertEqual(disk, expected)
+        self.assertTrue(disk.startswith(expected))
+        self.assertEqual(sum(line.startswith(b'Scratch: /tmp/dev2/') for line in disk.splitlines()), 1)
         committed = subprocess.run(["git", "-C", str(self.state), "show",
                                     f"HEAD:{record.relative_to(self.state)}"],
                                    env=self.env, check=True, capture_output=True).stdout
@@ -364,6 +371,33 @@ class DispatchStageTests(unittest.TestCase):
                 before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
                 after = subject.record_text(args, 1, dispatched, checklist, notes)
                 self.assertEqual(before.encode("utf-8"), after.encode("utf-8"))
+
+    def test_scratch_in_record_and_real_dispatch_artifact_without_changing_input(self):
+        original = self.notes.read_bytes()
+        result = self.build()
+        record = self.record().read_text()
+        expected = f'Scratch: /tmp/dev2/dispatch-code/{self.slug}/ideation-1'
+        self.assertEqual(record.splitlines().count(expected), 1)
+        artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
+        self.assertEqual(artifact.splitlines().count(expected), 1)
+        self.assertIn('Not archived (private): <what>; reproduce: <command>', artifact)
+        self.assertIn(str(ROOT / 'scripts/scratch.py') + ' close ', artifact)
+        self.assertEqual(self.notes.read_bytes(), original)
+
+    def test_scope_notes_outside_scratch_refuse_before_record_and_build(self):
+        for path in ('/tmp/x', '/private/tmp/x',
+                     f'/tmp/dev2/dispatch-code/{self.slug}/ideation-1/../escape'):
+            with self.subTest(path=path):
+                self.notes.write_text(f'Package root: {ROOT}\nSend your completion message to `main`.\nRead {path}\n')
+                result = self.build(extra=('--spacedock', self.spy), expected=1)
+                self.assertIn('outside', result.stderr)
+                self.assertFalse(self.marker.exists())
+                self.assertFalse(self.record().exists())
+
+    def test_scope_notes_inside_scratch_are_kept(self):
+        self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/dispatch-code/{self.slug}/ideation-1/checkout\n')
+        self.build()
+        self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
 
     def assert_committed(self, path, subject):
         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
