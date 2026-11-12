@@ -15,6 +15,17 @@ gates:
                 id: briefing:pr-watch-tasks-foreign-worktree:backlog:attempt-1:revision-1
                 digest: sha256:5783c0be460d444e9682a84792d956f027e99a56ec1d28917b381361e2972a80
                 room-ref: ./pr-watch-tasks-foreign-worktree/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pr-watch-tasks-foreign-worktree:backlog:1
+                briefing: briefing:pr-watch-tasks-foreign-worktree:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-12T17:01:58.054817Z"
+                decision: approve
+                reason: The Captain chose 「五張都准，授權代記設計關卡（建議）」 (host question dialog, 2026-11-13), answering 「獨立審查說原本的合約不能直接跑，我已照它修正（設計關卡保留、Prod 不動、每張最多 3 輪實作）。要不要用下面五張小任務開始試跑，並授權我在第一輪沒踩到停止條件時，代你記錄設計關卡通過？五張：①做新東西前先查既有的（你的首要方向，預期第一輪後會停下來問你）②設計檢查腳本遇到同名資料夾會當掉 ③合併檢查不該要求已刪除的暫存路徑 ④沒啟用學習擴充的專案不該被叫去跑學習 ⑤PR 監看不該對別台機器的任務提示。預算每張：1 implementation and 2 validation cycles。」; accepts outcome, scope and Budget as seeded and the trial route rules.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-16), after FO's first run of the v0.23.0 lifecycle mod's idle step on this workflow.
