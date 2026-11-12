@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:design-surfaces-task-dir-crash:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:design-surfaces-task-dir-crash-backlog-1
+              briefing:
+                id: briefing:design-surfaces-task-dir-crash:backlog:attempt-1:revision-1
+                digest: sha256:5fd3d071be50b4b72b9178559fd58dc9ef467da5a0d99826887575d556fd8e60
+                room-ref: ./design-surfaces-task-dir-crash/review/backlog/briefing-1
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer (found by its implementation worker on 2026-10-13); the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?").
