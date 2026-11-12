@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:each-task-records-stage-time-revises-and-interruptions:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:each-task-records-stage-time-revises-and-interruptions-validation-1
+              briefing:
+                id: briefing:each-task-records-stage-time-revises-and-interruptions:validation:attempt-1:revision-1
+                digest: sha256:0161d90f66497a929ee58d3406d2e1d4bccd605cd03f3cbb9beddf5191e1cee6
+                room-ref: ./each-task-records-stage-time-revises-and-interruptions/review/validation/briefing-1
 started: 2026-11-12T05:16:44Z
 worktree: .worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions
 pr: iamcxa/kc-claude-plugins#852
