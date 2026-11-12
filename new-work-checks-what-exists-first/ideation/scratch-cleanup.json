@@ -1,0 +1,13 @@
+{
+  "evidence_commit": "350521808",
+  "removed": [
+    "/tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md",
+    "/tmp/spacedock-dispatch/spacedock-ensign-new-work-checks-what-exists-first-ideation.md",
+    "/private/tmp/dev2-new-work-checks-what-exists-first-20261113"
+  ],
+  "all_absent_after_cleanup": true,
+  "kept_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-new-work-checks-what-exists-first",
+  "kept_branch": "poc/new-work-checks-what-exists-first",
+  "kept_head": "dd35c47ff2e7b00b167715f2b1816d34b8cc84fb",
+  "at": "2026-11-12T17:22:38.079881+00:00"
+}
