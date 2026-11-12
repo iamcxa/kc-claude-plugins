@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:dispatch-close-out-archives-evidence-and-removes-scratch:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:dispatch-close-out-archives-evidence-and-removes-scratch-backlog-1
+              briefing:
+                id: briefing:dispatch-close-out-archives-evidence-and-removes-scratch:backlog:attempt-1:revision-1
+                digest: sha256:385f8a76e9972e37f5d2d3227b89582f45e161d19cf571788289a44b509b42ec
+                room-ref: ./dispatch-close-out-archives-evidence-and-removes-scratch/review/backlog/briefing-1
 ---
 
 ## Scope
