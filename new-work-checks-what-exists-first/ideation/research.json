@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-11-12T17:14:03.618359+00:00",
+  "sources": [
+    {
+      "url": "https://spacedock.md/docs/concepts/stage-lifecycle/",
+      "finding": "Stage standards are workflow-owned; validation is separate from the maker."
+    },
+    {
+      "url": "https://spacedock.md/docs/concepts/workflows-and-entities/",
+      "finding": "Work records and stage rules have existing homes."
+    }
+  ],
+  "searches": [
+    "site:rfc-editor.org software engineering reuse existing code dependency design agents",
+    "site:spacedock.md/docs workflow stage skills ensign"
+  ],
+  "conclusion": "No directly applicable RFC/public standard identified in this bounded primary-source search. Internet protocol reuse guidance is not a contract for this worker practice. This is not a claim that none exists anywhere."
+}

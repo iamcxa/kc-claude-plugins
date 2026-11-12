@@ -1,0 +1,6 @@
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:932:def task_path(task):
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:953:def scope_hold(task):
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:1144:def check_task(path, seed=False, notes=None):
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:1226:def main(argv=None):
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:1233:    path = Path(args.task)
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/design_surfaces.py:1236:    verdict, why = ("clean", "") if args.seed else scope_hold(path)

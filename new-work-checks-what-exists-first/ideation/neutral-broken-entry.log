@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/tmp/dev2-new-work-checks-what-exists-first-20261113/neutral-replay/package/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/dev2-new-work-checks-what-exists-first-20261113/neutral-replay/package/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/tmp/dev2-new-work-checks-what-exists-first-20261113/neutral-replay/package/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/tmp/dev2-new-work-checks-what-exists-first-20261113/neutral-replay/wf/.spacedock-state/design-surfaces-task-dir-crash'

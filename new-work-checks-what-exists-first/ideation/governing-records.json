@@ -1,0 +1,44 @@
+[
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "16384fad490f88308c836d8e5d9cfeeff86a6c2c19c2b42cc7d8bea3e769cefb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "012ff17101537c57cc0da8bd3628b579e8a28d23b114f10550049e916fa035a5",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "d89bbda0d60ff5ba8649104b7025f5ec90a40a31ce0aa2fedba417bcacdc134c",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+    "commit": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "sha256": "d31f3ac3b93c14d2c6bc4dbbbf87ed95349b192fceda00c736a8e1332e3252c6",
+    "status": "Accepted"
+  }
+]

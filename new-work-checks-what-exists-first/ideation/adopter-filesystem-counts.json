@@ -1,0 +1,35 @@
+{
+  "rows": [
+    {
+      "adopter": 1,
+      "readmes_read": 1,
+      "state_files_read": 0,
+      "current_files": 0,
+      "archived_files": 0,
+      "readme_explicit_upstream_check": 0,
+      "files_mentioning_upstream": 0,
+      "files_mentioning_adr": 0
+    },
+    {
+      "adopter": 2,
+      "readmes_read": 1,
+      "state_files_read": 98,
+      "current_files": 16,
+      "archived_files": 82,
+      "readme_explicit_upstream_check": 0,
+      "files_mentioning_upstream": 0,
+      "files_mentioning_adr": 84
+    },
+    {
+      "adopter": 3,
+      "readmes_read": 1,
+      "state_files_read": 167,
+      "current_files": 99,
+      "archived_files": 68,
+      "readme_explicit_upstream_check": 0,
+      "files_mentioning_upstream": 1,
+      "files_mentioning_adr": 93
+    }
+  ],
+  "limit": "Read-only presence counts; not execution or adoption compliance. Private names, titles, rulings and logs are never emitted."
+}

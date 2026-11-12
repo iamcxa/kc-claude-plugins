@@ -1,0 +1,16 @@
+{
+  "scratch_root": "/tmp/dev2-new-work-checks-what-exists-first-20261113",
+  "canonical_root": "/private/tmp/dev2-new-work-checks-what-exists-first-20261113",
+  "generated_dispatch_files": [
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md",
+      "sha256": "127d5434f4cfa189a3b5f27cacbd5061c7d1e801fa522ba8effd4fe959badadd"
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-new-work-checks-what-exists-first-ideation.md",
+      "sha256": "46553df5a63ffa8301b69405db66026d3c3e3fa44ca06ff83cf38efd92805905"
+    }
+  ],
+  "keep_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-new-work-checks-what-exists-first",
+  "keep_branch": "poc/new-work-checks-what-exists-first"
+}

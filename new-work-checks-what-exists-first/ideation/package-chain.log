@@ -1,0 +1,8 @@
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/adoption.md:65:The workflow's Delivery authority constrains the upstream mod's local fallback,
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:270:  check this task's prior reports, linked sibling tasks and PRs, and relevant
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:548:or clean up an owned worktree unless the specific action is authorized. An upstream hook's
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/skills/ideation/principles.md:14:existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/skills/implementation/principles.md:53:## Existing-code capability check
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/skills/learn/SKILL.md:288:A `claim` refused by an `open` sibling runs this read once and retries the `claim` once;
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow/skills/adopt-dev-flow/SKILL.md:40:   runtime resources. Run its sibling installed loader from that same package;
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow/skills/adopt-dev-flow/SKILL.md:135:   version differs, stop and report the skew upstream to `kc-dev-flow`

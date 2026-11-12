@@ -1,0 +1,12 @@
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:140:  `python3 <package>/scripts/design_surfaces.py check --seed <task>` and holds the
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:195:  `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:233:  `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/references/sd/workflow.md:455:`python3 <package>/scripts/design_surfaces.py check <task>`, run by implementation and
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:16:spec = importlib.util.spec_from_file_location("design_surfaces", ROOT / "scripts/design_surfaces.py")
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:172:    source = (ROOT / "scripts/design_surfaces.py").read_text()
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:175:    module.__file__ = str(ROOT / "scripts/design_surfaces.py")
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:1527:        source = (ROOT / "scripts/design_surfaces.py").read_text()
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:1530:        mutant.__file__ = str(ROOT / "scripts/design_surfaces.py")
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:2547:                            done = subprocess.run([sys.executable, "-B", str(scripts / "design_surfaces.py"), "check",
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:2599:                for script, args in (("design_surfaces.py", ["check", str(path)]),
+8125e6d516d32abbf79c6772de10cde2c20900a8:kc-dev-flow-2/scripts/test_design_surfaces.py:2613:                    for script, args in (("design_surfaces.py", ["check", str(path)]),

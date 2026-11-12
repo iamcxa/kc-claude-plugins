@@ -1,0 +1,26 @@
+[
+  {
+    "command": [
+      "git",
+      "clone",
+      "--shared",
+      "--no-checkout",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "/tmp/dev2-new-work-checks-what-exists-first-20261113/state-source"
+    ],
+    "exit": 0,
+    "output": "Cloning into '/tmp/dev2-new-work-checks-what-exists-first-20261113/state-source'...\ndone.\n"
+  },
+  {
+    "command": [
+      "git",
+      "clone",
+      "--shared",
+      "--no-checkout",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-new-work-checks-what-exists-first",
+      "/tmp/dev2-new-work-checks-what-exists-first-20261113/code-source"
+    ],
+    "exit": 0,
+    "output": "Cloning into '/tmp/dev2-new-work-checks-what-exists-first-20261113/code-source'...\ndone.\n"
+  }
+]

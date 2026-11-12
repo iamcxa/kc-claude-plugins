@@ -1,0 +1,18 @@
+[
+  {
+    "path": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0/skills/ensign/references/ensign-shared-core.md",
+    "sha256": "fd4a57bd25de408cae20a108bbc2380f4afc515280906ce54f864fc35c042667"
+  },
+  {
+    "path": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0/skills/ensign/references/codex-ensign-runtime.md",
+    "sha256": "30a874fbd165d649ca6fc82ea909f220126297264c56d779681a44802d9e7ee1"
+  },
+  {
+    "path": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0/docs/site/concepts/workflows-and-entities.md",
+    "sha256": "e121b66a629a810636b9209425f60b09f245e02aaa336e35d78329a5735b9afe"
+  },
+  {
+    "path": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0/docs/site/concepts/stage-lifecycle.md",
+    "sha256": "e72a7e6d3a25ab84fafa240257221939470fd3483d86ca30618a0ce8c8ac1bd4"
+  }
+]
