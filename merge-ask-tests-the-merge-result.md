@@ -56,6 +56,7 @@ gates:
                 state: consumed
 started: 2026-11-12T05:16:52Z
 worktree: .worktrees/spacedock-ensign-merge-ask-tests-the-merge-result
+pr: iamcxa/kc-claude-plugins#853
 ---
 
 ## Scope
