@@ -82,6 +82,9 @@ jobs:
       - name: test_replay_dispatch.py
         run: python3 kc-dev-flow-2/scripts/test_replay_dispatch.py
 
+      - name: test_task_timeline.py
+        run: python3 -B kc-dev-flow-2/scripts/test_task_timeline.py
+
       - name: test_decision_ledger.py
         run: python3 kc-dev-flow-2/scripts/test_decision_ledger.py
 
