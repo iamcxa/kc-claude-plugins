@@ -1,0 +1,23 @@
+{
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "candidate": "a3266ec91c7d46d36864c471c0cc26b389130b3c",
+  "branch": "spacedock-ensign/each-task-records-stage-time-revises-and-interruptions",
+  "proof_of_concept": "89568e4840b9cd4f386511bcc97982edcb9fff9c",
+  "state_head_at_evidence_end": "0f856ce7d637ed69daf66048e9027ff8c87fe75b",
+  "public_corpus_only": true,
+  "files": {
+    ".github/workflows/kc-dev-flow-2-tests.yml": "f7cb2d858998b0f6eaf533543dda9c71ac93b9730f21ed55ad2c12c93a4366e8",
+    "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md": "b87f129fdac8c5c52b1773ac88083051315b7dfa15e150d3bbbeef154bce6972",
+    "kc-dev-flow-2/references/sd/workflow.md": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb",
+    "kc-dev-flow-2/scripts/lint-skills.py": "024d22ccb6f8fcc891fec23e1521040f40293eb843b6ec52ce51695725998770",
+    "kc-dev-flow-2/scripts/task_timeline.py": "af33ac746b09e2af3a9e043126d3489f2f0b1dcd0bc356a7617036b585152b43",
+    "kc-dev-flow-2/scripts/test_task_timeline.py": "1ad65b7c2c3b90b0351024fa52835bd69fc509e47aa7092ddae4131b0b92d002"
+  },
+  "poc_helper_lines": {
+    "before": 199,
+    "retained": 181,
+    "replaced_or_removed": 18,
+    "added_or_replacement": 68,
+    "after": 249
+  }
+}

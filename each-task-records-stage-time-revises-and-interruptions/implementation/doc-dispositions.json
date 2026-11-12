@@ -1,0 +1,68 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: its quoted-raise and exact-count rule is followed by the new +25 step"
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: its +144 step and collaboration rule are unchanged"
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: model and effort comparisons are unchanged"
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: extension word bounds and permission ownership are unchanged"
+  },
+  {
+    "doc": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/task_timeline.py"
+    ],
+    "disposition": "updated: records the approved decisions and protected sites"
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      ".github/workflows/kc-dev-flow-2-tests.yml",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: it points to the CI test list, which now includes the helper tests"
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: exact budget and required Captain-quote rules remain true"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected: historical observations remain true; no existing mode consumer changes"
+  }
+]

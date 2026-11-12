@@ -1,0 +1,60 @@
+[
+ {
+  "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+  "state": "updated",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py",
+   "kc-dev-flow-2/scripts/task_timeline.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/README.md",
+  "state": "review",
+  "terms": [
+   ".github/workflows/kc-dev-flow-2-tests.yml",
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ },
+ {
+  "doc": "learning.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/lint-skills.py"
+  ]
+ }
+]

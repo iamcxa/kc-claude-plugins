@@ -1,0 +1,27 @@
+[
+  {
+    "name": "three post-release tasks compared with hand timing and ask tally",
+    "status": "untested",
+    "reason": "release and post-release tasks do not exist in this implementation dispatch"
+  },
+  {
+    "name": "a Codex First Officer produces the same records",
+    "status": "untested",
+    "reason": "real fixture commits are covered; Codex worker records do not establish First Officer provenance"
+  },
+  {
+    "name": "FO records every outside-gate question before asking",
+    "status": "untested",
+    "reason": "no post-release FO session and asks ledger to compare; historical missing asks stay unknown"
+  },
+  {
+    "name": "hosted CI for test_task_timeline.py",
+    "status": "untested",
+    "reason": "no product push or PR grant; FO owns publication and CI"
+  },
+  {
+    "name": "RoboRev",
+    "status": "untested",
+    "reason": "FO runs it after local handoff; not run here"
+  }
+]

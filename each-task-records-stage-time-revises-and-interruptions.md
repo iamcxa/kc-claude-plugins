@@ -246,3 +246,49 @@ ADR: 0080
 ### Summary
 
 The proof of concept shows stage times and revise counts already exist as records written at the time (Spacedock's commits, gate stamps and FO's dispatch records) and need only a reader; interruptions have no record, so the design adds one written by the same helper's `ask`. The revise count agrees with the budget counter on all 62 comparable tasks. Open for the Captain: the two definitions (D1, D2), report rather than refuse despite his word "lint" (D3), and a 25-word README raise (D4). Ideation also wrote a local poc branch, which this task's dispatch permitted against the stage's no-branch rule.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8ce0eb6050c889b21baccf50fec35231bc888d66) implementing the approved design and acceptance criteria in the task file; decisions D1 to D4 as the design recommends and the Captain approved at the ideation gate; start from the proof of concept the design names (local branch poc/each-task-records-stage-time-revises-and-interruptions at 89568e4840b9, not pushed: bring its commits into your branch and expand it to the Pilot bar by the design's expansion plan); the items under 'Not provable now' become checks you run and report; only the files the design names
+  Product prepared locally at a3266ec91c7d46d36864c471c0cc26b389130b3c, branch spacedock-ensign/each-task-records-stage-time-revises-and-interruptions, base 8ce0eb6050c889b21baccf50fec35231bc888d66; no PR opened: no push grant. PR title/body: /tmp/impl-each-task-records-stage-time-revises-and-interruptions-pr.md; FO publishes and runs RoboRev/CI. POC commits brought in as 236dfe77d and 10ab691b9; only five design files plus amendment 1 ADR changed.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1: implementation/ac1-{finished,human,hand-log}.log matches every finished-stage boundary; mutation-ac1-no-archive.log fails on a missing end, and mutation-ac1-committer-time.log fails when author time is replaced.
+  AC-2: implementation/ac2-compare-spent.log: 62 equal, 0 differ, 2 no-record cases listed apart; mutation-ac2-count-files.log fails if record count replaces highest number.
+  AC-3: implementation/ac3-ask-smoke.log records two UTC asks and refuses empty text; mutation-ac3-ignore-asks.log fails if asks are not read; ask-wrong-stage mutation fails the stage attribution assertion.
+  AC-4: implementation/ac4-sweep.log reads 159 tasks, 136 timed; ac4-untimed.json checks all 23 untimed have no started stamp or dispatch folder. Unreadable-history mutation fails with nonzero; malformed-frontmatter fixture also exercises nonzero.
+  AC-5: implementation/ac5-running.log prints a running positive duration; mutation-ac5-zero-running-time.log fails if a running stage ends at its start. Nine mutations caught with python3 -B and caches removed; summary.json and tests.json record 11 helper fixtures and 144 tests across four suites.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  implementation/{lint-skills,adr-lint,number-guards,comment-ratio}.log and required-checks.json: exit 0 at candidate; 6033/6033 words, 7 comment / 405 code lines = 1.7%, maximum 5%. No product push; PR text prepared; RoboRev and hosted CI not run, FO-owned; CI cost per PR not measured, existing package path filters retained.
+- DONE: Captain amendment 1 permits docs/adr/0080-<short-title>.md recording only the four ideation-gate decisions.
+  ADR 0080 quotes the gate approval and timing portion of its bound question; implementation/adr-lint.log requires 0080 and passes; no further decision added.
+- DONE: The task Number guards section holds ADR: 0080; run ADR lint with --require 0080 and the number guards check.
+  implementation/required-checks.json records both exact commands and exit 0; base and candidate are in manifest.json.
+- DONE: Everything else in the first implementation record stands.
+  Pilot scope retained; no versions bumped and no product publication; six changed paths are hashed in implementation/manifest.json.
+- SKIPPED: The Stop condition: three tasks finished after the change, within five minutes and matching hand counts.
+  No post-release tasks or accompanying hand records exist in this dispatch; implementation/limits.json marks this untested, not a fixture pass.
+- SKIPPED: A Codex First Officer writes the same records; FO runs ask before every outside-gate question.
+  No qualifying post-release FO session is available; worker provenance and fixture commits do not prove either claim; limits.json records both as untested.
+- SKIPPED: test_task_timeline.py passes in hosted CI.
+  Local helper and repository lint suites pass; no product branch push or PR exists for a hosted run. FO owns this check.
+- DONE: Affected document docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md
+  unaffected: its quoted-raise and exact-count rule is followed by the new +25 step; implementation/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md
+  unaffected: its +144 step and collaboration rule are unchanged; implementation/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md
+  unaffected: model and effort comparisons are unchanged; implementation/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md
+  unaffected: extension word bounds and permission ownership are unchanged; implementation/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+  updated: records the approved decisions and protected sites; implementation/doc-impact.json names the match.
+- DONE: Affected document kc-dev-flow-2/README.md
+  unaffected: it points to the CI test list, which now includes the helper tests; implementation/doc-impact.json names the match.
+- DONE: Affected document kc-dev-flow-2/skills/maintain-flow/SKILL.md
+  unaffected: exact budget and required Captain-quote rules remain true; implementation/doc-impact.json names the match.
+- DONE: Affected document learning.md
+  unaffected: historical observations remain true; no existing mode consumer changes; implementation/doc-impact.json names the match.
+
+### Summary
+
+Candidate a3266ec91c7d46d36864c471c0cc26b389130b3c keeps 181 of the POC helper's 199 lines, replaces/removes 18 and adds 68, retaining both POC commits and its ledger/counter reuse. It adds stage-attributed asks, folder-form and missing-start reporting, fixture/falsifier evidence, the approved 25-word workflow step and amendment 1 ADR; no POC mechanism was discarded.
+Start: 2026-11-12 17:25:58 Asia/Taipei. Implementation/reading.json measures startup 6008 to 6033 words; idle, archive and merge-ask moments unchanged. The code tree is locally committed; FO still owns publication, independent review and hosted CI, and the three post-release observations remain unverified. Scratch cleanup paths and the retained PR file are listed in implementation/cleanup.json.

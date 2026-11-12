@@ -9,12 +9,14 @@ import shutil
 import subprocess
 import sys
 import unittest
+import tempfile
 
 code, state, package, scratch = map(Path, sys.argv[1:])
 evidence = Path(__file__).resolve().parent
 scripts = code / "kc-dev-flow-2/scripts"
 helper = scripts / "task_timeline.py"
 scratch.mkdir(parents=True, exist_ok=True)
+tempfile.tempdir = str(scratch)
 env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "TMPDIR": str(scratch)}
 summary = []
 
@@ -70,12 +72,14 @@ run("ac2-compare-spent", [sys.executable, "-B", evidence.parent / "poc/compare_s
 run("ac3-ask-smoke", ["bash", evidence.parent / "poc/ask_smoke.sh", helper])
 run("ac4-sweep", [sys.executable, "-B", helper, state, "--all"])
 untimed = []
-for path in sorted((state / "_archive").glob("*.md")):
-    row = tt.timeline(state, path.stem)
+slugs = {p.stem for p in (state / "_archive").glob("*.md")} | {p.parent.name for p in (state / "_archive").glob("*/index.md")}
+for slug in sorted(slugs):
+    path = tt.find_task(state, slug)
+    row = tt.timeline(state, slug)
     if not row["stages"]:
         assert not re.search(r"^started:", path.read_text(), re.M)
-        assert not (path.with_suffix("") / "dispatch").exists()
-        untimed.append(path.stem)
+        assert not (tt.folder(path) / "dispatch").exists()
+        untimed.append(slug)
 (evidence / "ac4-untimed.json").write_text(json.dumps({"count": len(untimed), "not_dispatched": untimed}, indent=2))
 run("ac5-running", [sys.executable, "-B", helper, state, evidence.parent.name, "--json"])
 assert any(r["end"] is None and r["elapsed_min"] > 0 for r in tt.timeline(state, evidence.parent.name)["stages"])

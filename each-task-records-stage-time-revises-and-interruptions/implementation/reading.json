@@ -1,0 +1,10 @@
+{
+  "startup_before": 6008,
+  "startup_after": 6033,
+  "idle_open_pr": "unchanged",
+  "idle_merged_pr": "unchanged",
+  "after_archive": "unchanged",
+  "merge_ask": "unchanged",
+  "on_demand_sample_words": 148,
+  "source": "base versus candidate workflow; sample actual helper output"
+}

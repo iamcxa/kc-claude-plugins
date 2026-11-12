@@ -1,0 +1,8 @@
+{
+  "remove_after_state_commit": [
+    "/tmp/impl-stage-timing-8fcbee7d",
+    "/tmp/tt-ask-smoke.LagOU6"
+  ],
+  "keep_for_fo": "/tmp/impl-each-task-records-stage-time-revises-and-interruptions-pr.md",
+  "note": "ask-smoke directory already removed by its EXIT trap; fixture and mutant children reside under the dispatch scratch root and are removed with it"
+}

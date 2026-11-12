@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_folder_form_archived_task_is_in_sweep (test_task_timeline.TimelineTests.test_folder_form_archived_task_is_in_sweep)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-stage-timing-8fcbee7d/mutant/test_task_timeline.py", line 153, in test_folder_form_archived_task_is_in_sweep
+    self.assertIn("archived tasks: 1; at least one stage timed: 1", run.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'archived tasks: 1; at least one stage timed: 1' not found in 'archived tasks: 0; at least one stage timed: 0; with a repeat dispatch: 0; with a withdrawn gate attempt: 0; with an amendment outside a gate: 0; with asks.jsonl: 0\nno stage timed: \n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.189s
+
+FAILED (failures=1)

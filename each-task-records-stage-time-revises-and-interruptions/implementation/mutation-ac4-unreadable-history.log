@@ -1,0 +1,19 @@
+E
+======================================================================
+ERROR: test_folder_form_archived_task_is_in_sweep (test_task_timeline.TimelineTests.test_folder_form_archived_task_is_in_sweep)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-stage-timing-8fcbee7d/mutant/test_task_timeline.py", line 150, in test_folder_form_archived_task_is_in_sweep
+    self.assertEqual(tt.timeline(self.state, "demo")["stages"][0]["elapsed_min"], 10.0)
+                     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/impl-stage-timing-8fcbee7d/mutant/task_timeline.py", line 78, in timeline
+    for at, subject, added in history(state, slug):
+                              ~~~~~~~^^^^^^^^^^^^^
+  File "/private/tmp/impl-stage-timing-8fcbee7d/mutant/task_timeline.py", line 66, in history
+    raise ValueError("mutation: unreadable history")
+ValueError: mutation: unreadable history
+
+----------------------------------------------------------------------
+Ran 1 test in 0.137s
+
+FAILED (errors=1)

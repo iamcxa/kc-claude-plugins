@@ -1,0 +1,37 @@
+{
+  "fixture_tests": 11,
+  "mutations_caught": 9,
+  "commands": 21,
+  "all_expected": true,
+  "total_tests": 144,
+  "suites": [
+    {
+      "name": "test_task_timeline.py",
+      "count": 11,
+      "status": "passed"
+    },
+    {
+      "name": "test_lint_skills.py",
+      "count": 47,
+      "status": "passed"
+    },
+    {
+      "name": "test_decision_ledger.py",
+      "count": 23,
+      "status": "passed"
+    },
+    {
+      "name": "test_role_triggers.py",
+      "count": 63,
+      "status": "passed"
+    }
+  ],
+  "archived_tasks": 159,
+  "timed_tasks": 136,
+  "comparable_tasks": 62,
+  "differences": 0,
+  "ci_cost_per_pr": "not measured",
+  "hosted_ci": "not run; FO-owned",
+  "roborev": "not run; FO-owned",
+  "untimed_tasks": 23
+}
