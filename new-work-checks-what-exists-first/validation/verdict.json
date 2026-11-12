@@ -1,0 +1,28 @@
+{
+  "verdict": "REJECTED",
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "product_defect_established": false,
+  "criteria": [
+    {
+      "name": "AC-1 source loading",
+      "status": "passed"
+    },
+    {
+      "name": "AC-2 independent cold behavior",
+      "status": "blocked"
+    },
+    {
+      "name": "AC-3 public count boundary",
+      "status": "passed",
+      "limit": "1 authorised root rerun; 2 original roots not independently reproduced"
+    },
+    {
+      "name": "AC-4 bounded scope and cost",
+      "status": "passed"
+    },
+    {
+      "name": "AC-5 lint and native integration",
+      "status": "passed"
+    }
+  ]
+}

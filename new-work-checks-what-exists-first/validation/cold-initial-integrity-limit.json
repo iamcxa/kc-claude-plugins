@@ -1,0 +1,6 @@
+{
+  "decisive": false,
+  "reason": "Cold subject and source-mutation controls shared candidate export during a short mutation window. Reads could overlap; byte-restoration alone does not prove every earlier read. Replacement requested with separate immutable export.",
+  "mutation_completed_taipei": "2026-11-13T02:01:00+08:00",
+  "restored_identity_record": "archive-integrity.json"
+}

@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/kent/.local/bin/spacedock",
+    "dispatch",
+    "build",
+    "--workflow-dir",
+    "/tmp/validate-new-work-checks-20261113/cold-replay-2/wf",
+    "--entity-path",
+    "/tmp/validate-new-work-checks-20261113/cold-replay-2/wf/.spacedock-state/design-surfaces-task-dir-crash.md",
+    "--stage",
+    "ideation",
+    "--host",
+    "codex",
+    "--checklist-file",
+    "/tmp/validate-new-work-checks-20261113/cold-replay-2/checklist.txt",
+    "--scope-notes-file",
+    "/tmp/validate-new-work-checks-20261113/cold-replay-2/scope.txt"
+  ],
+  "exit": 0,
+  "immutable_export": "/tmp/validate-new-work-checks-20261113/cold-replay-2/candidate",
+  "history": "none",
+  "model": "inherited parent runtime; exact identifier not exposed"
+}

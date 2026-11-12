@@ -1,0 +1,11 @@
+{
+  "changed": [
+    "kc-dev-flow-2/skills/ideation/principles.md",
+    "kc-dev-flow-2/skills/implementation/principles.md"
+  ],
+  "expected": [
+    "kc-dev-flow-2/skills/ideation/principles.md",
+    "kc-dev-flow-2/skills/implementation/principles.md"
+  ],
+  "no_workflow_or_runtime_change": true
+}

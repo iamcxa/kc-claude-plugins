@@ -1,0 +1,9 @@
+[
+  {
+    "severity": "warning",
+    "title": "F1 Needs decision: independent cold proof missing",
+    "detail": "Two validator fixtures unusable; no candidate defect established. The one authorised replacement is exhausted; AC-2 remains unverified.",
+    "status": "open",
+    "fix": "FO routes any further evidence work; no product repair proposed."
+  }
+]

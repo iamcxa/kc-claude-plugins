@@ -1,0 +1,177 @@
+[
+  {
+    "name": "AC1-original",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC1-original.log"
+  },
+  {
+    "name": "AC1-unlink-ideation",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC1-unlink-ideation.log"
+  },
+  {
+    "name": "AC1-remove-home",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC1-remove-home.log"
+  },
+  {
+    "name": "AC1-change-retained-audit",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC1-change-retained-audit.log"
+  },
+  {
+    "name": "AC2-original-record",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC2-original-record.log"
+  },
+  {
+    "name": "AC2-proposal-first",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC2-proposal-first.log"
+  },
+  {
+    "name": "AC2-sibling-as-contract",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC2-sibling-as-contract.log"
+  },
+  {
+    "name": "AC2-undisclosed-source",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC2-undisclosed-source.log"
+  },
+  {
+    "name": "AC3-original-counts",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC3-original-counts.log"
+  },
+  {
+    "name": "AC3-private-field",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC3-private-field.log"
+  },
+  {
+    "name": "AC3-empty-local-is-not-absence",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC3-empty-local-is-not-absence.log"
+  },
+  {
+    "name": "AC4-original-scope",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC4-original-scope.log"
+  },
+  {
+    "name": "AC4-extra-product-file",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC4-extra-product-file.log"
+  },
+  {
+    "name": "AC4-original-cost",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC4-original-cost.log"
+  },
+  {
+    "name": "AC4-new-FO-text",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC4-new-FO-text.log"
+  },
+  {
+    "name": "AC4-undisclosed-worker-text",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC4-undisclosed-worker-text.log"
+  },
+  {
+    "name": "AC5-original-lint",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC5-original-lint.log"
+  },
+  {
+    "name": "AC5-broken-profile",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC5-broken-profile.log"
+  },
+  {
+    "name": "AC5-broken-link",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC5-broken-link.log"
+  },
+  {
+    "name": "AC5-original-design",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC5-original-design.log"
+  },
+  {
+    "name": "AC5-invalid-AC",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC5-invalid-AC.log"
+  },
+  {
+    "name": "AC5-original-POC",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC5-original-POC.log"
+  },
+  {
+    "name": "AC5-added-POC-ideation",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC5-added-POC-ideation.log"
+  },
+  {
+    "name": "AC5-original-ADR",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "output": "controls/AC5-original-ADR.log"
+  },
+  {
+    "name": "AC5-missing-ADR-field",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "output": "controls/AC5-missing-ADR-field.log"
+  }
+]

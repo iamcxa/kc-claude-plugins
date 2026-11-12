@@ -1,0 +1,8 @@
+{
+  "candidate_has_git": false,
+  "files": {
+    "/tmp/validate-new-work-checks-20261113/candidate/kc-dev-flow-2/scripts/design_surfaces.py": "a8d0820593961d109d4ac22e8b2053bdb268a82d68cb5ff765a43222764b368a",
+    "/tmp/validate-new-work-checks-20261113/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py": "52d09587b4104832f6520827a560966f088db49cbd2b280d36c5306e2a01d171",
+    "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/design-surfaces-task-dir-crash.md": "c04d65a80756566771b0bbea14ca2a4a6771ef2d9e9f3633daf7b840a719f1eb"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "rows": [
+    {
+      "stage": "ideation",
+      "profile": "poc",
+      "active": false,
+      "general_check_loaded": false,
+      "stage_principles_declared": true
+    },
+    {
+      "stage": "ideation",
+      "profile": "pilot",
+      "active": true,
+      "general_check_loaded": false,
+      "stage_principles_declared": true
+    },
+    {
+      "stage": "ideation",
+      "profile": "prod",
+      "active": true,
+      "general_check_loaded": false,
+      "stage_principles_declared": true
+    },
+    {
+      "stage": "implementation",
+      "profile": "poc",
+      "active": true,
+      "general_check_loaded": true,
+      "stage_principles_declared": true
+    },
+    {
+      "stage": "implementation",
+      "profile": "pilot",
+      "active": true,
+      "general_check_loaded": true,
+      "stage_principles_declared": true
+    },
+    {
+      "stage": "implementation",
+      "profile": "prod",
+      "active": true,
+      "general_check_loaded": true,
+      "stage_principles_declared": true
+    }
+  ],
+  "existing_capability_check_unchanged": true,
+  "result": "missing general check",
+  "limit": "Source loading and applicability only; does not prove worker compliance."
+}

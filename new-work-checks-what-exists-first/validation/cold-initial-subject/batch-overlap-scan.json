@@ -1,0 +1,741 @@
+[
+  {
+    "slug": "adr-required-statement",
+    "status": "validation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/adr-required-statement.md",
+    "matching_mentions": [
+      {
+        "line": 125,
+        "text": "**AC-8** `references/sd/workflow.md` carries the rules in § Decision records only (the ledger and its grammar, FO duty to append an entry at every Captain ruling it records, the `ADRs:` line, the three run points with the `--task` command replacing the `--require <numbers>` sentence, the validation verdict lines) plus one sentence in § Number guards' applicability line: an unheld `yes` entry is a third trigger, and FO reserves at the dispatch after the entry was recorded. `### backlog` and every ideation-only text are unchanged."
+      },
+      {
+        "line": 126,
+        "text": "Verified by: `python3 kc-dev-flow-2/scripts/test_poc_readme.py` including a new assertion that `poc_readme.derive(SOURCE)` contains each of those phrases inside the `Decision records` and `Number guards` sections and that both `implementation` and `validation` list them in `context-sections`; `python3 kc-dev-flow-2/scripts/poc_readme.py check <poc-readme> <derived>` on a fresh derivation exits 0. Falsified by moving a phrase under `### ideation`, after which the derivation drops it."
+      },
+      {
+        "line": 145,
+        "text": "## Number guards"
+      },
+      {
+        "line": 147,
+        "text": "ADR: 0009"
+      },
+      {
+        "line": 172,
+        "text": "- *What does a POC owe?* The same ledger and the same `ADRs:` line. POC skips ideation only; § Decision records and § Number guards are outside `### ideation`, so `poc_readme.py derive` carries them unchanged."
+      },
+      {
+        "line": 184,
+        "text": "  Y -- \"yes, unheld\" --> RS[\"FO reserves an ADR number at the next dispatch<br/>Number guards, third trigger\"]"
+      },
+      {
+        "line": 218,
+        "text": "- Conclusion: extend `adr_lint.py` (the ADR authority validation already runs) with `--task` and `--validation`, reading the frontmatter with line regexes as every package script does (no script imports `yaml`; adding it would be an undeclared dependency). Not `design_surfaces.py`: it exits 1 on a POC `ui` task for an unrelated reason and would bury the ADR failure."
+      },
+      {
+        "line": 235,
+        "text": "- **Number guards:** add \"or its ledger holds a `yes` entry that is not `held by` a record\" to the applicability line; FO reserves at the next implementation dispatch after the entry is recorded. One number per kind per task stays; a task needing more returns to FO as today."
+      },
+      {
+        "line": 242,
+        "text": "| `kc-dev-flow-2/references/sd/workflow.md` (§ Decision records, § Number guards) | each adopter's five-stage workflow README, per-adopter three-way merge | the rules in AC-8 |"
+      },
+      {
+        "line": 245,
+        "text": "| skills, task template, stage frontmatter | n/a | unchanged: both worker stages already inline § Decision records and § Number guards |"
+      },
+      {
+        "line": 255,
+        "text": "Back-filling ADRs in adopters; changing the ADR template; syncing any adopter README in this PR; fixing `design_surfaces.py check` on POC `ui` tasks; a merge-guard hook in spacedock; judging whether a cited record states the ruling by script; finding Captain words that never reach the task."
+      },
+      {
+        "line": 270,
+        "text": "  `## Acceptance criteria` AC-1..AC-7. Observed today at package 0.10.4: `adr_lint.py <empty-adr-dir>` exit 0 and `adr_lint.py <dir> --task t.md` exit 2. AC-4 replays the case's shape as synthetic fixtures on both routes. `design_surfaces.py check` on this task: exit 0, \"design surfaces presentable\"."
+      },
+      {
+        "line": 280,
+        "text": "  Not yet verified. The case file was read read-only from `origin/spacedock-state/dev2-poc` (`subspace-tab-icon.md`); its report names no ADR, its FO alignment carries no ruling mark, and its own `design_surfaces.py check` fails for an unrelated reason, so the fixture asserts messages."
+      },
+      {
+        "line": 290,
+        "text": "The design extends `adr_lint.py` with `--task`, adds an FO `Product ruling:` line at backlog and a worker `ADRs:` line in the implementation report, and adds `Product ruling: yes` as a third Number guards trigger so a POC (no design) still gets an ADR number reserved. The one choice beyond the relayed words is that `yes` plus `none` fails unless an existing record is cited; without it the replayed case would pass with `none: trivial`. Unrelated, not touched: `design_surfaces.py check` exits 1 on any POC task whose Surfaces include `ui`, which buried the signal in the case's validation. This task itself should be marked `Product ruling: yes` by FO, so it dogfoods its own rule."
+      },
+      {
+        "line": 303,
+        "text": "The design now enumerates the Captain's words from the gate records the workflow already writes instead of trusting the worker or a single backlog line, which covers all four audited cases without reading `## Scope`. The one choice beyond the Captain's words is that a `yes` must be quoted by a named record or point to an existing one, and that the check also runs on the PR head so a ruling at the last gate cannot reach `done` unread. `design_surfaces.py check` on this task exits 0. This task's own `## FO alignment` still carries cycle 1's `Product ruling: yes:` line (FO-owned, left untouched); it is the grammar this cycle replaces, so FO should migrate it to `## Captain rulings` (R1 the opening 「要，交給上游修」, R2 the revise 「退回設計」) when it dogfoods. Unchanged and unrelated: `design_surfaces.py check` still exits 1 on a POC `ui` task."
+      },
+      {
+        "line": 308,
+        "text": "  Candidate 36c0e746 on spacedock-ensign/adr-required-statement (one commit off 6d344bcb): `adr_lint.py --task/--validation`, workflow.md § Decision records + § Number guards line + template section, adoption.md § Captain rulings ledger. Amendment 1: decision 4 moved verbatim under `Superseded text:` in its entry, AC-11 added; on-touch and 10-task text in workflow.md and adoption.md, asserted in the derived POC README."
+      },
+      {
+        "line": 347,
+        "text": "  At b73a69c2: `unittest discover -s kc-dev-flow-2/scripts` 147 tests OK; `adr_lint.py docs/adr --require 9` exit 0; `adr_lint.py docs/adr --task <this task>` exit 0 (\"task rulings covered\"); `design_surfaces.py check <this task>` exit 0 (before the move it exited 1 on the still-declared AC-10); `poc_readme.py derive` then `check` exit 0 (workflow.md and adoption.md untouched since 36c0e746)."
+      },
+      {
+        "line": 360,
+        "text": "  `unittest discover -s kc-dev-flow-2/scripts` Ran 147 OK, `test_poc_readme.py` 6 OK; `adr_lint.py docs/adr --require 9` exit 0; `--task <this task>` exit 0 and `--task --validation` exit 0 (\"task rulings covered\"); `poc_readme.py derive` of workflow.md then `check` exit 0; `design_surfaces.py check` presentable; comment_ratio 36c0e746..b73a69c2: 0 code lines, 0 comment lines. Unverified: see Summary."
+      }
+    ]
+  },
+  {
+    "slug": "dispatch-close-out-archives-evidence-and-removes-scratch",
+    "status": "validation",
+    "recorded_pr": "iamcxa/kc-claude-plugins#854",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch.md",
+    "matching_mentions": [
+      {
+        "line": 269,
+        "text": "## Number guards"
+      },
+      {
+        "line": 271,
+        "text": "ADR: 0079"
+      },
+      {
+        "line": 289,
+        "text": "- DONE: design_surfaces.py check"
+      },
+      {
+        "line": 290,
+        "text": "  `python3 <package>/scripts/design_surfaces.py check <task>` exit 0, \"design surfaces presentable\" (`evidence/design-surfaces-check.txt`)."
+      },
+      {
+        "line": 327,
+        "text": "- DONE: The task's Number guards section now holds ADR: 0079; run the package ADR lint with --require 0079 and the number guards check as the first dispatch record says"
+      }
+    ]
+  },
+  {
+    "slug": "held-and-closed-tasks-leave-the-design-queue",
+    "status": "validation",
+    "recorded_pr": "iamcxa/kc-claude-plugins#856",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/held-and-closed-tasks-leave-the-design-queue.md",
+    "matching_mentions": [
+      {
+        "line": 268,
+        "text": "## Number guards"
+      },
+      {
+        "line": 270,
+        "text": "ADR: 0081"
+      },
+      {
+        "line": 297,
+        "text": "  `design_surfaces.py check` exit 0, \"design surfaces presentable\"; `status --read --ac-scan` exit 0, AC-1..AC-7 each `unevidenced=false`."
+      }
+    ]
+  },
+  {
+    "slug": "journey-server-host-pilot",
+    "status": "validation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/journey-server-host-pilot/index.md",
+    "matching_mentions": [
+      {
+        "line": 189,
+        "text": "## Number guards"
+      },
+      {
+        "line": 191,
+        "text": "ADR: 0015"
+      },
+      {
+        "line": 313,
+        "text": "rtk proxy python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.21.0/scripts/design_surfaces.py check \"$TASK/index.md\""
+      },
+      {
+        "line": 357,
+        "text": "  Commands and falsifiers above; design_surfaces.py exited 0: `index.md: design surfaces presentable`; product main remains clean at 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f."
+      },
+      {
+        "line": 400,
+        "text": "  TypeScript, Vite build, existing 215 library tests and `git diff --check` pass; version/config parity and 68 skill manifests pass. `design_surfaces.py`: presentable; `adr_lint.py --since BASE --require 0015`: 14 ADRs, 0 legacy; roborev: `clean on 4f678cd88; evidence=roborev:621`. These detect wiring/type/regression/doc/review faults; the build retains its large-chunk warning."
+      }
+    ]
+  },
+  {
+    "slug": "merge-guard-stops-unasked-merges",
+    "status": "validation",
+    "recorded_pr": "iamcxa/kc-claude-plugins#794",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/merge-guard-stops-unasked-merges.md",
+    "matching_mentions": [
+      {
+        "line": 311,
+        "text": "## Number guards"
+      },
+      {
+        "line": 313,
+        "text": "ADR: 0063"
+      },
+      {
+        "line": 324,
+        "text": "  AC-1 not yet verified; the 11 hand-made cases ran only against `poc/merge_guard.py`. AC-2 not yet verified. AC-3 not yet verified; nothing has tested the fail-closed wrapper. AC-4 not yet verified for the package script; for the POC script, `poc/run-output.txt` (claude-p) and `poc/claude-tui-nomatch-prompt.txt`. AC-5 not yet verified for the package script; for the POC script, `poc/run-output.txt` (codex) and `poc/manual-runs.md` item 2. AC-6 not yet verified for the package script; for the POC script, `poc/replay-output.txt` gives 54 pass / 30 stop. AC-7 not yet verified. AC-8 not yet verified. D1 (Codex deny) and D2 (placement) are coupled, each with what gets worse. `design_surfaces.py check`: \"design surfaces presentable\", exit 0. `status --ac-scan` reads AC-1 to AC-8."
+      },
+      {
+        "line": 351,
+        "text": "  - D1 to D4 each carry a recommendation and what gets worse. `design_surfaces.py check`: \"design surfaces presentable\", exit 0."
+      }
+    ]
+  },
+  {
+    "slug": "archive-waits-for-observer-report",
+    "status": "implementation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/archive-waits-for-observer-report.md",
+    "matching_mentions": [
+      {
+        "line": 215,
+        "text": "  `design_surfaces.py check` exited 0: `archive-waits-for-observer-report.md: design surfaces presentable`; Mermaid rendered and was visually checked. This checks design form and agreement, not native enforcement."
+      }
+    ]
+  },
+  {
+    "slug": "ops-inbox-r1-setup-and-isolation",
+    "status": "implementation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/ops-inbox-r1-setup-and-isolation.md",
+    "matching_mentions": [
+      {
+        "line": 131,
+        "text": "FO note, 2026-10-26: number collision. This task's reserved ADR 0031 (axis ADR, on branch spacedock-ensign/ops-inbox-r1-setup-and-isolation at 770ce166) collides with main's 0031 (a-release-is-accepted-by-walking-it, merged in #714 on 2026-10-24). Nothing of this task is applied, so under Number guards it renumbers: when r1 resumes, FO deletes the `ADR:` line, runs reserve again, and the task returns to implementation with the new number. Also from ops-metric-event-protocol ideation (2026-10-26): r1 must later merge main, import the contract module that task lands, change its relay fixtures to the protocol's metric type, and its live preview test needs a routing override (preview × warning → agent) or a production test."
+      },
+      {
+        "line": 133,
+        "text": "Captain 2026-10-27 (chat): 「恢復 r1。但是確認一下有沒有哪些 ext 該開沒開的」. FO resumed r1 after contract v1 landed on main (PR #727, merge d7eeeef2, task ops-metric-event-protocol archived). Number guard: the stale `ADR: 0031` was deleted and reserve returned `ADR: 0040`; the axis ADR renumbers to 0040. Carried in from ops-metric-event-protocol: H1 (a signing secret that decodes to zero bytes verifies a forged signature) is the first contract item r1 fixes, per the Captain's approval of that task's delivery gate; D8 (at-most-once loss at 504) was accepted for v1 with 「第一版接受缺陷，後續再補」 and is not in this resume."
+      },
+      {
+        "line": 139,
+        "text": "## Number guards"
+      },
+      {
+        "line": 141,
+        "text": "ADR: 0040"
+      },
+      {
+        "line": 142,
+        "text": "FO note: this task holds one ADR number, for the axis ADR (AC-6). The trigger-repository and state-branch ruling (D2, D3) needs a second ADR; per Number guards a second ADR returns to FO, so FO files it as a follow-up task instead of reserving a second number here."
+      },
+      {
+        "line": 541,
+        "text": "  PRFAQ, a sequence diagram (seven actors: every stop and branch in the prose, the Captain's review as the only approval) and a setup flowchart. `ui`: `UI proposal:` line, `Preview: ops-inbox-r1-setup-and-isolation/preview/` (runnable `setup-preview.mjs`, pictures rendered with agent-browser), two design reviews (17 then 15 findings, all dispositioned). `python3 <package>/scripts/design_surfaces.py check` printed \"design surfaces presentable\" and \"design review design/ideation-2.yaml: 15 findings, 5 fixed, 0 criteria, 10 declined, 0 decisions\", exit 0. Package-value observation under `## Design`."
+      },
+      {
+        "line": 565,
+        "text": "  PRFAQ, sequence diagram (seven actors; open, join, refused, uncertain, duplicate and gate branches) and setup flowchart. `ui`: `UI proposal:` line, `Preview: ops-inbox-r1-setup-and-isolation/preview/` (runnable `r1-preview.mjs`, three pictures, cycle-1 previews moved to `cycle-1/`); design reviews `design/ideation-3.yaml` (4 MAJOR, 12 MINOR, redrawn) and `design/ideation-4.yaml` (2 MAJOR, 20 MINOR, all dispositioned). `python3 <package>/scripts/design_surfaces.py check` printed \"design surfaces presentable\" and \"design review design/ideation-4.yaml: 22 findings, 10 fixed, 0 criteria, 12 declined, 0 decisions\", exit 0. ADR draft quotes the Captain from `asked-day2-axis-2026-10-23.md` and amendment 1. Estimate 3.75 days, 3.5 with D10: over the budget, so the stop condition holds and D10 is the planning delta."
+      },
+      {
+        "line": 592,
+        "text": "  `comment_ratio.py 0701aa8d HEAD`: code 2289, comment 37, 1.6%, max 5% met. `number_guards.py check`: PASS (ADR 0031 only). `design_surfaces.py check`: presentable. `doc_impact.py`: `kc-ops-inbox/contract/README.md` updated, `kc-ops-inbox/setup/RUNBOOK.md` updated; `e2e-pipeline/docs/plans/2026-07-31-diagnostic-init-hook-implementation.md` and the two `kc-nightwatch/.planning/...` files unaffected: they match only the symbol names `parseArgs`/`defaultBranch` in other plugins. ADR 0031 added; the D2/D3 ADR is left to FO as a follow-up (no second number)."
+      }
+    ]
+  },
+  {
+    "slug": "pr-review-lite-value-pilot",
+    "status": "implementation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/pr-review-lite-value-pilot.md",
+    "matching_mentions": []
+  },
+  {
+    "slug": "validation-reads-pr-review-comments",
+    "status": "implementation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/validation-reads-pr-review-comments.md",
+    "matching_mentions": [
+      {
+        "line": 202,
+        "text": "The bite was confirmed at source. Comment 4505793059 was posted two minutes after validation-3 was dispatched and before both of its reports. The validator read the PR's checks but not its comments, because it took review to be FO's job; validation-4 read the comments only because its checklist said to. The design changes one file: the validation principles now open with the Captain's question (can he merge this candidate at its head?) and say PASSED answers it. Reading the PR's comments follows from that question; there is no new script. Proof is a pre-registered behaviour replay of the validation-3 situation against a frozen PR fixture served by a gh shim: 3 runs per arm on Claude and on Codex. Two decisions go to the Captain: require the Codex half (D1) and defer the ADR (D2). `python3 <package 0.36.0>/scripts/design_surfaces.py check` (2026-11-09) printed `validation-reads-pr-review-comments.md: design surfaces presentable`, exit 0."
+      },
+      {
+        "line": 213,
+        "text": "- DONE: Required repository lint, installed adr_lint.py, number_guards.py check, comment_ratio.py and design_surfaces.py."
+      }
+    ]
+  },
+  {
+    "slug": "adoption-asks-which-extensions",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/adoption-asks-which-extensions.md",
+    "matching_mentions": [
+      {
+        "line": 169,
+        "text": "- fo-write-checks-parse-top-level (ideation, same workflow): changes `delivery_gate.py`, `design_surfaces.py` and their tests; no shared file."
+      },
+      {
+        "line": 202,
+        "text": "The Scope's example does not hold: `interrogation-replay-on-batch-3-poc` listed roborev at its dispatch, so its flag was true; the measured bite is one record (`journey-map-dev2-contract`) in 71 folders here, and the paseo case is relayed. The design reads each record's list from the README at its `Dispatched:` SHA, keeps the other five flags, changes no CI, no FO-read text and no observer skill. `python3 <package>/scripts/design_surfaces.py check adoption-asks-which-extensions.md` printed `design surfaces presentable`, exit 0."
+      }
+    ]
+  },
+  {
+    "slug": "adr-silent-undo-probe",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/adr-silent-undo-probe.md",
+    "matching_mentions": [
+      {
+        "line": 85,
+        "text": "- SKIPPED: AC-1..AC-3 evidence clauses, Captain decisions, design_surfaces.py check"
+      }
+    ]
+  },
+  {
+    "slug": "captain-ruling-sources-checked",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/captain-ruling-sources-checked.md",
+    "matching_mentions": [
+      {
+        "line": 51,
+        "text": "- Input: the design in peers-rules-name-each-host-binding (section \"Structured refusal at the existing check\" and its ideation decision 2, at its 2026-10-27 head): a `## Captain sources` section, `design_surfaces.py check` refusing missing, unknown or peer-relay origins, and backfill of active tasks. FO's concern at the gate: every Captain ruling would need a structured entry and active tasks without readable originals would hold, against two bites in one adopter."
+      },
+      {
+        "line": 52,
+        "text": "- Upstream first: adr-required-statement (another session; designs a `## Captain rulings` section for the same check), `scripts/design_surfaces.py`, `scripts/decision_ledger.py`."
+      },
+      {
+        "line": 60,
+        "text": "- One package PR in `scripts/design_surfaces.py`; a backfill of active tasks only if the Captain accepts it at ideation."
+      },
+      {
+        "line": 77,
+        "text": "- FAILED: A design for refusing, in scripts/design_surfaces.py check, a Captain ruling recorded from a peer's relayed words, reconciled with adr-required-statement's ## Captain rulings design (read its task file as it stands); the two qnow bites in fo-interviews-extension/peers-round-1.md replayed as refused; the scope of any active-task backfill left as a Captain decision"
+      },
+      {
+        "line": 86,
+        "text": "  `python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check <this-task>` exited 1: `captain-ruling-sources-checked.md: missing '## Acceptance criteria' section`; this checks the current missing criteria only and does not mechanically establish the missing-Result hold."
+      },
+      {
+        "line": 98,
+        "text": "**Press release.** A First Officer (FO, workflow coordinator) who records a peer's quotation as the Captain's authority will receive a refusal from `design_surfaces.py check`. The refusal identifies the ruling and the missing or non-original source. FO reads the original user message and its question, or leaves the claim unverified and returns the authority question to the Captain. Verifying a peer's repository facts never verifies the peer's quotation."
+      },
+      {
+        "line": 109,
+        "text": "2. **Package next.** `git fetch origin` succeeded on 2026-10-28; source pin `e57feb6eec956b74a1d4b29f26f1d0a7d1693785`, released manifest 0.32.1. Installed Codex package `scripts/design_surfaces.py`, `scripts/decision_ledger.py` and `references/sd/workflow.md` compare byte-for-byte with that main. Bounded search 1: `design_surfaces.py` source/check_task/seed return and its tests; search 2: callers in package scripts, workflow, mods and peers. The current checker already imports `decision_ledger`; that module can enumerate resolution and delegation fields, but neither authenticates sources. A normalized design replay with explicit peer-relay entries passes the released check for both bites (exit 0). Repair this existing check, not a second ledger service. Exclusions: native recorder internals beyond its own published contract, private chat authentication, omitted calls and unrecorded rulings."
+      },
+      {
+        "line": 110,
+        "text": "3. **Sibling adopters last, read-only.** Local qnow state ref `cf95f6d8d7b5e83b575c8ce51669ef17bec9421d`, relay `9bbf43a8690d92c9557bd5785912d30e5f9c88ae`, web `045282bb6b5ca6eb084383e166caaf3bfc3427ba`. Their local workflow READMEs declare 0.27.0, 0.19.1 and 0.32.1 respectively and all include `design_surfaces.py check` plus seed admission. These are local snapshots, not claims about their latest active installation. No fetch, write or message to an adopter. `gh pr list --repo iamcxa/kc-claude-plugins --state open --json number,title,headRefName` failed with `error connecting to api.github.com`; live PR overlap is unverified, not absent."
+      },
+      {
+        "line": 135,
+        "text": "- Enumerate current resolutions/conn grants through existing `decision_ledger.split_task`/`gate_entries`, amendments through the existing amendment reader, and explicitly marked Scope targets. Keep `decision_ledger.py` JSON output unchanged. Historical withdrawn attempts remain historical records to explain, not permission to act now. Do not classify an FO resolution as a Captain decision; `/conn` checks only its claimed human grant."
+      },
+      {
+        "line": 144,
+        "text": "FO records a ruling in `## Captain rulings` before relying on it and runs `design_surfaces.py check`; at task admission use `check --seed`. Refusal output names the source fields. No original means hold."
+      },
+      {
+        "line": 252,
+        "text": "Proposed changed files (complete intended set): `kc-dev-flow-2/scripts/design_surfaces.py`, `kc-dev-flow-2/scripts/test_design_surfaces.py`, `kc-dev-flow-2/extensions/peers/EXTENSION.md`, `kc-dev-flow-2/references/sd/adoption.md`, and one `docs/adr/<reserved>-captain-ruling-provenance-at-existing-checks.md`. No workflow.md, budget, decision_ledger.py output, laws_check.py, task template, CI or adopter file change. Release-generated manifests are owned by the release process, not this design."
+      },
+      {
+        "line": 259,
+        "text": "| `batch-reaches-each-gate-together` (wait and review whole batch) | workflow rules and possibly decision_ledger.py; we import that reader, so preserve its gate-entry shape/JSON and rebase/replay if it changes. No same changed file currently. |"
+      },
+      {
+        "line": 274,
+        "text": "**AC-1** Both `check --seed` and full `check` refuse a missing/empty/malformed Captain rulings section and accept an explicit None declaration only for a zero-target task. Verified by: `python3 -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py`, exercising actual CLI exits and source-specific diagnostics with otherwise valid seed/full fixtures; base must fail the new assertions, not merely an unrelated surface check. Falsifiers: move source validation below the seed return, treat absent section as None, or accept None with a Captain resolution. Current evidence: released checker accepted both normalized peer-relay fixtures; implementation tests not yet written."
+      },
+      {
+        "line": 276,
+        "text": "**AC-2** Exact gate-resolution, conn-grant, amendment and marked-Scope targets join to one complete entry each; shared-original entries can cover several targets without permitting duplicate coverage or an orphan. Verified by: synthetic fixtures in test_design_surfaces.py and CLI exit assertions for each missing enumerator, duplicates, unknown origin, missing/placeholder original/words/asked, agent-only/no-grant and valid None controls. Falsifiers: remove any one enumerator, accept peer-relay/unverified, or let later duplicate coverage win. Current evidence: existing decision_ledger reader inspected; candidate integration unverified."
+      },
+      {
+        "line": 297,
+        "text": "- DONE: A design for refusing, in scripts/design_surfaces.py check, a Captain ruling recorded from a peer's relayed words, reconciled with adr-required-statement's ## Captain rulings design (read its task file as it stands); the two qnow bites in fo-interviews-extension/peers-round-1.md replayed as refused; the scope of any active-task backfill left as a Captain decision"
+      },
+      {
+        "line": 322,
+        "text": "  `python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check <this-task>` exits 0, `captain-ruling-sources-checked.md: design surfaces presentable`; this proves current format/artifact checks, not the proposed provenance behavior."
+      }
+    ]
+  },
+  {
+    "slug": "comment-check-reaches-delivery-gate",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/comment-check-reaches-delivery-gate.md",
+    "matching_mentions": [
+      {
+        "line": 140,
+        "text": "| fo-batch-sittings (batch 4, ideation not started) | none known; its Scope names `workflow.md` Number guards | none; recheck when its design lands |"
+      },
+      {
+        "line": 209,
+        "text": "  `## Design`: `delivery_gate.py check` counts added comments from the `patch` fields of the `files` pages it already fetches and requires a `Comment check (validation): ... at <40-hex head>` line in the latest validation report. Measured 77 check-era heads (39 here, 38 relay): 13 reports carry the script line verbatim, 10 equal the head, 2 stale, 1 not a candidate run; relay's 11 moved heads quoted the right comment count in all 11; 0 of 77 breach ratio or citations; patch counting equals the script on 42 of 42 PRs. Gate: yes; laws L2: no (judges state commits after the push, no PR head); observer: no change (runs at archive). The read half stays prose (Non-goals). `design_surfaces.py check` (package 0.26.0 and working copy): \"presentable\"."
+      }
+    ]
+  },
+  {
+    "slug": "delivery-gate-s4-skips-removed-scratch",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/delivery-gate-s4-skips-removed-scratch.md",
+    "matching_mentions": []
+  },
+  {
+    "slug": "dispatch-carries-reserved-adr-number",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/dispatch-carries-reserved-adr-number.md",
+    "matching_mentions": [
+      {
+        "line": 2,
+        "text": "title: A dispatch record for a task holding a reserved ADR number is refused without its Number guards line"
+      },
+      {
+        "line": 34,
+        "text": "- Bite: relay pair-once implementation-1: its scope notes lacked 'ADR: 0069' though the task held that number, and `dispatch_records.py --names` passed it."
+      },
+      {
+        "line": 35,
+        "text": "- Upstream first: `scripts/dispatch_records.py`, `scripts/number_guards.py`, the README's Number guards."
+      },
+      {
+        "line": 43,
+        "text": "Result: aligned 2026-10-27 on the outcome by the Captain's 「全准」 answering this task's backlog briefing-1 question, which named refusing a dispatch record without the Number guards line of a reserved ADR; where the check runs is put to him at the ideation gate."
+      },
+      {
+        "line": 52,
+        "text": "Read on 2026-10-27 after a successful `git fetch origin`: repository `origin/main` is `8bf4f3582411e8e4238f19fbadda8ddeca6767be`, released manifest version `0.32.0`. The dispatched Codex package is `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0`; its `dispatch_records.py`, `number_guards.py`, `design_surfaces.py` and `laws_check.py` are byte-equal to that revision. No GitHub API query was needed or attempted; PR references below are local Git history, not a claim about current provider state."
+      },
+      {
+        "line": 58,
+        "text": "3. **Sibling adopters:** read relay, web and qnow state only; no adopter workaround was used as upstream authority. The relay pair-once observer identifies the actual ordering defect: dispatch commit `70c8f952` preceded reservation commit `16809dc9`. At the first commit, the task has no `## Number guards` reservation. A checker of numbers the task already holds cannot infer that missing future reservation. At the second commit the same dispatch fails on `ADR: 0069` using the current package."
+      },
+      {
+        "line": 70,
+        "text": "**What is compared?** The existing parser reads bare `ADR: <digits>` and `Migration: <digits>` lines under the task's `## Number guards`. Task lookup supports `<task>/index.md` and `<task>.md`. In the first implementation record's `## Scope notes`, the numeric value must match; current compatibility accepts zero-padding differences, indentation, a list prefix, `Number guards:` prefix and a trailing explanation. An unrelated prose mention, a wrong/longer number or a checklist-only mention does not satisfy it. Reuse this grammar; do not invent a second reservation parser or tighten spelling incidentally."
+      },
+      {
+        "line": 80,
+        "text": "    C --> D[\"FO writes Number guards and copies lines into scope notes\"]"
+      },
+      {
+        "line": 101,
+        "text": "| relay task at `16809dc9`, original first record | 1, `reserved line 'ADR: 0069' missing from scope notes` |"
+      },
+      {
+        "line": 102,
+        "text": "| same pair, only add `ADR: 0069` under scope notes in scratch | 0, silent |"
+      },
+      {
+        "line": 140,
+        "text": "    record.write_bytes(original.replace(b'## Scope notes\\n', b'## Scope notes\\n\\nADR: 0069\\n'))"
+      },
+      {
+        "line": 167,
+        "text": "- **AC-2** Adding exactly the missing line under Scope notes clears that reservation defect without changing task or code. Evidence: relay at `16809dc9`, original record exit 1, line-only scratch repair exit 0; existing cases cover flat/folder task lookup and number mismatch. Falsifier: copy `ADR: 0068`, `ADR: 00690`, or place 0069 outside Scope notes; the original refusal must remain."
+      },
+      {
+        "line": 186,
+        "text": "| seed-check-requires-schema-fields — validate required seed fields | none; `design_surfaces.py` is imported by dispatch checking, so rerun dispatch tests if that sibling changes shared parsing |"
+      },
+      {
+        "line": 201,
+        "text": "- DONE: A design for /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/dispatch_records.py to refuse a dispatch record whose task holds a reserved ADR or Migration number in ## Number guards but whose scope notes lack that Number guards line, replayed over this workflow's dispatch records and the relay pair-once record read only"
+      },
+      {
+        "line": 220,
+        "text": "  design_surfaces.py check printed \"dispatch-carries-reserved-adr-number.md: design surfaces presentable\" (exit 0); removing the usable acceptance section would fail this gate check."
+      }
+    ]
+  },
+  {
+    "slug": "fo-write-checks-parse-top-level",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/fo-write-checks-parse-top-level.md",
+    "matching_mentions": [
+      {
+        "line": 51,
+        "text": "- Finding 2, `kc-dev-flow-2/scripts/design_surfaces.py`: the Scope search selects a fenced `## Scope` example placed before the real section; the example is unchanged in baseline and working copy, so real Scope edits compare equal and the hold returns clean. Parse the unfenced document, as the amendment parser already does."
+      },
+      {
+        "line": 70,
+        "text": "**Press line.** FO's two ask-time checks stop trusting text shape they cannot read: `delivery_gate.py check` counts each declined item once even when a reason quotes another `Declined:` label, and `design_surfaces.py check` finds the real `## Scope` even when a fenced example of that heading comes first."
+      },
+      {
+        "line": 75,
+        "text": "- Why not rewrite the parsers? Each is one function: `declined_items` (with `DECLINE_END`) in `delivery_gate.py` and `scope_lines` in `design_surfaces.py`. Both repairs are local."
+      },
+      {
+        "line": 91,
+        "text": "  J[FO runs design_surfaces.py check at the ideation gate] --> K[scope_lines takes the first ## Scope heading outside a fence]"
+      },
+      {
+        "line": 101,
+        "text": "- kc-dev-flow-2: both functions exist and are the owners. `unfenced()` with `FENCE` in `design_surfaces.py` is the precedent for ignoring fenced text (`amendment_entries`, the `Surfaces:` count); the Scope fix reuses `FENCE`, not a new fence definition."
+      },
+      {
+        "line": 107,
+        "text": "2. `scope_lines`: walk the lines once; a line matching `FENCE` toggles an inside-fence flag; the first `## Scope` heading outside a fence opens the section and the next `## ` heading outside a fence closes it. Fenced lines between them are kept, so an edit inside a fenced block of the real Scope still holds, as today. The `design_surfaces.py` docstring says the heading is read outside fences."
+      },
+      {
+        "line": 112,
+        "text": "Corpus: every task file (top-level and `_archive/`) in the four dev2 state checkouts at heads kc-claude-plugins e5aec638e18d, qnow 0fd4f5b64fa8, subspace-relay 55e447aa04b5, subspace-web 4a51160e6f1f: 305 files, 747 committed revisions of them, 735 gate questions (the `question` field of every `review/*/briefing-*/index.json`). The harness is `ideation/measure.py` beside the task (`python3 -B -I measure.py <base-scripts-dir> <candidate-scripts-dir>`, about 8 minutes; `--gate-only` about 3 seconds). It reads the checkouts read-only, loads both script sets from their own directories, and compares per file `design_surfaces.py check` and `check --seed` (exit code and printed text), `scope_lines` at every committed revision, and `declined_items` plus `unreasoned_items` over every gate question and every task body."
+      },
+      {
+        "line": 127,
+        "text": "`check_criteria` in `design_surfaces.py` calls `section(lines, AC_HEADING)` on raw lines, so a fenced `## Acceptance criteria` example holding a `**AC-1**` line satisfies the criteria requirement (probed 2026-10-21 on origin/main: returns `{'AC-1'}`, no error, with the real section empty). Same fence-blind class, one more function. FO files it as its own backlog task if the Captain wants it; widening this one breaks the Scope non-goal."
+      },
+      {
+        "line": 131,
+        "text": "Files this design would change: `kc-dev-flow-2/scripts/delivery_gate.py` (`DECLINE_END`, `declined_items`, the module docstring's sentence on item runs), `kc-dev-flow-2/scripts/design_surfaces.py` (`scope_lines`, one docstring clause), `kc-dev-flow-2/scripts/test_delivery_gate.py` (`FoWriteRuleTests`), `kc-dev-flow-2/scripts/test_design_surfaces.py` (`ScopeCheckTests`). No README, skill, reference, extension, ADR or version file."
+      },
+      {
+        "line": 137,
+        "text": "| idle-names-failing-seeds | batch 5, ideation | reads the same check: it runs `design_surfaces.py check --seed` from `pr_watch.py`; edits neither script | none; `--seed` returns before `scope_hold`, and the corpus shows 0 `check --seed` changes |"
+      },
+      {
+        "line": 138,
+        "text": "| new-work-starts-from-a-story-map | batch 5, ideation held | possibly: touchpoint (4) is a backlog-gate notice that could land in `design_surfaces.py` | re-check after its design; no edit to `scope_lines` is likely |"
+      },
+      {
+        "line": 140,
+        "text": "| kc-decision-log-p1, kc-decision-log-cli, kc-decision-log-handoff-trial, pr-review-lite-value-pilot, release-acceptance, journey-canvas-hosted-poc, journey-server-host-pilot (other sessions, read only) | live | they only run `design_surfaces.py check`; none edits either script (grep of each task file) | none; 0 verdict changes in the corpus, so none of their task files changes verdict |"
+      },
+      {
+        "line": 141,
+        "text": "| chat-only-evidence-observer-blind-followups (`clause()`), amendment-form-check-round3-followups and override-reaches-gate-and-criteria-wait (`check_amendments`), design-surfaces-task-dir-crash (`main`) | backlog | same files, different functions | order only if one is pulled forward |"
+      },
+      {
+        "line": 176,
+        "text": "Files this design would change: `kc-dev-flow-2/scripts/delivery_gate.py` (`DECLINE_END`, `declined_items`, the module docstring's sentence on item runs), `kc-dev-flow-2/scripts/design_surfaces.py` (`scope_lines`, one docstring clause), `kc-dev-flow-2/scripts/test_delivery_gate.py` (`FoWriteRuleTests`), `kc-dev-flow-2/scripts/test_design_surfaces.py` (`ScopeCheckTests`). No README, skill, reference, extension, ADR or version file."
+      },
+      {
+        "line": 182,
+        "text": "| idle-names-failing-seeds | batch 5, ideation | reads the same check: it runs `design_surfaces.py check --seed` from `pr_watch.py`; edits neither script | none; `--seed` returns before `scope_hold`, and the corpus shows 0 `check --seed` changes |"
+      },
+      {
+        "line": 183,
+        "text": "| new-work-starts-from-a-story-map | batch 5, ideation held | possibly: touchpoint (4) is a backlog-gate notice that could land in `design_surfaces.py` | re-check after its design; no edit to `scope_lines` is likely |"
+      },
+      {
+        "line": 185,
+        "text": "| kc-decision-log-p1, kc-decision-log-cli, kc-decision-log-handoff-trial, pr-review-lite-value-pilot, release-acceptance, journey-canvas-hosted-poc, journey-server-host-pilot (other sessions, read only) | live | they only run `design_surfaces.py check`; none edits either script (grep of each task file) | none; 0 verdict changes in the corpus, so none of their task files changes verdict |"
+      },
+      {
+        "line": 186,
+        "text": "| chat-only-evidence-observer-blind-followups (`clause()`), amendment-form-check-round3-followups and override-reaches-gate-and-criteria-wait (`check_amendments`), design-surfaces-task-dir-crash (`main`) | backlog | same files, different functions | order only if one is pulled forward |"
+      },
+      {
+        "line": 200,
+        "text": "| ideation gate | `design_surfaces.py check` output; a Scope hold line is 52 words when it prints | same text; the hold prints in more cases (a Scope edit behind a fenced example) | 0 on 305 files; at most 52 words on a newly caught edit |"
+      },
+      {
+        "line": 211,
+        "text": "**AC-3**: `scope_lines` reads the first `## Scope` heading outside a fence. Evidence: a new `ScopeCheckTests` case commits a task whose body has a fenced `## Scope` example before the real section, closes the backlog gate, adds a line to the real Scope, and `scope_hold` returns `hold` (origin/main returns `clean`); `design_surfaces.py check` exits 1 with the existing hold line. Falsifier: restoring the old `re.search` turns it clean, shown by a `mutated` case."
+      },
+      {
+        "line": 217,
+        "text": "**AC-6**: Nothing else changes. Evidence: `git diff --name-only origin/main...HEAD` lists exactly `kc-dev-flow-2/scripts/delivery_gate.py`, `design_surfaces.py`, `test_delivery_gate.py` and `test_design_surfaces.py`; `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 with the same word budget; both suites pass in full (`kc-dev-flow-2-tests.yml` already runs them, so no new CI job). Falsifier: any other path in the diff list, or a budget change."
+      },
+      {
+        "line": 236,
+        "text": "  AC-6: not yet verified; the prototype diff touches only `delivery_gate.py` and `design_surfaces.py`, and `test_delivery_gate` 80 and `test_design_surfaces` 144 pass on it."
+      },
+      {
+        "line": 238,
+        "text": "- DONE: `python3 <package>/scripts/design_surfaces.py check <task>` output cited"
+      },
+      {
+        "line": 243,
+        "text": "Both fixes are one function each, `declined_items` with `DECLINE_END` in `delivery_gate.py` and `scope_lines` in `design_surfaces.py`; the prototype passes both existing suites and changes no verdict on 305 task files, 747 revisions or 735 gate questions. Two choices need the Captain: keep fenced lines inside the real Scope compared (recommended), and add a line-opens-with-a-label end to `DECLINE_END` so a bulleted decline list is not undercounted (recommended). A third finding, `check_criteria` being fence-blind, is a follow-up proposal and not in this design. Ideation wrote no repository file, branch or commit; the prototype and harness sit under `fo-write-checks-parse-top-level/ideation/` in the state checkout."
+      }
+    ]
+  },
+  {
+    "slug": "gate-summary-names-each-decline",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/gate-summary-names-each-decline.md",
+    "matching_mentions": [
+      {
+        "line": 51,
+        "text": "- Upstream first: `scripts/delivery_gate.py` decline parsing, `scripts/design_surfaces.py`, the README's FO steps: review findings step 2."
+      },
+      {
+        "line": 105,
+        "text": "Upstream first, checked 2026-11-05. Spacedock 0.27.3 gate records store the question and summary and do not read declines (grep 2026-11-05: `declin` appears in `internal/gates` only in a test fixture). kc-dev-flow-2 at origin/main `d37c6dc653e0` (0.35.0): `delivery_gate.py` `text_problems` holds a labelled item without a bracketed reason (`unreasoned_items`) and fewer labelled items than the newest `## Stage Report: validation` `- F<N> Deferred risk:`/`Polish:` bullets (`findings_join`); `validation_security.py` already parses `Security review (validation): security/validation-<N>.yaml at <head>` and `Security finding (validation <N>) <n>: declined: ...`; `design_surfaces.py` already parses `Built screen finding <n>: declined: ...` (`BUILT_FINDING_LINE`). README FO steps: review findings, steps 2 and 5, already require naming the finding and filing the round-3 task, so the workflow text needs no change. Sibling adopters (relay, qnow, web) run the same package scripts and add no decline check (grep of each `docs/dev2` outside the state checkout, 2026-11-05). The design reuses all three parsers and adds no new command."
+      },
+      {
+        "line": 144,
+        "text": "- Built-screen declines are read only from the newest validation report, as `design_surfaces.py` reads them."
+      },
+      {
+        "line": 225,
+        "text": "- DONE: design_surfaces.py check"
+      },
+      {
+        "line": 226,
+        "text": "  `python3 <package>/scripts/design_surfaces.py check gate-summary-names-each-decline.md` (0.35.0 root): \"design surfaces presentable\", exit 0."
+      }
+    ]
+  },
+  {
+    "slug": "ideation-checks-external-prior-art",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/ideation-checks-external-prior-art.md",
+    "matching_mentions": [
+      {
+        "line": 149,
+        "text": "| What enforces it | the worker's judgment of \"new mechanism\"; no check | the worker; `design_surfaces.py` could refuse a design without the line, but that shares the file with budget-overrun-holds-and-findings-meet-non-goals and is not proposed | the reviewer, only when called; ADR 0026 rules out a phrase-matched trigger |"
+      },
+      {
+        "line": 153,
+        "text": "Precedent for D1: in this workflow's gate records the Captain has more than once chosen a deterministic check over an advisory rule (`Override: recommended no FO rule (design D-2); Captain chose the checker printing preview paths`; `_archive/agent-reads-governing-adr.md`, `Captain chose refusing branch refs`). That lean favours (b) with a check. The Scope's non-goal \"a mandatory survey on every task\" and the budget task's own `design_surfaces.py` change weigh against it now; the recommendation below keeps that variant out."
+      },
+      {
+        "line": 202,
+        "text": "- **budget-overrun-holds-and-findings-meet-non-goals** (batch 21, ideation; it now holds the folded first-principles-check-in-dev2-principles): its design adds a `### Worth questions` duty to `skills/ideation/principles.md` and a refusal to `scripts/design_surfaces.py`. Under (a) or (b) the two tasks share `principles.md` (neighbouring sentences); under a checked (b) they would also share `design_surfaces.py`. Under (c), nothing is shared."
+      },
+      {
+        "line": 245,
+        "text": "  The only shared file is `skills/ideation/principles.md`, with budget-overrun-holds-and-findings-meet-non-goals (and the folded first-principles task). A checked (b) would also share `design_surfaces.py`. Recommended order: the budget task first."
+      },
+      {
+        "line": 260,
+        "text": "- Checks run: `design_surfaces.py check` exits 0 (\"design surfaces presentable\"; log in `ideation-1/design-surfaces.log`)."
+      }
+    ]
+  },
+  {
+    "slug": "journey-canvas-hosted-poc",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/journey-canvas-hosted-poc.md",
+    "matching_mentions": [
+      {
+        "line": 185,
+        "text": "  `## Acceptance criteria` holds AC-1 to AC-4 as bold declarations; `design_surfaces.py check` printed \"journey-canvas-hosted-poc.md: design surfaces presentable\" (exit 0). No `Override:` lines in the state checkout and no ADR directory in docs/dev2."
+      }
+    ]
+  },
+  {
+    "slug": "new-work-checks-what-exists-first",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/new-work-checks-what-exists-first.md",
+    "matching_mentions": []
+  },
+  {
+    "slug": "observer-check-learn-only-when-listed",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/observer-check-learn-only-when-listed.md",
+    "matching_mentions": []
+  },
+  {
+    "slug": "picky-reviewers-may-run-on-gemini",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/picky-reviewers-may-run-on-gemini.md",
+    "matching_mentions": [
+      {
+        "line": 186,
+        "text": "- DONE: `design_surfaces.py check`"
+      }
+    ]
+  },
+  {
+    "slug": "pr-watch-tasks-foreign-worktree",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/pr-watch-tasks-foreign-worktree.md",
+    "matching_mentions": []
+  },
+  {
+    "slug": "seed-check-requires-alignment-result",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/seed-check-requires-alignment-result.md",
+    "matching_mentions": [
+      {
+        "line": 50,
+        "text": "- Bite: batch 9 (2026-10-28): three ideation workers (batch-reaches-each-gate-together, captain-ruling-sources-checked, reused-worker-dispatch-leaves-a-record) held at their first step because `## FO alignment` said \"needed\" with no `Result:` line, costing three dispatches; the same miss on adr-protected-path-guard (2026-10-23). Each time `design_surfaces.py check --seed` (0.32.1) passed the task: it printed \"seed fields and FO alignment recorded\" for all five batch-9 seeds before the Result lines existed."
+      },
+      {
+        "line": 51,
+        "text": "- Upstream first: `scripts/design_surfaces.py` (`check --seed`), `skills/ideation/principles.md` (the stop rule the workers applied), the workflow README FO alignment section."
+      },
+      {
+        "line": 59,
+        "text": "- One package PR in `scripts/design_surfaces.py` and its tests; no new script."
+      },
+      {
+        "line": 115,
+        "text": "1. **Spacedock first:** read the installed 0.27.3 ensign contract, first-officer entry, shared State Management section and `fo-dispatch-core.md` Dispatch section. Its own contract reads the task and stage definition, stamps dispatch state and builds the worker envelope; it does not specify a kc-dev-flow-2 alignment schema or run `design_surfaces.py`. Fix the package check already prescribed at admission, not an adopter workaround or an invented runtime hook."
+      },
+      {
+        "line": 116,
+        "text": "2. **Package source:** fetched origin and pinned `iamcxa/kc-claude-plugins` `origin/main` at `5725d495bb83a17ec13616bb5421bf5ffdc71f70`; its manifest says 0.33.0. The dispatched Codex package's checker, checker tests and workflow source are byte-identical to that commit. `alignment_owes_result` already exists in `design_surfaces.py`, but only `dispatch_records.py:check_task_facts` uses it for ideation records. `check_task(seed=True)` returns field/surface errors without calling it. This is a broken existing seam, not missing parser machinery."
+      },
+      {
+        "line": 132,
+        "text": "The following are full commits on this workflow's state branch. For each task, the left commit is its last committed version before the first Result line; the right commit adds that result. Extract with `git -C <state-checkout> show <commit>:<task>.md > <temporary-task>.md`, then run `python3 <package>/scripts/design_surfaces.py check --seed <temporary-task>.md`."
+      },
+      {
+        "line": 178,
+        "text": "Verified by: preserve the six exact git extracts as test fixtures in the existing `test_design_surfaces.py` or reconstruct their relevant seed bytes there with provenance comments; run the candidate CLI on the full extracts and report stdout and exit per snapshot. Falsifier: remove the new seed-branch predicate call; all three required refusals become false success. Current evidence: the in-memory proposal produced 1/0 for each pair; candidate acceptance unverified."
+      },
+      {
+        "line": 181,
+        "text": "Verified by: table-driven CLI tests in `test_design_surfaces.py` with otherwise-valid seeds, including needed marker case variants, needed-before-ideation, an empty result followed by another field, result in another section, and quoted backtick examples. Falsifiers: unconditional refusal breaks the valid rows; whole-document Result search breaks the outside-section row; accepting blank results breaks the empty row; raw-text matching breaks fenced rows. Current evidence: inspected/exercised the shared predicate on the historical corpus; complete candidate matrix unverified."
+      },
+      {
+        "line": 189,
+        "text": "**AC-5**: The implementation changes only `kc-dev-flow-2/scripts/design_surfaces.py` and `kc-dev-flow-2/scripts/test_design_surfaces.py`, keeps the shared predicate behavior and default-mode behavior, and retains existing dispatch-record enforcement."
+      },
+      {
+        "line": 190,
+        "text": "Verified by: exact candidate diff, `python3 <candidate-package>/scripts/test_design_surfaces.py`, `test_dispatch_records.py` and `test_pr_watch.py`, plus the repository's required package checks. Falsifier: changing the helper to always return false makes historical refusal tests fail; changing default behavior fails AC-3; changing a third deliverable file fails the scope check and returns to FO. Current evidence: caller/source audit establishes the two-file repair seam; implementation tests not run on a candidate because no candidate exists."
+      },
+      {
+        "line": 193,
+        "text": "Verified by: render the Mermaid block and compare its branches with the FAQ, then run the dispatched package's `design_surfaces.py check <task>` and the stage checklist read. Falsifier: removing the Acceptance criteria declarations makes the design checker refuse; moving worker dispatch before Captain approval contradicts the rendered flow and fails the semantic review. Current evidence: diagram rendered/inspected in ideation; final design/checklist output is recorded in the stage report."
+      },
+      {
+        "line": 201,
+        "text": "Files this design would change: `kc-dev-flow-2/scripts/design_surfaces.py` (seed branch only) and `kc-dev-flow-2/scripts/test_design_surfaces.py` (seed tests). Shared checks: `design_surfaces.py check --seed`, its unchanged shared predicate used by `dispatch_records.py`, and the `pr_watch.py` seed consumer. No shared ADR index, number reservation, workflow table or budget step is changed. Entries below are as recorded when read, not forecasts of another worker's final design."
+      },
+      {
+        "line": 206,
+        "text": "| `captain-amendment-form-checked` (amendment shape and history) | Direct overlap: `design_surfaces.py` and its tests; adjacent `dispatch_records.py` behavior. Land this narrow seed change first, then rebase and rerun both modes for the amendment change. |"
+      },
+      {
+        "line": 209,
+        "text": "| `gate-requires-recorded-reviews` (reviews before gate preparation) | Scope names delivery gate, role triggers and Spacedock gate prepare. No direct file overlap currently; shares the gate-entry journey. Recheck design if it chooses `design_surfaces.py` as enforcement. |"
+      },
+      {
+        "line": 224,
+        "text": "- DONE: A design for refusing, in kc-dev-flow-2/scripts/design_surfaces.py check --seed, a task whose ## FO alignment says needed before the stage being dispatched and has no Result: line; the three batch-9 seeds as committed before their Result lines (state history of batch-reaches-each-gate-together, captain-ruling-sources-checked, reused-worker-dispatch-leaves-a-record) replayed as refused, and current tasks with a Result line passing"
+      }
+    ]
+  },
+  {
+    "slug": "step-back-answer-has-a-record-line",
+    "status": "ideation",
+    "recorded_pr": "",
+    "source": "/tmp/validate-new-work-checks-20261113/cold-replay/wf/.spacedock-state/step-back-answer-has-a-record-line.md",
+    "matching_mentions": [
+      {
+        "line": 185,
+        "text": "| override-recorded-when-captain-departs (batch 14) | none: README review-finding disposition / `decision_ledger.py`; this task edits no README | none |"
+      },
+      {
+        "line": 205,
+        "text": "**AC-4** — Counts and calls are unchanged. All existing tests in `test_role_triggers.py` pass, with one expectation changed: `test_two_failed_reports_count_once_each_and_passing_reports_do_not_count` pins the reminder at 51 words and moves to 67 (run against the scratch prototype on 2026-11-05: that one assertion fails `67 != 51`, every other test passes; `test_the_space_class_is_the_one_design_surfaces_uses` errors outside the package folder on base and prototype alike, needing `design_surfaces.py` beside it); `test_pr_watch.py` and `test_delivery_gate.py` assert the reminder only as a substring and its order before `record:`, and their word-count pins are on other lines (git grep at origin/main, 2026-11-05), so they pass unchanged; an answered `amendments` event plus a third replacing amendment still owes the chief-engineer line with the three questions, exit 1; with both families at two and one answered, the other still prints. Evidence: test run output. Falsifier: letting an answer clear the owed line makes the third-amendment test fail."
+      },
+      {
+        "line": 237,
+        "text": "- DONE: `design_surfaces.py check` — \"step-back-answer-has-a-record-line.md: design surfaces presentable\", exit 0."
+      }
+    ]
+  }
+]

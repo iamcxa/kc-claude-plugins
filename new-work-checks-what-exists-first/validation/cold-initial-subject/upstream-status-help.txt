@@ -1,0 +1,28 @@
+Show or update workflow state
+
+Usage:
+  spacedock status --workflow-dir DIR [query flags]
+
+Query flags:
+  --where FIELD=VALUE  Filter entities — THE entity query; repeat the flag to AND clauses
+  --archived           Include archived entities (active PLUS archived, not archived-only)
+  --fields a,b,c       Project to these fields    --all-fields  Show every stored field
+  --next               Dispatchable entities      --boot        Startup roll-up
+  --resolve REF        Resolve slug/id/prefix     --next-id     Preview the next id
+  --validate           Check workflow state       --json        Machine-readable output
+
+Operators (one clause per flag):
+  field=value   equals             field!=value  not equals
+  field=        field is empty     field!=       field is non-empty
+
+Repeat --where to AND clauses. Two clauses in one string is an error, not an AND.
+
+Known fields are this workflow's entity frontmatter keys plus the canonical set
+(id, slug, status, title, score, source, worktree, pr, started, completed,
+verdict, mod-block, archived, issue). An unknown field is an error that lists them.
+
+Examples:
+  spacedock status --workflow-dir docs/dev --where status=ideation
+  spacedock status --workflow-dir docs/dev --where sprint=X --where 'sprint-readiness!=defer'
+  spacedock status --workflow-dir docs/dev --where sprint=X --archived
+  spacedock status --workflow-dir docs/dev --where sprint=X --archived --fields slug,status,verdict,archived

@@ -1,0 +1,18 @@
+{
+  "quoted_sources": [
+    {
+      "quote_present_in_task_and_ADR": true
+    },
+    {
+      "quote_present_in_task_and_ADR": true
+    },
+    {
+      "quote_present_in_task_and_ADR": true
+    },
+    {
+      "quote_present_in_task_and_ADR": true
+    }
+  ],
+  "relayed_source_labelled": true,
+  "all_passed": true
+}

@@ -1,0 +1,230 @@
+[
+  {
+    "artifact": "candidate-routing.json",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/new_work_check.py",
+      "routing",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+      "--ref",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.793519+00:00"
+  },
+  {
+    "artifact": "base-routing.json",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/new_work_check.py",
+      "routing",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+      "--ref",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 1,
+    "at": "2026-11-12T17:57:48.793354+00:00"
+  },
+  {
+    "artifact": "product-scope.json",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/new_work_check.py",
+      "scope",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+      "--ref",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.719934+00:00"
+  },
+  {
+    "artifact": "reading-cost.json",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/new_work_check.py",
+      "cost",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+      "--ref",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:49.012385+00:00"
+  },
+  {
+    "artifact": "lint-skills.log",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-new-work-checks-20261113/candidate/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/validate-new-work-checks-20261113/candidate",
+    "exit": 0,
+    "at": "2026-11-12T17:57:47.006985+00:00"
+  },
+  {
+    "artifact": "adr-lint.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--require",
+      "0083"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.814111+00:00"
+  },
+  {
+    "artifact": "number-guards.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:54.660994+00:00"
+  },
+  {
+    "artifact": "comment-ratio.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.798117+00:00"
+  },
+  {
+    "artifact": "doc-impact.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "1fc2f05f88b18a62d4eda598158ffa385df9fae8"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.883948+00:00"
+  },
+  {
+    "artifact": "design-surfaces.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first.md"
+    ],
+    "cwd": "/tmp/validate-new-work-checks-20261113/candidate",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.879135+00:00"
+  },
+  {
+    "artifact": "dispatch-records.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+    "exit": 0,
+    "at": "2026-11-12T17:57:48.904486+00:00"
+  },
+  {
+    "artifact": "negative-controls.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation/negative_controls.py",
+      "--scratch",
+      "/tmp/validate-new-work-checks-20261113",
+      "--evidence",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation",
+      "--implementation",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation",
+      "--package",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first.md"
+    ],
+    "exit": 0
+  },
+  {
+    "artifact": "sd-dispatch-integration.log",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/validate-new-work-checks-20261113/candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0"
+    ],
+    "exit": 0,
+    "environment": {
+      "TMPDIR": "/tmp/validate-new-work-checks-20261113/native-temp",
+      "SPACEDOCK_BIN": "/Users/kent/.local/bin/spacedock"
+    }
+  },
+  {
+    "artifact": "acceptance.log",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation/acceptance.sh"
+    ],
+    "exit": 0,
+    "context": "fresh Bash shell with approved number-guard state-ref fetch"
+  },
+  {
+    "artifact": "number-guards-refreshed.log",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first.md"
+    ],
+    "exit": 0,
+    "context": "approved metadata access; no warning"
+  }
+]

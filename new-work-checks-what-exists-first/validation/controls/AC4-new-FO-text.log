@@ -1,0 +1,83 @@
+{
+  "fo_instruction_sources_byte_equal": false,
+  "rows": [
+    {
+      "moment": "startup/resume",
+      "passages": [
+        "full workflow",
+        "full mod"
+      ],
+      "base_words": 6081,
+      "probe_words": 6081,
+      "delta": 0
+    },
+    {
+      "moment": "idle/open PR",
+      "passages": [
+        "full mod",
+        "Delivery authority",
+        "Review-finding disposition"
+      ],
+      "base_words": 795,
+      "probe_words": 795,
+      "delta": 0
+    },
+    {
+      "moment": "idle/merged PR",
+      "passages": [
+        "full mod",
+        "Delivery authority"
+      ],
+      "base_words": 536,
+      "probe_words": 536,
+      "delta": 0
+    },
+    {
+      "moment": "after archive",
+      "passages": [
+        "full mod",
+        "Extensions"
+      ],
+      "base_words": 272,
+      "probe_words": 272,
+      "delta": 0
+    },
+    {
+      "moment": "merge ask",
+      "passages": [
+        "Delivery authority",
+        "Captain steps",
+        "Review-finding disposition"
+      ],
+      "base_words": 913,
+      "probe_words": 913,
+      "delta": 0
+    },
+    {
+      "moment": "stage dispatch",
+      "passages": [
+        "Stages",
+        "Dispatch facts"
+      ],
+      "base_words": 2160,
+      "probe_words": 2160,
+      "delta": 0
+    }
+  ],
+  "worker_principles": [
+    {
+      "stage": "ideation",
+      "base_words": 687,
+      "probe_words": 681,
+      "delta": -6
+    },
+    {
+      "stage": "implementation",
+      "base_words": 707,
+      "probe_words": 813,
+      "delta": 106
+    }
+  ],
+  "workflow_words": 6033,
+  "limit": "Counts enumerate the named passages, not a universal total. Dynamic output volume is input-dependent; unchanged scripts with the same input add zero changed words. Ideation follows the new linked section in implementation principles."
+}

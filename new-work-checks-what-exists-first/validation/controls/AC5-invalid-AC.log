@@ -1,0 +1,2 @@
+control-task.md: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)
+scope check not run: stage is validation, not ideation
