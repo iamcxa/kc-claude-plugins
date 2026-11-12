@@ -102,10 +102,11 @@ def notes_for(repo, folder, record, notes, package):
     command = shlex.join(['python3', str(package / 'scripts/scratch.py'), 'close', str(folder), record])
     # see docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md
     return (notes + '\nScratch: ' + str(root).replace(str(BASE.parent), '/tmp', 1) + '\n'
-            "Put every file or checkout you create outside the task worktree and the state checkout under that folder. "
-            f"Copy what your report cites into evidence/{record}/ in the task folder, and nothing that holds a secret or "
-            "a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. "
-            f"Before your report, run `{command}` and paste the lines it prints.\n")
+            "Put files and checkouts outside the task worktree or state checkout under that folder. "
+            f"Copy cited evidence into evidence/{record}/ in the task folder. "
+            "Never archive private repository evidence, secrets or personal data; instead write "
+            "`Not archived (private): <what>; reproduce: <command>`. "
+            f"Before reporting, run `{command}` and paste its output.\n")
 
 
 def evidence(folder, record):

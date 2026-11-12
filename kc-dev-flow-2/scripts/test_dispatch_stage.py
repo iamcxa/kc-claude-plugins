@@ -384,6 +384,8 @@ class DispatchStageTests(unittest.TestCase):
         self.assertEqual(record.splitlines().count(expected), 1)
         artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
         self.assertEqual(artifact.splitlines().count(expected), 1)
+        for emitted in (record, artifact):
+            self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
         self.assertIn('Not archived (private): <what>; reproduce: <command>', artifact)
         self.assertIn(str(ROOT / 'scripts/scratch.py') + ' close ', artifact)
         self.assertEqual(self.notes.read_bytes(), original)

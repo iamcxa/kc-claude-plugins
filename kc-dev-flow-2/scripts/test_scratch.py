@@ -93,6 +93,23 @@ class ScratchTests(unittest.TestCase):
         self.assertIn('uncommitted-files=2', (self.folder / 'scratch-removed.txt').read_text())
         self.git('worktree', 'remove', external)
 
+    def test_close_keeps_another_dispatch_in_the_same_repository(self):
+        peer_root = scratch.claim_root(self.repo, self.folder, 'validation-2')
+        peer = peer_root / 'peer-checkout'
+        own = self.root / 'own-checkout'
+        self.git('worktree', 'add', '--detach', own)
+        self.git('worktree', 'add', '--detach', peer)
+        (peer / 'uncommitted').write_text('keep peer work')
+        self.close()
+        listed = [Path(line.removeprefix('worktree ')) for line in
+                  self.git('worktree', 'list', '--porcelain').splitlines() if line.startswith('worktree ')]
+        self.assertFalse(self.root.exists())
+        self.assertEqual(sum(path.is_relative_to(self.root) for path in listed), 0)
+        self.assertEqual(sum(path.is_relative_to(scratch.BASE) for path in listed), 1)
+        self.assertIn(peer, listed)
+        self.assertEqual((peer / 'uncommitted').read_text(), 'keep peer work')
+        self.git('worktree', 'remove', '--force', peer)
+
     def test_missing_record_refuses_without_deletion(self):
         sentinel = self.root / 'sentinel'
         sentinel.write_text('keep')
