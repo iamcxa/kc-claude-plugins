@@ -1,0 +1,13 @@
+{
+  "candidate": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+  "code_worktree_clean": true,
+  "task_status": "validation",
+  "PR": "OPEN Draft, exact head; pr-final.json",
+  "hosted_CI": "completed success; ci-run-final.json",
+  "worker_background_sessions": "all completed",
+  "subagents_created": 0,
+  "product_push": false,
+  "PR_comments": false,
+  "merge": false,
+  "remaining": "FO gate/review/delivery decisions; post-release observations"
+}

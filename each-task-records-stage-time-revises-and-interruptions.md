@@ -423,3 +423,7 @@ Hosted run 43202173161 completed successfully at this candidate (validation-2/ci
 Captain steps: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation-2/acceptance.sh — expected four PASS lines, 12 helper tests OK, 20/20/40 split, real after-gate 30.3, ADR lint exit 0. No changed UI; command output is the observable surface. This does not cover post-release hand records, host parity or completeness of ask recording.
 
 Evidence: validation-2/. No private repository was read or copied. Archived public input files remained byte-identical (archive-state-stability.json). After the evidence commit, remove the exact owned roots in cleanup-plan.json; cleanup.json will hold the post-commit absence checks and evidence commit identity.
+
+### Validation cycle 2 cleanup
+
+Evidence commit: 8cf6190618d1678a84be7a17030c7fba6086346c (pushed). The five exact roots in validation-2/cleanup.json are absent, including all export and mutation contents. The unmodified legacy script filtered its nested ask-smoke removal path; its EXIT cleanup ran and a read-only prefix check found zero remaining matching directories. No unknown directory was deleted; no /tmp evidence copy remains. Code worktree remains clean at the candidate; FO retains the open task and Draft PR.

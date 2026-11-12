@@ -1,0 +1,35 @@
+{
+  "evidence_commit": "8cf6190618d1678a84be7a17030c7fba6086346c",
+  "evidence_push": "confirmed by spacedock state commit",
+  "committed_paths_in_task_scope": true,
+  "roots": [
+    {
+      "path": "/tmp/stage-time-acceptance-2.ItuhXX",
+      "removed_after_evidence_commit": false,
+      "absent": true
+    },
+    {
+      "path": "/tmp/stage-time-acceptance-2.oMF07E",
+      "removed_after_evidence_commit": false,
+      "absent": true
+    },
+    {
+      "path": "/tmp/stage-time-validation-2-188ba44f-20261112",
+      "removed_after_evidence_commit": true,
+      "absent": true
+    },
+    {
+      "path": "/tmp/tt-ask-smoke.8jdiox",
+      "removed_after_evidence_commit": false,
+      "absent": true
+    },
+    {
+      "path": "/tmp/tt-falsify.CkPSc1",
+      "removed_after_evidence_commit": false,
+      "absent": true
+    }
+  ],
+  "legacy_nested_ask_smoke_remaining_count": 0,
+  "legacy_nested_ask_smoke_note": "The unmodified legacy runner filters out its self-cleanup path. Its ask-smoke EXIT trap removed the generated directory; a read-only glob found no remaining matching directories. No unknown path was deleted.",
+  "cleanup_asia_taipei": "2026-11-12T18:49:30.518613+08:00"
+}
