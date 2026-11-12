@@ -34,6 +34,17 @@ gates:
                 id: briefing:new-work-checks-what-exists-first:ideation:attempt-1:revision-1
                 digest: sha256:a3bab217a775292a4c7ae6bff93319ca5ac476eb108429524849cbf14cc87d91
                 room-ref: ./new-work-checks-what-exists-first/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:new-work-checks-what-exists-first:ideation:1
+                briefing: briefing:new-work-checks-what-exists-first:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-12T17:37:04.390686Z"
+                decision: approve
+                reason: The Captain chose 「放階段原則（建議）」 (host question dialog, 2026-11-13), answering 「「做新東西前先查既有的」這條規則要放在哪裡？我建議放進階段原則（worker 每個階段都會讀的守則）。worker 已用這個放法做出試作：沒有這段文字時檢查不過，加上後通過，並在一次重播的派工中先寫出查了什麼、找到什麼才開始設計。核准等於接受這個放法，同一個 worker 接著實作。」; accepts the design with that placement.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-12T17:03:29Z
 ---
 
