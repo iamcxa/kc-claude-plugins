@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:observer-check-learn-only-when-listed:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:observer-check-learn-only-when-listed-backlog-1
+              briefing:
+                id: briefing:observer-check-learn-only-when-listed:backlog:attempt-1:revision-1
+                digest: sha256:2e471176de0b419ffc5d393f3ba3755feef99997b9b34deea05f5ccaec0c84a1
+                room-ref: ./observer-check-learn-only-when-listed/review/backlog/briefing-1
 ---
 
 ## Scope
