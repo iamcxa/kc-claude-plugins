@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-12T05:16:56Z
+worktree: .worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue
 ---
 
 ## Scope
