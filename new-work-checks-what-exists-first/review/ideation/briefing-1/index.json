@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:new-work-checks-what-exists-first:ideation:attempt-1:revision-1",
+  "question": "「做新東西前先查既有的」這條規則要放在哪裡？我建議放進階段原則（worker 每個階段都會讀的守則）。worker 已用這個放法做出試作：沒有這段文字時檢查不過，加上後通過，並在一次重播的派工中先寫出查了什麼、找到什麼才開始設計。核准等於接受這個放法，同一個 worker 接著實作。",
+  "artifacts": [
+    {
+      "id": "artifact:new-work-checks-what-exists-first:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/725e2a410600bcc4d966a9be8638f2a607f6af2a/new-work-checks-what-exists-first.md",
+      "rev": "sha256:e513e6f6397584b19ed9ba18e6d0dc2c0fa96101e9796e5ea4740e55b71373ca",
+      "mediaType": "text/markdown",
+      "summary": "Round 1 stopped for the Captain's placement decision (stage principles, seed, or gate content). design_surfaces.py check exit 0 (FO run 2026-11-13). Probe on local branch poc/new-work-checks-what-exists-first at dd35c47ff: base routing check exit 1, candidate exit 0; one same-worker replay, not independent. Recommended placement adds 106 words to implementation principles and has no mechanical enforcement."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:new-work-checks-what-exists-first:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:new-work-checks-what-exists-first-ideation-1
+              briefing:
+                id: briefing:new-work-checks-what-exists-first:ideation:attempt-1:revision-1
+                digest: sha256:a3bab217a775292a4c7ae6bff93319ca5ac476eb108429524849cbf14cc87d91
+                room-ref: ./new-work-checks-what-exists-first/review/ideation/briefing-1
 started: 2026-11-12T17:03:29Z
 ---
 
