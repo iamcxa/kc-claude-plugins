@@ -1,0 +1,682 @@
+{
+  "evidence_commit": "99a9dc85e08d0bac9f7dbfd2d66af4f9b7d05e5d",
+  "pushed_to_state_branch": true,
+  "restored_files": 135,
+  "files": [
+    {
+      "path": "ac1-grep.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "ac2.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "ac4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "acceptance.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "acceptance.sh",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "adr-lint.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "amendment-proof.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "assessment.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "candidate-files.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/checks/acceptance.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/checks/acceptance.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/checks/s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/checks/tmp/xcrun_db",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/created-directories.jsonl",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/close-cli.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/emitted-dispatch.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/emitted-record.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/public.txt.gz",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/replay.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay/scratch-removed.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-final/replay.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-run-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-run-initial.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-run.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/checks/acceptance.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/checks/acceptance.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/checks/s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/checks/tmp/xcrun_db",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/created-directories.jsonl",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/close-cli.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/emitted-dispatch.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/emitted-record.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/public.txt.gz",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/replay.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay/scratch-removed.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified/replay.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified-nested.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "captain-verified.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "collision/commands.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "collision/results.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "collision.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "commands.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "comment-ratio.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "context-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "counts.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "created-directories.jsonl",
+      "compressed": true,
+      "matches_original": true
+    },
+    {
+      "path": "design-surfaces.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-adapted.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-adapted.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-native.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-native.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-record-check.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "doc-impact.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "findings.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "fixture_adapter.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "identity.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "idle-emitted.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "implementation-restore.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/AC1-paragraph-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/AC2-reports-scanned.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/AC3-skip-worktree-remove.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/AC4-own-worktree-left.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/AC4-peer-root-deleted.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/F1-private-repository-ban-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/idle-sweep-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/outside-scope-notes-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/root-mismatch-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/size-cap-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/symlink-follows-sentinel.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/threshold-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations/truncated-gzip.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "native-artifact-cleanup-candidates.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "number-guards-live.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "number-guards.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "package-checks.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "package_checks.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "pr-live-attempt.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "pr-live.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-candidate/emitted-notes.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-candidate/privacy.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-candidate.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-previous/emitted-notes.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-previous/privacy.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-previous-native.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-previous-native.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "privacy-previous.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "product-status.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "python-version.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "records-native-directories.jsonl",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "records-native.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "records-native.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-mutations/build-ownership-bypassed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-mutations/close-ownership-bypassed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-mutations/namespace-basename-only.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-mutations/repair-mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-mutations.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/close-cli.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/emitted-dispatch.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/emitted-record.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/public.txt.gz",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/replay.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "replay/scratch-removed.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "required-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/collision_replay.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/fixture_adapter.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/implementation-1/acceptance.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/mutate.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/privacy_probe.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/repair_mutations.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/run_tests.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/s4_repro.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "reused/scope_and_privacy.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "role-triggers.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "run_validation.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "runner.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "scope-privacy-cli.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "scratch-accounting-before-cleanup.json",
+      "compressed": true,
+      "matches_original": true
+    },
+    {
+      "path": "scratch.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "scratch.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "skill-lint.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "spacedock-version.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "supplement-directories.jsonl",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "supplement.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "supplement.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "supplemental-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "trace/sitecustomize.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "watch.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "watch.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "word-budget.json",
+      "compressed": false,
+      "matches_original": true
+    }
+  ]
+}
