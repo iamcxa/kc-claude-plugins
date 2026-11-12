@@ -3,7 +3,7 @@ title: Every task records its time per stage, its revise count and its interrupt
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-12), answering 「決定：合併 #852（一個指令讀出任務每個階段的起訖時間、同一階段重做幾次、我在關卡以外問了你幾次）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；「重做」算同一階段第二次以後的派工，「打斷」算我在關卡以外問你的每一題，靠我在問的當下記一筆，我漏記不會有警告；工具只報告、不擋任務；流程說明多 25 個字、CI 多跑一個測試步驟；時間是從紀錄的提交時間算的，分不出工人在做還是在等；只有 Codex 審過，Copilot 因額度不足沒有審；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit 188ba44f427a15bfff69d9d4e24b2446af0b69dc, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T05:16:44Z
 worktree: .worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions
 pr: pr-merge:852
+verdict: PASSED
+completed: 2026-11-12T16:31:36Z
+archived: 2026-11-12T16:31:36Z
 ---
 
 ## Scope
