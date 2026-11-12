@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_runs_the_merged_tree_and_removes_scratch (test_delivery_gate.MergeRunTests.test_runs_the_merged_tree_and_removes_scratch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-853-20261112-1752/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 792, in test_runs_the_merged_tree_and_removes_scratch
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : merge result 188fd7d3a743 of d8404868dc0b onto trunk a951d75ae1b9: bash -c 'test -f head && test -f trunk && pwd' exit 1 in 0.0s
+record: task/merge/result-1.json
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.373s
+
+FAILED (failures=1)

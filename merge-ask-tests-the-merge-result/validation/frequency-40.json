@@ -1,0 +1,447 @@
+{
+  "method": "Last 40 merged PRs, all types, sorted by mergedAt from the 100 most recently updated merged PRs; compare landed commit first parent to PR head.",
+  "rows": [
+    {
+      "headRefOid": "887530e5e21938bade54519e2599ff6d7e01641f",
+      "mergeCommit": {
+        "oid": "8ce0eb6050c889b21baccf50fec35231bc888d66"
+      },
+      "mergedAt": "2026-11-11T16:21:45Z",
+      "number": 851,
+      "trunk": "4bdf93d231fe719caa15d63590e607e12e1b6a7b",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "2a03d17039a6f4926120b25ce2273d3b68c1db7d",
+      "mergeCommit": {
+        "oid": "4bdf93d231fe719caa15d63590e607e12e1b6a7b"
+      },
+      "mergedAt": "2026-11-11T16:14:58Z",
+      "number": 850,
+      "trunk": "83f6a04c39caad4187314e1e6b290b256d815538",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "78905b08d6f38817ccdda5d2e91be478fd75dfc7",
+      "mergeCommit": {
+        "oid": "83f6a04c39caad4187314e1e6b290b256d815538"
+      },
+      "mergedAt": "2026-11-11T15:39:05Z",
+      "number": 849,
+      "trunk": "44f11855264bde64da284ffa9c1fef70e8ac38dd",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "3415891bb20d8e3c0ee7447c6b29510b76cc038f",
+      "mergeCommit": {
+        "oid": "44f11855264bde64da284ffa9c1fef70e8ac38dd"
+      },
+      "mergedAt": "2026-11-11T13:40:44Z",
+      "number": 848,
+      "trunk": "3968965df3280811fb220b2c8660384177dcaac1",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "db7f54a903cd43dbeaff11904a5239342ab278f4",
+      "mergeCommit": {
+        "oid": "3968965df3280811fb220b2c8660384177dcaac1"
+      },
+      "mergedAt": "2026-11-11T11:02:34Z",
+      "number": 840,
+      "trunk": "539350a6cb97a88d5fd34c561c53449e079a40ee",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "9b9be172c7cb2453ae74a79f10322344bf9ab32f",
+      "mergeCommit": {
+        "oid": "539350a6cb97a88d5fd34c561c53449e079a40ee"
+      },
+      "mergedAt": "2026-11-11T10:14:26Z",
+      "number": 846,
+      "trunk": "571a7bd8a24ce08fac149fbcc91c4561610834c7",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+      "mergeCommit": {
+        "oid": "571a7bd8a24ce08fac149fbcc91c4561610834c7"
+      },
+      "mergedAt": "2026-11-11T08:56:38Z",
+      "number": 841,
+      "trunk": "eeee002303aca7c14237258253cd9318a5b3248c",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "0a5c37f091daec6909a76d443219c655b17d534e",
+      "mergeCommit": {
+        "oid": "eeee002303aca7c14237258253cd9318a5b3248c"
+      },
+      "mergedAt": "2026-11-11T08:43:00Z",
+      "number": 844,
+      "trunk": "ad817367b354b37c73498bb3484eb052b338829b",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "d22a01d5e8d334f6f4e8a2c5853f8f6abeddc89a",
+      "mergeCommit": {
+        "oid": "ad817367b354b37c73498bb3484eb052b338829b"
+      },
+      "mergedAt": "2026-11-11T07:59:54Z",
+      "number": 842,
+      "trunk": "4947482cf8340058619495f7f2f5a2d145ba0464",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "01d23393ebe5bfd63d8bcafc01859c3b146021d2",
+      "mergeCommit": {
+        "oid": "4947482cf8340058619495f7f2f5a2d145ba0464"
+      },
+      "mergedAt": "2026-11-11T07:55:20Z",
+      "number": 843,
+      "trunk": "caebde4b978964ddf731af1d8426f7b37e5d12ec",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "fd1caa475f85483cf5c4031a1e58656ff5d3eaff",
+      "mergeCommit": {
+        "oid": "caebde4b978964ddf731af1d8426f7b37e5d12ec"
+      },
+      "mergedAt": "2026-11-11T07:42:24Z",
+      "number": 839,
+      "trunk": "546a136386c94c58e430c91a6f3457b38bd73880",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "61529999eb4184b44328fe2fbad545b1b0b0ed92",
+      "mergeCommit": {
+        "oid": "546a136386c94c58e430c91a6f3457b38bd73880"
+      },
+      "mergedAt": "2026-11-11T04:56:36Z",
+      "number": 838,
+      "trunk": "e8664a72b0f904e5dda3c391d52ab3abaca876b4",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "39fd9f372d338892d4d41f411f8af263957ad443",
+      "mergeCommit": {
+        "oid": "e8664a72b0f904e5dda3c391d52ab3abaca876b4"
+      },
+      "mergedAt": "2026-11-11T00:50:10Z",
+      "number": 836,
+      "trunk": "2d8277985a4539a51f106dbffd2f7c76cf223702",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "80dbb68066415098e0965f2c94bc58bb91ae140c",
+      "mergeCommit": {
+        "oid": "2d8277985a4539a51f106dbffd2f7c76cf223702"
+      },
+      "mergedAt": "2026-11-11T00:43:26Z",
+      "number": 835,
+      "trunk": "7655b8dab3daba2674ebd0faad3fb81e9754187c",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "7d75d65ef317fc5c426eb7b0975d93a72d50acaa",
+      "mergeCommit": {
+        "oid": "7655b8dab3daba2674ebd0faad3fb81e9754187c"
+      },
+      "mergedAt": "2026-11-11T00:25:46Z",
+      "number": 834,
+      "trunk": "8c714a370867eccb0d26a589c5149ad3e0c911b4",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "663138d16fdb4be86bc76a7590df74c9a3315507",
+      "mergeCommit": {
+        "oid": "8c714a370867eccb0d26a589c5149ad3e0c911b4"
+      },
+      "mergedAt": "2026-11-10T14:07:29Z",
+      "number": 833,
+      "trunk": "ec2bae0d6b9c4cedc5fc67adfc99d7043143c5de",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "5850083421242b2fd1dde8256aea3a7229035870",
+      "mergeCommit": {
+        "oid": "ec2bae0d6b9c4cedc5fc67adfc99d7043143c5de"
+      },
+      "mergedAt": "2026-11-10T13:47:01Z",
+      "number": 831,
+      "trunk": "9f9fdd436a0c15a111f9f0c473ea8a7d748f198d",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "39a76c68836f471fc0c42c18eab12641196860ed",
+      "mergeCommit": {
+        "oid": "9f9fdd436a0c15a111f9f0c473ea8a7d748f198d"
+      },
+      "mergedAt": "2026-11-10T13:20:21Z",
+      "number": 827,
+      "trunk": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "864536d1180334fa8a10c1ec7122f2ddf0feea14",
+      "mergeCommit": {
+        "oid": "d8dbfcb1051d7c696aca139ed9ade332ee85abaf"
+      },
+      "mergedAt": "2026-11-10T11:09:27Z",
+      "number": 828,
+      "trunk": "99cb186238c45612fc9fa0237ebabfbcabbe4029",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "e608489c62fd387aeafaa5a1a6111ae59cd7d383",
+      "mergeCommit": {
+        "oid": "99cb186238c45612fc9fa0237ebabfbcabbe4029"
+      },
+      "mergedAt": "2026-11-10T11:09:00Z",
+      "number": 826,
+      "trunk": "01195ae6cd5ff09de31ab286374f43ccceb6667e",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "2a72c89b9aa9d114e45aeb16b746b8ca9f747bb8",
+      "mergeCommit": {
+        "oid": "01195ae6cd5ff09de31ab286374f43ccceb6667e"
+      },
+      "mergedAt": "2026-11-10T11:08:46Z",
+      "number": 825,
+      "trunk": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "a607d4d28ff2237e679daa7831365d728ff6b56c",
+      "mergeCommit": {
+        "oid": "6a495cb8c4055f9a6eba8a05419c2d2fad1a90f1"
+      },
+      "mergedAt": "2026-11-10T03:14:12Z",
+      "number": 824,
+      "trunk": "35d4ab8df6dc352300abc60c5dab8cf0becd28c8",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "1d80c9e6cbfb75f69bd98a51953aa66c4bb9be4c",
+      "mergeCommit": {
+        "oid": "35d4ab8df6dc352300abc60c5dab8cf0becd28c8"
+      },
+      "mergedAt": "2026-11-10T03:02:54Z",
+      "number": 819,
+      "trunk": "c5f2bf9f43f6c25ee249e35e8424d01b73edf316",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "4a146449de8ad43f1eb67e59599215989c327645",
+      "mergeCommit": {
+        "oid": "c5f2bf9f43f6c25ee249e35e8424d01b73edf316"
+      },
+      "mergedAt": "2026-11-10T02:29:26Z",
+      "number": 822,
+      "trunk": "19a3a8619bee89957d0bc10470429163440b544b",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "42455f093facfc96edf6cd0357f26be1c858b262",
+      "mergeCommit": {
+        "oid": "19a3a8619bee89957d0bc10470429163440b544b"
+      },
+      "mergedAt": "2026-11-10T01:45:28Z",
+      "number": 823,
+      "trunk": "f980a097bf15d8d1382c039949c6b9aefc5439c8",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "8470611d718f19aa8ef1f7ae66ba9f72c3c01422",
+      "mergeCommit": {
+        "oid": "f980a097bf15d8d1382c039949c6b9aefc5439c8"
+      },
+      "mergedAt": "2026-11-10T00:28:12Z",
+      "number": 820,
+      "trunk": "6a07ecbe70cd10a2395236ca22b5eb7b0763ab24",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "ebbac3de0dbf3b9bf9bf4c59611ff06bb5eb4fe9",
+      "mergeCommit": {
+        "oid": "6a07ecbe70cd10a2395236ca22b5eb7b0763ab24"
+      },
+      "mergedAt": "2026-11-10T00:28:05Z",
+      "number": 821,
+      "trunk": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "b8362fb901cd27bd367be1cd5b826f21fefad70e",
+      "mergeCommit": {
+        "oid": "82c9e67ae892b80647c3f6a8b6929f993e42dbc2"
+      },
+      "mergedAt": "2026-11-09T15:36:14Z",
+      "number": 818,
+      "trunk": "8c8313823f353f631e2b7cca4559dd3e643f30a5",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "85f9a65928958f78a4eaf12b3ce38ca4e25e2ab0",
+      "mergeCommit": {
+        "oid": "8c8313823f353f631e2b7cca4559dd3e643f30a5"
+      },
+      "mergedAt": "2026-11-09T08:27:45Z",
+      "number": 817,
+      "trunk": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "cf94cc486ccc3ed360b44543c31b20a450c03242",
+      "mergeCommit": {
+        "oid": "e7c9381f2ae7f11bc715a6f11a3e000b9b807e1e"
+      },
+      "mergedAt": "2026-11-09T04:53:08Z",
+      "number": 813,
+      "trunk": "f3d768a416a583f8370c39c6b35dd55ca1c7ba5a",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "b01af3c286e11518f440fc21ff9930cf57fb7cc8",
+      "mergeCommit": {
+        "oid": "f3d768a416a583f8370c39c6b35dd55ca1c7ba5a"
+      },
+      "mergedAt": "2026-11-08T12:49:19Z",
+      "number": 783,
+      "trunk": "5757476fceb391d1ae90a2387cc7b38699e01267",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "bd9d4abce4e0c61a69079d4e822b6ded45cfdc20",
+      "mergeCommit": {
+        "oid": "5757476fceb391d1ae90a2387cc7b38699e01267"
+      },
+      "mergedAt": "2026-11-08T12:33:07Z",
+      "number": 812,
+      "trunk": "4deaa2aa108adeaf3c934fd2309e69d90ac3a076",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "fef21735308e7e807d04a93a5506de5284dde436",
+      "mergeCommit": {
+        "oid": "4deaa2aa108adeaf3c934fd2309e69d90ac3a076"
+      },
+      "mergedAt": "2026-11-08T08:13:34Z",
+      "number": 810,
+      "trunk": "334d91e3165953b2ca7191e3308d80b6c02c4a99",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "a43b537cd12d69a5ccfde38bf964c6ea35cb0de0",
+      "mergeCommit": {
+        "oid": "334d91e3165953b2ca7191e3308d80b6c02c4a99"
+      },
+      "mergedAt": "2026-11-08T03:20:49Z",
+      "number": 809,
+      "trunk": "4d7eb1ae918b7c1779c0b44473ab4fd2301a7e88",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "2760f259379e9c3bb43bab9efa56d90c5b657ab1",
+      "mergeCommit": {
+        "oid": "4d7eb1ae918b7c1779c0b44473ab4fd2301a7e88"
+      },
+      "mergedAt": "2026-11-08T03:20:44Z",
+      "number": 807,
+      "trunk": "a3502ac1bdcbe0d3a871b2615eb860b231e65b76",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "f429f0fac40511c6480fd92e2cccd4c0e94b2454",
+      "mergeCommit": {
+        "oid": "a3502ac1bdcbe0d3a871b2615eb860b231e65b76"
+      },
+      "mergedAt": "2026-11-08T03:20:40Z",
+      "number": 806,
+      "trunk": "139feeaee7ce037a0c6535568cd6bd103155cbae",
+      "status": "ahead",
+      "fires": false
+    },
+    {
+      "headRefOid": "37b1c0b7a9561ee48165cefbc9424a4390fe9d0a",
+      "mergeCommit": {
+        "oid": "139feeaee7ce037a0c6535568cd6bd103155cbae"
+      },
+      "mergedAt": "2026-11-07T02:05:20Z",
+      "number": 802,
+      "trunk": "655e474cfe63abca8634769ab89898bd7aa7f8c1",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "ef3ed3e05534e2a997acbdfb055a880fde1f484a",
+      "mergeCommit": {
+        "oid": "655e474cfe63abca8634769ab89898bd7aa7f8c1"
+      },
+      "mergedAt": "2026-11-07T02:05:13Z",
+      "number": 801,
+      "trunk": "3123cf7ac9c432d51be3c959a7cc84c638f71224",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "ae7750375bc19e482f829edc9a041d95fb280693",
+      "mergeCommit": {
+        "oid": "3123cf7ac9c432d51be3c959a7cc84c638f71224"
+      },
+      "mergedAt": "2026-11-07T02:05:06Z",
+      "number": 800,
+      "trunk": "629cf732613494eb86ac96e0bf70a0d4f85b3bd4",
+      "status": "diverged",
+      "fires": true
+    },
+    {
+      "headRefOid": "97dceebedd68108ef8e67fa5455f1e578c910ad6",
+      "mergeCommit": {
+        "oid": "629cf732613494eb86ac96e0bf70a0d4f85b3bd4"
+      },
+      "mergedAt": "2026-11-07T02:04:59Z",
+      "number": 799,
+      "trunk": "4112dee72125dde3721fd258e9bfa5e764d00b1c",
+      "status": "diverged",
+      "fires": true
+    }
+  ],
+  "sample": 40,
+  "fired": 17
+}

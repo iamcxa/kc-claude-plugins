@@ -1,0 +1,8 @@
+{
+  "command": "bash -c 'python3 -B kc-dev-flow-2/scripts/lint-skills.py && for t in kc-dev-flow-2/scripts/test_*.py kc-dev-flow-2/extensions/*/test_*.py; do case \"$t\" in */test_dispatch_stage.py|*/test_sd_dispatch.py|*/test_observer_recovery.py) continue;; esac; python3 -B \"$t\" || exit; done'",
+  "exit": 0,
+  "seconds": 636.6371880839579,
+  "runs": 1,
+  "head": "d79053d0836c558a9269f9cf1ba222933935b820",
+  "trunk": "8ce0eb6050c889b21baccf50fec35231bc888d66"
+}

@@ -1,0 +1,7 @@
+# Local measurement
+
+The exact workflow README merge-test command is retained in cost.json and cost-command.log. The command ran once through candidate merge-run, on head d79053d0836c558a9269f9cf1ba222933935b820 merged with trunk 8ce0eb6050c889b21baccf50fec35231bc888d66. Because that trunk is an ancestor, this cost sample tests the candidate tree; frequency is measured separately. End-to-end wall time: 636.64 seconds; recorded archive/run interval: 636.5 seconds. Other validation processes ran concurrently during part of the sample. This is one local measurement, not a CI cost or a distribution.
+
+The latest 40 merged PRs of all types, including release PRs, span 2026-11-07T02:04:59Z to 2026-11-11T16:21:45Z. Exactly 17 have a landed parent not ancestral to their PR head (42.5%); 23 do not. frequency-source.json and frequency-completeness.json establish coverage; frequency-40.json holds each public PR's head, landed parent and GitHub compare status. This sample differs from the design's 40 feature PRs, which excluded release PRs and reached back to November 5. Do not replace one sample's rate with the other without stating that difference.
+
+No CI definition or repository setting changed; CI billing cost was not measured. The three pinned-Spacedock integration scripts ran separately and all exited 0. Their times are not part of the named merge-test command. All public head checks observed in pr-853.json succeeded except the expected skipped deployment; PR remains Draft/open. This is not merge or release evidence.

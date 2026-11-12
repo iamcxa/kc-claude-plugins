@@ -1,0 +1,554 @@
+diff --git a/docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md b/docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md
+new file mode 100644
+index 000000000..35f94d173
+--- /dev/null
++++ b/docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md
+@@ -0,0 +1,63 @@
++# 0078. A merge ask on a moved trunk carries a test run on the merge result
++
++Date: 2026-11-12
++
++## Status
++
++Accepted
++
++## Context
++
++PR #841 passed on its own head but, after #843 landed, their combined tree failed
++one of 226 design-surface tests. Its merge ask disclosed that acceptance had not
++been rerun, without a hold. The task merge-ask-tests-the-merge-result rebuilt the
++landed tree and measured 580 seconds for the 25 local unit scripts, excluding the
++three requiring pinned Spacedock. Trunk had diverged for 24 of 40 sampled PRs.
++
++## Decision
++
++**Words:** 「五份都核准（建議）」 — Captain, host question dialog, 2026-11-12,
++ideation gate of merge-ask-tests-the-merge-result.
++
++**Asked:** 「決定：實驗的五份設計要不要都核准並開始實作。我建議五份都照各自設計的建議核准。」
++The bound question included: 「三、合併後結果先測：main 的頂端不是 PR 的祖先時就要求一次測試紀錄，量到約六成的 PR 會觸發、整組測試一次約 10 分鐘（只量一次）；流程說明加一行指定要跑的指令。」
++These are verbatim excerpts of the task's ideation gate record, not a new grant.
++
++**Options considered:**
++- D1: require a record matching the workflow README `merge-test:` command (chosen),
++  rather than letting FO choose narrower tests at each ask.
++- D2: trigger when trunk's tip is not an ancestor of the head (chosen), rather than
++  recording the dispatch-time base and ignoring divergence before dispatch.
++- D3: demonstrate the passing replay on the same head at its earlier CI trunk
++  (chosen); the honest run on the actual ask trunk fails and must hold.
++- GitHub strict branch protection or a merge queue: not chosen; repository-setting
++  changes remain outside this task's authority.
++
++**Recommended:** D1, D2 and D3 above, as the approved design recommends.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/delivery_gate.py` — `merge_result_problem`, the command and trunk match at the merge ask
++
++For a diverged or behind head, `check` requires a passing merge-result record at
++the head and current trunk, with the configured command. Without that run, FO may
++proceed only by putting `Merge result: not run: <reason>` in the question the
++Captain reads; `question` checks that placement for a not-run ask record.
++`merge-run` builds with `git merge-tree --write-tree`, runs in an archived temporary
++tree, saves the exit and log, and removes that temporary tree. A conflict exits 2.
++The merge-result point shares the existing display cap; ask records retain its
++record name or `not run`. An ancestor trunk adds no merge-result requirement.
++
++## Consequences
++
++The workflow adds one command line; adopters add theirs at their next sync. Until
++then, moved-trunk asks there need the explicit not-run line. The adopted command
++runs the 25 local unit scripts; the three pinned-Spacedock integration scripts
++remain separate checks. No CI definition or repository setting changes.
++
++The initial measurement implies about six local minutes per PR averaged over
++that sample, not CI billing minutes. The run binds the trunk observed at check
++time; it cannot prevent trunk moving again before merge. Records are trusted,
++not authenticated or recomputed by check. A live green ask remains unproven
++until an eligible PR after release; D3's replay does not establish that event.
++Reopen if these limits permit another observed combined-tree failure to pass
++without the Captain seeing the omitted run.
+diff --git a/docs/dev2/README.md b/docs/dev2/README.md
+index 5205f1970..c5dbc9f2b 100644
+--- a/docs/dev2/README.md
++++ b/docs/dev2/README.md
+@@ -8,6 +8,7 @@ extensions: [roborev, codex, copilot, learn, peers, paseo, fo-feedback]
+ second-reviewer: copilot
+ state: .spacedock-state
+ trunk: main
++merge-test: bash -c 'python3 -B kc-dev-flow-2/scripts/lint-skills.py && for t in kc-dev-flow-2/scripts/test_*.py kc-dev-flow-2/extensions/*/test_*.py; do case "$t" in */test_dispatch_stage.py|*/test_sd_dispatch.py|*/test_observer_recovery.py) continue;; esac; python3 -B "$t" || exit; done'
+ stages:
+   defaults:
+     worktree: false
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index eddcbe403..fb1f44b17 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -35,6 +35,7 @@ other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
+ the PR is a draft or not mergeable, its base is not the README's
+ `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
+ README cannot be read, or an input is unusable. Every problem is printed.
++When trunk is not an ancestor of the head, check requires a passing merge-result run matching README `merge-test:`, or a `Merge result: not run: <reason>` line.
+ A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
+ (no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
+ adds one problem line and its `next:` lines, exit 2 holds with its message.
+@@ -74,13 +75,19 @@ Report-only Markdown files contribute fenced commands; missing-path checks cover
+ Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
+ and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
+ file becomes one large required step, through the end of the file.
++
++Usage: delivery_gate.py merge-run <task> --pr owner/repo#N [--workflow-dir <dir>] -- <command>
++Runs the README `merge-test:` command on an archived merge tree and saves result-N.json and its log beside the task. Missing commit objects are fetched; conflicts exit 2. The temporary tree is removed after the run.
+ """
+ import argparse
+ import datetime
+ import json
+ import re
++import shlex
++import shutil
+ import subprocess
+ import sys
++import tempfile
+ from pathlib import Path
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+@@ -125,6 +132,7 @@ ASK = "next: merge this head if the approved question named the merge and he did
+ # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
+ ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
+ ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
++MERGE_NOT_RUN = re.compile(r"^Merge result:[ \t]+not run:[ \t]*\S.*$", re.M)
+ CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
+ 
+ 
+@@ -319,7 +327,7 @@ def readme_front(path):
+             break
+         if m := re.match(r"^([\w-]+):[ \t]*(.*?)[ \t]*$", line):
+             key, value = m.groups()
+-            scalars[key] = value.strip("'\"")
++            scalars[key] = value[1:-1] if len(value) > 1 and value[0] == value[-1] and value[0] in "'\"" else value
+             if value.startswith("["):
+                 lists[key] = [v.strip().strip("'\"") for v in value.strip("[]").split(",") if v.strip()]
+         elif key and (m := re.match(r"^[ \t]+-[ \t]+(.*?)[ \t]*$", line)):
+@@ -424,8 +432,8 @@ def commit_date(path):
+     return datetime.datetime.fromtimestamp(path.stat().st_mtime, datetime.timezone.utc).strftime("%Y-%m-%d")
+ 
+ 
+-def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, root):
+-    found = []
++def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, root, merge_result=None):
++    found = [("merge-result", merge_result[1])] if merge_result else []
+     reports = "\n".join(VALIDATION_SECTION.findall(task_text))
+     prose = reports + "\n" + gate_text
+     found += [("deferred", l) for l in prose.split("\n") if DEFERRED.search(l)]
+@@ -444,7 +452,7 @@ def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, r
+     if root and (root / "release-please-config.json").exists() and not CONVENTIONAL.match(facts["title"]):
+         found.append(("title", facts["title"]))
+     found += [("second-reviewer", r) for r in dict.fromkeys(m.lower() for m in SECOND_REVIEWER.findall(gate_text))]
+-    lines = [f"point: {kind}: {tok(value)}" for kind, value in found]
++    lines = [f"point: {kind}: {clean(value)}" if kind == "merge-result" else f"point: {kind}: {tok(value)}" for kind, value in found]
+     return lines[:MAX_POINTS] + ([f"point: more: {len(lines) - MAX_POINTS} not shown"] if len(lines) > MAX_POINTS else [])
+ 
+ 
+@@ -531,6 +539,98 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
+     return problems, nexts
+ 
+ 
++def trunk_position(repo, trunk, head):
++    data = json.loads(gh("api", f"repos/{repo}/compare/{trunk}...{head}"))
++    if data["status"] not in ("ahead", "identical", "diverged", "behind") or not re.fullmatch(r"[0-9a-f]{40}", str(data["base_commit"]["sha"])):
++        raise ValueError("unusable trunk comparison")
++    return data["status"], str(data["base_commit"]["sha"]).lower()
++
++
++def merge_results(task):
++    found = []
++    for path in (task_folder(task) / "merge").glob("result-*.json"):
++        if (m := re.fullmatch(r"result-(\d+)\.json", path.name)):
++            found.append((int(m.group(1)), path))
++    return [(path, json.loads(path.read_text())) for _, path in sorted(found)]
++
++
++def merge_result_problem(task, gate_text, head, status, trunk_sha, command):
++    if status in ("ahead", "identical"):
++        return None, None
++    # see docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md
++    matching = [(p, r) for p, r in merge_results(task) if r.get("head") == head and r.get("trunk") == trunk_sha
++                and command and r.get("command") == command]
++    if matching:
++        path, rec = matching[-1]
++        if rec.get("exit") == 0:
++            return None, (path.name, f"{tok(command, words=12, chars=120)} exit 0 on {tok(rec.get('tree', '')[:12], words=1, chars=14)} ({path.name})")
++        return (f"the merge-result run {path.name} on trunk {trunk_sha[:12]} exited {tok(rec.get('exit'), words=1, chars=12)}",
++                None)
++    if MERGE_NOT_RUN.search("\n".join(outside_fences(gate_text))):
++        return None, ("not run", "not run (the ask says so)")
++    return (f"the trunk moved since this head ({status}, trunk {trunk_sha[:12]}) and no merge-result run is recorded at this head and trunk",
++            None)
++
++
++def merge_run(args):
++    task = Path(args.task)
++    if task.is_dir():
++        task = task / "index.md"
++    pr = PR.match(args.pr)
++    if not pr or not args.run:
++        emit("merge-run needs --pr owner/repo#N and a command after --")
++        return 2
++    repo, number = pr.groups()
++    try:
++        workflow_dir, scalars, _ = find_readme(task, args.workflow_dir)
++        command = scalars.get("merge-test", "")
++        if not command or shlex.split(command) != args.run:
++            raise ValueError("command must match workflow README merge-test:")
++        trunk = scalars.get("trunk") or "main"
++        head = (args.head or run_gh(repo, number)).lower()
++        trunk_sha = (args.trunk or trunk_position(repo, trunk, head)[1]).lower()
++        if not all(re.fullmatch(r"[0-9a-f]{40}", ref) for ref in (head, trunk_sha)):
++            raise ValueError("head and trunk must be full commit ids")
++        git_dir = args.repo_dir or str(repo_root(workflow_dir))
++        if any(subprocess.run(["git", "-C", git_dir, "cat-file", "-e", ref + "^{commit}"], capture_output=True).returncode
++               for ref in (trunk_sha, head)):
++            subprocess.run(["git", "-C", git_dir, "fetch", "-q", "origin", trunk, f"refs/pull/{number}/head"],
++                           capture_output=True, check=True, timeout=300)
++        merged = subprocess.run(["git", "-C", git_dir, "merge-tree", "--write-tree", trunk_sha, head], capture_output=True, text=True, timeout=300)
++    except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
++        emit(f"cannot prepare the merge result: {error}")
++        return 2
++    if merged.returncode:
++        emit(f"cannot prepare the merge result: merge-tree exited {merged.returncode}", merged.stdout, merged.stderr)
++        return 2
++    tree = merged.stdout.split()[0] if merged.stdout.split() else ""
++    folder = task_folder(task) / "merge"
++    folder.mkdir(parents=True, exist_ok=True)
++    taken = [int(m.group(1)) for p in folder.glob("result-*.json") if (m := re.fullmatch(r"result-(\d+)\.json", p.name))]
++    n = max(taken, default=0) + 1
++    log = folder / f"result-{n}.log"
++    rec = {"pr": args.pr, "head": head, "trunk": trunk_sha, "tree": tree, "command": command}
++    start = utcnow()
++    scratch = Path(tempfile.mkdtemp(prefix="merge-result-"))
++    try:
++        archive = subprocess.run(["git", "-C", git_dir, "archive", tree], capture_output=True, check=True, timeout=300)
++        subprocess.run(["tar", "-x", "-C", str(scratch)], input=archive.stdout, check=True, capture_output=True)
++        with log.open("w") as out:
++            done = subprocess.run(args.run, cwd=scratch, stdout=out, stderr=subprocess.STDOUT)
++        rec.update(exit=done.returncode)
++    except (OSError, subprocess.SubprocessError) as error:
++        emit(f"cannot run the merge-result command: {error}")
++        return 2
++    finally:
++        shutil.rmtree(scratch)
++    rec.update(seconds=round((utcnow() - start).total_seconds(), 1), time=utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), log=log.name)
++    path = folder / f"result-{n}.json"
++    path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
++    emit(f"merge result {tree[:12]} of {head[:12]} onto trunk {trunk_sha[:12]}: {rec['command']} exit {rec['exit']} in {rec['seconds']}s",
++         f"record: {task_folder(task).name}/merge/{path.name}")
++    return 0 if rec["exit"] == 0 else 1
++
++
+ def check(args):
+     emit(CLAIM_SOURCE)
+     task, text_file = Path(args.task), Path(args.text_file)
+@@ -577,6 +677,7 @@ def check(args):
+             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
+ 
+     facts = files = runs = required = None
++    merge_result = None
+     try:
+         facts, files = pr_facts(repo, number), pr_files(repo, number)
+         runs = pr_runs(repo, str(facts["headRefOid"]).lower())
+@@ -611,6 +712,17 @@ def check(args):
+         if scalars.get("trunk") and facts.get("baseRefName") != scalars["trunk"]:
+             problems.append(f"the PR base {tok(facts.get('baseRefName'), words=1, chars=60)} is not the trunk {tok(scalars['trunk'], words=1, chars=60)}")
+             nexts.append("next: hold the ask; the PR does not target the trunk, tell the Captain.")
++        if scalars.get("trunk") and head and full.startswith(head):
++            try:
++                status, trunk_sha = trunk_position(repo, scalars["trunk"], full)
++                why, merge_result = merge_result_problem(task, gate_text, full, status, trunk_sha, scalars.get("merge-test"))
++            except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
++                holds.append(f"cannot compare the trunk with {full[:12]}: {error}")
++            else:
++                if why:
++                    problems.append(why)
++                    nexts.append(f"next: hold the ask; run `delivery_gate.py merge-run <task> --pr {args.pr} -- <test command>` on the merge result, "
++                                 "using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.")
+         if len(files) != facts.get("changedFiles"):
+             problems.append(f"the changed-file list has {len(files)} files but the PR reports {tok(facts.get('changedFiles'), words=1, chars=12)}")
+             nexts.append("next: hold the ask; the changed-file list is incomplete, tell the Captain.")
+@@ -698,7 +810,7 @@ def check(args):
+     front = re.match(r"---\n(.*?)\n---", task_text, re.S)
+     profile_prod = bool(front and (m := FM_PROFILE.search(front.group(1))) and m.group(1) == "prod")
+     cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
+-    points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
++    points = points_for(task_text, gate_text, record, never, facts, profile_prod, root, merge_result)
+     verdict = "merge" if not points and cls != "never" else "ask"
+     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
+ 
+@@ -722,7 +834,8 @@ def check(args):
+     ask = ASK if pending or captain and decision_ledger.quotes_bound_question(
+         max(captain, key=lambda r: r["at"] or "")) else ASK_UNQUOTED
+     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
+-                                "points": points, "next": ask, **({"siblings": sibling_notes} if sibling_notes else {}),
++                                "points": points, "next": ask, "merge_result": merge_result[0] if merge_result else None,
++                                **({"siblings": sibling_notes} if sibling_notes else {}),
+                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
+                                 "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+     emit(f"record: {task_folder(task).name}/merge/{saved.name}", ask)
+@@ -1001,6 +1114,9 @@ def question(args):
+         if delivery_record is None:
+             problems.append("the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses")
+             nexts.append("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.")
++        elif json.loads(delivery_record.read_text()).get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
++            problems.append("the question itself needs Merge result: not run: <reason>")
++            nexts.append("next: hold preparation; put the merge-result not-run line in the question the Captain reads.")
+     if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
+         problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
+         nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
+@@ -1030,11 +1146,21 @@ def main(argv=None):
+     ask.add_argument("--text-file", required=True)
+     ask.add_argument("--workflow-dir")
+     ask.add_argument("--summary-file")
++    run_merge = commands.add_parser("merge-run")
++    run_merge.add_argument("task")
++    run_merge.add_argument("--pr", required=True)
++    run_merge.add_argument("--head")
++    run_merge.add_argument("--trunk")
++    run_merge.add_argument("--repo-dir")
++    run_merge.add_argument("--workflow-dir")
+     run_steps = commands.add_parser("steps")
+     run_steps.add_argument("record")
+     run_steps.add_argument("--text-file", required=True)
+-    args = parser.parse_args(argv)
+-    return {"question": question, "check": check, "steps": steps}[args.command](args)
++    argv = list(sys.argv[1:] if argv is None else argv)
++    cut = argv.index("--") if "--" in argv else len(argv)
++    args = parser.parse_args(argv[:cut])
++    args.run = argv[cut + 1:]
++    return {"question": question, "check": check, "steps": steps, "merge-run": merge_run}[args.command](args)
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index 9edd29c77..80415aa26 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -61,6 +61,9 @@ elif a[:2] == ["pr", "checks"]:
+ elif a[0] == "api" and "actions/runs" in " ".join(a):
+     runs = os.path.join(d, "runs.json")
+     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
++elif a[0] == "api" and "/compare/" in " ".join(a):
++    cmp = os.path.join(d, "compare.json")
++    print(open(cmp).read() if os.path.exists(cmp) else '{{"status": "ahead", "base_commit": {{"sha": "{"b" * 40}"}}}}')
+ elif a[0] == "api" and "/contents/" in " ".join(a):
+     adr = os.path.join(d, "adr.txt")
+     at = os.path.join(d, "adr-" + " ".join(a).split("?ref=")[1].split()[0] + ".txt")
+@@ -664,12 +667,185 @@ class SettledChecksTests(unittest.TestCase):
+             "api --paginate repos/o/r/pulls/9/files",
+             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
+             "pr checks 9 --repo o/r --required --json name,bucket",
++            f"api repos/o/r/compare/main...{HEAD40}",
+         ]
+         for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
+             with self.subTest(label):
+                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+ 
+ 
++
++class MergeResultTests(unittest.TestCase):
++    TRUNK = "b" * 40
++    COMMAND = "python3 -B suite.py"
++
++    def check(self, status="diverged", result=None, text="", command=COMMAND, **kwargs):
++        def setup(d):
++            stub = Path(d, "stub")
++            stub.mkdir(exist_ok=True)
++            (stub / "compare.json").write_text(json.dumps(dict(status=status, base_commit=dict(sha=self.TRUNK))))
++            if result is not None:
++                folder = Path(d, "task/merge")
++                folder.mkdir(parents=True, exist_ok=True)
++                (folder / "result-1.json").write_text(json.dumps({**dict(head=HEAD40, trunk=self.TRUNK, command=self.COMMAND, tree="a" * 40, exit=0), **result}))
++        return run_check(text=text, setup=setup, readme_body="extensions: [roborev, codex]\n" +
++                         (f"merge-test: {command}\n" if command else ""), **kwargs)
++
++    def test_moved_trunk_without_run_holds(self):
++        done = self.check()
++        self.assertEqual(done.code, 1, done.out)
++        self.assertIn("no merge-result run", done.out)
++        self.assertIn("README `merge-test:` command", done.out)
++        self.assertFalse(done.written)
++
++    def test_matching_passing_run_passes_and_records_point(self):
++        done = self.check(result={})
++        self.assertEqual(done.code, 0, done.out)
++        self.assertIn("point: merge-result:", done.out)
++        self.assertIn("exit 0 on", done.out)
++        self.assertEqual(done.written["ask-1.json"]["merge_result"], "result-1.json")
++
++    def test_another_trunk_head_or_command_cannot_satisfy(self):
++        for key, value in (("trunk", "c" * 40), ("head", S2), ("command", "true")):
++            with self.subTest(key=key):
++                self.assertEqual(self.check(result={key: value}).code, 1)
++        self.assertEqual(self.check(command=None, result={}).code, 1)
++
++    def test_failing_run_holds_and_names_exit(self):
++        done = self.check(result={"exit": 1})
++        self.assertEqual(done.code, 1, done.out)
++        self.assertIn("exited '1'", done.out)
++        self.assertEqual(self.check(result={"exit": 1}, text="Merge result: not run: explanation\n").code, 1)
++
++    def test_not_run_line_passes_and_is_saved(self):
++        done = self.check(text="Merge result: not run: the tests are unavailable.\n", command=None)
++        self.assertEqual(done.code, 0, done.out)
++        self.assertEqual(done.written["ask-1.json"]["merge_result"], "not run")
++        for text in ("acceptance was not rerun on the merged result", "Merge result: not run:",
++                     "```\nMerge result: not run: example\n```\n"):
++            self.assertEqual(self.check(text=text).code, 1)
++
++    def test_ancestor_trunk_adds_no_requirement_or_point(self):
++        for status in ("ahead", "identical"):
++            done = self.check(status=status)
++            self.assertEqual(done.code, 0, done.out)
++            self.assertNotIn("point: merge-result", done.out)
++            self.assertIsNone(done.written["ask-1.json"]["merge_result"])
++        self.assertEqual(self.check(status="behind").code, 1)
++        self.assertEqual(self.check(status="unknown").code, 2)
++
++    def test_merge_point_uses_existing_cap(self):
++        done = self.check(result={}, files=tuple(f"hooks/{n}.py" for n in range(16)))
++        points = [line for line in done.lines if line.startswith("point:") and not line.startswith("point: more:")]
++        self.assertEqual(done.code, 0, done.out)
++        self.assertEqual(len(points), gate.MAX_POINTS)
++        self.assertTrue(points[0].startswith("point: merge-result:"))
++
++
++class MergeRunTests(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory()
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.repo = self.root / "repo"
++        self.repo.mkdir()
++        self.git("init", "-q")
++        (self.repo / "base").write_text("base\n")
++        self.commit()
++        base = self.git("rev-parse", "HEAD")
++        (self.repo / "trunk").write_text("trunk\n")
++        self.commit()
++        self.trunk = self.git("rev-parse", "HEAD")
++        self.git("checkout", "-qb", "candidate", base)
++        (self.repo / "head").write_text("head\n")
++        self.commit()
++        self.head = self.git("rev-parse", "HEAD")
++        self.task = self.root / "task.md"
++        self.task.write_text(TASK)
++        self.scratch = self.root / "scratch"
++        self.scratch.mkdir()
++        readme(self.root)
++        (self.root / "README.md").write_text((self.root / "README.md").read_text().replace(
++            "trunk: main", "merge-test: bash -c 'test -f head && test -f trunk && pwd'\ntrunk: main"))
++
++    def git(self, *args):
++        return subprocess.run(["git", "-C", str(self.repo), "-c", "user.name=fixture", "-c", "user.email=fixture@invalid", *args],
++                              capture_output=True, text=True, check=True).stdout.strip()
++
++    def commit(self):
++        self.git("add", "-A")
++        self.git("commit", "-qm", "fixture")
++
++    def run_merge(self, command=None):
++        argv = ["merge-run", str(self.task), "--pr", "o/r#9", "--head", self.head,
++                "--trunk", self.trunk, "--repo-dir", str(self.repo), "--workflow-dir", str(self.root), "--"]
++        if command is None:
++            command = ["bash", "-c", "test -f head && test -f trunk && pwd"]
++        out = io.StringIO()
++        with mock.patch.object(gate.tempfile, "tempdir", str(self.scratch)), contextlib.redirect_stdout(out):
++            code = gate.main(argv + command)
++        return code, out.getvalue()
++
++    def test_runs_the_merged_tree_and_removes_scratch(self):
++        with mock.patch.object(gate.subprocess, "run", wraps=subprocess.run) as run:
++            code, out = self.run_merge()
++        self.assertEqual(code, 0, out)
++        self.assertFalse(any("fetch" in call.args[0] for call in run.call_args_list))
++        rec = json.loads((self.root / "task/merge/result-1.json").read_text())
++        self.assertEqual(rec["tree"], self.git("merge-tree", "--write-tree", self.trunk, self.head))
++        self.assertEqual(rec["command"], "bash -c 'test -f head && test -f trunk && pwd'")
++        self.assertEqual(rec["exit"], 0)
++        self.assertEqual(list(self.scratch.iterdir()), [])
++        logged = (self.root / "task/merge/result-1.log").read_text().strip()
++        self.assertFalse(Path(logged).exists())
++        self.assertFalse((self.repo / "trunk").exists())
++
++    def test_missing_or_mismatched_command_is_exit_2(self):
++        for command in ([], ["true"]):
++            code, out = self.run_merge(command)
++            self.assertEqual(code, 2, out)
++            self.assertFalse((self.root / "task/merge").exists())
++
++    def test_test_failure_records_exit_and_cleans_scratch(self):
++        readme(self.root, "merge-test: bash -c 'exit 7'\n")
++        code, out = self.run_merge(["bash", "-c", "exit 7"])
++        self.assertEqual(code, 1, out)
++        self.assertEqual(json.loads((self.root / "task/merge/result-1.json").read_text())["exit"], 7)
++        self.assertEqual(list(self.scratch.iterdir()), [])
++
++    def test_conflict_holds_with_exit_2_without_a_run_record(self):
++        self.git("checkout", "-q", self.trunk)
++        (self.repo / "base").write_text("trunk change\n")
++        self.commit()
++        self.trunk = self.git("rev-parse", "HEAD")
++        self.git("checkout", "-q", self.head)
++        (self.repo / "base").write_text("head change\n")
++        self.commit()
++        self.head = self.git("rev-parse", "HEAD")
++        code, out = self.run_merge()
++        self.assertEqual(code, 2, out)
++        self.assertIn("merge-tree exited 1", out)
++        self.assertFalse((self.root / "task/merge").exists())
++        self.assertEqual(list(self.scratch.iterdir()), [])
++
++    def test_missing_object_fetches_trunk_and_pull_head(self):
++        remote = self.root / "remote.git"
++        self.git("init", "--bare", "-q", str(remote))
++        self.git("remote", "add", "origin", str(remote))
++        self.git("push", "-q", "origin", f"{self.trunk}:refs/heads/main", f"{self.head}:refs/pull/9/head")
++        empty = self.root / "empty"
++        empty.mkdir()
++        self.repo = empty
++        self.git("init", "-q")
++        self.git("remote", "add", "origin", str(remote))
++        with mock.patch.object(gate.subprocess, "run", wraps=subprocess.run) as run:
++            code, out = self.run_merge()
++        self.assertEqual(code, 0, out)
++        fetches = [call.args[0] for call in run.call_args_list if "fetch" in call.args[0]]
++        self.assertEqual(len(fetches), 1)
++        self.assertEqual(fetches[0][-3:], ["origin", "main", "refs/pull/9/head"])
++
++
+ class RequiredChecksTests(unittest.TestCase):
+     PASS = [{"name": "ci-gate", "bucket": "pass"}]
+ 
+@@ -1324,7 +1500,7 @@ class FoWriteRuleTests(unittest.TestCase):
+         pointed = run_check(text="Deferred risk, a thing (kept as is).")
+         self.assertIn("class: docs-only (verdict ask)", pointed.lines)
+         self.assertEqual(sorted(docs.written["ask-1.json"]), sorted(never.written["ask-1.json"]))
+-        self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
++        self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "merge_result", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
+         always = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls} (verdict ask)"')
+         never_tag = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls}"')
+         self.assertNotIn("class: docs-only", run_variant(always).lines)
+@@ -2323,6 +2499,16 @@ class DeliveryCheckBeforeQuestionTests(unittest.TestCase):
+         self.save(sufficiency=gate.clean(value)[:199])
+         self.assert_held()
+ 
++    def test_not_run_line_must_be_in_the_question_itself(self):
++        self.save(merge_result="not run")
++        self.summary.write_text(self.summary.read_text() + "\nMerge result: not run: no environment available.\n")
++        done = self.run_question()
++        self.assertEqual(done.returncode, 1, done.stdout)
++        self.assertIn("question itself needs Merge result", done.stdout)
++        self.message.write_text(self.message.read_text() + "\nMerge result: not run: no environment available.\n")
++        done = self.run_question()
++        self.assertEqual(done.returncode, 0, done.stdout)
++
+     def test_no_merge_question_needs_no_delivery_record(self):
+         self.message.write_text("Approve this candidate?")
+         done = self.run_question()

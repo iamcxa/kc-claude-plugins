@@ -1,0 +1,7 @@
+{
+  "fetched": 100,
+  "minimum_updated_at_in_fetched": "2026-10-27T15:01:19Z",
+  "oldest_selected_merge": "2026-11-07T02:04:59Z",
+  "selected_ids_match_measurement": true,
+  "coverage": "The fetched list is sorted by updatedAt; any omitted PR was last updated before the oldest selected merge, and cannot have merged more recently."
+}

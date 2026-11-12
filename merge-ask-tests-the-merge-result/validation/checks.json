@@ -1,0 +1,75 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "--require",
+      "0078"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/merge-ask-tests-the-merge-result.md"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "d79053d0836c558a9269f9cf1ba222933935b820",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "d79053d0836c558a9269f9cf1ba222933935b820"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/merge-ask-tests-the-merge-result"
+    ],
+    "exit": 0,
+    "status": "passed"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/merge-ask-tests-the-merge-result.md"
+    ],
+    "exit": 0,
+    "status": "passed"
+  }
+]

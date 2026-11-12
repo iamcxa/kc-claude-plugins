@@ -1,0 +1,18 @@
+[
+  {
+    "path": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "sha256": "52da5d06257fb3f10db9fcad797697cdb77462ed4e23b2515f0327d399b22310"
+  },
+  {
+    "path": "docs/dev2/README.md",
+    "sha256": "98796c6c12b75c4fc896b6edbea3512e1e7e6c9cd4c25a010d0320f5a1938c61"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "sha256": "b5718dbab2c0957115ad3b25288908bd29aadff2df044dad849cb570b7cc1fba"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "sha256": "610fae9cc81856c2a2ab3039fe86ee4252eb4399562b1a03091237ac2e346265"
+  }
+]

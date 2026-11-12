@@ -1,0 +1,79 @@
+[
+  {
+    "name": "runtime-red",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "seconds": 14.820094583090395
+  },
+  {
+    "name": "runtime-green",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 14.405854458920658
+  },
+  {
+    "name": "head-only",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 13.708744167117402
+  },
+  {
+    "name": "invoke-control",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 1.3181723749730736
+  },
+  {
+    "name": "invoke-AC-1",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "seconds": 1.1542495840694755
+  },
+  {
+    "name": "invoke-AC-2",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 1.2003265828825533
+  },
+  {
+    "name": "invoke-AC-3",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "seconds": 1.128991917008534
+  },
+  {
+    "name": "invoke-AC-4",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "seconds": 1.1968140420503914
+  },
+  {
+    "name": "invoke-AC-5",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 1.1632150830700994
+  },
+  {
+    "name": "invoke-AC-6",
+    "status": "passed",
+    "exit": 0,
+    "expected": 0,
+    "seconds": 1.2450202500913292
+  },
+  {
+    "name": "AC-2-falsifier",
+    "status": "passed",
+    "exit": 1,
+    "expected": 1,
+    "seconds": 1.2685226248577237
+  }
+]

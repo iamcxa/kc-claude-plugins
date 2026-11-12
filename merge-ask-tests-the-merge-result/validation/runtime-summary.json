@@ -1,0 +1,44 @@
+[
+  {
+    "name": "red-result-1.log",
+    "unittest_summary": [
+      "Ran 226 tests in 13.909s",
+      "FAILED (failures=1, skipped=4)"
+    ],
+    "pass_lines": 0
+  },
+  {
+    "name": "green-result-1.log",
+    "unittest_summary": [
+      "Ran 224 tests in 13.547s",
+      "OK (skipped=4)"
+    ],
+    "pass_lines": 0
+  },
+  {
+    "name": "head-only.log",
+    "unittest_summary": [
+      "Ran 224 tests in 13.617s",
+      "OK (skipped=4)"
+    ],
+    "pass_lines": 0
+  },
+  {
+    "name": "test-dispatch-stage.log",
+    "unittest_summary": [
+      "Ran 46 tests in 176.052s",
+      "OK"
+    ],
+    "pass_lines": 0
+  },
+  {
+    "name": "test-sd-dispatch.log",
+    "unittest_summary": [],
+    "pass_lines": 11
+  },
+  {
+    "name": "test-observer-recovery.log",
+    "unittest_summary": [],
+    "pass_lines": 1
+  }
+]

@@ -1,0 +1,202 @@
+{
+  "scripts": 24,
+  "lint_command": 1,
+  "run": 1345,
+  "passed": 1334,
+  "skipped": 11,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+      "status": "passed",
+      "run": 9,
+      "passed": 9,
+      "skipped": 0,
+      "seconds": 0.92
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+      "status": "passed",
+      "run": 14,
+      "passed": 14,
+      "skipped": 0,
+      "seconds": 6.754
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+      "status": "passed",
+      "run": 23,
+      "passed": 23,
+      "skipped": 0,
+      "seconds": 0.485
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "status": "passed",
+      "run": 221,
+      "passed": 220,
+      "skipped": 1,
+      "seconds": 131.017
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "status": "passed",
+      "run": 229,
+      "passed": 225,
+      "skipped": 4,
+      "seconds": 15.321
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "status": "passed",
+      "run": 136,
+      "passed": 135,
+      "skipped": 1,
+      "seconds": 130.585
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "status": "passed",
+      "run": 84,
+      "passed": 83,
+      "skipped": 1,
+      "seconds": 98.421
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_learning.py",
+      "status": "passed",
+      "run": 50,
+      "passed": 50,
+      "skipped": 0,
+      "seconds": 45.187
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+      "status": "passed",
+      "run": 47,
+      "passed": 47,
+      "skipped": 0,
+      "seconds": 9.718
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_merge_audit.py",
+      "status": "passed",
+      "run": 17,
+      "passed": 17,
+      "skipped": 0,
+      "seconds": 11.895
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+      "status": "passed",
+      "run": 38,
+      "passed": 38,
+      "skipped": 0,
+      "seconds": 26.044
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+      "status": "passed",
+      "run": 19,
+      "passed": 19,
+      "skipped": 0,
+      "seconds": 5.805
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_package_version.py",
+      "status": "passed",
+      "run": 23,
+      "passed": 23,
+      "skipped": 0,
+      "seconds": 6.697
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "status": "passed",
+      "run": 9,
+      "passed": 9,
+      "skipped": 0,
+      "seconds": 1.758
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "status": "passed",
+      "run": 136,
+      "passed": 136,
+      "skipped": 0,
+      "seconds": 61.031
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+      "status": "passed",
+      "run": 8,
+      "passed": 8,
+      "skipped": 0,
+      "seconds": 3.975
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+      "status": "passed",
+      "run": 63,
+      "passed": 63,
+      "skipped": 0,
+      "seconds": 63.831
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+      "status": "passed",
+      "run": 5,
+      "passed": 5,
+      "skipped": 0,
+      "seconds": 0.482
+    },
+    {
+      "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+      "status": "passed",
+      "run": 13,
+      "passed": 13,
+      "skipped": 0,
+      "seconds": 6.029
+    },
+    {
+      "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+      "status": "passed",
+      "run": 36,
+      "passed": 36,
+      "skipped": 0,
+      "seconds": 0.004
+    },
+    {
+      "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+      "status": "passed",
+      "run": 15,
+      "passed": 15,
+      "skipped": 0,
+      "seconds": 0.0
+    },
+    {
+      "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+      "status": "passed",
+      "run": 23,
+      "passed": 23,
+      "skipped": 0,
+      "seconds": 0.189
+    },
+    {
+      "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "status": "passed",
+      "run": 122,
+      "passed": 118,
+      "skipped": 4,
+      "seconds": 5.984
+    },
+    {
+      "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+      "status": "passed",
+      "run": 5,
+      "passed": 5,
+      "skipped": 0,
+      "seconds": 1.778
+    }
+  ]
+}

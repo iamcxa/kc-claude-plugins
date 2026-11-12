@@ -1,0 +1,15 @@
+[
+  {
+    "severity": "low",
+    "title": "Historical replay output differs by more than two lines",
+    "detail": "Evidence or form; Polish. AC-1 behavior passes and the only added rejection reason is the missing merge-result run, but the candidate exits at the hold and therefore omits the base successful points and ask record lines. The design literal output-diff statement is not reproduced. No supported-workflow harm; value-ac[AC-1] hold reason remains satisfied. See replay-output-comparison.json.",
+    "fix": "Read the acceptance as a single new hold reason; do not repeat the literal two-line-only output claim.",
+    "status": "confirmed",
+    "kind": "evidence or form",
+    "disposition": "Polish",
+    "released_user": "FO replaying the historical merge ask",
+    "observable_harm": "No current supported-workflow loss; the evidence prose overstates output equivalence.",
+    "protected_boundary": "value-ac[AC-1]: missing merge-result run is the only new hold reason; that behavior passed.",
+    "trigger_evidence": "replay-output-comparison.json"
+  }
+]

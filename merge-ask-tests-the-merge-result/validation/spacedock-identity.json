@@ -1,0 +1,6 @@
+{
+  "binary_version": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "source_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "archive_sha256": "ffb76da0623090f7d06f752601a8f250a0034e2bfeebe6bb163ce4f4f6d4bb3d",
+  "public_repository": true
+}

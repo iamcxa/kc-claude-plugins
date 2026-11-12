@@ -1,0 +1,16 @@
+scratch: /tmp/merge-result-853-acceptance.fEAj7k
+exported candidate and base
+exit=0 -> /private/tmp/merge-result-853-acceptance.fEAj7k/base.log
+exit=1 -> /private/tmp/merge-result-853-acceptance.fEAj7k/held.log
+the trunk moved since this head (diverged, trunk eeee002303ac) and no merge-result run is recorded at this head and trunk
+base=0; candidate=1, missing run
+exit=0 -> /private/tmp/merge-result-853-acceptance.fEAj7k/green.log
+exit=1 -> /private/tmp/merge-result-853-acceptance.fEAj7k/stale.log
+point: merge-result: 'python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py' exit 0 on '0cea91ffa2eb' (result-1.json)
+correct=0; stale=1
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 5.108s
+
+OK
+Acceptance PASS

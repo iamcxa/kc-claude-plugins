@@ -1,0 +1,27 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/validate-853-20261112-1752/candidate/kc-dev-flow-2/scripts/delivery_gate.py",
+    "merge-run",
+    "/tmp/validate-853-20261112-1752/cleanup/task.md",
+    "--pr",
+    "iamcxa/kc-claude-plugins#841",
+    "--head",
+    "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+    "--trunk",
+    "546a136386c94c58e430c91a6f3457b38bd73880",
+    "--workflow-dir",
+    "/tmp/validate-853-20261112-1752/cleanup",
+    "--repo-dir",
+    "/tmp/validate-853-20261112-1752/objects.git",
+    "--",
+    "true"
+  ],
+  "exit": 0,
+  "stdout": "merge result 0cea91ffa2eb of 6da9a765ee04 onto trunk 546a136386c9: true exit 0 in 0.7s\nrecord: task/merge/result-1.json\n",
+  "stderr": "",
+  "left": [
+    "xcrun_db"
+  ]
+}

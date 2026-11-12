@@ -1,0 +1,10 @@
+{
+  "directories_created": [
+    "/tmp/validate-853-20261112-1752",
+    "/tmp/merge-result-853-acceptance.fEAj7k"
+  ],
+  "acceptance_removed_by_exit_trap": true,
+  "main_scratch_delete_after_evidence_commit": true,
+  "nested_test_temp_directories": "All tool subprocesses used TMPDIR under the named root; they are covered by its removal.",
+  "private_repositories_inspected": 0
+}

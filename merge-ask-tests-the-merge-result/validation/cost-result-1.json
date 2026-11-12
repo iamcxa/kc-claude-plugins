@@ -1,0 +1,11 @@
+{
+  "command": "bash -c 'python3 -B kc-dev-flow-2/scripts/lint-skills.py && for t in kc-dev-flow-2/scripts/test_*.py kc-dev-flow-2/extensions/*/test_*.py; do case \"$t\" in */test_dispatch_stage.py|*/test_sd_dispatch.py|*/test_observer_recovery.py) continue;; esac; python3 -B \"$t\" || exit; done'",
+  "exit": 0,
+  "head": "d79053d0836c558a9269f9cf1ba222933935b820",
+  "log": "result-1.log",
+  "pr": "iamcxa/kc-claude-plugins#853",
+  "seconds": 636.5,
+  "time": "2026-11-12T10:07:29Z",
+  "tree": "5a54dc3ad1d89d6a210afe68bd5e7c7ebdf5f516",
+  "trunk": "8ce0eb6050c889b21baccf50fec35231bc888d66"
+}

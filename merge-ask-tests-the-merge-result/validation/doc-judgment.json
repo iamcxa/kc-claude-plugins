@@ -1,0 +1,32 @@
+[
+  {
+    "document": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "disposition": "unaffected",
+    "reason": "Optional summary input and legacy reviewer checks remain; the added condition concerns the question containing the not-run disclosure."
+  },
+  {
+    "document": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "disposition": "unaffected",
+    "reason": "Round count and its hold remain unchanged."
+  },
+  {
+    "document": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "disposition": "unaffected",
+    "reason": "Quoted-question merge grant and Captain authority are unchanged."
+  },
+  {
+    "document": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "disposition": "unaffected",
+    "reason": "Newest ask head and clause binding remain; merge_result adds only the approved not-run placement requirement."
+  },
+  {
+    "document": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "disposition": "unaffected",
+    "reason": "Count disclosure behavior unchanged; original historical replay gives the same count lines."
+  },
+  {
+    "document": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "disposition": "updated",
+    "reason": "Candidate matches approved command source, ancestry trigger, and earlier-trunk green proof; source Captain quotations checked against task gate record."
+  }
+]

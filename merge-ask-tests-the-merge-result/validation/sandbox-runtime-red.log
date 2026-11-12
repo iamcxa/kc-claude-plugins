@@ -1,0 +1,3 @@
+cannot prepare the merge result: merge-tree exited 128
+
+error: unable to create temporary file: Operation not permitted\nfatal: failure to merge\n

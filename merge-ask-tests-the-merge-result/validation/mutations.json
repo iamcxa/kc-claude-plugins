@@ -1,0 +1,74 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_moved_trunk_without_run_holds",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_matching_passing_run_passes_and_records_point",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_another_trunk_head_or_command_cannot_satisfy",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_failing_run_holds_and_names_exit",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_not_run_line_passes_and_is_saved",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_ancestor_trunk_adds_no_requirement_or_point",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeRunTests.test_runs_the_merged_tree_and_removes_scratch",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeRunTests.test_runs_the_merged_tree_and_removes_scratch",
+    "failures": 1,
+    "errors": 0
+  },
+  {
+    "name": "command-match",
+    "status": "passed",
+    "message": "Mutated implementation was rejected by the named behavioral test",
+    "test": "MergeResultTests.test_another_trunk_head_or_command_cannot_satisfy",
+    "failures": 2,
+    "errors": 0
+  }
+]

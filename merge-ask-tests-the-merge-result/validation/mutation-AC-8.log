@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_runs_the_merged_tree_and_removes_scratch (test_delivery_gate.MergeRunTests.test_runs_the_merged_tree_and_removes_scratch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-853-20261112-1752/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 798, in test_runs_the_merged_tree_and_removes_scratch
+    self.assertEqual(list(self.scratch.iterdir()), [])
+AssertionError: Lists differ: [PosixPath('/tmp/validate-853-20261112-175[45 chars]nc')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+PosixPath('/tmp/validate-853-20261112-1752/tmp/tmpxyhas52j/scratch/merge-result-uge_70nc')
+
+- [PosixPath('/tmp/validate-853-20261112-1752/tmp/tmpxyhas52j/scratch/merge-result-uge_70nc')]
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.332s
+
+FAILED (failures=1)

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "README merge-test command on candidate merge tree",
+    "metrics": {
+      "seconds": 636.6371880839579
+    },
+    "status": "passed",
+    "context": "One local run; includes lint and 24 unit scripts; three pinned-Spacedock integration scripts excluded from this command."
+  }
+]

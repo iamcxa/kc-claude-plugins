@@ -1,0 +1,7 @@
+merge-tree of trunk eeee0023 and head 6da9a765: 3ba409485bafe8619557e955a8b6393736988da6
+tree of landed squash commit 571a7bd8:        3ba409485bafe8619557e955a8b6393736988da6
+merge result 0cea91ffa2eb of 6da9a765ee04 onto trunk 546a136386c9: true exit 0 in 0.6s
+record: t/merge/result-1.json
+merge-run exit 0; entries left in its TMPDIR: 1; record: result-1.json
+result-1.log
+AC-8 FAIL
