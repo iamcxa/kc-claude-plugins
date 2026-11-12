@@ -1,0 +1,14 @@
+{
+  "evidence_commit": "dd5a0a6acf947bdb149c1df3da8162060d0afeca",
+  "evidence_paths_only_this_task": true,
+  "deleted_exact_paths": [
+    "/tmp/design-surfaces-task-dir-crash-validation-8fcbee7d"
+  ],
+  "absent_after_cleanup": true,
+  "code_head": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+  "code_worktree_clean": true,
+  "cleanup_time": "2026-11-13T02:16:24.763386+08:00",
+  "time_source": "host datetime timezone +08:00; final reply cross-check uses clock.curr_time",
+  "kept": "assigned code worktree, shared state checkout and all pre-existing scratch owned by other workers",
+  "state_commit": "First sandboxed attempt could not acquire external Git index.lock; exact prescribed helper succeeded with authorized access and pushed the state branch."
+}
