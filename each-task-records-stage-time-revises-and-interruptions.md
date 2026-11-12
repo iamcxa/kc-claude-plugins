@@ -340,3 +340,51 @@ Cleanup: all evidence is in validation/; after its commit, remove the exact owne
 ### Validation cleanup
 
 Evidence commit: 9cc4739d4c30c9f8adc1751d2ae35783d961f95f (pushed). All five exact scratch roots, including their children, are absent; no /tmp evidence copy remains (validation/cleanup.json). Only this task's paths were committed.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8ce0eb6050c889b21baccf50fec35231bc888d66) implementing the approved design and acceptance criteria in the task file; decisions D1 to D4 as the design recommends and the Captain approved at the ideation gate; start from the proof of concept the design names (local branch poc/each-task-records-stage-time-revises-and-interruptions at 89568e4840b9, not pushed: bring its commits into your branch and expand it to the Pilot bar by the design's expansion plan); the items under 'Not provable now' become checks you run and report; only the files the design names
+  Draft PR #852 exists at parent a3266ec91c7d46d36864c471c0cc26b389130b3c; repair 188ba44f427a15bfff69d9d4e24b2446af0b69dc is local on spacedock-ensign/each-task-records-stage-time-revises-and-interruptions, base 8ce0eb6050c889b21baccf50fec35231bc888d66; FO owns pushing this additional commit and updating the PR. Current PR text: /tmp/impl-each-task-records-stage-time-revises-and-interruptions-pr.md.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1: implementation-repair-1/ac1-{finished,hand-log}.log keeps author-date boundaries; before-probe.log and regression-red.log fail on the rejected head, after-probe.log passes on the repair. real-case-{before,after}.json restores after-gate 7.1 to 30.3 min; reversing the fix fails mutation-repeated-stage-last-gate-only.log.
+  AC-2: implementation-repair-1/ac2-compare-spent.log: 62 equal, 0 differ, two no-record cases separate; count-files mutation fails.
+  AC-3: implementation-repair-1/ac3-ask-smoke.log persists two UTC asks and refuses empty input; ignore-asks and wrong-stage mutations fail.
+  AC-4: implementation-repair-1/ac4-sweep.log reads 159 archives, 136 timed; ac4-untimed.json checks all 23 untimed lack starts/dispatch folders. Malformed-frontmatter fixture and unreadable-history/folder mutations catch parse and sweep failures; archive-tree-before/after are identical.
+  AC-5: implementation-repair-1/ac5-running.log stays running with positive time; zero-running mutation fails. summary.json records 145 passing tests across four affected suites and 10 caught mutations; python3 -B, mutation caches cleared.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  implementation-repair-1/{lint-skills,adr-lint,number-guards,comment-ratio}.log and required-checks.json: all exit 0, ADR --require 0080, 6033/6033 words, 7 comment / 428 code lines = 1.6%, max 5%. Updated PR text prepared; product push, RoboRev and hosted CI on this repair not run, FO-owned; monetary CI cost per PR not measured, CI config unchanged in this repair.
+- DONE: Captain amendment 1 of this task (2026-11-12, in the task file under Captain amendments) permits one decision-record file the design did not list: write docs/adr/0080-<short-title>.md recording only what the Captain approved at the ideation gate (decisions D1 to D4 in the design, with his words from the ideation gate record)
+  ADR 0080 remains unchanged and within amendment 1; required-checks.json records ADR lint --require 0080 and number guards exit 0.
+- DONE: The task's Number guards section now holds ADR: 0080; run the package ADR lint with --require 0080 and the number guards check as the first dispatch record says
+  ADR 0080 remains unchanged and within amendment 1; required-checks.json records ADR lint --require 0080 and number guards exit 0.
+- DONE: Everything else in the first implementation record stands; if you had already stopped for this reason, resume
+  Original Pilot scope and delivery ownership retained; only the two repair paths differ from the rejected head, proven in manifest.json.
+- DONE: Validation-1 rejected head a3266ec91 with one Material finding (kind build), recorded under Feedback Cycles in the task file and in the validation stage report: for a stage that ran more than once, kc-dev-flow-2/scripts/task_timeline.py uses only the last gate close to split before-gate from after-gate time, so the time from an earlier decision to the next dispatch is counted as before-gate; the validator's real case moves 23.2 minutes
+  Reproduced F1 before editing: before-probe.log exits 1 with before/wait/after 50/20/10 rather than 20/20/40; real-case-before.json independently confirms the 23.2-minute shift.
+- DONE: Repair that one defect with a test that fails without the repair, built from the validator's case (the task folder's validation/real-cycle-split.json and validation/probe-repeated-stage.log); change nothing else; the acceptance criteria and Captain amendment 1 stand
+  Each dispatch interval now contributes its own last-decision-to-next-dispatch time; the new real-git CLI test fails before and passes after, and the real case yields 30.3 after-gate minutes. No other product path changed.
+- DONE: Commit on top of a3266ec91 locally, do not push or amend; append a complete new stage report that supersedes the earlier one; run the package checks the first record names again
+  Commit 188ba44f427a15bfff69d9d4e24b2446af0b69dc has parent a3266ec91c7d46d36864c471c0cc26b389130b3c, no amend or product push; required checks rerun successfully and this complete report supersedes the earlier implementation report.
+- SKIPPED: The Stop condition and the post-release Codex First Officer / complete ask-recording observations.
+  Still no three post-release hand logs or qualifying FO session to compare; validation/limits.json remains the boundary, not a fixture pass. New-candidate hosted CI and independent validation remain FO-owned.
+- DONE: Affected document docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md
+  unaffected: its quoted-raise and exact-count rule is followed by the new +25 step; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md
+  unaffected: its +144 step and collaboration rule are unchanged; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md
+  unaffected: model and effort comparisons are unchanged; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md
+  unaffected: extension word bounds and permission ownership are unchanged; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+  updated in original candidate; unchanged in this repair: the approved timing definition already requires correct per-cycle attribution; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document kc-dev-flow-2/README.md
+  unaffected: it points to the CI test list, which now includes the helper tests; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document kc-dev-flow-2/skills/maintain-flow/SKILL.md
+  unaffected: exact budget and required Captain-quote rules remain true; implementation-repair-1/doc-impact.json names the match.
+- DONE: Affected document learning.md
+  unaffected: historical observations remain true; no existing mode consumer changes; implementation-repair-1/doc-impact.json names the match.
+
+### Summary
+
+This complete report supersedes the earlier implementation Stage Report. Repair round started 2026-11-12 18:29:20 Asia/Taipei; candidate 188ba44f427a15bfff69d9d4e24b2446af0b69dc adds one commit above the rejected head and fixes only repeated-stage post-gate attribution, without changing the approved definitions, ADR or workflow text.
+FO owns the PR update, RoboRev and validation of this repair. Evidence is in implementation-repair-1/; after its commit, remove the exact scratch paths in cleanup.json and retain the named PR text for FO. No private repository was read.
