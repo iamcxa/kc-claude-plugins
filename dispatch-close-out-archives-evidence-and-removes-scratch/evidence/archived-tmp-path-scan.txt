@@ -1,0 +1,6 @@
+$ scan of _archive/*.md at state 15052c70f, 2026-11-12T05:36:53Z: grep -o -E '/(private/)?tmp/[A-Za-z0-9._/-]+' (counts only; paths kept off this public branch)
+archived task files:      157
+files naming at least one /tmp path:      127
+distinct paths named:      824
+bare /tmp or /private/tmp among them: 0
+still exist now: 75
