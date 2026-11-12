@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:held-and-closed-tasks-leave-the-design-queue:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:held-and-closed-tasks-leave-the-design-queue-backlog-1
+              briefing:
+                id: briefing:held-and-closed-tasks-leave-the-design-queue:backlog:attempt-1:revision-1
+                digest: sha256:cff2229580a5f7be6070bdcd4e21387458f05516df089eae064cacbff26a131d
+                room-ref: ./held-and-closed-tasks-leave-the-design-queue/review/backlog/briefing-1
 ---
 
 ## Scope
