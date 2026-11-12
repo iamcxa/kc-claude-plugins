@@ -3320,5 +3320,109 @@ class CountDisclosureTests(unittest.TestCase):
         self.assertFalse(result.written)
 
 
+class ScopeDisclosureTests(unittest.TestCase):
+    ask = QuestionTests.ask
+    CASES = ("已經開好的舊任務不會被要求補標。", "升級後，還沒過設計關卡的舊設計會被擋下。")
+
+    def test_recorded_false_claim_shapes_reach_question_and_summary_without_hold(self):
+        for claim in self.CASES:
+            for summary in (None, claim):
+                saved = {}
+                code, out = self.ask(claim, summary=summary, saved=saved, cli=True)
+                self.assertEqual(code, 0, out)
+                self.assertIn(claim[:-1] + gate.SCOPE_MARK + "。", saved["text"])
+                if summary:
+                    self.assertIn(gate.SCOPE_MARK, saved["summary"])
+                self.assertIn("marked scope:", out)
+
+    def test_check_marks_ask_and_copies_pr_body_claim_to_the_ask(self):
+        for text, body in ((self.CASES[0], ""), ("", self.CASES[1])):
+            result = run_check(text=text, facts={"body": body})
+            self.assertEqual(result.code, 0, result.out)
+            self.assertIn(gate.SCOPE_MARK, result.text)
+            self.assertIn((text or body)[:-1], result.text)
+            self.assertIn("scope claims: 0 cited, 1 marked", result.out)
+        held = run_check(text=self.CASES[0], facts={"isDraft": True})
+        self.assertEqual(held.code, 1)
+        self.assertIn(gate.SCOPE_MARK, held.text)
+
+    def test_check_repeating_a_pr_body_count_does_not_duplicate_its_disclosures(self):
+        body = "Existing tasks are not affected: 2 tasks."
+        first = run_check(facts={"body": body})
+        second = run_check(text=first.text, facts={"body": body}, clauses=False, rounds="")
+        self.assertEqual((first.code, second.code), (0, 0))
+        self.assertEqual(first.text, second.text)
+        self.assertIn("Unchecked counts: 1\n", second.text)
+        self.assertIn("scope claims: 0 cited, 1 marked", second.out)
+
+    def test_citation_must_resolve_to_a_file_inside_the_task_folder(self):
+        with tempfile.TemporaryDirectory() as d:
+            folder = Path(d, "task")
+            folder.mkdir()
+            (folder / "run.json").write_text("{}")
+            (Path(d) / "outside.json").write_text("{}")
+            (folder / "escape.json").symlink_to(Path(d) / "outside.json")
+            (folder / "directory.json").mkdir()
+            for name, expected in (("run.json", True), ("task/run.json", True),
+                                   (str(folder / "run.json"), True), ("missing.json", False),
+                                   ("../outside.json", False), ("escape.json", False), ("directory.json", False)):
+                with self.subTest(name=name):
+                    rows = gate.scope_claims(folder, "Existing tasks are not affected (" + name + ").")
+                    self.assertEqual(len(rows), 1)
+                    self.assertEqual(rows[0][2], expected)
+
+    def test_cited_marked_controls_and_fences_need_no_new_mark(self):
+        for claim in ("New tasks can proceed.", self.CASES[0][:-1] + "（未驗證）。",
+                      "Existing tasks are not affected (unverified).", "Existing tasks are not affected (run.json)."):
+            saved = {}
+            code, out = self.ask(claim, cards={"run.json": "{}"}, saved=saved)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn(gate.SCOPE_MARK, saved["text"])
+        code, out = self.ask("New tasks can proceed.")
+        self.assertNotIn("scope claims:", out)
+        self.assertEqual(gate.scope_claims(Path("/nonexistent"), "```text\n" + self.CASES[0] + "\n```\n~~~text\n" + self.CASES[1] + "\n~~~\n"), [])
+
+    def test_chinese_enumerations_and_sentence_marks_are_idempotent(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d, "ask.txt")
+            text = "一、" + self.CASES[0] + "二、" + self.CASES[1] + "\n"
+            extra = "Existing tasks are not affected."
+            with contextlib.redirect_stdout(io.StringIO()):
+                first, = gate.scope_disclosure(Path(d), [(path, text)], extra)
+                second, = gate.scope_disclosure(Path(d), [(path, first)], extra)
+            self.assertEqual(first, second)
+            self.assertEqual(path.read_text(), first)
+            self.assertEqual(first.count(gate.SCOPE_MARK), 3)
+
+    def test_chinese_counts_share_the_split_and_check_saved_numbers(self):
+        saved = {}
+        code, out = self.ask("一、15個檢查（run.txt）。二、2張任務；三、3次執行？四、4項記錄。",
+                             cards={"run.txt": "15個"}, saved=saved)
+        self.assertEqual(code, 0, out)
+        self.assertIn("counts: 1 checked, 3 unchecked", out)
+        self.assertIn("Unchecked counts: 3\n", saved["text"])
+
+    def test_scope_write_failure_uses_existing_input_error_exit(self):
+        write = Path.write_text
+        def unwritable(path, text, *args, **kwargs):
+            if path.name == "gate.txt" and gate.SCOPE_MARK in text:
+                raise PermissionError("read-only ask")
+            return write(path, text, *args, **kwargs)
+        with mock.patch.object(Path, "write_text", unwritable):
+            result = run_check(text=self.CASES[0])
+        self.assertEqual(result.code, 2)
+        self.assertFalse(result.written)
+
+    def test_english_only_and_unchecked_citation_mutations_lose_the_warning(self):
+        for old, new, claim in (("EXISTING.search(sentence)", "re.search(r'\\bexisting\\b', sentence, re.I)", self.CASES[0]),
+                                ("and path.is_file():", "and True:", "Existing tasks are not affected (missing.json).")):
+            mutant = variant_of(old, new)
+            normal, changed = {}, {}
+            self.assertEqual(self.ask(claim, saved=normal)[0], 0)
+            self.assertEqual(self.ask(claim, saved=changed, module=mutant)[0], 0)
+            self.assertIn(gate.SCOPE_MARK, normal["text"])
+            self.assertNotIn(gate.SCOPE_MARK, changed["text"])
+
+
 if __name__ == "__main__":
     unittest.main()

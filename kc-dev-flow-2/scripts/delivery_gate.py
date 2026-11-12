@@ -63,6 +63,9 @@ They list count sentences without a task-folder file holding their numbers, then
 Unchecked counts: N into the summary (legacy question: question file; check: ask text).
 Check scans the PR body too. The disclosure is automatic and never holds a count;
 an unreadable or unwritable input still exits 2.
+Both commands mark uncited existing-item effect claims with （未對過紀錄） in
+the submitted files; uncited PR-body sentences are copied into the ask with the
+mark. Citations must resolve to existing task-folder files. This adds no hold.
 
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
@@ -94,7 +97,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 from role_triggers import outside_fences
-from count_tokens import count_sentences, numbers, prose_lines
+from count_tokens import count_sentences, numbers, prose_lines, sentences
 import decision_ledger
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
@@ -685,7 +688,11 @@ def check(args):
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
     try:
-        gate_text = count_disclosure(task_folder(task), gate_text + "\n" + ((facts or {}).get("body") or ""), text_file, gate_text)
+        body = (facts or {}).get("body") or ""
+        copies = scope_pr_copies(task_folder(task), body)
+        count_text = "\n".join(line for line in gate_text.splitlines() if line not in copies)
+        gate_text = count_disclosure(task_folder(task), count_text + "\n" + body, text_file, gate_text)
+        gate_text, = scope_disclosure(task_folder(task), [(text_file, gate_text)], body)
     except (OSError, UnicodeDecodeError) as error:
         emit(f"cannot write count disclosure: {error}")
         return 2
@@ -927,6 +934,69 @@ def count_problems(folder, text):
     return checked, unchecked
 
 
+EXISTING = re.compile(r"舊任務|舊設計|舊的|已經開好|已開好|已開的|既有|已經過了|過了設計關卡|已核准的|進行中的|"
+                      r"\balready[- ]filed\b|\bexisting\b|\bfiled before\b|\bpast (?:ideation|the gate)\b", re.I)
+EFFECT = re.compile(r"不會|不再|只有|只會|只在|擋|要求|補寫|補標|不受|影響|\brefus|\bblock|\bnot\b|\bonly\b", re.I)
+SCOPE_MARK = "（未對過紀錄）"
+MARKED = re.compile(r"未驗證|未對過紀錄|\bunverified\b", re.I)
+SAVED_FILE = re.compile(r"(?<![\w/.-])((?:/?[\w.-]+/)*[\w.-]+\.(?:json|log|md|txt|jsonl|csv|out))\b")
+
+
+def scope_claims(folder, text):
+    rows = []
+    for index, line in prose_lines(text):
+        for sentence in sentences(line):
+            if not (EXISTING.search(sentence) and EFFECT.search(sentence)):
+                continue
+            cited = False
+            for value in SAVED_FILE.findall(sentence):
+                path = named_file(folder, value).resolve()
+                if path.is_relative_to(folder.resolve()) and path.is_file():
+                    cited = True
+                    break
+            rows.append((index, sentence, cited, bool(MARKED.search(sentence))))
+    return rows
+
+
+def mark_scope(sentence):
+    end = re.search(r"[。；;？?.]+$", sentence)
+    point = end.start() if end else len(sentence)
+    return sentence[:point] + SCOPE_MARK + sentence[point:]
+
+
+def scope_pr_copies(folder, text):
+    return {"PR body: " + (sentence if marked else mark_scope(sentence))
+            for _, sentence, cited, marked in scope_claims(folder, text) if not cited}
+
+
+def scope_disclosure(folder, sources, extra=""):
+    # see docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md
+    results, claims = [], []
+    copies = scope_pr_copies(folder, extra)
+    for destination, text in sources:
+        rows = scope_claims(folder, text)
+        lines = text.splitlines(keepends=True)
+        claims.extend(row for row in rows if lines[row[0]].rstrip("\r\n") not in copies)
+        for index, sentence, cited, marked in rows:
+            if not cited and not marked:
+                lines[index] = lines[index].replace(sentence, mark_scope(sentence), 1)
+        results.append("".join(lines))
+    external = scope_claims(folder, extra)
+    claims.extend(external)
+    for _, sentence, cited, marked in external:
+        if not cited:
+            disclosed = sentence if marked else mark_scope(sentence)
+            if disclosed not in results[0]:
+                results[0] = results[0].rstrip("\n") + "\nPR body: " + disclosed + "\n"
+    if claims:
+        emit(f"scope claims: {sum(row[2] for row in claims)} cited, {sum(not row[2] for row in claims)} marked",
+             *("marked scope: " + " ".join(sentence.split()[:12]) for _, sentence, cited, _ in claims if not cited))
+    for (destination, text), result in zip(sources, results):
+        if result != text:
+            destination.write_text(result)
+    return results
+
+
 def count_disclosure(folder, text, destination, declared):
     # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
     checked, unchecked = count_problems(folder, text)
@@ -1087,10 +1157,12 @@ def question(args):
         reviewer_text = None
         if args.summary_file is not None:
             summary = Path(args.summary_file).read_text()
+            gate_text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text), (Path(args.summary_file), summary)])
             summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
             reviewer_text = "\n".join(outside_fences(summary))
             gate_text += "\n" + summary
         else:
+            gate_text, = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text)])
             gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
         found, wanted = reviewer_problems(task, task_text,
                                          gate_text if reviewer_text is None else reviewer_text, second, extensions)
