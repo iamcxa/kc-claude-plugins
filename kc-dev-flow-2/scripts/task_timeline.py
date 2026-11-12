@@ -127,9 +127,14 @@ def timeline(state, slug):
                              (None, "open"))
                 attempts.append({"attempt": n, "opened": opened, "closed": close[0], "outcome": close[1]})
         wait = sum(mins(a["opened"], a["closed"] or row["end"] or now) or 0 for a in attempts)
-        last = max((a["closed"] for a in attempts if a["closed"]), default=None)
-        end = row["end"] or now
-        after = mins(last, end) if last and last < end else 0.0
+        after = 0.0
+        for (start, st), end in zip(segments, ends):
+            if st != stage:
+                continue
+            end = end or now
+            last = max((a["closed"] for a in attempts if a["closed"] and start <= a["closed"] <= end), default=None)
+            after += mins(last, end) or 0.0
+        after = round(after, 1)
         before = round(row["elapsed"] - wait - after, 1)
         if stage not in starts:
             before, after = 0.0, round(row["elapsed"] - wait, 1)

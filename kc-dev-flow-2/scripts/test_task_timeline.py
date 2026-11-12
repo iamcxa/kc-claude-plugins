@@ -112,6 +112,25 @@ class TimelineTests(unittest.TestCase):
         self.assertEqual((row["before_gate_min"], row["captain_wait_min"], row["after_gate_min"]), (15.0, 15.0, 10.0))
         self.assertEqual((result["withdrawn_gate_attempts"], result["gate_revise_decisions"]), (1, 0))
 
+    def test_repeated_stage_preserves_each_cycles_after_gate_time(self):
+        (self.state / "_archive").mkdir()
+        self.dispatch("validation", 1, 10, entering=True)
+        self.room("validation", 1, 20)
+        self.gates("validation", [(1, "revise", 30)])
+        self.commit("gate: record demo validation revise", 30)
+        self.dispatch("implementation", 1, 60, entering=True)
+        self.dispatch("validation", 2, 80)
+        self.room("validation", 2, 90)
+        self.gates("validation", [(1, "revise", 30), (2, "approve", 100)])
+        self.commit("gate: record demo validation approve", 100)
+        self.finish(110)
+        result = json.loads(self.cli("demo", "--json").stdout)
+        row = next(r for r in result["stages"] if r["stage"] == "validation")
+        self.assertEqual({key: row[key] for key in (
+            "elapsed_min", "before_gate_min", "captain_wait_min", "after_gate_min")},
+            {"elapsed_min": 80.0, "before_gate_min": 20.0,
+             "captain_wait_min": 20.0, "after_gate_min": 40.0})
+
     def test_gate_only_stage_has_no_before_gate_minutes(self):
         self.room("backlog", 1, 0)
         self.room("backlog", 2, 10)
