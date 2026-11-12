@@ -9,7 +9,11 @@ Times come from records written at the time: author dates of the state checkout'
 (`dispatch|advance: <slug> entering <stage>`, the commit adding each dispatch record and each
 gate room's index.json, `archive <slug>`), the `at` of each gate resolution or withdrawal, and
 `<task>/asks.jsonl`. Author dates are used because `pull --rebase` rewrites committer dates.
-POC for task each-task-records-stage-time-revises-and-interruptions.
+A revise is a dispatch after the first, by highest plain dispatch-record number, including gaps;
+follow-up messages are excluded. An interruption is an FO question outside a scheduled gate,
+recorded by `ask` when asked. Gate revise decisions, withdrawals and amendments are separate.
+Missing records are reported, never a work hold. Before-gate minutes include FO idle, not just
+agent work. No asks.jsonl means unknown, not zero. `ask` appends locally; FO commits the record.
 """
 import argparse
 import json
@@ -68,12 +72,15 @@ def timeline(state, slug):
     task = find_task(state, slug)
     text = task.read_text(encoding="utf-8")
     fm, body = split_task(text)
+    if fm is None:
+        raise ValueError(f"{task}: missing or unclosed frontmatter")
     entering, records, rooms, done = {}, {}, {}, None
     for at, subject, added in history(state, slug):
         m = ENTERING.match(subject)
         if m and m["slug"] == slug:
             entering.setdefault(m["stage"], []).append(at)
-        if ARCHIVE.match(subject) and done is None:
+        archived = ARCHIVE.match(subject)
+        if archived and archived["slug"] == slug and done is None:
             done = at
         for path in added:
             name = path.rsplit("/", 1)[-1]
@@ -87,13 +94,14 @@ def timeline(state, slug):
     for e in gate_entries(fm or []):
         if e.get("at"):
             closes.setdefault(e["stage"], []).append(
-                (when(e["at"]), e.get("decision") if e["kind"] == "resolution" else "withdrawn"))
+                (int(e["attempt"].rsplit("-", 1)[1]), when(e["at"]),
+                 e.get("decision") if e["kind"] == "resolution" else "withdrawn"))
     # A repeat dispatch of a stage writes a record but no `entering` commit.
     starts = {}
     for stage in set(entering) | set(records):
-        first = entering.get(stage, [])[:1]
-        rec = [t for _, t in sorted(records.get(stage, {}).items())]
-        starts[stage] = first + rec[len(first):] if len(rec) >= len(first) else entering[stage]
+        first = entering.get(stage, [])
+        rec = [t for n, t in sorted(records.get(stage, {}).items()) if n > len(first)]
+        starts[stage] = first + rec
     segments = sorted((t, s) for s, ts in starts.items() for t in ts)
     ends = [t for t, _ in segments[1:]] + [done]
     rows = {}
@@ -103,35 +111,62 @@ def timeline(state, slug):
         row["end"] = end
         row["elapsed"] += mins(start, end or now) or 0
     for (stage, _), opened in sorted(rooms.items()):
-        if stage not in rows:  # a gate with no dispatch, such as backlog: the stage is its gate
-            last = max((t for t, _ in closes.get(stage, [])), default=None)
+        if stage not in rows:  # A gate-only stage starts at its first room.
+            stage_rooms = [t for (s, _), t in rooms.items() if s == stage]
+            stage_closes = {n: t for n, t, _ in closes.get(stage, [])}
+            last = max(stage_closes.values(), default=None) if all(
+                n in stage_closes for (s, n) in rooms if s == stage) else None
+            opened = min(stage_rooms)
             rows[stage] = {"stage": stage, "start": opened, "end": last, "elapsed": mins(opened, last or now)}
     out = []
     for stage, row in sorted(rows.items(), key=lambda kv: kv[1]["start"]):
         attempts = []
         for (st, n), opened in sorted(rooms.items()):
             if st == stage:
-                close = closes.get(stage, [])[n - 1] if n <= len(closes.get(stage, [])) else (None, "open")
+                close = next(((t, outcome) for number, t, outcome in closes.get(stage, []) if number == n),
+                             (None, "open"))
                 attempts.append({"attempt": n, "opened": opened, "closed": close[0], "outcome": close[1]})
         wait = sum(mins(a["opened"], a["closed"] or row["end"] or now) or 0 for a in attempts)
         last = max((a["closed"] for a in attempts if a["closed"]), default=None)
-        after = mins(last, row["end"]) if last and row["end"] and last < row["end"] else 0.0
-        # Record numbers are FO's dispatch count; a gap means a record was never written, not no dispatch.
+        end = row["end"] or now
+        after = mins(last, end) if last and last < end else 0.0
+        before = round(row["elapsed"] - wait - after, 1)
+        if stage not in starts:
+            before, after = 0.0, round(row["elapsed"] - wait, 1)
+        # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
         n = max(len(starts.get(stage, [])), max(records.get(stage, {}), default=0))
         out.append({
             "stage": stage, "start": iso(row["start"]), "end": iso(row["end"]),
             "elapsed_min": round(row["elapsed"], 1),
-            "before_gate_min": round(row["elapsed"] - wait - after, 1),
+            "before_gate_min": before,
             "captain_wait_min": round(wait, 1), "after_gate_min": after,
             "dispatches": n, "repeat_dispatches": max(n - 1, 0), "dispatch_records": len(records.get(stage, {})),
             "gate_attempts": [{**a, "opened": iso(a["opened"]), "closed": iso(a["closed"])} for a in attempts],
         })
     asks_file = folder(task) / "asks.jsonl"
     asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
-    gates = [o for v in closes.values() for _, o in v]
+    unassigned = []
+    for row in out:
+        row["asks"] = []
+        row["asks_outside_gate"] = 0 if asks_file.is_file() else None
+    for ask in asks:
+        at = when(ask["at"])
+        stage = next((s for (start, s), end in zip(segments, ends)
+                      if start <= at < (end or now)), None)
+        if stage is None:
+            stage = next((r["stage"] for r in out if when(r["start"]) <= at < (when(r["end"]) if r["end"] else now)), None)
+        if stage is None:
+            unassigned.append(ask)
+        else:
+            row = next(r for r in out if r["stage"] == stage)
+            row["asks"].append(ask)
+            row["asks_outside_gate"] += 1
+    gates = [o for v in closes.values() for _, _, o in v]
+    known = set(starts) | set(closes) | {s for s, _ in rooms}
     return {
         "task": slug, "stages": out, "done": iso(done),
-        "re_asks": gates.count("withdrawn"), "revise_decisions": gates.count("revise"),
+        "withdrawn_gate_attempts": gates.count("withdrawn"), "gate_revise_decisions": gates.count("revise"),
+        "stages_without_start": sorted(known - set(rows)), "unassigned_asks": unassigned,
         "amendments_outside_gate": sum(1 for _, _, place in AMENDMENT.findall(body) if "gate" not in place.lower()),
         "asks_outside_gate": len(asks) if asks_file.is_file() else None,
     }
@@ -143,33 +178,48 @@ def show(t):
         print(f"  {r['stage']}: {r['start']} -> {r['end'] or 'running'}  {r['elapsed_min']} min "
               f"(before gate {r['before_gate_min']}, Captain wait {r['captain_wait_min']}, after gate {r['after_gate_min']}); "
               f"dispatches {r['dispatches']}, repeats {r['repeat_dispatches']}")
+        print(f"    asks outside a gate: {r['asks_outside_gate'] if r['asks_outside_gate'] is not None else 'not recorded'}")
+        for ask in r["asks"]:
+            print(f"      {ask['at']}: {ask['asked']}")
         for a in r["gate_attempts"]:
             print(f"    gate attempt {a['attempt']}: opened {a['opened']}, closed {a['closed'] or '-'}, {a['outcome']}")
     print(f"  done: {t['done'] or '-'}")
+    if t["stages_without_start"]:
+        print("  stages without start: " + ", ".join(t["stages_without_start"]))
+    for ask in t["unassigned_asks"]:
+        print(f"  ask with no stage start: {ask['at']}: {ask['asked']}")
     asks = t["asks_outside_gate"]
     print(f"  asks outside a gate: {'not recorded (no asks.jsonl)' if asks is None else asks}; "
-          f"withdrawn gate attempts: {t['re_asks']}; revise decisions: {t['revise_decisions']}; "
+          f"withdrawn gate attempts: {t['withdrawn_gate_attempts']}; revise decisions: {t['gate_revise_decisions']}; "
           f"amendments outside a gate: {t['amendments_outside_gate']}")
 
 
+# see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
 def record_ask(state, slug, text, clock=None):
     path = folder(find_task(state, slug)) / "asks.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     entry = {"at": iso(clock or datetime.now(timezone.utc)), "asked": text}
     with path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
-    print(f"recorded ask {sum(1 for _ in path.open())} in {path}")
+    with path.open(encoding="utf-8") as fh:
+        print(f"recorded ask {sum(1 for _ in fh)} in {path}")
 
 
+# see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
 def sweep(state):
-    rows = [timeline(state, f.stem) for f in sorted((state / "_archive").glob("*.md"))]
+    archive = state / "_archive"
+    slugs = {p.stem for p in archive.glob("*.md")} | {p.parent.name for p in archive.glob("*/index.md")}
+    rows = [timeline(state, slug) for slug in sorted(slugs)]
     timed = [r for r in rows if r["stages"]]
     print(f"archived tasks: {len(rows)}; at least one stage timed: {len(timed)}; "
           f"with a repeat dispatch: {sum(any(s['repeat_dispatches'] for s in r['stages']) for r in rows)}; "
-          f"with a withdrawn gate attempt: {sum(r['re_asks'] > 0 for r in rows)}; "
+          f"with a withdrawn gate attempt: {sum(r['withdrawn_gate_attempts'] > 0 for r in rows)}; "
           f"with an amendment outside a gate: {sum(r['amendments_outside_gate'] > 0 for r in rows)}; "
           f"with asks.jsonl: {sum(r['asks_outside_gate'] is not None for r in rows)}")
     print("no stage timed: " + " ".join(r["task"] for r in rows if not r["stages"]))
+    for row in rows:
+        if row["stages_without_start"]:
+            print(f"stages without start: {row['task']}: {', '.join(row['stages_without_start'])}")
 
 
 def main(argv=None):
