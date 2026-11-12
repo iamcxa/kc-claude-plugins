@@ -1,0 +1,9 @@
+{
+  "role_triggers_exit": 1,
+  "package_root": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+  "package_version": "0.39.1",
+  "candidate_unchanged": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "checks_not_run": "All product, package and word-bound checks blocked by the required unrecorded engineering-reviewer call or FO decline.",
+  "scratch_created": [],
+  "publication": "local state commit only; no push per follow-up"
+}

@@ -309,3 +309,32 @@ Spacedock already tells a held task from a waiting one: a hold reads as `gate-re
 ### Summary
 
 Implemented the approved listing and quote checks, stacked on PR #854 without redoing its scratch changes, plus amendment 1's ADR 0081. The one-cycle budget stops here: the exact approved line adds 32 words instead of at most 30, so FO must route that wording/bound decision; the candidate is not fully accepted. Origin-less replay failures remain recorded (inherited scratch-origin requirement and sandbox GitHub access); the normal real workflow entrance separately exits 0, and state body edits, product publication, RoboRev and hosted CI remain FO-owned.
+
+## Stage Report: implementation
+
+- FAILED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch (77e240d46ced4980ec1f6f2dc61a692f27857af1) implementing the approved design and acceptance criteria in the task file; decisions D1 and D2 as the design recommends and the Captain approved at the ideation gate, plus Captain amendment 1 (one decision-record file, ADR 0081, recording only what he approved at the ideation gate); this branch is stacked on the branch of the close-out task's PR #854, which changes the same idle check in kc-dev-flow-2/scripts/pr_watch.py: build on top of it and do not redo its change; the state edits the design names for the held tasks (a Held section quoting the Captain's words) are the First Officer's to make, not yours; the items under 'Not provable now' become checks you run and report; only the files the design names
+  held: special-role call owed
+- FAILED: ADR 0081 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  held: special-role call owed
+- FAILED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  held: special-role call owed
+- FAILED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> --require 0081 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  held: special-role call owed
+- FAILED: Captain amendment 2 of this task (2026-11-12, in the task file under Captain amendments) replaces the 30-word bound: the line keeps naming every held task, and the bound becomes at most 3 added words for each held task plus a fixed 6 words; the program does not change
+  held: special-role call owed
+- FAILED: Rerun the word count for the current 14 held tasks against that bound and report it under the item it belongs to (the 'Not provable now' item about added words), using only the Captain's words for the new bound; if the candidate's line exceeds the new bound, say so and stop
+  held: special-role call owed
+- FAILED: Append a complete new stage report that supersedes the earlier one; run the package checks the first record names that you skipped; commit locally, do not push
+  held: special-role call owed
+
+### Summary
+
+This complete report supersedes the earlier implementation report for this continuation. The product remains unchanged at 455846c6d30d4ab650c1c4503bc591722231586d; amendment 2 is read, but no new word count or package check ran after the entry guard returned 1. Package /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1 is version 0.39.1; FO must record the engineering-reviewer call or decline under FO alignment before resuming.
+
+role_triggers.py output:
+```text
+next: held-and-closed-tasks-leave-the-design-queue has replacing amendment 2; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+budget: Budget: 1 cycle per stage, in one package PR or none if the design finds an existing mechanism and only state changes are owed.; spent implementation 1, validation 0
+```
+
+Evidence: implementation/continuation-1/role-triggers.log and preflight.json. No /tmp scratch was created this round; the PR text file is not changed. State report committed locally only, with no push under the follow-up instruction.
