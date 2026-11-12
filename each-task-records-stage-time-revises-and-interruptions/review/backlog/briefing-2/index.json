@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:each-task-records-stage-time-revises-and-interruptions:backlog:attempt-2:revision-1",
+  "question": "決定：這五張新任務要不要都進設計階段，並照你說的做成對照實驗。我建議核准。五張是：一、合併前在合併後的結果上跑測試；二、被你擱置或關掉的任務不再像在排隊；三、每張任務記錄階段時間、重做、打斷次數；四、派工結束封存證據、刪掉暫存；五、我問你的問題裡的事實先對過紀錄。實驗分兩組：第三、五、一張的設計階段照你的說法，等於「試作加擴大計畫」，設計工人先在不推送的分支上把東西真的做出一個能跑的試作、拿真實案例跑過，再寫擴大成正式版本還要補什麼，實作工人從那個試作接著做；第二、四張的設計階段只要求把每條驗收條件的證明實際跑一次，不寫試作。對照基準是過去兩週的 67 張。核准代表接受各任務檔寫的範圍、預算（每階段一輪、一個 PR）與停止條件。不代表接受任何設計或修法。哪張進哪一組是我挑的，不是隨機：試作組放的是證據最難產生或最大的三張。五張合起來我沒有把握一天做完，超過時我連同預算回來請你取捨。",
+  "artifacts": [
+    {
+      "id": "artifact:each-task-records-stage-time-revises-and-interruptions:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/c50413d922a166e55e4f8c593cbb2d02154a7336/each-task-records-stage-time-revises-and-interruptions.md",
+      "rev": "sha256:992f90e3527cefbedf240a3f5843ce09dce35fb5ee7ce12c5a36dd5bfa8195c1",
+      "mediaType": "text/markdown",
+      "summary": "Joint backlog admission of five tasks for the experiment the Captain asked for on 2026-11-12 (ideation as POC plus expansion plan for three tasks, proof-run-only ideation for two, the past two weeks as baseline): merge-ask-tests-the-merge-result, held-and-closed-tasks-leave-the-design-queue, each-task-records-stage-time-revises-and-interruptions, dispatch-close-out-archives-evidence-and-removes-scratch, gate-question-facts-are-checked-before-the-captain-reads-them.\nBite: each task file's Scope names an event of 2026-11-11 or 2026-11-12 with its source; two carry the Captain's own words as Source, three are FO's misses.\nBudget: 1 cycle per stage each, one package PR each.\nAlignment: not needed on each; the mechanism is compared in the design and ruled at the ideation gate.\nSeed check: design_surfaces.py check --seed exit 0 on all five (FO run 2026-11-12, kc-dev-flow-2 0.39.1).\nNot admitted, with FO's reason: follow-up messages not budget-checked and the Budget line edit (no recorded bite since the rule shipped); fifteen sibling parser holes (reviewer-constructed, like a task the Captain closed on 2026-10-21); stage report item shape (the stage skills already state it); a fixed minor built-screen finding has no line form (one report, unverified); learn across repositories (learn has not been run in this workflow)."
+    }
+  ]
+}
