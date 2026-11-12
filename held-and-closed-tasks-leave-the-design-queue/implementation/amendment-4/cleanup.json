@@ -1,0 +1,10 @@
+{
+  "evidence_commit_before_cleanup": "19dd0bf90b68cabbe8782576fb2b0384a45e8588",
+  "removed": [
+    "/tmp/impl-held-amendment4-893fysil"
+  ],
+  "all_absent": true,
+  "pr_text_not_modified": "/tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md",
+  "pr_text_retained": false,
+  "no_product_change_push_or_amend": true
+}
