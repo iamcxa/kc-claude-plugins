@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "Scratch roots collide across repositories and clones",
+    "file": "kc-dev-flow-2/scripts/scratch.py",
+    "line": 24,
+    "detail": "Old-head replays deleted peer uncommitted files in both cases; repaired replays retain them.",
+    "fix": "Qualify the namespace by clone and state identity; verify full ownership before reuse or close.",
+    "status": "fixed"
+  }
+]

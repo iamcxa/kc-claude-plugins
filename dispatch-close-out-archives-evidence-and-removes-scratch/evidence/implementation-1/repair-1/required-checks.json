@@ -1,0 +1,41 @@
+[
+  {
+    "name": "lint-skills",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ]
+  },
+  {
+    "name": "adr-lint",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "--require",
+      "0079"
+    ]
+  },
+  {
+    "name": "comment-ratio",
+    "status": "passed",
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives) ... FAIL
+
+======================================================================
+FAIL: test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 90, in test_dirty_registered_worktree_removed_and_external_worktree_survives
+    self.assertNotIn(str(worktree), listed)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/private/tmp/dev2/scratch-745caea873304ae1bbfd3f3519edd43a-6529bca08bdf5ab8/task/validation-1/checkout with spaces' unexpectedly found in 'worktree /private/tmp/impl-dispatch-close-out-repair-854/tmp/scratch-test-0e5m1b96\nHEAD afce8f0b4c547192daaf65951ce6cebbf670cd45\nbranch refs/heads/main\n\nworktree /private/tmp/dev2/scratch-745caea873304ae1bbfd3f3519edd43a-6529bca08bdf5ab8/task/validation-1/checkout with spaces\nHEAD afce8f0b4c547192daaf65951ce6cebbf670cd45\ndetached\nprunable gitdir file points to non-existent location\n\nworktree /private/tmp/impl-dispatch-close-out-repair-854/tmp/scratch-test-0e5m1b96/external\nHEAD afce8f0b4c547192daaf65951ce6cebbf670cd45\ndetached\n\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.317s
+
+FAILED (failures=1)

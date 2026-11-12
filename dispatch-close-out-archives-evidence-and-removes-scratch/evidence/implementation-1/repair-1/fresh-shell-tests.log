@@ -1,0 +1,23 @@
+test_archive_move_and_linked_worktree_keep_identity (test_scratch.ScratchTests.test_archive_move_and_linked_worktree_keep_identity) ... ok
+test_cli_returns_nonzero_for_refused_close (test_scratch.ScratchTests.test_cli_returns_nonzero_for_refused_close) ... ok
+test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives) ... ok
+test_evidence_size_limit_preserves_scratch_and_restorable_evidence (test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence) ... ok
+test_follow_up_uses_parent_dispatch_root (test_scratch.ScratchTests.test_follow_up_uses_parent_dispatch_root) ... ok
+test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) ... ok
+test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse) ... ok
+test_missing_record_refuses_without_deletion (test_scratch.ScratchTests.test_missing_record_refuses_without_deletion) ... ok
+test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) ... ok
+test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel) ... ok
+test_symlinked_evidence_and_log_refuse_without_deletion (test_scratch.ScratchTests.test_symlinked_evidence_and_log_refuse_without_deletion) ... ok
+test_threshold_restore_and_idempotence (test_scratch.ScratchTests.test_threshold_restore_and_idempotence) ... ok
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... ok
+test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) ... ok
+test_scope_notes_inside_scratch_are_kept (test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept) ... ok
+test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown) ... ok
+test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record) ... ok
+test_post_archive_removal_record_preserves_learn_and_observer_results (test_pr_watch.TasksTests.test_post_archive_removal_record_preserves_learn_and_observer_results) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 10.328s
+
+OK

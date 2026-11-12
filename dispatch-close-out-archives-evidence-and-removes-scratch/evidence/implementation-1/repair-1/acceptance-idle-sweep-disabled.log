@@ -1,0 +1,15 @@
+test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown) ... FAIL
+
+======================================================================
+FAIL: test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_pr_watch.py", line 1038, in test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown
+    self.assertEqual(len(closes), 2, lines)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.749s
+
+FAILED (failures=1)

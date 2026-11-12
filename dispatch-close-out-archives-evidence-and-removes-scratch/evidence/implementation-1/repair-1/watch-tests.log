@@ -1,0 +1,10 @@
+................................usage: run_tests.py [-h] [--state STATE] [--codex] [--copilot]
+                    {add,check,wait,tasks} [args ...]
+run_tests.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.......................................................................................................................
+----------------------------------------------------------------------
+Ran 151 tests in 75.550s
+
+OK
+Scratch removed: /private/tmp/impl-dispatch-close-out-repair-854/tmp/tmpre2k9nzz/dev2/scratch-7aaec09ec23546da9ac77d788544f70f-d24aadcdeb965793/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)

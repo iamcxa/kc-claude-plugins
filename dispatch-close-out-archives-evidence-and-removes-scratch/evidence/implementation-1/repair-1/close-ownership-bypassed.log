@@ -1,0 +1,32 @@
+test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) ... 
+  test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker=None) ... FAIL
+  test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker='{"repository":"other","task":"task","record":"validation-1"}') ... ERROR
+
+======================================================================
+ERROR: test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker='{"repository":"other","task":"task","record":"validation-1"}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 205, in test_foreign_or_unowned_root_refuses_notes_reuse_and_close
+    marker.write_text(content)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1008, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 970, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/dev2/scratch-6a74abd924874a09800cf137c0c0ec4b-a64d207354f4ea39/task/validation-1/.owner.json'
+
+======================================================================
+FAIL: test_foreign_or_unowned_root_refuses_notes_reuse_and_close (test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close) (marker=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 210, in test_foreign_or_unowned_root_refuses_notes_reuse_and_close
+    with self.assertRaisesRegex(ValueError, 'ownership'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.313s
+
+FAILED (failures=1, errors=1)

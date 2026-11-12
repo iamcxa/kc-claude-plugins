@@ -1,0 +1,56 @@
+test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) ... 
+  test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/another-owner/scratch-029515e77c644055b98d9a9163cb8f94.git') ... ERROR
+  test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/fixtures/scratch-029515e77c644055b98d9a9163cb8f94.git') ... ERROR
+
+======================================================================
+ERROR: test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/another-owner/scratch-029515e77c644055b98d9a9163cb8f94.git')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 77, in claim_root
+    root.mkdir(parents=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/private/tmp/dev2/scratch-029515e77c644055b98d9a9163cb8f94/task/validation-1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 186, in test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees
+    peer = scratch.claim_root(other, folder, 'validation-1')
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 79, in claim_root
+    check_owner(root, owner)
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 69, in check_owner
+    raise ValueError(f'scratch ownership missing or differs: {root}')
+ValueError: scratch ownership missing or differs: /private/tmp/dev2/scratch-029515e77c644055b98d9a9163cb8f94/task/validation-1
+
+======================================================================
+ERROR: test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees (test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees) (origin='https://example.invalid/fixtures/scratch-029515e77c644055b98d9a9163cb8f94.git')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 77, in claim_root
+    root.mkdir(parents=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/private/tmp/dev2/scratch-029515e77c644055b98d9a9163cb8f94/task/validation-1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 186, in test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees
+    peer = scratch.claim_root(other, folder, 'validation-1')
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 79, in claim_root
+    check_owner(root, owner)
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py", line 69, in check_owner
+    raise ValueError(f'scratch ownership missing or differs: {root}')
+ValueError: scratch ownership missing or differs: /private/tmp/dev2/scratch-029515e77c644055b98d9a9163cb8f94/task/validation-1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.552s
+
+FAILED (errors=2)

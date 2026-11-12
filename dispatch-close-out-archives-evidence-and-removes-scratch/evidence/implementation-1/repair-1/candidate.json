@@ -1,0 +1,18 @@
+{
+  "candidate": "223dbb6d1b5e895a45d11537b9494aa08610c8f8",
+  "parent": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "branch": "spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch",
+  "code_state_root_agree": true,
+  "owned_root": "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1",
+  "worker_note_words": 65,
+  "python_caches": 0,
+  "path_form": "/tmp/dev2/<repo>-<16-hex clone/workflow identity>/<slug>/<record>",
+  "owner_uses_full_sha256": true,
+  "finding": {
+    "classification": "Material",
+    "normal_workflow": "Existing package dispatch workers in independent repositories or clones using the same task/record names; cleanup behavior is candidate-only, not a released-adopter incident.",
+    "observable_harm": "At 77e240d46, close from one fixture deleted the other working copy and its uncommitted file while leaving its registration.",
+    "protected_boundary": "captain-ruling[2026-11-12] D4 permits forced removal only inside the current dispatch scratch root.",
+    "trigger_evidence": "replay-old.json shows shared roots and lost peer files; replay-candidate.json shows distinct roots and surviving peer files for both cases."
+  }
+}

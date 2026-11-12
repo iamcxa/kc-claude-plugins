@@ -1,0 +1,30 @@
+[
+ {
+  "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_stage.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_stage.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/dispatch_stage.py"
+  ]
+ },
+ {
+  "doc": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/scratch.py"
+  ]
+ }
+]
