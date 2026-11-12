@@ -266,3 +266,21 @@ Falsifier: a `git worktree add` inside a root that close leaves registered.
 ### Summary
 
 The design is one record-named scratch folder per dispatch, under `/tmp/dev2/<repo>/<slug>/<record>`, written into scope notes by dispatch_stage.py. A new `scratch.py close` deletes it with refusals that guard the deletion, archives cited evidence in the task folder with gzip over 256 KiB and a 1 MiB cap, and logs the removal in `scratch-removed.txt`. pr_watch.py's idle look names each ended or archived root. The design needs no README or delivery-check change: S4 has read only FO's text since 0.36.0, verified on 0.39.1. Four decisions are open for the Captain: D1 where 「派工分支」 is, D2 the compression form, D3 private evidence, and D4 unattended `--force` worktree removal. Measured today, `/tmp` holds 121.2 GiB, and 749 of the 824 `/tmp` paths named in archived task files no longer exist. A root left by a worker while its task waits at a gate is a stated limit.
+
+
+## Stage Report: implementation
+
+- FAILED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8ce0eb6050c889b21baccf50fec35231bc888d66) implementing the approved design and acceptance criteria in the task file; decisions D1 to D4 as the design recommends and the Captain approved at the ideation gate; the items under 'Not provable now' become checks you run and report; only the files the design names
+  Held before implementation: the design permits six script/test files, whereas `<package>/skills/implementation/principles.md` requires "Write one file per decision, `docs/adr/NNNN-short-title.md`". The approved enduring evidence-location, compression, private-evidence and forced-removal decisions have no new ADR path or reserved number in this task; adding one would exceed the explicit file boundary. FO must reconcile the scope and decision-record requirement before redispatch. No product file changed or empty commit made.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Not run: the dispatch says to stop if an out-of-design file is needed. No acceptance, mutation, real-run, restore, idle-sweep, post-archive or word-count result is claimed.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured
+  Not run: lints, number/comment guards, RoboRev and CI; CI cost not measured. Product branch `spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch` remains at fetched base/candidate `8ce0eb6050c889b21baccf50fec35231bc888d66`; no product push or PR opened. `/tmp/impl-dispatch-close-out-archives-evidence-and-removes-scratch-pr.md` is a held handoff, not a publishable implementation PR.
+- DONE: Required stage entry and approved-scope checks
+  Loaded ensign and implementation/Pilot references; role_triggers.py exited 0 (implementation 1, validation 0). Verified assigned pwd/git root, clean branch and successful `git fetch origin`; HEAD equals origin/main at `8ce0eb6050c889b21baccf50fec35231bc888d66`. Read the ideation approval and accepted ADRs 0070, 0072 and 0074; they do not record these cleanup decisions.
+- DONE: Scratch cleanup
+  No disposable /tmp scratch created. Retained only the requested `/tmp/impl-dispatch-close-out-archives-evidence-and-removes-scratch-pr.md` for FO to remove; removed-path list: none.
+
+### Summary
+
+Implementation is held at the approved-file boundary: the mandatory decision record would require a file the design does not name. FO needs to resolve that one scope conflict; product bytes, candidate SHA and task frontmatter remain unchanged, and no passing implementation or delegated-check result is claimed.
