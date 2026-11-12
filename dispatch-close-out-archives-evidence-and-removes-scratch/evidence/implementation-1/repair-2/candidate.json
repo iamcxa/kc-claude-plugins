@@ -1,0 +1,14 @@
+{
+  "head": "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+  "parent": "223dbb6d1b5e895a45d11537b9494aa08610c8f8",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "branch": "spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch",
+  "sha256": {
+    "kc-dev-flow-2/scripts/scratch.py": "5511beff92c5e390c483b7409e491d69834958861363f2d2f5436b38524f3c5b",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "9483db51288ac45741f789e224cae1f6e91877176eac4b2a1a7fb2575de08891",
+    "kc-dev-flow-2/scripts/test_scratch.py": "148f01c2a196d1cda07e961d4fe8db6c2164f380b7e6a8b8dfb01d0ab6e408b7"
+  },
+  "synthetic_evidence_only": true,
+  "product_push": false,
+  "private_scanner_added": false
+}

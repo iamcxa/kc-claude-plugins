@@ -1,0 +1,9 @@
+[
+ {
+  "doc": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+  "state": "review",
+  "terms": [
+   "kc-dev-flow-2/scripts/scratch.py"
+  ]
+ }
+]

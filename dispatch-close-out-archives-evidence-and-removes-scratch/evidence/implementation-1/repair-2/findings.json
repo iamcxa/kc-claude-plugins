@@ -1,0 +1,18 @@
+[
+  {
+    "severity": "high",
+    "title": "F1: emitted native dispatch retains the private-repository evidence ban",
+    "file": "kc-dev-flow-2/scripts/scratch.py",
+    "line": 107,
+    "detail": "Material, kind build. Old native dispatch fails the new assertion; candidate record and native artifact include the full rule. Removing just the private-repository phrase fails again. No scanner and no private input.",
+    "status": "fixed"
+  },
+  {
+    "severity": "medium",
+    "title": "F2: own-dispatch acceptance replaces global zero",
+    "file": "dispatch-close-out-archives-evidence-and-removes-scratch.md",
+    "line": 265,
+    "detail": "Needs decision, kind aim or scope, resolved by Captain amendment 2. AC-3 moved verbatim; AC-4 uses his words. Two roots in one synthetic repo prove own count zero while one peer remains. Both leave-own and delete-peer mutations fail.",
+    "status": "fixed"
+  }
+]

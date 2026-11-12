@@ -1,0 +1,6 @@
+{
+  "superseded_block_moved_verbatim": true,
+  "replacement_criterion": "AC-4",
+  "replacement_requirement": "只看這次派工自己的暫存資料夾，不為了湊到零去刪別的派工的資料夾。",
+  "requirement_is_exact_substring_of_asked": true
+}

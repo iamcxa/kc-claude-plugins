@@ -94,6 +94,12 @@ Captain: 「一次授權，跑完（建議）」 (host question dialog, 2026-11-
 Asked: 「實驗裡還沒過驗證的三張任務（收尾清理、問題裡的事實、擱置的任務）要怎麼走完？我建議一次給足授權讓它們跑完：一、這三張的預算都改成「1 implementation and 2 validation cycles」，退回後用追加訊息修正、再驗一次；第二次驗證再被退回就停下來回到你這裡。二、收尾清理那條「收尾後整個 repo 的暫存工作目錄是零」的驗收條件，改成只看這次派工自己的暫存資料夾，不為了湊到零去刪別的派工的資料夾。三、問題裡的事實那條要拿「擱置的任務」成品重播的條件不改，等那張的成品出來後補跑。這些會記成三張任務各一筆修正案。變差的是：三張各多一輪驗證（每輪約 15 到 20 分鐘），今天會跑到晚上；而且這段期間我不會再為「程式缺陷修完重驗」回來問你。」
 Supersedes: AC-3
 Budget: 1 implementation and 2 validation cycles
+Superseded text:
+
+**AC-3** After a dispatch's close, no git worktree of the code repository is registered under `/tmp/dev2/`.
+Evidence: `git -C <code repo> worktree list --porcelain | grep -c '^worktree /\(private/\)\?tmp/dev2/'`; pass is count 0, which `grep -c` reports with exit 1.
+Run now: 90 worktrees registered, 3 under `/tmp`, none under `/tmp/dev2/`; count 0, exit 1 (`evidence/code-repo-tmp-worktrees.txt`). This shows the command works; it proves nothing about close yet.
+Falsifier: a `git worktree add` inside a root that close leaves registered.
 
 ### Feedback Cycles
 
@@ -256,10 +262,9 @@ Evidence: `PYTHONPATH=<package>/scripts python3 -B evidence/s4_repro.py <package
 Run now on 0.39.1: exit 0. The report case exited 0 with no S4; the message case exited 1 with `message S4: missing path …` (`evidence/ac-s4-removed-path.txt`).
 Falsifier: a candidate that makes S4 read reports again.
 
-**AC-3** After a dispatch's close, no git worktree of the code repository is registered under `/tmp/dev2/`.
-Evidence: `git -C <code repo> worktree list --porcelain | grep -c '^worktree /\(private/\)\?tmp/dev2/'`; pass is count 0, which `grep -c` reports with exit 1.
-Run now: 90 worktrees registered, 3 under `/tmp`, none under `/tmp/dev2/`; count 0, exit 1 (`evidence/code-repo-tmp-worktrees.txt`). This shows the command works; it proves nothing about close yet.
-Falsifier: a `git worktree add` inside a root that close leaves registered.
+**AC-4** Amended by Captain, amendment 2. 只看這次派工自己的暫存資料夾，不為了湊到零去刪別的派工的資料夾。
+Current evidence: `python3 -B -m unittest test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository` from the candidate scripts, with `PYTHONPATH` set to those scripts; pass is exit 0. The test creates two dispatch roots in one synthetic repository, closes one, checks zero registered worktrees under that root and that the other dispatch's uncommitted file and registration survive.
+Falsifier: leaving the closed dispatch's worktree registered, or deleting the other dispatch's worktree.
 
 ## Number guards
 

@@ -1,0 +1,21 @@
+test_close_keeps_another_dispatch_in_the_same_repository (test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository) ... ERROR
+
+======================================================================
+ERROR: test_close_keeps_another_dispatch_in_the_same_repository (test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 110, in test_close_keeps_another_dispatch_in_the_same_repository
+    self.assertEqual((peer / 'uncommitted').read_text(), 'keep peer work')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/dev2/scratch-5ccc6e506db4447885cd96fd27153852-3b46a58656448a23/task/validation-2/peer-checkout/uncommitted'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.403s
+
+FAILED (errors=1)
