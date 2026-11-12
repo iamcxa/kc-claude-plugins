@@ -3,7 +3,7 @@ title: pr_watch.py tasks prints record-PR next lines for tasks whose worktree is
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
