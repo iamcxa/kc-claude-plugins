@@ -1,0 +1,54 @@
+[
+  {
+    "name": "pr-live",
+    "command": [
+      "gh",
+      "pr",
+      "view",
+      "854",
+      "--repo",
+      "iamcxa/kc-claude-plugins",
+      "--json",
+      "number,title,state,isDraft,headRefOid,baseRefName,url"
+    ],
+    "exit": 1
+  },
+  {
+    "name": "spacedock-version",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "--version"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "python-version",
+    "command": [
+      "python3",
+      "--version"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "product-status",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+      "status",
+      "--short",
+      "--branch"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "role-triggers",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "dispatch-close-out-archives-evidence-and-removes-scratch"
+    ],
+    "exit": 0
+  }
+]

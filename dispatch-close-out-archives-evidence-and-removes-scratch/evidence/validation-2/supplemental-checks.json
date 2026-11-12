@@ -1,0 +1,9 @@
+{
+  "fresh_ref_number_guards_exit": 0,
+  "github_read_after_sandbox_network_failure_exit": 0,
+  "native_records_rerun_exit": 0,
+  "fresh_shell_final_exit": 0,
+  "private_input_count": 0,
+  "candidate_product_mutations": 0,
+  "temporary_roots_to_account": 173
+}

@@ -1,0 +1,15 @@
+test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives) ... FAIL
+
+======================================================================
+FAIL: test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 90, in test_dirty_registered_worktree_removed_and_external_worktree_survives
+    self.assertNotIn(str(worktree), listed)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/private/tmp/dev2/scratch-ef3deac9d88e4a2b8a61724c42373b37-6cb8f93ad6086108/task/validation-1/checkout with spaces' unexpectedly found in 'worktree /private/tmp/close-854-validation2-20261112/tmp/scratch-test-grn6hftj\nHEAD 426758dd4a79bf142157b5a39b7c352a56d442aa\nbranch refs/heads/main\n\nworktree /private/tmp/close-854-validation2-20261112/tmp/scratch-test-grn6hftj/external\nHEAD 426758dd4a79bf142157b5a39b7c352a56d442aa\ndetached\n\nworktree /private/tmp/dev2/scratch-ef3deac9d88e4a2b8a61724c42373b37-6cb8f93ad6086108/task/validation-1/checkout with spaces\nHEAD 426758dd4a79bf142157b5a39b7c352a56d442aa\ndetached\nprunable gitdir file points to non-existent location\n\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.356s
+
+FAILED (failures=1)

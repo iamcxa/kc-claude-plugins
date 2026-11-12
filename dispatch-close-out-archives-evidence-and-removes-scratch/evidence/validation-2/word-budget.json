@@ -1,0 +1,8 @@
+{
+  "worker_prose_words": 52,
+  "worker_with_scratch_line_words": 54,
+  "worker_ceiling": 66,
+  "idle_next_line_words": 20,
+  "idle_ceiling": 21,
+  "startup_and_workflow_text_changed": false
+}

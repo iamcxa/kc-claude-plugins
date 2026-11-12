@@ -1,0 +1,41 @@
+Pinned candidate exported
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/loader.py", line 141, in loadTestsFromName
+    module = __import__(module_name)
+ModuleNotFoundError: No module named 'test_dispatch_stage.DispatchStageTests'; 'test_dispatch_stage' is not a package
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/fixture_adapter.py", line 16, in <module>
+    runpy.run_path(runner,run_name='__main__')
+  File "<frozen runpy>", line 292, in run_path
+  File "<frozen runpy>", line 97, in _run_module_code
+  File "<frozen runpy>", line 87, in _run_code
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/implementation-1/acceptance.py", line 21, in <module>
+    suite=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(name) for name in names)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py", line 24, in __init__
+    self.addTests(tests)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py", line 57, in addTests
+    for test in tests:
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/implementation-1/acceptance.py", line 21, in <genexpr>
+    suite=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(name) for name in names)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/loader.py", line 146, in loadTestsFromName
+    error_case, error_message = _make_failed_import_test(
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/loader.py", line 40, in _make_failed_import_test
+    name, traceback.format_exc())
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py", line 256, in format_exc
+    return "".join(format_exception(sys.exception(), limit=limit, chain=chain))
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py", line 200, in format_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py", line 1207, in __init__
+    elif abi_tag := _find_incompatible_extension_module(module_name):
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/traceback.py", line 2075, in _find_incompatible_extension_module
+    traversable = importlib.resources.files(parent)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/importlib/resources/_common.py", line 22, in files
+    return from_package(resolve(anchor))
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/importlib/resources/_common.py", line 95, in from_package
+    _assert_spec(package)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/importlib/resources/_common.py", line 81, in _assert_spec
+    raise TypeError(
+TypeError: Cannot access resources for 'test_dispatch_stage' as it does not appear to correspond to an importable module (its __spec__ is None).

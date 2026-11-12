@@ -1,0 +1,5 @@
+{
+  "synthetic_only": true,
+  "excludes_secrets_and_personal_data": false,
+  "excludes_all_private_repository_evidence": true
+}

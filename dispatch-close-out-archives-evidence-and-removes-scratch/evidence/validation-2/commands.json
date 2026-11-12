@@ -1,0 +1,198 @@
+[
+  {
+    "name": "dispatch-native",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/run_tests.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "test_dispatch_stage",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/dispatch-native.json"
+    ],
+    "cwd": null,
+    "exit": 1,
+    "expected": 1
+  },
+  {
+    "name": "dispatch-adapted",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/fixture_adapter.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/run_tests.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "test_dispatch_stage",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/dispatch-adapted.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "watch",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/run_tests.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "test_pr_watch",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/watch.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "scratch",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/run_tests.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "test_scratch",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/scratch.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/run_tests.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "test_dispatch_records",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/dispatch-records.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "privacy-previous",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/privacy_probe.py",
+      "/private/tmp/close-854-validation2-20261112/previous",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/privacy-previous"
+    ],
+    "cwd": null,
+    "exit": 1,
+    "expected": 1
+  },
+  {
+    "name": "privacy-candidate",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/privacy_probe.py",
+      "/private/tmp/close-854-validation2-20261112/candidate",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/privacy-candidate"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "scope-privacy-cli",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/fixture_adapter.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/scope_and_privacy.py",
+      "/private/tmp/close-854-validation2-20261112/candidate",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/replay"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "mutations",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/fixture_adapter.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/mutate.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/private/tmp/close-854-validation2-20261112/mutations",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/s4_repro.py"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "repair-mutations",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/fixture_adapter.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/repair_mutations.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/private/tmp/close-854-validation2-20261112/repair-mutations"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "collision",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/collision_replay.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+      "/private/tmp/close-854-validation2-20261112/collision"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "ac2",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/reused/s4_repro.py",
+      "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "ac4",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository"
+    ],
+    "cwd": "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "ac1-grep",
+    "command": [
+      "grep",
+      "-c",
+      "^Scratch: /tmp/dev2/",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-2/replay/emitted-record.md"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "expected": 0
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "name": "test_scratch.ScratchTests.test_archive_move_and_linked_worktree_keep_identity",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_cli_returns_nonzero_for_refused_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_follow_up_uses_parent_dispatch_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_missing_record_refuses_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlinked_evidence_and_log_refuse_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_threshold_restore_and_idempotence",
+    "status": "passed"
+  }
+]

@@ -1,0 +1,264 @@
+{
+  "files": [
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-02002341512e43-ideation.md",
+      "sha256": "432b7a3343b298c03e659e0d0dac11fa7c69cad3b3b4c4a8aa7f0c2efe0f2480",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-026751d533c445-ideation.md",
+      "sha256": "95c842b52417297ce67b7d240f770c5988bdce3ca614e1f9b3e3ecacbef1c812",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-040717345bbb4f-ideation.md",
+      "sha256": "41dd80b043be5823853a53d8b9e086d0dff5ce59a3808154ad78076427659ebd",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-0417c539a10e4c-ideation.md",
+      "sha256": "e07056f5e930b27a19d99fbfd53c2ccf42c1a65244670febc3555010c1f90a6e",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-0fc88369dc2447-ideation.md",
+      "sha256": "07c856e5b2c444f9111fa09d148d8f1194bac3c32fa1b1bd34c6def3350ff2c4",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1c9ed87440f040-ideation.md",
+      "sha256": "c7178bbe6de9497ce7ded900437e2d1c80e0c9abf29dd0ee4ae94918876a279e",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1ca477e5f7424b-ideation.md",
+      "sha256": "f94c2a92c4280ff7d8e8bf6b50b34ebd41965b52bb9ac02a6f0b54b2bf1e7419",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1dbfed7072ff4e-ideation.md",
+      "sha256": "9e334cfebe15513352026f941c22918af321cb93fbfd9b290e817716be0d4370",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-211a89d4fb2244-ideation.md",
+      "sha256": "62b90187570db16e2768dff8bef544a8e3b1dfe09313fda21818f0b5e9814826",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2475b10a5f774b-ideation.md",
+      "sha256": "bd5995859abb6dddfd60c75da014bc6a64b4ee9549573bf258e144d05767c0d3",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2afba3903d5c47-ideation.md",
+      "sha256": "859823230cfda69aba422feba2c47d11054afd83f16c5bbdcf1c47bcaa48e93a",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-304f7cca348841-ideation.md",
+      "sha256": "0f00a662f41a41644051818618129496483b47fb044b4b69d84d5bdf83962d9d",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-35586add711047-ideation.md",
+      "sha256": "6f4b3cb3b2f49dcc911ae54f507df0f7766c0a212c4a34ddf0256ed091c381d9",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3810e7308b5544-ideation.md",
+      "sha256": "288f9f70ea1127874658c8e16897332a5fdce352dbb407fc3e966768a480554f",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-38a7536fc41a4f-ideation.md",
+      "sha256": "2b91c0e1982ea152f08a785a3ae86ee3d48ddd65fcac9dc6fec1380cd9ebb73d",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-41c65d0b462449-ideation.md",
+      "sha256": "153a5c1417a5f2650f31b456b125e5c7a73820ec7c47abd41492f639f949e80f",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-482f4898887a45-ideation.md",
+      "sha256": "1d006e7b6ad5698404b550928e6fcbbece4155c98a41e066d8068b7cf8200d45",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-4e0b62d0e4a843-ideation.md",
+      "sha256": "538801f2fe745f8ada332b05e4468851b0c50cb97e0522fb2cf550be440be880",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-540d0d8d0fae49-ideation.md",
+      "sha256": "ac9d93afe234ea5a2e38521ee5a1f4eedfdd2e99e2b7c9f4c9d53d3f8d2a9661",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-55fbd3101d6247-ideation.md",
+      "sha256": "2926e951f18cf5ac8fce4d35a9e3040f20a4619d046ac3d0ddcf0e89cf49ddf8",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-56cbeee8d2b545-ideation.md",
+      "sha256": "fc42e0c8360392a76a3485bc41a3e982eb6148ccc12e76c3ac0782d7177d3021",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-643ab5ec40f849-ideation.md",
+      "sha256": "d60e2322ee58812f3b4b21d94325bc858c0d7f5cfb3bb53b574a5f2d918699a5",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6a5d35ab1c7243-ideation.md",
+      "sha256": "0e30c5944ec9356e409fed6472706046b9cf6fbd2cd601c1b8fd99627a13d03d",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6e33f4c0bb9c48-ideation.md",
+      "sha256": "5de0d6e0eb9d3d3e3e6f81e71406b43ef9e42f3629648c8f8f28182a48790963",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-705f2275497f43-ideation.md",
+      "sha256": "6a91c38b3bf416c9345cc04bf8c074f34153885b9169e870538b5498f75db163",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-789ac6f0c0b847-ideation.md",
+      "sha256": "584a75541f5d5f24b1621386cf15c56620928ca43fa24c0528565c5fec1c4b01",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7a3638ccfa7c4c-ideation.md",
+      "sha256": "15a7dbd80a5dba91339c167d8ac640a662b8fdb48e46da7224cc8dcd7a6a127c",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7adae2fdfd8843-ideation.md",
+      "sha256": "d3ece32ce22a56f0a87f610ed066745f3a8b88259ba7a6ac60f30da5ba0f2acd",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-87f61f5a62164b-ideation.md",
+      "sha256": "5fad779e4ef51b3979a73ace70c557c928b08df9ffffbf16fb1b1c11bea1740b",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-94e51fa8709847-ideation.md",
+      "sha256": "8ae5f66e0bfde9e444f18eda9430b6b8d245b9dd41565de1aaf1471075643dea",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-97121bfd396b4d-ideation.md",
+      "sha256": "64a7967c58b68347047b2a7c1d95828798bb2930d61a22f5d835774e95841dc0",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-998144031f8548-ideation.md",
+      "sha256": "9deb470ab3f3d59c258515d5c2f3d79da86dc21a03f01739b31e7c14b6a77fc3",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a082cd4d4a8d43-ideation.md",
+      "sha256": "72ede301e8eb7b773cd0afeb31c9ac2d7292d7201eeb785653e8b1c354acbf63",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a34f56bc4fbe42-ideation.md",
+      "sha256": "d9cac586f5ef1f46be30200279f5c693c45aaccd7fb6b9d9adc6706644fe7ac8",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a64a7bb65b2b4f-ideation.md",
+      "sha256": "1217d053e6c1af1713b224addd80fec6cb27c05f7df0fd88d685c29f8913f894",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a90261ecbda849-ideation.md",
+      "sha256": "e7b04ddc8fe1a41d75cd3aaaa71620ca938be3dbece7df7aa5555b932c781ff3",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ae48d42d5a084c-ideation.md",
+      "sha256": "676b7d9d09dab686fd76773d11fafb4b087e419ba9700d4fb189dbc26a05b2f0",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b1d58a4d54ec4b-ideation.md",
+      "sha256": "0b030d1bc5976d9d84346ad97af61590f1bda9d619855b24c85aa53f7abcdc4a",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b40ebbb0e37b42-ideation.md",
+      "sha256": "80af11109cd71d628a4bca928bf48d864c5052307d35503f51cd93f378626287",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b56b4c849b094d-ideation.md",
+      "sha256": "9c9e1c65569b842aa661f34ee969a71c14c2ade8e802efbdf40b7e0e85a6c885",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-bbd5838c9e8043-ideation.md",
+      "sha256": "33bb2a309e30469a0b6496f7496c3ca233cb876a57db057c125b9d471ba7b5e2",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c2a6f63e34e14f-ideation.md",
+      "sha256": "31839106d57ed64816df6ed706c0f0ef95220d0f23f9651696b43a475df52689",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-cd420a2ade0643-ideation.md",
+      "sha256": "6edfbae887d86a4a418e1e806e08900636015953d9c75203bced059f27821cf8",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-dd736f347f0b41-ideation.md",
+      "sha256": "89e20a378696df371ddf1c73c7ad2884962f23b126999ecc4295a15fe51a04ae",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e0f2411d7f404f-ideation.md",
+      "sha256": "46e1392f20b30b1f0d0f8be439dec777b8b2d1d0ec6717c8b1ecc4ff3802c0c4",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e256119de57045-ideation.md",
+      "sha256": "e9b1d6aa2c2317c613a7f7630cb9619af323f39ccf7262e15342549059b317f7",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e64961e17e2b48-ideation.md",
+      "sha256": "e65ae63663a8c70a9abdc6c9443177672f7f1fd7e2fb0cbda531d1d76bdb03aa",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ea680437ddc242-ideation.md",
+      "sha256": "3e42d01072bca046d4b249479591ed603f9683b3257c8efd9d58b00b7ec179ff",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ee31a21d4be54a-ideation.md",
+      "sha256": "13e89a8f82af2384d6f30bf72fe6220e130faefba4e64907713548e234e35c23",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ee75bf11c4d74f-ideation.md",
+      "sha256": "04bfc9f17f5cb960846391e6e3c1d22838fa470e6e0751957d2a34c8ecde3d0e",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f234631fca8945-ideation.md",
+      "sha256": "930699ee884377c35488805d9c1a8b34162d6f9f6cf286d364e3fb1d0592def7",
+      "owned_fixture_verified": true
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-fe158122c02143-ideation.md",
+      "sha256": "cf5d02553fc90e27f3f0c016ee2383398d6231c7ba8a024b135c161b65421982",
+      "owned_fixture_verified": true
+    }
+  ]
+}

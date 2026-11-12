@@ -1,0 +1,6 @@
+[
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture",
+    "status": "passed"
+  }
+]

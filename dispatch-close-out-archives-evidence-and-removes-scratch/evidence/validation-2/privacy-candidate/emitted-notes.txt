@@ -1,0 +1,3 @@
+
+Scratch: /tmp/dev2/scratch-e2de56504eca4b1cb0654a7a1853d902-065c5da2603ab839/task/validation-1
+Put files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/validation-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/scratch.py close /private/tmp/close-854-validation2-20261112/tmp/scratch-test-su__h73_/task validation-1` and paste its output.

@@ -1,0 +1,1 @@
+validation-1 /private/tmp/dev2/scratch-2f32b72f362a4f1b8df5a1c67b1a5717-3683a700fa631218/task/validation-1 243 2026-11-12T11:27:13.562501+00:00 worktree=/private/tmp/dev2/scratch-2f32b72f362a4f1b8df5a1c67b1a5717-3683a700fa631218/task/validation-1/own uncommitted-files=2

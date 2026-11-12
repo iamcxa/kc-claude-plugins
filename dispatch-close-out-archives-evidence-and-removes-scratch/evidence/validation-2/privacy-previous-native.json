@@ -1,0 +1,5 @@
+{
+  "prior_head": "223dbb6d1b5e895a45d11537b9494aa08610c8f8",
+  "native_build_exercised": true,
+  "new_regression_assertion_fails_on_prior_omission": true
+}

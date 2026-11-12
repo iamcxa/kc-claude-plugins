@@ -1,0 +1,15 @@
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... FAIL
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 388, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Never archive private repository evidence, secrets or personal data' not found in '# ideation-1\nDispatched: b562f4ec035ededb713d99954a6736eb2d852b8b (workflow checkout)\nModel: fixture-model\nBudget: not recorded\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-c285f6f245694ad5/dispatch-fixture-f234631fca8945009b85bbc5cf472f7e/ideation-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts/scratch.py close /private/tmp/close-854-validation2-20261112/tmp/dispatch-stage-71d5yi7k/code/docs/dev2/.spacedock-state/dispatch-fixture-f234631fca8945009b85bbc5cf472f7e ideation-1` and paste its output.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.950s
+
+FAILED (failures=1)

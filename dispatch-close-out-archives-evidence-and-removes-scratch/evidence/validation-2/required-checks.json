@@ -1,0 +1,102 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "--require",
+      "0079"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  },
+  {
+    "name": "skill-lint",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/close-854-validation2-20261112/candidate",
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  },
+  {
+    "name": "dispatch-record-check",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66",
+      "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+      "--json"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch.md",
+      "--head",
+      "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+      "--base",
+      "8ce0eb6050c889b21baccf50fec35231bc888d66"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch",
+    "exit": 0
+  }
+]

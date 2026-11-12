@@ -1,0 +1,1354 @@
+[
+  {
+    "name": "test_dispatch_records.AmendmentDispatchFormTests.test_form_errors_have_record_and_task_locations_without_worker_move_checks",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextMutationTests.test_context_boundary_falsifiers_fail_without_caches",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_copy_notice_preserves_plain_verdict_and_strict_refuses_without_cwd_inference",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_live_archive_flat_index_precedence_and_resolved_symlinks",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_missing_task_keeps_candidate_check_and_multirecord_diagnostics",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_real_laws_event_consumer_preserves_task_present_missing_and_notice_plus_defect",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_strict_usage_and_existing_path_notation_and_scanned_regions",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ContextNoticeTests.test_workflow_strict_preflight_holds_then_repaired_context_reaches_real_builder_fixture",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_both_layouts_and_message_record_do_not_count_repaired_reports",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_fences_exact_stage_and_no_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_folder_coverage_matches_file_in_both_layouts",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_folder_without_either_task_file_names_both_paths",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_historical_064e61a15_redacted_replay_stops_before_advancement_and_gate",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_invalid_record_names_and_directory_do_not_cover",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_invalid_stage_missing_or_unreadable_task_and_workflow_are_errors",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.CoverageTests.test_poc_rejects_ideation_and_override_reads_without_mutation",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrMutationTests.test_each_named_falsifier_breaks_a_behavioral_control_without_caches",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_actual_cli_controls_disposable_build_spawn_recorders_and_reading_cost",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_history_quotes_fences_numbered_paths_and_authorized_current_design_replacement",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_profiles_layouts_and_first_repeated_message_records",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_raw_740_bytes_refuse_then_allocator_recovery_and_missing_line_controls",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_reservation_parser_scope_copy_and_unrelated_modes_remain_unchanged",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DesignAdrTests.test_supported_paths_heading_suffixes_lists_tables_and_inline_code",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_checklist_that_only_names_other_records_fails_but_one_citing_a_sibling_beside_real_lines_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_complete_record_passes_from_the_folder_or_the_task_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_link_beside_an_action_or_a_longer_file_name_is_not_a_pointer",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_name_with_any_directory_part_or_not_in_the_package_is_not_judged",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_pointer_in_other_wording_still_fails_and_a_line_without_a_record_name_or_with_other_words_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_pointer_line_followed_by_a_real_line_is_a_checklist_of_its_own",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_pointer_may_name_the_record_with_a_path_an_md_suffix_or_a_link",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_record_name_inside_a_longer_name_or_the_records_own_name_is_not_a_pointer",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_record_naming_itself_in_a_pointer_line_is_not_a_pointer",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_a_task_without_records_fails",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_an_action_that_names_a_sibling_record_is_a_checklist_of_its_own",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_bare_names_of_scripts_and_extension_scripts_are_listed_with_file_and_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_each_missing_part_fails_and_is_named",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_names_asks_for_a_candidate_line_in_a_validation_record_exactly_as_the_merge_gate_reads_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_names_runs_against_the_real_package_and_needs_a_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_only_the_checklist_and_scope_notes_sections_are_scanned_unless_the_file_has_neither",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_paseo_completion_passes_only_with_the_listed_extension",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_paseo_completion_requires_the_exact_line_inside_scope_notes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_paseo_extension_and_checker_share_the_completion_instruction",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_the_completion_recipient_line_is_judged_by_its_recipient_and_its_section",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_the_default_mode_does_not_scan_names",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_the_package_root_line_must_be_absolute_and_inside_the_scope_notes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.DispatchRecordTests.test_wrong_arguments_are_a_usage_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_a_first_implementation_record_without_the_instruction_fails_and_names_the_extension",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_a_later_implementation_record_without_the_instruction_is_checked",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_a_path_that_continues_past_the_script_name_is_absent_and_one_that_ends_there_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_a_validation_record_without_the_instruction_is_not_checked",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_an_unlisted_extension_is_not_checked",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_every_shipped_instruction_is_read_from_its_extension_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_journey_map_and_release_acceptance_stay_quiet_without_an_acceptance_instruction",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_no_readme_is_said_not_skipped_and_leaves_the_exit_code_alone",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_only_listed_followers_end_the_script_path",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_paseo_checks_later_spawn_records_but_not_messages_or_recovery_records",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_paseo_requires_the_sentence_for_each_supported_header",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_readme_flag_supplies_the_file_and_a_missing_path_exits_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_release_acceptance_checks_an_acceptance_tasks_first_implementation_only",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_the_nearest_readme_with_an_entity_type_is_used_and_a_plain_one_is_skipped",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_the_placeholder_the_bare_name_and_an_empty_reason_each_fail",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.ExtensionInstructionTests.test_the_root_substituted_path_or_a_not_run_reason_passes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_corrected_report_without_ruling_names_final_text_commit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_correction_before_later_ruling_clears",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_correction_committed_beside_amendment_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_deleted_then_reintroduced_report_is_an_evidence_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_divergent_report_origins_and_duplicate_task_paths_are_evidence_errors",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_edited_old_gate_or_amendment_keeps_its_original_identity",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_fences_closed_checklist_mentions_and_newest_report_selection",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_flat_folder_and_archive_moves_preserve_committed_report_identity",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_freeform_then_on_touch_amendment_and_partial_supported_ruling",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_fresh_followup_and_filename_one_hold_then_native_ruling_clears_without_input_edits",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_inline_old_same_and_missing_reports_retain_refusals",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_newest_folder_and_coverage_keep_their_existing_contracts",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_old_and_same_commit_rulings_do_not_clear",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_old_gate_and_prepared_briefing_allow_pre_ruling_correction",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_old_text_returning_after_final_text_cannot_reset_clock",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_other_stage_task_actor_empty_reason_time_and_withdrawal_do_not_clear",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_plain_copy_skips_only_new_predicate_independent_of_cwd",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_pre_ruling_verdict_flip_added_word_or_reordering_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_punctuation_and_closed_findings_in_same_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_refusal_recovery_once_and_reading_cost",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_rewrite_after_native_ruling_or_nonclearing_gate_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_rewritten_report_without_verdict_word_is_refused",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_ruling_between_two_corrections_still_refuses",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_shallow_and_broken_established_git_roots_are_evidence_errors",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_split_and_inline_layouts_use_only_the_owning_workflow_history",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_supported_partial_reply_clears_structure_with_semantics_left_to_observer",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.LiveValidationRulingTests.test_uncommitted_ruling_does_not_clear_and_uncommitted_report_is_evidence_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_a_newer_bare_record_is_reported_over_an_older_clean_one_and_other_tasks_are_ignored",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_a_validation_record_without_a_candidate_line_is_not_reported_as_newest",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_an_older_bare_record_is_not_reported_once_a_newer_one_is_clean",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_the_file_is_read_as_it_is_on_disk_not_as_committed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.NewestTests.test_the_newest_record_is_scanned_and_its_lines_are_printed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.PaseoCompletionMutationTests.test_completion_boundary_falsifiers_fail_without_caches",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_bad_quoted_gate_scalar_repaired_before_report_clears",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_historical_fence_hiding_report_stays_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_carrying_clearing_identity_holds",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_pre_report_broken_text_without_clearing_identity_clears",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_repaired_amendment_after_report_clears",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_repaired_history_without_later_ruling_needs_ruling",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_report_rewrite_requiring_unreadable_identities_stays_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_ruling_then_later_heading_typo_repaired_clears",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_two_historical_task_paths_stay_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_undecodable_historical_bytes_stay_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RepairedRulingHistoryTests.test_unrepaired_current_or_pinned_text_stays_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_added_words_in_a_later_paragraph_are_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_deleting_withdrawn_words_and_changing_evidence_are_silent",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_filler_and_ac_ids_do_not_produce_holds",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_frozen_rewrite_is_held_with_criterion_amendment_and_added_words",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_later_asked_or_captain_words_clear_the_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_list_form_replacement_is_held_after_renumbering",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_repair_followup_passes_but_validation_continuation_is_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.RewrittenCriterionTests.test_short_slash_separated_requirement_is_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SavedValidationRulingTests.test_pinned_event_prefixes_four_refused_two_pass_and_amendment_restorations",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SavedValidationRulingTests.test_seven_adjudications_and_legacy_actual_rerun_cost_remain_explicit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SymptomDispatchTests.test_different_stages_symptoms_none_fences_and_body_do_not_repeat",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SymptomDispatchTests.test_missing_line_hints_but_only_strict_holds_and_first_and_none_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SymptomDispatchTests.test_named_record_excludes_later_records_and_folder_checks_only_each_stages_newest",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SymptomDispatchTests.test_one_plain_and_two_messages_count_at_folder_and_named_dispatch_checks",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.SymptomDispatchTests.test_second_symptom_prints_questions_only_on_stderr_without_changing_verdict",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_backslash_quote_on_an_amendment_line_is_refused_unless_it_sits_in_a_moved_criterion",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_captain_amendment_must_be_named_in_a_checklist_of_the_task_this_record_included",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_first_implementation_record_must_carry_each_reserved_line_in_its_scope_notes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_folder_task_given_by_index_names_its_dispatch_records",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_folder_task_is_judged_for_reserved_lines_like_a_flat_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_reserved_number_named_inside_a_prose_line_is_missing_and_the_line_forms_FO_writes_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_a_reserved_number_named_only_outside_the_scope_notes_or_inside_a_longer_number_is_missing",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_an_amendment_list_with_an_oxford_comma_names_every_number",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_an_amendment_named_outside_a_checklist_or_by_a_bare_number_is_unnamed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_an_archived_task_folder_is_judged_beside_its_own_task_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_an_ideation_record_is_refused_when_its_task_owes_a_result_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_mutation_dropping_the_result_check_lets_the_record_pass",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_only_the_first_implementation_record_of_a_task_with_a_task_file_is_judged_for_reserved_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_records.TaskFactTests.test_the_amendments_heading_is_read_like_design_surfaces_does_and_fenced_entries_are_skipped",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_a_missing_role_checker_refuses_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_an_unresolvable_committed_task_holds_on_exit_two",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_foreign_root_owner_refuses_before_build_or_notes_write",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_ideation_builds_even_when_a_call_is_owed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_index_entry_without_worktree_file_is_preserved",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_staged_record_survives_refused_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_untracked_record_survives_refused_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_rejects_incomplete_scope_notes_without_prompt_or_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_git_failure_is_a_nonmutating_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stage_lf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_symlinked_entity_is_a_nonmutating_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_the_third_dispatch_counts_before_it_is_committed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_a_waiting_caller_still_wakes_on_a_change_the_other_already_read",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_an_explicit_state_file_wins",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_an_unusable_session_id_falls_to_the_working_directory_and_writes_nothing_outside",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_one_sessions_wait_does_not_consume_another_sessions_pr",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_tasks_refills_the_new_callers_list_and_prints_no_state_flag",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_the_default_file_is_keyed_by_session_id_else_by_working_directory",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_the_old_shared_file_is_neither_read_nor_changed_and_a_new_caller_starts_empty",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.DefaultStateTests.test_two_callers_watching_one_pr_each_see_a_change_the_other_already_read",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_change_is_reported_once_and_a_merged_pr_is_then_dropped",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_codex_verdict_already_there_when_the_pr_is_added_wakes_wait",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_copilot_refusal_already_there_when_the_pr_is_added_wakes_wait_once",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_copilot_refusal_is_not_run_not_a_reader_error_and_wakes_wait",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_look_that_fails_is_not_a_second_unrecognized_read",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_new_codex_verdict_with_the_same_word_still_wakes_wait",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_non_outcome_or_unwatched_reading_at_add_is_stored_as_read",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_pr_added_while_a_sweep_runs_stays_watched",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_pr_that_cannot_be_read_stays_watched",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_recognized_verdict_before_the_second_read_wakes_wait_without_the_report",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_reviewer_flag_set_while_a_sweep_runs_survives_the_sweep",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_save_keeps_fields_another_writer_added_meanwhile",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_slow_sweep_does_not_roll_back_a_newer_observation",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_stalled_review_gives_an_unread_line_the_gate_pattern_accepts",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_state_file_named_like_the_lock_keeps_its_list",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_a_sweep_keeps_keys_its_own_look_does_not_return",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_adding_a_pr_again_after_wait_reported_its_outcome_stays_quiet",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_adding_a_watched_pr_again_keeps_its_reviewer_flags",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_an_add_that_read_the_list_earlier_does_not_turn_a_flag_off",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_an_entry_saved_before_the_codex_flag_keeps_reading_codex",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_checks_rollup_reads_failing_pending_green_and_none",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_codex_column_is_a_dash_without_the_sibling_reader",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_codex_is_read_only_for_a_pr_added_with_codex",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_copilot_is_read_only_for_a_pr_added_with_copilot_and_its_verdict_wakes",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_help_exits_zero",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_look_reads_codex_only_for_an_open_pr",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_only_consecutive_unrecognized_reads_of_one_comment_count_and_silence_never_ends_a_wait",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_the_codex_reader_is_found_in_its_extension",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_the_codex_reader_names_a_stalled_review_by_its_start_and_it_is_no_outcome",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_the_codex_reader_names_an_unrecognized_comment_without_evidence",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_the_copilot_reader_reports_an_answer_not_a_verdict",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_the_upstream_line_has_the_package_repository_file_a_backlog_task_and_the_others_use_peers_or_an_issue",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_asks_for_one_re_request_then_names_codex_unread_once_per_head",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_asks_once_per_security_only_head_without_counting_a_round",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_gives_up_on_two_unrecognized_reads_three_minutes_apart_once_and_names_the_comment",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_ignores_a_start_and_wakes_on_its_outcome",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_on_an_empty_list_ends_and_a_bad_ref_is_a_configuration_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.PrWatchTests.test_wait_returns_on_the_first_change_and_names_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_blocked_pr_with_no_check_runs_does_not_settle_until_it_is_not_blocked",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_call_older_than_the_newest_review_round_leaves_the_line_and_names_its_date",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_draft_with_no_check_runs_is_marked_ready_after_sixty_quiet_seconds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_failed_comment_read_is_reported_to_the_captain_with_exit_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_failed_or_misshapen_status_call_is_reported_to_the_captain_with_exit_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_failed_status_call_names_no_seed_task",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_failing_record_is_not_named_from_another_readiness_stage_route_or_a_missing_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_live_task_owing_a_role_call_prints_the_line_until_it_is_recorded",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_merged_folder_task_reaches_the_observer_check_under_its_folder_name",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_merged_pr_is_not_read_for_review_rounds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_merged_task_pr_without_a_report_is_kept_out_of_pr_merge_and_shows_the_observer_steps",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_missing_spacedock_executable_is_reported_to_the_captain_with_exit_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_new_head_or_a_ready_flip_restarts_the_quiet_sixty_seconds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_newest_record_naming_a_bare_script_prints_one_next_line_even_without_a_pr",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_pr_that_cannot_be_read_is_reported_and_exits_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_pr_with_no_check_runs_settles_only_after_sixty_quiet_seconds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_record_with_no_profile_is_named_before_its_gate_is_prepared",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_recorded_call_clears_the_review_round_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_reviewer_the_readme_does_not_list_is_not_in_the_facts_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_sentinel_and_a_task_without_a_pr_or_worktree_print_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_sidecar_folder_without_an_index_beside_a_flat_task_adds_no_second_scan",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_filed_as_a_folder_index_is_read_like_a_flat_one",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_in_both_forms_is_read_once_from_the_folder",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_outside_the_first_implementation_dispatch_or_with_no_mark_is_not_held",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_the_role_check_cannot_read_is_reported_with_exit_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_with_no_alignment_section_is_not_named_and_the_seed_check_does_not_run_for_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_a_task_without_a_pr_is_judged_without_review_rounds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_an_archived_task_owing_a_role_call_prints_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_an_empty_pr_whose_worktree_is_gone_says_to_record_it_and_one_with_no_worktree_field_stays_silent",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_an_open_pr_prints_its_facts_and_the_kept_step_then_keeps_one_wait_running",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_an_unreadable_task_file_is_reported_to_the_captain_beside_the_held_one",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_archive_provider_reads_only_state_and_preserves_qualified_repository",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_archive_shapes_are_sorted_deduplicated_and_guarded",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_archive_variant_profile_filter_matches_learning_eligibility",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_archived_hidden_and_mod_folders_are_not_tasks",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_clean_or_absent_records_leave_the_output_as_it_was",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_codex_and_copilot_are_added_with_their_watch_columns_only_when_listed",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_committed_archive_snapshot_ignores_disk_changes_and_missing_archive_is_empty",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_committed_second_symptom_round_is_forwarded_at_idle",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_coverage_cannot_read_task_reports_its_task_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_coverage_clean_folder_task_and_not_due_add_no_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_coverage_read_error_uses_task_error_route",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_coverage_without_directory_or_pr_and_with_provider_failure",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_each_stage_with_two_awaiting_gates_gets_its_own_line_and_only_validation_names_the_merge_order",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_every_mark_form_seen_in_adopter_history_holds",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_failed_notice_command_and_invalid_json_are_errors_never_absence",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_frontmatter_ineligible_learn_hold_is_skipped_without_a_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_gates_awaiting_the_captain_at_one_stage_print_one_sitting_line_naming_every_slug",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_gates_still_needing_preparation_are_not_counted_in_a_sitting",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_inline_workflow_and_external_definition_and_missing_origin",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_no_snapshot_prints_a_merge_ask_or_hold_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_one_awaiting_gate_prints_no_sitting_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_one_review_id_with_many_comments_and_no_comments_owe_nothing",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_only_a_documented_review_line_after_the_last_mark_clears_the_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_other_ineligibility_reasons_may_still_repeat",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_peers_and_the_journey_extensions_add_no_line_while_a_pr_is_open",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_post_archive_removal_record_preserves_learn_and_observer_results",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_progress_locator_prefers_direct_then_highest_cached_version",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_real_seed_subprocess_names_a_map_task_missing_its_story_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_real_seed_subprocess_names_a_missing_bound_with_valid_alignment",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_release_walk_due_errors_are_reported",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_release_walk_due_is_gated_by_listing_and_map_presence",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_second_failed_validation_is_advisory_live_and_silent_archived",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_tasks_makes_one_status_call_and_a_crash_in_the_seed_check_is_reported_beside_the_sitting_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_tasks_needs_one_workflow_directory",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_facts_line_names_each_listed_reviewer_outcome_with_its_review_id",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_hold_names_every_held_slug_in_one_line_after_the_seed_line_and_before_the_wait_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_hold_still_prints_when_the_status_call_fails_and_writes_no_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_line_grows_by_one_word_per_slug",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_seed_line_comes_after_the_sitting_line_and_before_the_wait_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_seed_line_names_every_slug_once_one_word_each_and_writes_no_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_sitting_line_comes_before_the_wait_lines",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_the_sitting_line_writes_no_file",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_two_review_ids_with_inline_comments_on_an_open_task_pr_owe_chief_engineer",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.TasksTests.test_without_learn_listed_a_merged_pr_prints_no_observer_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_a_start_that_is_not_an_outcome_prints_no_next_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_an_answered_copilot_is_the_review_step_even_when_the_codex_reader_is_absent",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_each_decisive_change_is_followed_by_the_step_it_calls_for",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_findings_and_green_in_one_sweep_print_the_review_step_once",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_no_wait_exit_prints_a_merge_ask_or_hold_line",
+    "status": "passed"
+  },
+  {
+    "name": "test_pr_watch.WaitNextTests.test_wait_ends_when_a_pr_with_no_check_runs_has_been_quiet_for_sixty_seconds",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_archive_move_and_linked_worktree_keep_identity",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_cli_returns_nonzero_for_refused_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_follow_up_uses_parent_dispatch_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_missing_record_refuses_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlinked_evidence_and_log_refuse_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_threshold_restore_and_idempotence",
+    "status": "passed"
+  }
+]

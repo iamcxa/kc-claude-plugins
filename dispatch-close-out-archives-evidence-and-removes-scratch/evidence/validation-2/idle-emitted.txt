@@ -1,0 +1,1 @@
+next: run `python3 /private/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts/scratch.py close /private/tmp/close-854-validation2-20261112/tmp/tmpw3wp0g86/repo/docs/dev2/.spacedock-state/live validation-1`; that dispatch has ended. Commit the scratch-removed.txt it writes with the task path.

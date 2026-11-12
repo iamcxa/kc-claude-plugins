@@ -1,0 +1,18 @@
+{
+  "privacy": {
+    "synthetic_only": true,
+    "record_and_native_artifact_keep_private_repository_ban": true,
+    "reproduction_instruction_kept": true
+  },
+  "scope": {
+    "own_root": "/private/tmp/dev2/scratch-7c333fd9f98541299377e64a62cd3989-1fadf69c4d1b6179/task/validation-1",
+    "peer_root": "/private/tmp/dev2/scratch-7c333fd9f98541299377e64a62cd3989-1fadf69c4d1b6179/task/validation-2",
+    "own_root_absent": true,
+    "own_registered_worktrees": 0,
+    "repository_registered_under_dev2": 1,
+    "peer_still_registered": true,
+    "peer_uncommitted_preserved": true,
+    "committed_gzip_restores_original": true,
+    "truncated_gzip_refused": true
+  }
+}

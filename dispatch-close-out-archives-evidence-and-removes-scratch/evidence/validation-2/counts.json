@@ -1,0 +1,9 @@
+{
+  "distinct_tests": 338,
+  "passed": 338,
+  "failed": 0,
+  "skipped_after_named_rerun": 0,
+  "mutation_checks_rejected": 16,
+  "fresh_shell_results": 20,
+  "implementation_files_restored": 146
+}

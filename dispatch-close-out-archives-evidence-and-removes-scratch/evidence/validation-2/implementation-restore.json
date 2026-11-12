@@ -1,0 +1,736 @@
+{
+  "state_ref": "983b94d3b92b1724e13ee065478c045c4af79721",
+  "count": 146,
+  "files": [
+    {
+      "path": "AC1-paragraph-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "AC2-reports-scanned.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "AC3-skip-worktree-remove.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "ac2-s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "acceptance.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "actual-close-after.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "actual-close-before.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "actual-code-worktree-authorized.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "actual-code-worktree.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "adr-lint-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "candidate.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "comment-ratio.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "design-surfaces.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-final-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-final-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records-native-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records-native-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "dispatch-records-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "doc-impact.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "first-dispatch-run.txt",
+      "compressed": true,
+      "matches_original": true
+    },
+    {
+      "path": "fresh-shell-layout-error.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "fresh-shell-s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "fresh-shell-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "fresh-shell-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "idle-sweep-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "lint-skills-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutate.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "number-guards-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "outside-scope-notes-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "pr-watch-final-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "pr-watch-final-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-AC1-paragraph-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-AC2-reports-scanned.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-AC3-skip-worktree-remove.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-idle-sweep-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-outside-scope-notes-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-root-mismatch-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-size-cap-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-symlink-follows-sentinel.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-threshold-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/acceptance-truncated-gzip.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/adr-lint-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/build-ownership-bypassed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/candidate.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/cleanup.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/close-ownership-bypassed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/collision-before.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/collision-before.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/collision_replay.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/comment-ratio-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/design-surfaces.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/dispatch-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/dispatch-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/doc-impact.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/fresh-shell-s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/fresh-shell-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/fresh-shell-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/lint-skills-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/mutate-acceptance.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/namespace-basename-only.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/number-guards-final.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/repair-mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/repair_mutations.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/replay-candidate.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/replay-candidate.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/replay-old.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/replay-old.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/required-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/review-findings.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/run_tests.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/watch-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-1/watch-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/ac1-record-scratch-line.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/ac4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/actual-close.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/actual-root.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/adr-lint.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/amendment-proof.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/assessment.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/before/emitted-notes.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/before/privacy.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/candidate.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/cleanup.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/comment-ratio.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/committed-restore.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/design-surfaces.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/dispatch-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/dispatch-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/doc-impact.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/findings.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/fresh-acceptance.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/fresh-shell-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/fresh-shell.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutate.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/AC1-paragraph-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/AC2-reports-scanned.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/AC3-skip-worktree-remove.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/AC4-own-worktree-left.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/AC4-peer-root-deleted.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/F1-private-repository-ban-removed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/idle-sweep-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/mutations.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/outside-scope-notes-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/root-mismatch-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/size-cap-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/symlink-follows-sentinel.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/threshold-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations/truncated-gzip.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/mutations.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/number-guards-live.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/number-guards.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/pr-live.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/privacy-red.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/privacy-red.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/close-cli.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/emitted-dispatch.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/emitted-record.md",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/public.txt.gz",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/replay.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay/scratch-removed.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/replay.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/required-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/role-triggers.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/run_tests.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/s4.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/scope_and_privacy.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/skill-lint.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/watch-tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/watch-tests.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "repair-2/word-budget.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "required-checks.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "root-mismatch-allowed.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "run_tests.py",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "size-cap-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "symlink-follows-sentinel.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "tests.json",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "threshold-disabled.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "truncated-gzip.log",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "words-emitted.txt",
+      "compressed": false,
+      "matches_original": true
+    },
+    {
+      "path": "words.json",
+      "compressed": false,
+      "matches_original": true
+    }
+  ]
+}

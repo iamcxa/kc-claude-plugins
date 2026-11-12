@@ -1,0 +1,15 @@
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... FAIL
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/close-854-validation2-20261112/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 388, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Never archive private repository evidence, secrets or personal data' not found in "# ideation-1\nDispatched: 0a284af34add68e89eac0a8c62cc6c50ba4c0271 (workflow checkout)\nModel: fixture-model\nBudget: not recorded\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-62eca14edcbe627b/dispatch-fixture-c2a6f63e34e14fadbdbb5498eb2a91e0/ideation-1\nPut every file or checkout you create outside the task worktree and the state checkout under that folder. Copy what your report cites into evidence/ideation-1/ in the task folder, and nothing that holds a secret or a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. Before your report, run `python3 /private/tmp/close-854-validation2-20261112/previous/kc-dev-flow-2/scripts/scratch.py close /private/tmp/close-854-validation2-20261112/tmp/dispatch-stage-6vmjo_kp/code/docs/dev2/.spacedock-state/dispatch-fixture-c2a6f63e34e14fadbdbb5498eb2a91e0 ideation-1` and paste the lines it prints.\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.032s
+
+FAILED (failures=1)
