@@ -1,0 +1,77 @@
+[
+  {
+    "output": "baseline-tests.txt",
+    "command": "test_design_surfaces.py TaskArgumentTests (unchanged product)",
+    "exit": 1
+  },
+  {
+    "output": "probe-tests.txt",
+    "command": "test_design_surfaces.py TaskArgumentTests",
+    "exit": 0
+  },
+  {
+    "output": "full-design-tests.txt",
+    "command": "test_design_surfaces.py (before missing-input test adjustment)",
+    "exit": 1
+  },
+  {
+    "output": "full-design-tests-final.txt",
+    "command": "test_design_surfaces.py",
+    "exit": 0
+  },
+  {
+    "output": "ac-1.txt",
+    "command": "test_design_surfaces.py TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict",
+    "exit": 0
+  },
+  {
+    "output": "ac-2.txt",
+    "command": "test_design_surfaces.py TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file",
+    "exit": 0
+  },
+  {
+    "output": "ac-3.txt",
+    "command": "test_design_surfaces.py TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback",
+    "exit": 0
+  },
+  {
+    "output": "initial-probe-run.txt",
+    "command": "run_probe.py (initial synthetic Budget fixture)",
+    "exit": 1
+  },
+  {
+    "output": "probe-run.txt",
+    "command": "run_probe.py --source \"$PROBE\" --base \"$BASE\" --scratch /tmp/design-surfaces-task-dir-crash-ideation-final --output \"$TASK/evidence\" --adopter-state \"$ADOPTER_STATE_1\" --adopter-state \"$ADOPTER_STATE_2\" --adopter-state \"$ADOPTER_STATE_3\"",
+    "exit": 0
+  },
+  {
+    "output": "lint-skills.txt",
+    "command": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "exit": 0
+  },
+  {
+    "output": "comment-ratio.txt",
+    "command": "python3 \"$PACKAGE/scripts/comment_ratio.py\" \"$BASE\" HEAD --workflow-dir \"$WORKFLOW\"",
+    "exit": 0
+  },
+  {
+    "output": "design-check-installed.txt",
+    "command": "python3 \"$PACKAGE/scripts/design_surfaces.py\" check \"$STATE/design-surfaces-task-dir-crash.md\"",
+    "exit": 0
+  },
+  {
+    "output": "ac-scan.json",
+    "command": "spacedock status --workflow-dir \"$WORKFLOW\" --read \"$STATE/design-surfaces-task-dir-crash.md\" --ac-scan --json",
+    "exit": 0
+  },
+  {
+    "output": "reading.txt",
+    "command": "reading.py --source \"$PROBE\" --base \"$BASE\" --output \"$TASK/evidence/reading.json\"",
+    "exit": 0
+  },
+  {
+    "output": "probe-prs-stderr.txt",
+    "command": "gh pr list --repo iamcxa/kc-claude-plugins --head poc/design-surfaces-task-dir-crash --state all --json number,state,headRefName",
+    "exit": 1
+  }
+]

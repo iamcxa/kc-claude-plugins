@@ -1,0 +1,14 @@
+{
+  "four_criteria_evidenced": true,
+  "frontmatter_unchanged": true,
+  "probe_worktree_clean": true,
+  "reading_passage_blob_hashes_match": {
+    "references/sd/workflow.md": true,
+    "references/sd/mods/kc-dev-flow-2.md": true,
+    "skills/dev/SKILL.md": true,
+    "extensions/learn/EXTENSION.md": true
+  },
+  "private_adopter_path_scan": "clean",
+  "report_lines": 39,
+  "remote_probe_PR_query": "unavailable; no PR created by this worker"
+}

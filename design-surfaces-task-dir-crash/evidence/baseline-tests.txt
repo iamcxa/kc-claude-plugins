@@ -1,0 +1,242 @@
+.FFFFFFFFFFFFFF
+======================================================================
+FAIL: test_resolving_a_name_preserves_a_failing_verdict (__main__.TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1800, in test_resolving_a_name_preserves_a_failing_verdict
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+AssertionError: Tuples differ: (1, '', 'Traceback (most recent call last):\n[1390 chars]'\n') != (1, "task.md: 'Surfaces:' has unknown value(s[62 chars], '')
+
+First differing element 1:
+''
+"task.md: 'Surfaces:' has unknown value(s[57 chars]le\n"
+
+Diff is 1726 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (__main__.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1771, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+AssertionError: Tuples differ: (1, '', 'Traceback (most recent call last)[1393 chars]'\n') != (0, 'task.md: design surfaces presentable\[433 chars], '')
+
+First differing element 0:
+1
+0
+
+Diff is 2136 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (__main__.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task.with.dots')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1771, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+AssertionError: Tuples differ: (1, '', 'Traceback (most recent call last)[1403 chars]'\n') != (0, 'task.with.dots.md: design surfaces pr[443 chars], '')
+
+First differing element 0:
+1
+0
+
+Diff is 2156 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_suffixless_name_without_a_directory_checks_the_task (__main__.TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1779, in test_suffixless_name_without_a_directory_checks_the_task
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'task'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : missing: cannot read task: [Errno 2] No such file or directory: 'missing'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: 'directory'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : directory: cannot read task: [Errno 21] Is a directory: 'directory'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1257, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1236, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1810, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '/'
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.163s
+
+FAILED (failures=14)

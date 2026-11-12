@@ -1,0 +1,5 @@
+{
+  "query_exit": 1,
+  "result": "unverified",
+  "reason": "GitHub API connection unavailable; no PR creation action performed"
+}

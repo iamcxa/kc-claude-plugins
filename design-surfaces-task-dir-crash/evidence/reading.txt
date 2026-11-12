@@ -1,0 +1,55 @@
+{
+  "method": "len(text.split()), same named passage inventory on base and probe",
+  "scope": "Package-owned instructions only. Upstream pr-merge and ordinary dynamic outputs are unchanged but not included in these totals. Optional learn reference included in after_archive on both sides.",
+  "passage_files": [
+    "references/sd/workflow.md",
+    "references/sd/mods/kc-dev-flow-2.md",
+    "skills/dev/SKILL.md",
+    "extensions/learn/EXTENSION.md"
+  ],
+  "all_passage_files_byte_identical": true,
+  "moments": [
+    {
+      "name": "startup",
+      "before": 6882,
+      "after": 6882,
+      "delta": 0
+    },
+    {
+      "name": "idle_open_PR",
+      "before": 1018,
+      "after": 1018,
+      "delta": 0
+    },
+    {
+      "name": "idle_merged_PR",
+      "before": 1018,
+      "after": 1018,
+      "delta": 0
+    },
+    {
+      "name": "after_archive",
+      "before": 310,
+      "after": 310,
+      "delta": 0
+    },
+    {
+      "name": "merge_ask",
+      "before": 1153,
+      "after": 1153,
+      "delta": 0
+    }
+  ],
+  "design_gate_command_output": [
+    {
+      "seed": false,
+      "before": 73,
+      "after": 10
+    },
+    {
+      "seed": true,
+      "before": 10,
+      "after": 7
+    }
+  ]
+}

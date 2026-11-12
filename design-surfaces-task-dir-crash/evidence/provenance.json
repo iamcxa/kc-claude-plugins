@@ -1,0 +1,22 @@
+{
+  "python": "3.11.14",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "probe": "54424755e201fbb39363835e8dbabb971caa67a1",
+  "branch": "poc/design-surfaces-task-dir-crash",
+  "package_version": "0.39.1",
+  "workflow_hashes": {
+    "host_codex_workflow": {
+      "path": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md",
+      "sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb"
+    },
+    "dispatch_claude_workflow": {
+      "path": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md",
+      "sha256": "a884a1079841eeff80a0b3a27fecc21379562077ce8e783b70ccbce0cd5b6ca1"
+    },
+    "current_origin_workflow": {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-surfaces-task-dir-crash/kc-dev-flow-2/references/sd/workflow.md",
+      "sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb"
+    }
+  },
+  "launcher": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n"
+}
