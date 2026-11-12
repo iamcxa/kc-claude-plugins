@@ -1,0 +1,1 @@
+Initial state-commit escalation was not executed. Automatic approval review rejected it because task names, PRs, rulings and logs might leak private repository content. Follow-up read-only checks confirmed the only repository is public and the task snapshot exactly equals its remote public blob; see public-source-proof.json. No alternate publication route was attempted.

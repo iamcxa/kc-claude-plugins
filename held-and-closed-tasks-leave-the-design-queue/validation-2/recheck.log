@@ -1,0 +1,33 @@
+ac1-query True
+AC-1 True
+AC-1 falsifier True
+ac2-next True
+AC-2 True
+AC-2 falsifier True
+ac1-status-display True
+ac4-dispatch True
+AC-4 True
+AC-4 falsifier True
+ac5-merge-guard True
+ac5-set-done True
+ac5-archive True
+AC-5 falsifier True
+AC-6 True
+AC-6 falsifier True
+AC-7 True
+AC-7 falsifier True
+NP-1 exact list True
+NP-1 empty True
+NP-2 missing sections True
+NP-4 copy True
+NP-4 falsifier True
+NP-3 amended bound True
+NP-3 falsifier True
+live Held state True
+mutation-quote-comparison True
+mutation-query-exit True
+mutation-no-held True
+mutation-newest-hold True
+mutation-list-wiring True
+mutation-candidate-removed True
+candidate bytes restored True

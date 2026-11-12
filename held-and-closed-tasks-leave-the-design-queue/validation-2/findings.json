@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "low",
+    "title": "PR body uses superseded word formula",
+    "classification": "Polish",
+    "kind": "evidence or form",
+    "detail": "PR #856 still says 3N+6; current task and this validation use N+20.",
+    "fix": "FO updates PR body before delivery gate.",
+    "status": "open"
+  },
+  {
+    "severity": "low",
+    "title": "Decline rationale understates report count",
+    "classification": "Polish",
+    "kind": "evidence or form",
+    "detail": "Five reports produce four repair passes; rationale says four reports. Unchanged-source rationale is independently supported.",
+    "fix": "Use the corrected count recorded in review.md.",
+    "status": "open"
+  }
+]

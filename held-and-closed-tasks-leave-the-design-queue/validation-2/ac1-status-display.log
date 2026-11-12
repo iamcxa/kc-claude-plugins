@@ -1,0 +1,19 @@
+ID     SLUG                           STATUS               TITLE                          SCORE    GATE-READINESS
+--     ----                           ------               -----                          -----    --------------
+adoption-asks-which-extensions adoption-asks-which-extensions ideation             A dispatch record written before an extension was listed is not judged against it          not-applicable
+adr-silent-undo-probe adr-silent-undo-probe          ideation             Does an agent quietly undo an ADR-protected choice during an unrelated refactor, with and without kc-adr?          not-applicable
+captain-ruling-sources-checked captain-ruling-sources-checked ideation             A Captain ruling recorded from a peer's relayed words is refused by a check FO already runs          not-applicable
+comment-check-reaches-delivery-gate comment-check-reaches-delivery-gate ideation             A task cannot reach its delivery gate while the comment check its implementation and validation owe is missing from their reports          not-applicable
+dispatch-carries-reserved-adr-number dispatch-carries-reserved-adr-number ideation             A dispatch record for a task holding a reserved ADR number is refused without its Number guards line          validating
+dispatch-close-out-archives-evidence-and-removes-scratch dispatch-close-out-archives-evidence-and-removes-scratch ideation             When a dispatch closes, its necessary evidence is archived compressed and its removable scratch is deleted          validating
+each-task-records-stage-time-revises-and-interruptions each-task-records-stage-time-revises-and-interruptions ideation             Every task records its time per stage, its revise count and its interruption count, and a helper reads them out          validating
+fo-write-checks-parse-top-level fo-write-checks-parse-top-level ideation             The FO-write checks parse only top-level declines and unfenced Scope, closing two Codex round-3 edge cases          not-applicable
+gate-question-facts-are-checked-before-the-captain-reads-them gate-question-facts-are-checked-before-the-captain-reads-them ideation             A factual claim in a question FO puts to the Captain has been checked against the record before he reads it          validating
+gate-summary-names-each-decline gate-summary-names-each-decline ideation             A gate summary that declines findings names each finding and its reason          not-applicable
+held-and-closed-tasks-leave-the-design-queue held-and-closed-tasks-leave-the-design-queue ideation             A task the Captain held or closed at a gate no longer looks like work waiting in that stage          validating
+ideation-checks-external-prior-art ideation-checks-external-prior-art ideation             Ideation checks standards and known patterns before designing a mechanism          feedback-pending
+journey-canvas-hosted-poc journey-canvas-hosted-poc      ideation             A kc-journey-map canvas room runs on a hosted service, survives this machine being off, and can be shared by link with edit access limited to people the Captain allows          not-applicable
+merge-ask-tests-the-merge-result merge-ask-tests-the-merge-result ideation             A merge ask for a PR whose base moved since validation carries a test run on the merge result          validating
+picky-reviewers-may-run-on-gemini picky-reviewers-may-run-on-gemini ideation             Release-walk picky reviewers can run on Gemini through Paseo          not-applicable
+seed-check-requires-alignment-result seed-check-requires-alignment-result ideation             The seed check refuses a task whose FO alignment says needed and records no Result line          not-applicable
+step-back-answer-has-a-record-line step-back-answer-has-a-record-line ideation             The step-back answer has a fixed record line, and the reminder stops once it is written          not-applicable

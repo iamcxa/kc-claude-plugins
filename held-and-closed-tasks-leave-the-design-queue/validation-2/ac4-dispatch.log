@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "subagent_type": "spacedock:ensign",
+  "description": "A dispatch record written before an extension was listed is not judged against it: ideation",
+  "fetch_commands": [
+    "/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/validate-held-closed-v2-20261112-193629/candidate/docs/dev2 --stage ideation"
+  ],
+  "dispatch_file_path": "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md",
+  "prompt": "$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md and treat its content as your assignment.",
+  "model": null,
+  "name": "spacedock-ensign-adoption-asks-which-extensions-ideation"
+}
+[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null

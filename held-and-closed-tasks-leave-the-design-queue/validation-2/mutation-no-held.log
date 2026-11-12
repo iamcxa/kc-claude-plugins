@@ -1,0 +1,61 @@
+........F.F                                         [100%]
+=================================== FAILURES ===================================
+_______________ TasksTests.test_no_held_task_prints_no_held_line _______________
+
+self = <test_pr_watch.TasksTests testMethod=test_no_held_task_prints_no_held_line>
+
+    def test_no_held_task_prints_no_held_line(self):
+        self.readme("")
+>       self.assertEqual(self.tasks({}), (0, []))
+E       AssertionError: Tuples differ: (0, ['fact: held by the Captain, not waiting: [42 chars]t.']) != (0, [])
+E       
+E       First differing element 1:
+E       ['fact: held by the Captain, not waiting: [41 chars]it.']
+E       []
+E       
+E       + (0, [])
+E       - (0,
+E       -  ['fact: held by the Captain, not waiting: ; each ## Held section says what '
+E       -   'reopens it.'])
+
+kc-dev-flow-2/scripts/test_pr_watch.py:857: AssertionError
+_ TasksTests.test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name _
+
+self = <test_pr_watch.TasksTests testMethod=test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name>
+
+    def test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+>       self.assertEqual(lines, ["next: hold the first implementation dispatch of r4: each ## FO alignment marks a release changed by "
+                                 "signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its "
+                                 "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."])
+E       AssertionError: Lists differ: ['fact: held by the Captain, not waiting: [356 chars]in."] != ["next: hold the first implementation disp[268 chars]in."]
+E       
+E       First differing element 0:
+E       'fact: held by the Captain, not waiting: [40 chars] it.'
+E       "next: hold the first implementation disp[267 chars]ain."
+E       
+E       First list contains 1 additional elements.
+E       First extra element 1:
+E       "next: hold the first implementation dispatch of r4: each ## FO alignment marks a release changed by signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."
+E       
+E       - ['fact: held by the Captain, not waiting: ; each ## Held section says what '
+E       -  'reopens it.',
+E       -  'next: hold the first implementation dispatch of r4: each ## FO alignment '
+E       ? ^
+E       
+E       + ['next: hold the first implementation dispatch of r4: each ## FO alignment '
+E       ? ^
+E       
+E          'marks a release changed by signal 1 or 2 with no Release review: line after '
+E          "it. Dispatch kc-journey-map's review-release, write its Release review: line "
+E          '(or Release review: not needed: <reason>) under ## FO alignment, then run '
+E          'this again.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:2104: AssertionError
+=========================== short test summary info ============================
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_no_held_task_prints_no_held_line
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name
+2 failed, 9 passed, 144 deselected in 8.48s

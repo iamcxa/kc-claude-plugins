@@ -1,0 +1,3 @@
+ONE held=1 words=17 maximum=21 PASS; over-bound 22 REJECTED
+CURRENT held=14 words=32 maximum=34 PASS; over-bound 35 REJECTED
+LARGER held=125 words=145 maximum=145 PASS; over-bound 146 REJECTED

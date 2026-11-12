@@ -1,0 +1,53 @@
+{
+  "candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "stack_base": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "AC-3": {
+    "exit": 0,
+    "words": 1287,
+    "held_names": 0,
+    "falsifier_rejected": true
+  },
+  "NP-1": {
+    "exit": 0,
+    "fact_lines": 1,
+    "held": 14,
+    "words": 32,
+    "exactly_once": true
+  },
+  "live_held_sections": {
+    "held": 14,
+    "valid": 0,
+    "owner": "First Officer after delivery"
+  },
+  "adr_ruling": {
+    "number": "0081",
+    "quoted_passage_present": true,
+    "scope_permitted_by_amendment": 1
+  },
+  "command_exits": {
+    "recheck": 0,
+    "tests": 0,
+    "captain-acceptance": 0,
+    "candidate-live": 2,
+    "candidate-live-network": 0,
+    "legacy-native": 2,
+    "legacy-native-network_sparse_setup": 0,
+    "legacy-full-state": 0,
+    "number-guards": 2,
+    "number-guards-explicit-base": 0,
+    "number-guards-fresh": 0
+  },
+  "setup_limits": [
+    "First origin-less legacy export omitted dispatch records, so it named held tasks as missing records; full frozen state restored without changing the predicate.",
+    "Initial network-restricted entrances exit 2; identical authorized public read operations reran with network and exit 0.",
+    "Initial archive has no main ref: number guard exit 2; explicit pinned stack base and successful public state-ref refresh exits 0."
+  ],
+  "no_private_repository_read_or_retained": true,
+  "test_scope": "164 items from test_pr_watch.py and test_scratch.py; not the full package suite",
+  "cleanup_roots": [
+    "/tmp/validate-held-closed-v2-20261112-193629"
+  ],
+  "created_dispatch_files": [
+    "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md"
+  ]
+}

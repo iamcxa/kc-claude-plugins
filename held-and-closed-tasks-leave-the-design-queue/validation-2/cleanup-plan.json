@@ -1,0 +1,9 @@
+{
+  "directories": [
+    "/tmp/validate-held-closed-v2-20261112-193629"
+  ],
+  "files": [
+    "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md"
+  ],
+  "rule": "Commit primary evidence first, then remove exact owned paths; no tmp evidence retained."
+}

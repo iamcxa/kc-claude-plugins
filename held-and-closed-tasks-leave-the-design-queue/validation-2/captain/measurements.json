@@ -1,0 +1,41 @@
+[
+  {
+    "case": "one",
+    "held": 1,
+    "stages": 1,
+    "words": 17,
+    "maximum": 21,
+    "fixed_words": 15,
+    "wc_output": "17 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-2/captain/one-fact.txt",
+    "exactly_once": true,
+    "over_bound_words": 22,
+    "over_bound_rejected": true,
+    "synthetic": false
+  },
+  {
+    "case": "current",
+    "held": 14,
+    "stages": 3,
+    "words": 32,
+    "maximum": 34,
+    "fixed_words": 15,
+    "wc_output": "32 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-2/captain/current-fact.txt",
+    "exactly_once": true,
+    "over_bound_words": 35,
+    "over_bound_rejected": true,
+    "synthetic": false
+  },
+  {
+    "case": "larger",
+    "held": 125,
+    "stages": 5,
+    "words": 145,
+    "maximum": 145,
+    "fixed_words": 15,
+    "wc_output": "145 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-2/captain/larger-fact.txt",
+    "exactly_once": true,
+    "over_bound_words": 146,
+    "over_bound_rejected": true,
+    "synthetic": true
+  }
+]

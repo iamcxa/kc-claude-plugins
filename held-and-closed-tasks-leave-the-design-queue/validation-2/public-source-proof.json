@@ -1,0 +1,20 @@
+{
+  "repository": "iamcxa/kc-claude-plugins",
+  "visibility": "public",
+  "remote_task": {
+    "sha": "359a362e7b5b44785510011cec4abe515678ece6",
+    "display_url": "https://github.com/iamcxa/kc-claude-plugins/blob/4116f1f7089cd8d33c5e1e13285f174ae19ee805/held-and-closed-tasks-leave-the-design-queue.md",
+    "encoding": "utf-8"
+  },
+  "private_repositories_read": 0,
+  "private_repository_artifacts_retained": 0,
+  "sources": [
+    "Pinned candidate and base git archives of iamcxa/kc-claude-plugins",
+    "Existing public state branch task files and dispatch history of that same repository",
+    "Public PR #854 and #856 provider metadata",
+    "Synthetic test fixtures generated inside the owned scratch directory",
+    "Local installed public workflow package scripts"
+  ],
+  "scope_rule": "The dispatch forbids private repository content in the public state branch and allows counts only for private sources. This run has no private source. Public task-specific evidence is explicitly required by the dispatch.",
+  "local_task_blob_equals_public_remote": true
+}

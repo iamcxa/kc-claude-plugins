@@ -1,0 +1,9 @@
+EXPORT 455846c6d30d4ab650c1c4503bc591722231586d
+NATIVE INPUTS 14 public held tasks
+...........                                         [100%]
+- generated xml file: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-2/captain/held-tests.xml -
+11 passed, 144 deselected in 8.38s
+ONE held=1 words=17 maximum=21 PASS; over-bound 22 REJECTED
+CURRENT held=14 words=32 maximum=34 PASS; over-bound 35 REJECTED
+LARGER held=125 words=145 maximum=145 PASS; over-bound 146 REJECTED
+PASS: exact candidate held behavior and amendment-4 counts

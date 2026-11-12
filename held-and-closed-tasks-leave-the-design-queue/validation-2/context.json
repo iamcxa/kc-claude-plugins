@@ -1,0 +1,19 @@
+{
+  "wt": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue",
+  "wf": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+  "slug": "held-and-closed-tasks-leave-the-design-queue",
+  "state": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+  "task": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue.md",
+  "folder": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue",
+  "pkg": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+  "head": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "base": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "start": "2026-11-12T19:36:29+08:00",
+  "scratch": "/tmp/validate-held-closed-v2-20261112-193629",
+  "ev": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-2",
+  "state_head": "4116f1f7089cd8d33c5e1e13285f174ae19ee805",
+  "main": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "gitdir": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue",
+  "objects": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/objects",
+  "state_objects": "/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/objects"
+}
