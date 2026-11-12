@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:dispatch-close-out-archives-evidence-and-removes-scratch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:dispatch-close-out-archives-evidence-and-removes-scratch-ideation-1
+              briefing:
+                id: briefing:dispatch-close-out-archives-evidence-and-removes-scratch:ideation:attempt-1:revision-1
+                digest: sha256:ad153a327a133e5201acbd460d43474058441c86c37374bae21ddde4c71d414d
+                room-ref: ./dispatch-close-out-archives-evidence-and-removes-scratch/review/ideation/briefing-1
 started: 2026-11-12T05:17:00Z
 ---
 
