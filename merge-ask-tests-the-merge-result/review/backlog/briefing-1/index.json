@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-ask-tests-the-merge-result:backlog:attempt-1:revision-1",
+  "question": "決定：「證明先跑過」試行用的這五張新任務，要不要都進設計階段。我建議五張都核准。一、合併前在「合併進 main 之後的結果」上跑過測試，否則擋下合併的詢問（昨天 main 變紅那次）。二、被你擱置或關掉的任務不再看起來像在排隊（今天我講錯五張任務那次）。三、每張任務記錄各階段時間、重做次數、打斷次數，並有工具讀出來（你的要求）。四、派工結束時把必要證據壓縮封存、刪掉可移除的暫存（你的要求）。五、我問你的問題裡的事實，在你讀到之前先對過紀錄（兩天內講錯三次）。核准代表接受各任務檔寫的範圍、預算（每階段一輪、一個 PR）與停止條件，並各派一個設計工人，設計要把每條驗收條件的證明實際跑過一次。不代表接受任何設計或修法。這五張合起來我沒有把握一天做完；第三、四張較大，超過一天時我連同預算回來請你取捨。",
+  "artifacts": [
+    {
+      "id": "artifact:merge-ask-tests-the-merge-result:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/42a97d9d835beb280984679ae5fee65682a8ac02/merge-ask-tests-the-merge-result.md",
+      "rev": "sha256:b961d9d4a9ba41d6cbb3c1549a1b8096c3de81bc7bed9d8cf1388388b09a51f1",
+      "mediaType": "text/markdown",
+      "summary": "Joint backlog admission of five tasks, the proof-first trial the Captain chose on 2026-11-12: merge-ask-tests-the-merge-result, held-and-closed-tasks-leave-the-design-queue, each-task-records-stage-time-revises-and-interruptions, dispatch-close-out-archives-evidence-and-removes-scratch, gate-question-facts-are-checked-before-the-captain-reads-them.\nBite: each task file's Scope names an event of 2026-11-11 or 2026-11-12 with its source; two carry the Captain's own words as Source, three are FO's misses.\nBudget: 1 cycle per stage each, one package PR each.\nAlignment: not needed on each; the mechanism is compared in the design and ruled at the ideation gate.\nSeed check: design_surfaces.py check --seed exit 0 on all five (FO run 2026-11-12, kc-dev-flow-2 0.39.1).\nNot admitted, with FO's reason: follow-up messages not budget-checked and the Budget line edit (no recorded bite since the rule shipped); fifteen sibling parser holes (reviewer-constructed, like a task the Captain closed on 2026-10-21); stage report item shape (the stage skills already state it); a fixed minor built-screen finding has no line form (one report, unverified); learn across repositories (learn has not been run in this workflow)."
+    }
+  ]
+}
