@@ -3,7 +3,7 @@ title: Every task records its time per stage, its revise count and its interrupt
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
