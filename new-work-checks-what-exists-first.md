@@ -3,7 +3,7 @@ title: Before any new work, the worker finds what already exists, states what it
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
