@@ -3,7 +3,7 @@ title: A merge ask for a PR whose base moved since validation carries a test run
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-12), answering 「決定：合併 #853（我問你要不要合併之前，主線若已往前走，要先附一次「合併後結果」的測試紀錄，否則檢查擋下那一題）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；約六成的合併會因此多跑一輪測試，今晚實測一輪約 10 到 15 分鐘，只花我這邊的時間；各 repo 的流程說明要多一行指定跑哪個指令，沒加之前那邊每次都得在問題裡寫明「沒跑」；只有 Codex 審過，Copilot 因額度不足沒有審；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit d79053d0836c558a9269f9cf1ba222933935b820, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」. Recommendation: followed. Before the gate was prepared he had said 「那合併，然後想辦法做真的改進」 (chat, 2026-11-12) about this PR and two others.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T05:16:52Z
 worktree: .worktrees/spacedock-ensign-merge-ask-tests-the-merge-result
 pr: pr-merge:853
+verdict: PASSED
+completed: 2026-11-12T16:31:14Z
+archived: 2026-11-12T16:31:15Z
 ---
 
 ## Scope
