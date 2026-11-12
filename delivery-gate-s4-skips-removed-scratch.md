@@ -34,6 +34,14 @@ gates:
                 id: briefing:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1
                 digest: sha256:e45c5dbb427a5821d04964c2da935b39f5a8edccf289da7769f78d03a9d874b7
                 room-ref: ./delivery-gate-s4-skips-removed-scratch/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-s4-skips-removed-scratch:ideation:1
+                briefing: briefing:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-12T17:38:28.503314Z"
+                decision: hold
+                reason: 'The Captain chose 「關掉，接受現行範圍（建議）」 (host question dialog, 2026-11-13), answering 「「合併檢查不該要求已刪除的暫存路徑」這張要不要直接關掉？我建議關掉。worker 重播原案例發現問題在 0.36.0 就修好了：現在只檢查「問你的文字」和「要你執行的步驟」裡的路徑，驗證報告裡提到的已刪暫存不再誤擋，要你執行卻不存在的路徑仍會擋。關掉等於接受現行檢查範圍，不再寫任何程式。」; closed with nothing built: the premise was overturned in trial round 1 (already fixed on main by PR #799, released in 0.36.0).'
 started: 2026-11-12T17:03:37Z
 ---
 
