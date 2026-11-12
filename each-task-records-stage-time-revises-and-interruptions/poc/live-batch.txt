@@ -1,0 +1,45 @@
+$ python3 -B task_timeline.py <state> each-task-records-stage-time-revises-and-interruptions
+task: each-task-records-stage-time-revises-and-interruptions
+  backlog: 2026-11-12T04:58:47Z -> 2026-11-12T05:15:39Z  16.9 min (before gate 0.5, Captain wait 16.4, after gate 0.0); dispatches 0, repeats 0
+    gate attempt 1: opened 2026-11-12T04:58:47Z, closed 2026-11-12T05:11:35Z, withdrawn
+    gate attempt 2: opened 2026-11-12T05:12:02Z, closed 2026-11-12T05:15:39Z, approve
+  ideation: 2026-11-12T05:16:44Z -> running  16.2 min (before gate 16.2, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 0; amendments outside a gate: 0
+exit 0
+$ python3 -B task_timeline.py <state> merge-ask-tests-the-merge-result
+task: merge-ask-tests-the-merge-result
+  backlog: 2026-11-12T04:58:41Z -> 2026-11-12T05:15:22Z  16.7 min (before gate 0.4, Captain wait 16.3, after gate 0.0); dispatches 0, repeats 0
+    gate attempt 1: opened 2026-11-12T04:58:41Z, closed 2026-11-12T05:11:28Z, withdrawn
+    gate attempt 2: opened 2026-11-12T05:11:55Z, closed 2026-11-12T05:15:22Z, approve
+  ideation: 2026-11-12T05:16:52Z -> running  16.0 min (before gate 16.0, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 0; amendments outside a gate: 0
+exit 0
+$ python3 -B task_timeline.py <state> held-and-closed-tasks-leave-the-design-queue
+task: held-and-closed-tasks-leave-the-design-queue
+  backlog: 2026-11-12T04:58:44Z -> 2026-11-12T05:15:30Z  16.8 min (before gate 0.5, Captain wait 16.3, after gate 0.0); dispatches 0, repeats 0
+    gate attempt 1: opened 2026-11-12T04:58:44Z, closed 2026-11-12T05:11:32Z, withdrawn
+    gate attempt 2: opened 2026-11-12T05:11:59Z, closed 2026-11-12T05:15:30Z, approve
+  ideation: 2026-11-12T05:16:57Z -> running  16.0 min (before gate 16.0, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 0; amendments outside a gate: 0
+exit 0
+$ python3 -B task_timeline.py <state> dispatch-close-out-archives-evidence-and-removes-scratch
+task: dispatch-close-out-archives-evidence-and-removes-scratch
+  backlog: 2026-11-12T04:58:50Z -> 2026-11-12T05:15:47Z  17.0 min (before gate 0.5, Captain wait 16.5, after gate 0.0); dispatches 0, repeats 0
+    gate attempt 1: opened 2026-11-12T04:58:50Z, closed 2026-11-12T05:11:39Z, withdrawn
+    gate attempt 2: opened 2026-11-12T05:12:05Z, closed 2026-11-12T05:15:47Z, approve
+  ideation: 2026-11-12T05:17:00Z -> running  15.9 min (before gate 15.9, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 0; amendments outside a gate: 0
+exit 0
+$ python3 -B task_timeline.py <state> gate-question-facts-are-checked-before-the-captain-reads-them
+task: gate-question-facts-are-checked-before-the-captain-reads-them
+  backlog: 2026-11-12T04:58:54Z -> 2026-11-12T05:15:55Z  17.0 min (before gate 0.4, Captain wait 16.6, after gate 0.0); dispatches 0, repeats 0
+    gate attempt 1: opened 2026-11-12T04:58:54Z, closed 2026-11-12T05:11:42Z, withdrawn
+    gate attempt 2: opened 2026-11-12T05:12:09Z, closed 2026-11-12T05:15:55Z, approve
+  ideation: 2026-11-12T05:16:49Z -> running  16.1 min (before gate 16.1, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 0; amendments outside a gate: 0
+exit 0

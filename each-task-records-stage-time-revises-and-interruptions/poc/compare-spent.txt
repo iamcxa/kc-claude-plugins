@@ -1,0 +1,5 @@
+$ python3 -B /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/poc/compare_spent.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+no record: canvas-document-popup: implementation, validation (role_triggers 0,0)
+no record: ops-metric-event-protocol: implementation (role_triggers 0,3)
+tasks with a budget line: 62; same: 62; differ: 0
+exit 0

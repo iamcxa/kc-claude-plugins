@@ -1,0 +1,17 @@
+$ bash /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/poc/ask_smoke.sh /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py
+task: demo
+  ideation: 2026-11-12T05:00:00Z -> running  32.9 min (before gate 32.9, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+recorded ask 1 in /tmp/tt-ask-smoke.ZunO6Z/demo/asks.jsonl
+recorded ask 2 in /tmp/tt-ask-smoke.ZunO6Z/demo/asks.jsonl
+task: demo
+  ideation: 2026-11-12T05:00:00Z -> running  32.9 min (before gate 32.9, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+  done: -
+  asks outside a gate: 2; withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+asks_outside_gate == 2
+usage: task_timeline.py [-h] [--json] [--all] state [task] [{ask}] [text]
+task_timeline.py: error: ask needs the question text
+empty ask refused
+removed /tmp/tt-ask-smoke.ZunO6Z
+exit 0
