@@ -1,0 +1,29 @@
+....FF..
+======================================================================
+FAIL: test_cited_marked_controls_and_fences_need_no_new_mark (__main__.ScopeDisclosureTests.test_cited_marked_controls_and_fences_need_no_new_mark)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3371, in test_cited_marked_controls_and_fences_need_no_new_mark
+    self.assertEqual(code, 0, out)
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+Captain steps record fails: message S5: unrecorded command or link '已經開好的舊任務不會被要求補標。'
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+======================================================================
+FAIL: test_english_only_and_unchecked_citation_mutations_lose_the_warning (__main__.ScopeDisclosureTests.test_english_only_and_unchecked_citation_mutations_lose_the_warning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3410, in test_english_only_and_unchecked_citation_mutations_lose_the_warning
+    mutant = variant_of(old, new)
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them/kc-dev-flow-2/scripts/test_delivery_gate.py", line 439, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: path.is_file()
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.036s
+
+FAILED (failures=2)
