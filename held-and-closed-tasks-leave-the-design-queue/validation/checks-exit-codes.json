@@ -1,0 +1,20 @@
+{
+  "role_triggers": 0,
+  "lint": 0,
+  "adr_lint": 0,
+  "adr_lint_dispatch_path": 0,
+  "number_guards_fresh": 0,
+  "comment_ratio": 0,
+  "doc_impact": 0,
+  "design_surfaces": 0,
+  "dispatch_records": 0,
+  "unit_tests": 0,
+  "scratch_tests": 0,
+  "recheck": 0,
+  "legacy_native": 0,
+  "candidate_live": 0,
+  "originless_base": 2,
+  "originless_candidate": 2,
+  "captain_acceptance": 1,
+  "word_bound_counterexample": "expected exit 1"
+}

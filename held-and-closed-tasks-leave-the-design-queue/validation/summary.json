@@ -1,0 +1,28 @@
+{
+  "verdict": "REJECTED",
+  "candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "stack_base": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "acceptance": "AC-1 through AC-7 independently reproduced; NP-1/NP-2 and current fourteen-task NP-3 pass; small-count formula needs design disposition.",
+  "tests": {
+    "pytest_items": 164,
+    "file_items": {
+      "test_pr_watch.py": 155,
+      "test_scratch.py": 9
+    },
+    "failures": 0,
+    "scope": "two related files, not full package suite"
+  },
+  "behavior_mutations": 6,
+  "live_held_count": 14,
+  "live_valid_held_sections": 0,
+  "captain_script_expected_exit": 1,
+  "captain_script_actual_exit": 1,
+  "limitations": [
+    "NP-4 body edits belong to FO after delivery; copy-only projection passes and preserves frontmatter.",
+    "NP-5 default upstream status table remains unchanged by approved scope.",
+    "Origin-less full copy tasks commands exit 2 in both base and candidate because inherited scratch scan needs origin. Normal real-workflow candidate command exits 0.",
+    "AC-5 first copies lacked commit objects; rerun with read-only source object alternate reached not-applicable refusal. No live task mutated.",
+    "No CI configuration change; CI cost not measured.",
+    "No private repository content was read or retained; all fixture tasks come from this public state branch."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "held": 14,
+  "added_words": 32,
+  "bound": 48,
+  "base_output_words": 1369,
+  "projected_output_words": 1401,
+  "base_exit": 2,
+  "candidate_exit": 2,
+  "inherited_origin_requirement": true,
+  "projection_only": true,
+  "no_held_next_line": true,
+  "other_output_equal_after_path_normalization": false
+}

@@ -1,0 +1,27 @@
+{
+  "AC-3": {
+    "exit": 0,
+    "words": 1353,
+    "held_names": 0,
+    "falsifier_fails": true
+  },
+  "NP-1": {
+    "exit": 0,
+    "lines": 1,
+    "held": 14,
+    "each_once": true,
+    "words": 32
+  },
+  "test_counts": {
+    "unit-tests": {
+      "junit_cases": 155,
+      "failures": 0,
+      "errors": 0
+    },
+    "scratch-tests": {
+      "junit_cases": 9,
+      "failures": 0,
+      "errors": 0
+    }
+  }
+}

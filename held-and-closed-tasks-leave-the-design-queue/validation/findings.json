@@ -1,0 +1,23 @@
+[
+  {
+    "severity": "medium",
+    "title": "The per-task word bound conflicts with the approved line at small held-task counts",
+    "file": "kc-dev-flow-2/scripts/pr_watch.py",
+    "line": 476,
+    "detail": "Needs decision; kind: design. A First Officer using the supported startup/idle tasks command with one held task reads 17 added words, against amendment 2 maximum 3*1+6=9. Current fourteen tasks pass 32/48. The approved instruction also says the program does not change, so validation cannot choose new wording or restrict the formula to the current dataset. This is a design-bound conflict, not a demonstrated held-task classification failure.",
+    "fix": "FO disposition is required: decide whether amendment 2 is a current-dataset measurement or a bound across supported held-task counts; any scope or wording change follows the existing amendment/feedback route.",
+    "status": "open",
+    "classification": "Needs decision",
+    "kind": "design",
+    "released_user_and_workflow": "FO startup and idle use pr_watch.py tasks; the accepted design explicitly considers a sibling adopter with one held task.",
+    "observable_harm": "One-task line is eight words over the stated nine-word maximum; two and three tasks also exceed the formula.",
+    "boundary": "captain-ruling[2026-11-12] amendment 2: every held task permits three added words plus six fixed words.",
+    "trigger_evidence": [
+      "captain-acceptance.log",
+      "captain-check.py",
+      "one-held.log",
+      "word-scaling.json"
+    ],
+    "verdict_effect": "REJECTED pending FO disposition; do not silently repair or broaden the bound."
+  }
+]

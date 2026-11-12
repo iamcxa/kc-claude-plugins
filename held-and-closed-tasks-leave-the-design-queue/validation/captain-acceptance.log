@@ -1,0 +1,7 @@
+EXPORT 455846c6d30d4ab650c1c4503bc591722231586d /tmp/validate-held-closed-c1vpl62a/captain-final
+NATIVE INPUTS 14 held tasks and one-task subset
+...........                                         [100%]
+11 passed, 144 deselected in 8.00s
+CURRENT held=14 words=32 maximum=48 result=PASS
+ONE held=1 words=17 maximum=9 result=FAIL
+Current dataset passes; the same formula fails for a workflow with one held task.

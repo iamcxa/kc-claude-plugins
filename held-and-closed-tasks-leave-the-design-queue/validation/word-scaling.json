@@ -1,0 +1,38 @@
+[
+  {
+    "held": 1,
+    "words": 17,
+    "bound": 9,
+    "within": false
+  },
+  {
+    "held": 2,
+    "words": 18,
+    "bound": 12,
+    "within": false
+  },
+  {
+    "held": 5,
+    "words": 21,
+    "bound": 21,
+    "within": true
+  },
+  {
+    "held": 6,
+    "words": 22,
+    "bound": 24,
+    "within": true
+  },
+  {
+    "held": 10,
+    "words": 26,
+    "bound": 36,
+    "within": true
+  },
+  {
+    "held": 14,
+    "words": 30,
+    "bound": 48,
+    "within": true
+  }
+]

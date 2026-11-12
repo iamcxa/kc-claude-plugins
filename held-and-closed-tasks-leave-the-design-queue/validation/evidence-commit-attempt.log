@@ -1,0 +1,4 @@
+spacedock state commit: git commit failed:
+git commit failed:
+fatal: Unable to create '/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/-spacedock-state3/index.lock': Operation not permitted
+

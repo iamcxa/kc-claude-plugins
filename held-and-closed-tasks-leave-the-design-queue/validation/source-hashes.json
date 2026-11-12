@@ -1,0 +1,5 @@
+{
+  "kc-dev-flow-2/scripts/pr_watch.py": "a7cd0741e604248dd31e33e39cd8d1a675a2d5fb520d3bcea915a243d1ceee1a",
+  "kc-dev-flow-2/scripts/test_pr_watch.py": "8250592f9b20e9e88a2e9e6a97cf5c6ea848d65d9e584c6227c7edf4ed0690d3",
+  "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde"
+}
