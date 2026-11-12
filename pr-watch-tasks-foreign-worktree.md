@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:pr-watch-tasks-foreign-worktree:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:pr-watch-tasks-foreign-worktree-validation-1
+              briefing:
+                id: briefing:pr-watch-tasks-foreign-worktree:validation:attempt-1:revision-1
+                digest: sha256:2ee9ab7e0bac1d5d8f8943322196b1b371bec413bf695fd5479ed2e343d49acb
+                room-ref: ./pr-watch-tasks-foreign-worktree/review/validation/briefing-1
 started: 2026-11-12T17:03:02Z
 worktree: .worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree
 pr: iamcxa/kc-claude-plugins#858

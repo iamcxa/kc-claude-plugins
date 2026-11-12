@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-watch-tasks-foreign-worktree:validation:attempt-1:revision-1",
+  "question": "決定：合併 #858（閒置檢查不再叫我替「工作目錄不在這台機器上的任務」登記 PR，改成只列出事實）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；另外兩句同一天看到的不當提示不在這次範圍；未合併的 #854、#856 也改同兩個檔，它們之後要在合併後的主線上重跑監看測試；只有 Codex 審過，第二審查者未觸發。 Squash merge with --match-head-commit e1fbb6ee5abbd7cefd67f57493ab1481a04ed073, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:pr-watch-tasks-foreign-worktree:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/726f12c79ae45e7516271898ec65fca1a2fe2dd3/pr-watch-tasks-foreign-worktree.md",
+      "rev": "sha256:41d1b8dc85fa7c7d2574d480a1341e6140635a37d5fcb07a925df5abdee9642a",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of pr-watch-tasks-foreign-worktree, PR #858, route trial of 2026-11-13.\nSufficiency: a task whose stamped worktree is absent from this machine produces fact lines and no next: line telling FO to record a PR; the base still prints the unsafe line (validation report, Astra, 2026-11-13, PASSED at e1fbb6ee5; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py change against the PR's base (gh pr view 858 file list, FO read 2026-11-13; judged in the validation report, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: bash --noprofile --norc \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/validation/accept.sh\"\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 858 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: origin/main is 8125e6d51, the commit this PR's branch was cut from, so no merge-result run is owed (git merge-base, FO run 2026-11-13).\nExternal rounds: 1.\nExternal round sources: Codex code review of e1fbb6ee5 completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6831718330@e1fbb6ee5).\nSecond reviewer: not triggered.\nRoboRev: clean on e1fbb6ee5, evidence=roborev:1806 (FO run 2026-11-13).\nCI: six checks on e1fbb6ee5 finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 1. PASSED at e1fbb6ee5 with one Deferred risk finding.\nCaptain amendments: 0.\nFO declines F1 Deferred risk at e1fbb6ee5: open PRs 854 and 856 edit the same two watcher files (validation/overlap-prs.json records it; the validator observed no failing workflow on this head)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:pr-watch-tasks-foreign-worktree:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/726f12c79ae45e7516271898ec65fca1a2fe2dd3/pr-watch-tasks-foreign-worktree/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:d3fd6c0e43538939c03bc0fa00c4ae28595c4b5c5de2d650745b23bbed887db4"
+    }
+  ]
+}
