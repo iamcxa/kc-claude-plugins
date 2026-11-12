@@ -88,5 +88,21 @@
       "number,headRefOid,baseRefName,isDraft,state,url,statusCheckRollup"
     ],
     "exit": 1
+  },
+  {
+    "name": "number-guards-fresh-ref-rerun",
+    "exit": 0,
+    "evidence": "number-guards-live.log"
+  },
+  {
+    "name": "pr-read-only-network-rerun",
+    "exit": 0,
+    "evidence": "pr-live.json"
+  },
+  {
+    "name": "captain-fresh-bash",
+    "exit": 1,
+    "expected": "rejected: private-repository instruction missing",
+    "evidence": "captain-run.log"
   }
 ]

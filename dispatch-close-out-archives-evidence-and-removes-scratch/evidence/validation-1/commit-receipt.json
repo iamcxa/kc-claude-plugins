@@ -1,0 +1,10 @@
+{
+  "evidence_commit": "9fa621f38e1bfcac03a02087964e3efcde7a7282",
+  "remote_ref_at_verification": "9fa621f38e1bfcac03a02087964e3efcde7a7282",
+  "commit_path_count": 111,
+  "all_changed_paths_belong_to_this_task": true,
+  "committed_manifest_entries_verified": 109,
+  "remote_gzip_restored_sha256": "24d5d3316b285aca4517f4aa04afd03011ec0296c28fbc2114a0bbf5a6331faf",
+  "sandbox_commit_attempt": "index.lock Operation not permitted; same prescribed command succeeded with required filesystem permission",
+  "product_branch_unchanged": true
+}
