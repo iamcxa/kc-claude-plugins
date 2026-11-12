@@ -49,6 +49,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-12T17:02:31Z
+worktree: .worktrees/spacedock-ensign-design-surfaces-task-dir-crash
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer (found by its implementation worker on 2026-10-13); the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?").
