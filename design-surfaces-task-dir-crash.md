@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:design-surfaces-task-dir-crash:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:design-surfaces-task-dir-crash-ideation-1
+              briefing:
+                id: briefing:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1
+                digest: sha256:2aa4f9eb5475c38ea806ef0f581c444f1a3729a30bc432f11c9e5c233d8be22e
+                room-ref: ./design-surfaces-task-dir-crash/review/ideation/briefing-1
 started: 2026-11-12T17:02:31Z
 ---
 

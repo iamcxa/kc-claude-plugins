@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1",
+  "question": "Design gate decided by FO under the Captain's standing grant for the route trial; the question he answered was: 獨立審查說原本的合約不能直接跑，我已照它修正（設計關卡保留、Prod 不動、每張最多 3 輪實作）。要不要用下面五張小任務開始試跑，並授權我在第一輪沒踩到停止條件時，代你記錄設計關卡通過？五張：①做新東西前先查既有的（你的首要方向，預期第一輪後會停下來問你）②設計檢查腳本遇到同名資料夾會當掉 ③合併檢查不該要求已刪除的暫存路徑 ④沒啟用學習擴充的專案不該被叫去跑學習 ⑤PR 監看不該對別台機器的任務提示。預算每張：1 implementation and 2 validation cycles。",
+  "artifacts": [
+    {
+      "id": "artifact:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b30a8f74cb1bf1079ac055666a97fba900be351b/design-surfaces-task-dir-crash.md",
+      "rev": "sha256:08492cb7e3543ceac0f2561c729b9c552d6a692d8ca3eabeee9e6571c0cb85b1",
+      "mediaType": "text/markdown",
+      "summary": "Round 1 fired no stop condition (worker's Trial round 1 line: none; Unresolved Captain decisions: none within the admitted Scope and budget). design_surfaces.py check exit 0 (FO run 2026-11-13). The probe on local branch poc/design-surfaces-task-dir-crash at 54424755e reproduces the crash on base 8125e6d51 and matches the explicit .md run; four criteria ran on the probe. One behaviour change inside Scope's 'or fail with a usage message': an unresolved argument exits 2 where a missing seed file exited 1."
+    }
+  ]
+}
