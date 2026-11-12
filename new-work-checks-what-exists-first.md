@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-12T17:03:29Z
+worktree: .worktrees/spacedock-ensign-new-work-checks-what-exists-first
 ---
 
 ## Scope
