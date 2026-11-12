@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:new-work-checks-what-exists-first:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:new-work-checks-what-exists-first-backlog-1
+              briefing:
+                id: briefing:new-work-checks-what-exists-first:backlog:attempt-1:revision-1
+                digest: sha256:2e8a099d1f558a47191b650c77499eb8616e1f95913e5dc1583173f0a7da57a9
+                room-ref: ./new-work-checks-what-exists-first/review/backlog/briefing-1
 ---
 
 ## Scope

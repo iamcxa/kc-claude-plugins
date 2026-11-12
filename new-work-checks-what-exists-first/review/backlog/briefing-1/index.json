@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:new-work-checks-what-exists-first:backlog:attempt-1:revision-1",
+  "question": "獨立審查說原本的合約不能直接跑，我已照它修正（設計關卡保留、Prod 不動、每張最多 3 輪實作）。要不要用下面五張小任務開始試跑，並授權我在第一輪沒踩到停止條件時，代你記錄設計關卡通過？五張：①做新東西前先查既有的（你的首要方向，預期第一輪後會停下來問你）②設計檢查腳本遇到同名資料夾會當掉 ③合併檢查不該要求已刪除的暫存路徑 ④沒啟用學習擴充的專案不該被叫去跑學習 ⑤PR 監看不該對別台機器的任務提示。預算每張：1 implementation and 2 validation cycles。",
+  "artifacts": [
+    {
+      "id": "artifact:new-work-checks-what-exists-first:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/353e835dd199fe02e0c1dc174be95cb75da79080/new-work-checks-what-exists-first.md",
+      "rev": "sha256:263514fb0cdbde9869d10952e085cd2fc3fa063ebc6a1eb6a9cba552911d0b84",
+      "mediaType": "text/markdown",
+      "summary": "profile pilot, variant kc-dev-flow-2; Budget: 1 implementation and 2 validation cycles, in one package PR; Surfaces none; scope, non-goals and stop condition as seeded in the task file; ideation owes a working probe on a local branch, the design, and criteria whose proofs ran."
+    }
+  ]
+}
