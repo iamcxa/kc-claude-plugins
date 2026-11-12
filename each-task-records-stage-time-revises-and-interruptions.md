@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-12T05:16:44Z
+worktree: .worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions
 ---
 
 ## Scope
