@@ -410,3 +410,4 @@ Implementation limits remain: original self-replay was unblinded; private counts
 Evidence is sealed before exact owned-scratch cleanup; cleanup receipt follows after the evidence commit.
 
 
+Post-commit cleanup after evidence commit 1885ad42361d40092c3e91cb65252e43694611fb (pushed): removed exactly /tmp/validate-new-work-cycle2-20261113-022341 and /tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md after checking the shared pointer still matched this replay. Both are absent (validation-2/scratch-cleanup.json). The acceptance script auto-removed its two separate exports by its exact resolved EXIT-trap path; those names were not logged. Automatic publication review first refused potential private data and then private input metadata; counts-only provenance was audited and all private input locators removed before the approved state push (validation-2/redaction-receipt.json, privacy-final.json).
