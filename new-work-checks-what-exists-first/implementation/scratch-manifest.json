@@ -1,0 +1,12 @@
+{
+  "root": "/private/tmp/impl-new-work-checks-what-exists-first-round2",
+  "generated_dispatch_files": [
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md",
+      "sha256": "2d3e435189d3d654938f007f1be96ddea84b4c45d74459a2519f9c5a985db4a3"
+    }
+  ],
+  "keep_pr_text": "/tmp/impl-new-work-checks-what-exists-first-pr.md",
+  "keep_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+  "keep_probe_worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-new-work-checks-what-exists-first"
+}

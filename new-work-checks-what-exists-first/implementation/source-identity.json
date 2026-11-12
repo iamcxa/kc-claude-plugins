@@ -1,0 +1,23 @@
+{
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "changed_files": [
+    "docs/adr/0083-workers-check-the-existing-chain-before-new-work.md",
+    "kc-dev-flow-2/skills/ideation/principles.md",
+    "kc-dev-flow-2/skills/implementation/principles.md"
+  ],
+  "probe_harness_in_candidate": false,
+  "principles": [
+    {
+      "path": "kc-dev-flow-2/skills/ideation/principles.md",
+      "identical_to_probe_product": true,
+      "sha256": "229e84c417fae974e719c83b50ad33279074c744288b27678c517deae6b2127f"
+    },
+    {
+      "path": "kc-dev-flow-2/skills/implementation/principles.md",
+      "identical_to_probe_product": true,
+      "sha256": "03f168d23bf0951380301442b471a0997c622127fd0f5a5b7d5d8e440f2fb63d"
+    }
+  ],
+  "worktree_clean": true
+}

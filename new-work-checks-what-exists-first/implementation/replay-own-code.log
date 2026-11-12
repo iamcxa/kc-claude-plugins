@@ -1,0 +1,5 @@
+HEAD:kc-dev-flow-2/scripts/design_surfaces.py:932:def task_path(task):
+HEAD:kc-dev-flow-2/scripts/design_surfaces.py:953:def scope_hold(task):
+HEAD:kc-dev-flow-2/scripts/design_surfaces.py:1144:def check_task(path, seed=False, notes=None):
+HEAD:kc-dev-flow-2/scripts/design_surfaces.py:1233:    path = Path(args.task)
+HEAD:kc-dev-flow-2/scripts/design_surfaces.py:1236:    verdict, why = ("clean", "") if args.seed else scope_hold(path)

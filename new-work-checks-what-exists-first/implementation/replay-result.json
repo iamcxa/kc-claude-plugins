@@ -1,0 +1,30 @@
+{
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "kind": "same-worker observation, not independent behavior proof",
+  "events": [
+    {
+      "kind": "checked_found",
+      "at": "2026-11-12T17:44:53.726284+00:00",
+      "own_repository": true,
+      "primary_tool_contract": true,
+      "sibling_counts_only": true,
+      "governing_adrs": [
+        "0083",
+        "0037",
+        "0041",
+        "0057",
+        "0077"
+      ],
+      "required_inaccessible": [],
+      "disclosed_inaccessible": [],
+      "reused_sibling_check": "ideation/adopter-counts.json"
+    },
+    {
+      "kind": "proposal",
+      "at": "2026-11-12T17:45:18.550280+00:00",
+      "integration": "extend existing checker",
+      "replaces_existing_checker": false
+    }
+  ],
+  "supplementary_census_ran_after_proposal": true
+}

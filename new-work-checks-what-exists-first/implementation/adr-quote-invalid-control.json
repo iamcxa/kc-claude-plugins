@@ -1,0 +1,5 @@
+{
+  "quoted_text_present_verbatim_in_task": false,
+  "exit": 1,
+  "note": "Pre-commit quote check caught an extra character; corrected before the candidate commit."
+}

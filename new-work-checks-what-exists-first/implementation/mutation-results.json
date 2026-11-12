@@ -1,0 +1,421 @@
+[
+  {
+    "name": "AC1-positive-routing",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "routing",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC1-positive-routing.log"
+  },
+  {
+    "name": "AC1-unlinked-ideation",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "routing",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC1-unlinked-ideation.log"
+  },
+  {
+    "name": "AC1-missing-general-home",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "routing",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC1-missing-general-home.log"
+  },
+  {
+    "name": "AC1-deeper-audit-altered",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "routing",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC1-deeper-audit-altered.log"
+  },
+  {
+    "name": "AC2-positive-observation",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "replay",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC2-positive-observation.json"
+    ],
+    "output": "mutation-output/AC2-positive-observation.log"
+  },
+  {
+    "name": "AC2-proposal-before-findings",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "replay",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC2-proposal-before-findings.json"
+    ],
+    "output": "mutation-output/AC2-proposal-before-findings.log"
+  },
+  {
+    "name": "AC2-sibling-as-contract",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "replay",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC2-sibling-as-contract.json"
+    ],
+    "output": "mutation-output/AC2-sibling-as-contract.log"
+  },
+  {
+    "name": "AC2-undisclosed-inaccessible-source",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "replay",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC2-undisclosed-inaccessible-source.json"
+    ],
+    "output": "mutation-output/AC2-undisclosed-inaccessible-source.log"
+  },
+  {
+    "name": "AC3-positive-public-schema",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "counts",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC3-positive-public-schema.json",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/adopter-counts.json"
+    ],
+    "output": "mutation-output/AC3-positive-public-schema.log"
+  },
+  {
+    "name": "AC3-raw-private-field",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "counts",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC3-raw-private-field.json",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/adopter-counts.json"
+    ],
+    "output": "mutation-output/AC3-raw-private-field.log"
+  },
+  {
+    "name": "AC3-empty-local-state-as-absence",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/evidence_guard.py",
+      "counts",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/AC3-empty-local-state-as-absence.json",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/adopter-counts.json"
+    ],
+    "output": "mutation-output/AC3-empty-local-state-as-absence.log"
+  },
+  {
+    "name": "AC3-positive-input-fingerprint",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/input_guard.py",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/readonly-source.txt",
+      "efbe4c73c50e86f71908eb5caa9af9557b93d112f0cc61c111bd39acf010d11d"
+    ],
+    "output": "mutation-output/AC3-positive-input-fingerprint.log"
+  },
+  {
+    "name": "AC3-mutated-input",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/input_guard.py",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/readonly-source.txt",
+      "efbe4c73c50e86f71908eb5caa9af9557b93d112f0cc61c111bd39acf010d11d"
+    ],
+    "output": "mutation-output/AC3-mutated-input.log"
+  },
+  {
+    "name": "AC4-positive-product-scope",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "scope",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC4-positive-product-scope.log"
+  },
+  {
+    "name": "AC4-extra-package-file",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "scope",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC4-extra-package-file.log"
+  },
+  {
+    "name": "AC4-positive-reading-disclosure",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "cost_guard",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--expected",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/reading-cost.json"
+    ],
+    "output": "mutation-output/AC4-positive-reading-disclosure.log"
+  },
+  {
+    "name": "AC4-changed-FO-source",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "cost_guard",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--expected",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/reading-cost.json"
+    ],
+    "output": "mutation-output/AC4-changed-FO-source.log"
+  },
+  {
+    "name": "AC4-hidden-worker-text",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "cost_guard",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--expected",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/implementation/reading-cost.json"
+    ],
+    "output": "mutation-output/AC4-hidden-worker-text.log"
+  },
+  {
+    "name": "AC5-positive-lint",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "output": "mutation-output/AC5-positive-lint.log"
+  },
+  {
+    "name": "AC5-broken-link",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/working_probe.py",
+      "routing",
+      "--repo",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source",
+      "--base",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "output": "mutation-output/AC5-broken-link.log"
+  },
+  {
+    "name": "AC5-broken-profile-route",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "output": "mutation-output/AC5-broken-profile-route.log"
+  },
+  {
+    "name": "AC5-positive-design-copy",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/evidence-task.md"
+    ],
+    "output": "mutation-output/AC5-positive-design-copy.log"
+  },
+  {
+    "name": "AC5-unusable-AC-grammar",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/evidence-task.md"
+    ],
+    "output": "mutation-output/AC5-unusable-AC-grammar.log"
+  },
+  {
+    "name": "AC5-positive-POC-graph",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/poc_guard.py",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/scripts",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "output": "mutation-output/AC5-positive-POC-graph.log"
+  },
+  {
+    "name": "AC5-POC-gains-ideation",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/poc_guard.py",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/scripts",
+      "/tmp/impl-new-work-checks-what-exists-first-round2/code-source/kc-dev-flow-2/references/sd/workflow.md"
+    ],
+    "output": "mutation-output/AC5-POC-gains-ideation.log"
+  },
+  {
+    "name": "AC5-positive-required-ADR",
+    "status": "passed",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--require",
+      "0083"
+    ],
+    "output": "mutation-output/AC5-positive-required-ADR.log"
+  },
+  {
+    "name": "AC5-required-check-fails",
+    "status": "passed",
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "--require",
+      "0083"
+    ],
+    "output": "mutation-output/AC5-required-check-fails.log"
+  }
+]

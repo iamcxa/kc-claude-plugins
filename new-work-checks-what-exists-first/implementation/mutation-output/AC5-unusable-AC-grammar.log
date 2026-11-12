@@ -1,0 +1,2 @@
+evidence-task.md: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)
+scope check not run: stage is implementation, not ideation

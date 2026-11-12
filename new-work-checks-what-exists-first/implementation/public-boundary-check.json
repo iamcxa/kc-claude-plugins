@@ -1,0 +1,4 @@
+{
+  "private_source_root_matches": 0,
+  "limit": "String/schema checks and controlled fixture mutations do not prove general semantic privacy or model compliance. Real source exports contain ordinal/count fields only."
+}

@@ -1,0 +1,12 @@
+{
+  "frozen_trial_probe_commit": "dd35c47ff2e7b00b167715f2b1816d34b8cc84fb",
+  "frozen_trial_probe_path": "probe/new_work_check.py",
+  "helpers_saved_before_cleanup": [
+    "new_work_check.py",
+    "working_probe.py",
+    "evidence_guard.py",
+    "input_guard.py",
+    "poc_guard.py"
+  ],
+  "reproduction": "Use the recorded commands with an independent temporary clone and scratch paths; the public helpers are evidence only and are not in the product branch. Private census roots require authorised access and are redacted."
+}

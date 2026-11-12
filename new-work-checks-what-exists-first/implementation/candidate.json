@@ -1,0 +1,9 @@
+{
+  "branch": "spacedock-ensign/new-work-checks-what-exists-first",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "candidate": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-new-work-checks-what-exists-first",
+  "product_text_source": "43fcbb679e983650bea174ba2355c499851c5822",
+  "probe_harness_source": "dd35c47ff2e7b00b167715f2b1816d34b8cc84fb",
+  "scratch": "/tmp/impl-new-work-checks-what-exists-first-round2"
+}

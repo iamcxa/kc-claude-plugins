@@ -1,0 +1,137 @@
+[
+  {
+    "name": "AC1-positive-routing",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC1-positive-routing.log"
+  },
+  {
+    "name": "AC1-unlinked-ideation",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC1-unlinked-ideation.log"
+  },
+  {
+    "name": "AC1-missing-general-home",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC1-missing-general-home.log"
+  },
+  {
+    "name": "AC1-deeper-audit-altered",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC1-deeper-audit-altered.log"
+  },
+  {
+    "name": "AC2-positive-observation",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC2-positive-observation.log"
+  },
+  {
+    "name": "AC2-proposal-before-findings",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC2-proposal-before-findings.log"
+  },
+  {
+    "name": "AC2-sibling-as-contract",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC2-sibling-as-contract.log"
+  },
+  {
+    "name": "AC2-undisclosed-inaccessible-source",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC2-undisclosed-inaccessible-source.log"
+  },
+  {
+    "name": "AC3-positive-public-schema",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC3-positive-public-schema.log"
+  },
+  {
+    "name": "AC3-raw-private-field",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC3-raw-private-field.log"
+  },
+  {
+    "name": "AC3-empty-local-state-as-absence",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC3-empty-local-state-as-absence.log"
+  },
+  {
+    "name": "AC3-positive-input-fingerprint",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC3-positive-input-fingerprint.log"
+  },
+  {
+    "name": "AC3-mutated-input",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC3-mutated-input.log"
+  },
+  {
+    "name": "AC4-positive-product-scope",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC4-positive-product-scope.log"
+  },
+  {
+    "name": "AC4-extra-package-file",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC4-extra-package-file.log"
+  },
+  {
+    "name": "AC4-positive-reading-disclosure",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC4-positive-reading-disclosure.log"
+  },
+  {
+    "name": "AC4-changed-FO-source",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC4-changed-FO-source.log"
+  },
+  {
+    "name": "AC4-hidden-worker-text",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC4-hidden-worker-text.log"
+  },
+  {
+    "name": "AC5-positive-lint",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC5-positive-lint.log"
+  },
+  {
+    "name": "AC5-broken-link",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC5-broken-link.log"
+  },
+  {
+    "name": "AC5-broken-profile-route",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC5-broken-profile-route.log"
+  },
+  {
+    "name": "AC5-positive-design-copy",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC5-positive-design-copy.log"
+  },
+  {
+    "name": "AC5-unusable-AC-grammar",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC5-unusable-AC-grammar.log"
+  },
+  {
+    "name": "AC5-positive-POC-graph",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC5-positive-POC-graph.log"
+  },
+  {
+    "name": "AC5-POC-gains-ideation",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC5-POC-gains-ideation.log"
+  },
+  {
+    "name": "AC5-positive-required-ADR",
+    "status": "passed",
+    "message": "expected exit 0; observed 0; mutation-output/AC5-positive-required-ADR.log"
+  },
+  {
+    "name": "AC5-required-check-fails",
+    "status": "passed",
+    "message": "expected exit 1; observed 1; mutation-output/AC5-required-check-fails.log"
+  }
+]
