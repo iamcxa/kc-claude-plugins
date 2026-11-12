@@ -15,3 +15,18 @@ Filed on the Captain's 「開」 (chat, 2026-10-16), after FO's first run of the
 - Candidate fix: a task whose worktree is not on this machine is listed as a fact line, not a `next:` action; a test with such a task.
 - Should land before subspace-relay syncs to the mod.
 - Also seen 2026-10-16 on the same run: `next: run spacedock state commit amendment-form-check` while that task's implementation worker was still writing its report (the worker owns that commit), and `next: mark #649 ready if Delivery authority allows` before its validation had run. Both are `next:` lines an FO must not follow at that moment; whether they become facts too is for ideation.
+- Non-goals: to be set at ideation.
+- Trial (2026-11-13): admitted by the Captain's 「五張都准，授權代記設計關卡（建議）」 (host question dialog, 2026-11-13) as one of five tasks run by hand under the trial route rules: one worker builds a working probe during ideation and continues into implementation, a different worker validates, at most 3 build rounds counted by hand; stop for the Captain on an overturned premise, spent budget, two rounds without progress or a second validation rejection, a change of scope or criterion, or a component boundary or Prod trigger.
+
+## Budget
+1 implementation and 2 validation cycles, in one package PR.
+
+## Stop condition
+- A task whose worktree is not on this machine produces no `next:` line telling FO to record a PR; a test covers such a task. The two other `next:` lines seen on 2026-10-16 are decided in the design, not assumed in scope.
+
+## FO alignment
+
+Alignment: not needed before ideation: one observed defect with a candidate fix; the Captain filed it.
+Surfaces: none
+Visible change: none
+Release review: not needed: workflow maintenance, on no journey map.
