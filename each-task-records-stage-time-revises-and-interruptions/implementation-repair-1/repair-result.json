@@ -1,0 +1,16 @@
+{
+  "name": "repeated-stage post-gate attribution",
+  "before": {
+    "before_gate_min": 71.1,
+    "captain_wait_min": 8.6,
+    "after_gate_min": 7.1
+  },
+  "after": {
+    "before_gate_min": 47.9,
+    "captain_wait_min": 8.6,
+    "after_gate_min": 30.3
+  },
+  "corrected_minutes": 23.2,
+  "regression_failed_before": true,
+  "validator_probe_passed_after": true
+}

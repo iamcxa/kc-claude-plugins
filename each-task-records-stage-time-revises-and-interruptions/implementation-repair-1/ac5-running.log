@@ -1,0 +1,92 @@
+{
+ "task": "each-task-records-stage-time-revises-and-interruptions",
+ "stages": [
+  {
+   "stage": "backlog",
+   "start": "2026-11-12T04:58:47Z",
+   "end": "2026-11-12T05:15:39Z",
+   "elapsed_min": 16.9,
+   "before_gate_min": 0.0,
+   "captain_wait_min": 16.4,
+   "after_gate_min": 0.5,
+   "dispatches": 0,
+   "repeat_dispatches": 0,
+   "dispatch_records": 0,
+   "gate_attempts": [
+    {
+     "attempt": 1,
+     "opened": "2026-11-12T04:58:47Z",
+     "closed": "2026-11-12T05:11:35Z",
+     "outcome": "withdrawn"
+    },
+    {
+     "attempt": 2,
+     "opened": "2026-11-12T05:12:02Z",
+     "closed": "2026-11-12T05:15:39Z",
+     "outcome": "approve"
+    }
+   ],
+   "asks": [],
+   "asks_outside_gate": null
+  },
+  {
+   "stage": "ideation",
+   "start": "2026-11-12T05:16:44Z",
+   "end": "2026-11-12T09:25:18Z",
+   "elapsed_min": 248.6,
+   "before_gate_min": 234.3,
+   "captain_wait_min": 12.7,
+   "after_gate_min": 1.6,
+   "dispatches": 1,
+   "repeat_dispatches": 0,
+   "dispatch_records": 1,
+   "gate_attempts": [
+    {
+     "attempt": 1,
+     "opened": "2026-11-12T09:10:59Z",
+     "closed": "2026-11-12T09:23:41Z",
+     "outcome": "approve"
+    }
+   ],
+   "asks": [],
+   "asks_outside_gate": null
+  },
+  {
+   "stage": "implementation",
+   "start": "2026-11-12T09:25:18Z",
+   "end": "2026-11-12T09:42:21Z",
+   "elapsed_min": 17.1,
+   "before_gate_min": 17.1,
+   "captain_wait_min": 0,
+   "after_gate_min": 0.0,
+   "dispatches": 1,
+   "repeat_dispatches": 0,
+   "dispatch_records": 1,
+   "gate_attempts": [],
+   "asks": [],
+   "asks_outside_gate": null
+  },
+  {
+   "stage": "validation",
+   "start": "2026-11-12T09:42:21Z",
+   "end": null,
+   "elapsed_min": 50.7,
+   "before_gate_min": 50.7,
+   "captain_wait_min": 0,
+   "after_gate_min": 0.0,
+   "dispatches": 1,
+   "repeat_dispatches": 0,
+   "dispatch_records": 1,
+   "gate_attempts": [],
+   "asks": [],
+   "asks_outside_gate": null
+  }
+ ],
+ "done": null,
+ "withdrawn_gate_attempts": 1,
+ "gate_revise_decisions": 0,
+ "stages_without_start": [],
+ "unassigned_asks": [],
+ "amendments_outside_gate": 1,
+ "asks_outside_gate": null
+}

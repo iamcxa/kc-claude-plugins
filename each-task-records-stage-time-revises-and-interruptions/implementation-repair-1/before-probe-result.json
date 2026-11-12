@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation/probe_repeated_stage.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions"
+  ],
+  "exit": 1,
+  "expected_exit": 1
+}

@@ -1,0 +1,287 @@
+[
+  {
+    "name": "ac1-finished",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "worth-questions-asked-only-before-the-design-gate",
+      "--json"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac1-human",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "worth-questions-asked-only-before-the-design-gate"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac1-hand-log",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "log",
+      "--reverse",
+      "--format=%aI %s",
+      "--",
+      "worth-questions-asked-only-before-the-design-gate.md",
+      "worth-questions-asked-only-before-the-design-gate",
+      "_archive/worth-questions-asked-only-before-the-design-gate.md",
+      "_archive/worth-questions-asked-only-before-the-design-gate"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac2-compare-spent",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/poc/compare_spent.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac3-ask-smoke",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/poc/ask_smoke.sh",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac4-sweep",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--all"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ac5-running",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/task_timeline.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "each-task-records-stage-time-revises-and-interruptions",
+      "--json"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac1-no-archive",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_finished_boundaries_use_author_dates_even_after_rebase"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac1-committer-time",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_finished_boundaries_use_author_dates_even_after_rebase"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac2-count-files",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_repeat_without_entering_uses_highest_record_number_and_excludes_messages"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac3-ignore-asks",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_ask_cli_appends_utc_questions_and_rejects_empty_without_write"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac4-unreadable-history",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_folder_form_archived_task_is_in_sweep"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ac5-zero-running-time",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_running_stage_minutes_reach_now"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-gate-only-before",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_gate_only_stage_has_no_before_gate_minutes"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-ask-wrong-stage",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-sweep-ignore-folders",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_folder_form_archived_task_is_in_sweep"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "mutation-repeated-stage-last-gate-only",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "-m",
+      "unittest",
+      "test_task_timeline.TimelineTests.test_repeated_stage_preserves_each_cycles_after_gate_time"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "matched": true
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "lint-tests",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "ledger-tests",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "role-tests",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-each-task-records-stage-time-revises-and-interruptions/kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions.md"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "matched": true
+  }
+]

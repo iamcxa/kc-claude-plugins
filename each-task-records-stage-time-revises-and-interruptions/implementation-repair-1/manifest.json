@@ -1,0 +1,16 @@
+{
+  "start": "2026-11-12T18:29:20+08:00",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "repair_parent": "a3266ec91c7d46d36864c471c0cc26b389130b3c",
+  "candidate": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+  "branch": "spacedock-ensign/each-task-records-stage-time-revises-and-interruptions",
+  "product_pushed_by_worker": false,
+  "files": {
+    "kc-dev-flow-2/scripts/task_timeline.py": "595c4786041225cb7ec0fe468fe276d6d5c777e8c7f2a102263d1b200f7eecbd",
+    "kc-dev-flow-2/scripts/test_task_timeline.py": "3080471c3a7b6bfd12a64bff2bf3903d6f4a5c131861d159b0ae26888aeba59b"
+  },
+  "validator_sources": {
+    "probe_repeated_stage.py": "ab3bc63a9ef344f870712b8115bfd50aca4030e729548580842ab9edbcd92065",
+    "real-cycle-split.json": "aea00d33a19e9d1ce565cf76e5462edf654a828019cb6f5196d7971da569d475"
+  }
+}

@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage (test_task_timeline.TimelineTests.test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-stage-timing-repair-8fcbee7d/mutant/test_task_timeline.py", line 199, in test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage
+    self.assertEqual([r["asks_outside_gate"] for r in result["stages"]], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [0, 0] != [1, 1]
+
+First differing element 0:
+0
+1
+
+- [0, 0]
++ [1, 1]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.115s
+
+FAILED (failures=1)

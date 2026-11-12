@@ -1,0 +1,7 @@
+{
+  "remove_after_evidence_commit": [
+    "/tmp/impl-stage-timing-repair-8fcbee7d",
+    "/tmp/tt-ask-smoke.SWueHI"
+  ],
+  "note": "ask-smoke already removed by EXIT trap; all other fixture/mutant scratch is inside the exact dispatch root"
+}

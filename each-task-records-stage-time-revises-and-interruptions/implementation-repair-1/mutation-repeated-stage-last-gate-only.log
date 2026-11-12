@@ -1,0 +1,34 @@
+F
+======================================================================
+FAIL: test_repeated_stage_preserves_each_cycles_after_gate_time (test_task_timeline.TimelineTests.test_repeated_stage_preserves_each_cycles_after_gate_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/impl-stage-timing-repair-8fcbee7d/mutant/test_task_timeline.py", line 129, in test_repeated_stage_preserves_each_cycles_after_gate_time
+    self.assertEqual({key: row[key] for key in (
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "elapsed_min", "before_gate_min", "captain_wait_min", "after_gate_min")},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        {"elapsed_min": 80.0, "before_gate_min": 20.0,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         "captain_wait_min": 20.0, "after_gate_min": 40.0})
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'ela[28 chars]e_min': 50.0, 'captain_wait_min': 20.0, 'after_gate_min': 10.0} != {'ela[28 chars]e_min': 20.0, 'captain_wait_min': 20.0, 'after_gate_min': 40.0}
+- {'after_gate_min': 10.0,
+?                    ^
+
++ {'after_gate_min': 40.0,
+?                    ^
+
+-  'before_gate_min': 50.0,
+?                     ^
+
++  'before_gate_min': 20.0,
+?                     ^
+
+   'captain_wait_min': 20.0,
+   'elapsed_min': 80.0}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.440s
+
+FAILED (failures=1)
