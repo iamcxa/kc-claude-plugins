@@ -86,6 +86,12 @@ Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
 Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
 Supersedes: none
 
+### Amendment 2 — 2026-11-12, host question dialog
+Captain: 「照列名稱，上限隨張數算（建議）」 (host question dialog, 2026-11-12); before it he asked 「解釋一下機制」 and 「提醒層是spacedock 做的，還是dev2？這一層如果是dev2 我預期應該是整合sd tool？」 (same dialog), and FO answered both.
+Asked: 「「擱置的任務」那一行要怎麼印？我建議照列名稱、上限改成隨張數算：把設計的「最多多 30 個字」改成「每張擱置的任務最多多 3 個字，另加固定 6 個字」。這張任務的目的就是讓我開工時直接看到哪幾張被擱置，只印數字會讓今天那種錯仍可能發生。這會記成你的一筆修正案，程式不用改，只改驗收的上限。變差的是：擱置的越多，我每次開工讀的這一行越長，目前 14 張是 32 個字。」
+Supersedes: none
+Design: Every moment rises by one line (about 26 words for ten held tasks). This task adds a line rather than cutting text, so the learning's "each moment below its base" test does not apply. The bound is ≤ 30 words.
+
 ## Design
 
 Ideation evidence folder: `held-and-closed-tasks-leave-the-design-queue/ideation/` in this state checkout (state pinned at `eae5ea47cec926f35d164f8a88d31579196d7634`, package at origin/main `8ce0eb6050c889b21baccf50fec35231bc888d66`, kc-dev-flow-2 0.39.1, `spacedock 0.27.2`). The exact commands for every criterion, and the origin-less scratch recipe, are in `ideation/commands.md`.
