@@ -88,6 +88,10 @@ Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
 Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
 Supersedes: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-12): validation-1 on #852 head a3266ec91 recommended REJECTED with one finding, assessed Material and owned (kind build; value-ac[AC-1]): a stage that ran more than once uses only its last gate close to split before-gate from after-gate time, moving 23.2 minutes in one real archived task. Routed to the implementation worker as a repair message; the Captain approved one repair and a second validation (host question dialog, 2026-11-12).
+
 ## Design
 
 Ruling in one paragraph. A new read-only helper, `kc-dev-flow-2/scripts/task_timeline.py`, prints for one task each stage's start, end and minutes split into before the gate, Captain wait and after the gate, the dispatches per stage, the gate attempts with their outcome, and the questions put to the Captain outside a gate. Stage times and dispatch counts need no new record: Spacedock and FO already write them at the time, as state-checkout commits and gate `at` stamps, and the proof of concept read them back for 135 of 157 archived tasks. Interruptions need one new record, `<task>/asks.jsonl`, written by the same helper's `ask` subcommand when FO asks; nothing records them today. Nothing refuses a task for missing records; the helper reports.
