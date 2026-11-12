@@ -15,6 +15,10 @@ gates:
                 id: briefing:merge-ask-tests-the-merge-result:backlog:attempt-1:revision-1
                 digest: sha256:49ebaa98701d209a51e97e09e90aa390888350e8d02aef377224de98ebe6270a
                 room-ref: ./merge-ask-tests-the-merge-result/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-12T05:11:28.449691Z"
+                reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
 ---
 
 ## Scope
