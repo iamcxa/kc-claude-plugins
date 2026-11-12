@@ -566,6 +566,13 @@ print(json.dumps(answer))
 """
 SD_STUB = """#!/usr/bin/env python3
 import os, sys
+if sys.argv[1:] == ["status", "--workflow-dir", os.environ["SD_DIR"], "--where", "gate-readiness=not-applicable", "--fields", "slug,status", "--json", "--limit", "0"]:
+    text = open(os.environ["SD_HELD"]).read()
+    if text == "FAIL":
+        sys.stderr.write("stub spacedock: held query down")
+        sys.exit(3)
+    print(text)
+    sys.exit(0)
 if sys.argv[1:] != ["status", "--workflow-dir", os.environ["SD_DIR"], "--next", "--json"]:
     sys.stderr.write("stub spacedock: unexpected " + " ".join(sys.argv[1:]))
     sys.exit(2)
@@ -772,6 +779,8 @@ class TasksTests(unittest.TestCase):
         sd.chmod(0o755)
         self.next = self.root / "next.json"
         self.next.write_text(json.dumps({"ready_gates": []}))
+        self.held = self.root / "held.json"
+        self.held.write_text(json.dumps({"entities": []}))
         self.repo = self.root / "repo"
         self.workflow = self.repo / "docs/dev2"
         self.state = self.workflow / ".spacedock-state"
@@ -811,7 +820,7 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, "commit", "-qm", "report")
 
     def sd_env(self):
-        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_DIR": str(self.workflow.resolve()),
+        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_HELD": str(self.held), "SD_DIR": str(self.workflow.resolve()),
                 **({"SD_LOG": str(self.root / "sd.log")} if self.log_calls else {})}
 
     def gates(self, *rows):
@@ -827,6 +836,93 @@ class TasksTests(unittest.TestCase):
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
         return code, out.getvalue().splitlines()
+
+    def held_task(self, body="", reason="reopen after an adopter fails", folder=False):
+        self.readme("")
+        self.task("paused", worktree=False, status="ideation", folder=folder, body=body.encode())
+        path = self.state / ("paused/index.md" if folder else "paused.md")
+        text = path.read_text()
+        gates = ("gates:\n    version: 1\n    records:\n        - stage: ideation\n          attempts:\n"
+                 "            - id: gate-attempt:paused-ideation-1\n              resolution:\n"
+                 "                type: Resolution\n                decision: hold\n"
+                 f"                reason: {json.dumps(reason)}\n")
+        path.write_text(text.replace("\n---\n", "\n" + gates + "---\n", 1))
+        self.git(self.state, "add", str(path))
+        self.git(self.state, "commit", "-qm", "hold")
+        self.held.write_text(json.dumps({"entities": [{"slug": "paused", "status": "ideation"}]}))
+        return path
+
+    def test_no_held_task_prints_no_held_line(self):
+        self.readme("")
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks(self):
+        for folder in (False, True):
+            with self.subTest(folder=folder):
+                self.held_task("## Held\nReopen when: reopen after an adopter fails\n", folder=folder)
+                self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; "
+                                                     "each ## Held section says what reopens it."]))
+                (self.state / ("paused/index.md" if folder else "paused.md")).unlink()
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(len(lines), 2, lines)
+                self.assertTrue(lines[1].startswith("next: write ## Held in paused:"), lines)
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(len(lines), 1 if good else 2, lines)
+
+    def test_held_quote_uses_newest_hold_reason(self):
+        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
+        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
+                 "                decision: hold\n                reason: wait for a different condition\n")
+        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
+
+    def test_held_fact_groups_stages_and_names_each_task_once(self):
+        self.held_task("## Held\nClosed: reopen after an adopter fails\n")
+        self.task("waiting", worktree=False, status="ideation")
+        self.task("later", worktree=False, status="validation", body=b"## Held\nClosed: finished\n## Captain amendments\nCaptain: finished\n")
+        self.held.write_text(json.dumps({"entities": [{"slug": "later", "status": "validation"},
+                                                     {"slug": "paused", "status": "ideation"}]}))
+        self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; validation later; "
+                                             "each ## Held section says what reopens it."]))
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 2, lines)
+                self.assertEqual(len(lines), 1, lines)
+                self.assertTrue(lines[0].startswith("next: report held-task query failure to the Captain:"), lines)
 
     def test_release_walk_due_is_gated_by_listing_and_map_presence(self):
         self.readme("")
@@ -1821,7 +1917,8 @@ class TasksTests(unittest.TestCase):
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)])
         self.assertEqual(code, 2)
-        self.assertRegex(out.getvalue(), r"^next: report the awaiting gates to the Captain: ")
+        self.assertIn("next: report held-task query failure to the Captain: ", out.getvalue())
+        self.assertIn("next: report the awaiting gates to the Captain: ", out.getvalue())
 
     def test_the_sitting_line_writes_no_file(self):
         self.readme("roborev")

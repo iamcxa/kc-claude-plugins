@@ -9,6 +9,8 @@
 
 Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
 With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
+Tasks names held tasks by stage and asks for ## Held when its reopen or close quote is missing or unverified.
+A failed held-task query prints a next: diagnostic and exits 2.
 
 Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
 $CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
@@ -73,8 +75,9 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from role_triggers import review_facts  # noqa: E402
-from dispatch_records import coverage, worker_stages  # noqa: E402
+from role_triggers import review_facts, outside_fences  # noqa: E402
+from dispatch_records import coverage, worker_stages, named_section  # noqa: E402
+from decision_ledger import split_task, gate_entries  # noqa: E402
 from learning import job_key  # noqa: E402
 import scratch  # noqa: E402
 
@@ -428,6 +431,56 @@ def ready_rows(workflow):
     return json.loads(done.stdout)["ready_gates"]
 
 
+def held_rows(workflow):
+    binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
+    done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--where",
+                           "gate-readiness=not-applicable", "--fields", "slug,status", "--json", "--limit", "0"],
+                          capture_output=True, text=True)
+    if done.returncode:
+        raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "spacedock held-task query failed")
+    data = json.loads(done.stdout)
+    rows = data["entities"]
+    if not isinstance(rows, list) or any(not isinstance(row, dict) or
+            any(not isinstance(row.get(key), str) or not row[key].strip() for key in ("slug", "status")) for row in rows):
+        raise ValueError("invalid held-task rows")
+    if len({row["slug"] for row in rows}) != len(rows):
+        raise ValueError("duplicate held-task rows")
+    pagination = data.get("pagination", {})
+    if str(pagination.get("has_next", "false")).lower() != "false" or int(pagination.get("total", len(rows))) != len(rows):
+        raise ValueError("incomplete held-task rows")
+    return rows
+
+
+def held_quote(task):
+    fm, body = split_task(task.read_text(encoding="utf-8"))
+    body = "\n".join(outside_fences(body))
+    quotes = re.findall(r"^(?:Reopen when|Closed):[ \t]*(.*\S)[ \t]*$", named_section(body, "Held"), re.M)
+    if len(quotes) != 1:
+        return False
+    reasons = [entry.get("reason", "") for entry in gate_entries(fm or [])
+               if entry.get("kind") == "resolution" and entry.get("decision") == "hold"]
+    sources = reasons[-1:] + re.findall(r"^Captain:[ \t]*(.+)$", named_section(body, "Captain amendments"), re.M)
+    return any(quotes[0] in source for source in sources)
+
+
+# see docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md
+def held_lines(rows, found):
+    if not rows:
+        return []
+    stages, missing = {}, []
+    for row in sorted(rows, key=lambda row: (row["status"], row["slug"])):
+        slug = row["slug"]
+        stages.setdefault(row["status"], []).append(slug)
+        if slug not in found or not held_quote(found[slug]):
+            missing.append(slug)
+    grouped = "; ".join(f"{stage} {', '.join(slugs)}" for stage, slugs in stages.items())
+    lines = [f"fact: held by the Captain, not waiting: {grouped}; each ## Held section says what reopens it."]
+    if missing:
+        lines.append(f"next: write ## Held in {', '.join(missing)}: copy Reopen when: <his words> or Closed: <his words> "
+                     "verbatim from the hold reason or a Captain amendment; where neither states one, ask him at the next sitting.")
+    return lines
+
+
 LIST_LINE = ("next: before asking, list each open decision of these tasks once, from their decision sections and the map's "
              "open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; "
              "then ask one at a time; a decision that blocks no worker waits for the next sitting.")
@@ -600,6 +653,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
         errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
     stages = None
+    try:
+        out += held_lines(held_rows(workflow), dict(found))
+    except (RuntimeError, KeyError, TypeError, ValueError, OSError) as error:
+        errors.append(f"next: report held-task query failure to the Captain: {str(error)[:120]}.")
     for slug, task in found:
         try:
             meta = front(task)
