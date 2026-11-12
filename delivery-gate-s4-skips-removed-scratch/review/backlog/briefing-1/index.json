@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-s4-skips-removed-scratch:backlog:attempt-1:revision-1",
+  "question": "獨立審查說原本的合約不能直接跑，我已照它修正（設計關卡保留、Prod 不動、每張最多 3 輪實作）。要不要用下面五張小任務開始試跑，並授權我在第一輪沒踩到停止條件時，代你記錄設計關卡通過？五張：①做新東西前先查既有的（你的首要方向，預期第一輪後會停下來問你）②設計檢查腳本遇到同名資料夾會當掉 ③合併檢查不該要求已刪除的暫存路徑 ④沒啟用學習擴充的專案不該被叫去跑學習 ⑤PR 監看不該對別台機器的任務提示。預算每張：1 implementation and 2 validation cycles。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-s4-skips-removed-scratch:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1d48ef61362e02def4cc87e6a89f0189f5097f5b/delivery-gate-s4-skips-removed-scratch.md",
+      "rev": "sha256:c72b7a3b15cd99164bc8215d6c7cb5fa13ee6fc7d87ad8a9d9988e0702623404",
+      "mediaType": "text/markdown",
+      "summary": "profile pilot, variant kc-dev-flow-2; Budget: 1 implementation and 2 validation cycles, in one package PR; Surfaces none; scope, non-goals and stop condition as seeded in the task file; ideation owes a working probe on a local branch, the design, and criteria whose proofs ran."
+    }
+  ]
+}

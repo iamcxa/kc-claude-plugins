@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:delivery-gate-s4-skips-removed-scratch:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:delivery-gate-s4-skips-removed-scratch-backlog-1
+              briefing:
+                id: briefing:delivery-gate-s4-skips-removed-scratch:backlog:attempt-1:revision-1
+                digest: sha256:dffe6f989ba6fbb0df866814f05cfd60e70bad098a6f0d15faa3e783f75f38b5
+                room-ref: ./delivery-gate-s4-skips-removed-scratch/review/backlog/briefing-1
 ---
 
 ## Scope
