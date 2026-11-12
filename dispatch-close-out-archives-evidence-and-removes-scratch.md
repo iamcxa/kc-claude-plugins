@@ -56,6 +56,7 @@ gates:
                 state: consumed
 started: 2026-11-12T05:17:00Z
 worktree: .worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch
+pr: iamcxa/kc-claude-plugins#854
 ---
 
 ## Scope
