@@ -1,0 +1,37 @@
+[
+  {
+    "name": "startup",
+    "before": 0,
+    "after": 0
+  },
+  {
+    "name": "building-dispatch-FO",
+    "before": 19,
+    "after": 0
+  },
+  {
+    "name": "worker-paragraph",
+    "before": 0,
+    "after": 65
+  },
+  {
+    "name": "after-worker-report",
+    "before": 0,
+    "after": 0
+  },
+  {
+    "name": "idle-no-ended-root",
+    "before": 0,
+    "after": 0
+  },
+  {
+    "name": "idle-ended-root",
+    "before": 0,
+    "after": 20
+  },
+  {
+    "name": "merge-ask",
+    "before": 0,
+    "after": 0
+  }
+]

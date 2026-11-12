@@ -1,0 +1,2 @@
+First scratch-location invocation missed the documented ../s4_repro.py dependency; rerun from its final task-evidence location.
+/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/private/tmp/dev2/kc-claude-plugins/dispatch-close-out-archives-evidence-and-removes-scratch/s4_repro.py': [Errno 2] No such file or directory

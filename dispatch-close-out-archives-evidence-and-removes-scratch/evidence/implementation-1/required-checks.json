@@ -1,0 +1,27 @@
+[
+  {
+    "name": "adr-lint-final.log",
+    "status": "passed",
+    "evidence": "adr-lint-final.log"
+  },
+  {
+    "name": "lint-skills-final.log",
+    "status": "passed",
+    "evidence": "lint-skills-final.log"
+  },
+  {
+    "name": "number-guards-final.log",
+    "status": "passed",
+    "evidence": "number-guards-final.log"
+  },
+  {
+    "name": "comment-ratio.log",
+    "status": "passed",
+    "evidence": "comment-ratio.log"
+  },
+  {
+    "name": "design-surfaces.log",
+    "status": "passed",
+    "evidence": "design-surfaces.log"
+  }
+]

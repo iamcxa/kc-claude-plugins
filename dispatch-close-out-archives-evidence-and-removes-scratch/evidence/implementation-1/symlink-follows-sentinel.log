@@ -1,0 +1,15 @@
+test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel) ... FAIL
+
+======================================================================
+FAIL: test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 111, in test_symlink_root_and_parent_leave_sentinel
+    with self.assertRaisesRegex(ValueError, 'symlinked'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.141s
+
+FAILED (failures=1)

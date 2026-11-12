@@ -1,0 +1,8 @@
+................................usage: run_tests.py [-h] [--state STATE] [--codex] [--copilot]
+                    {add,check,wait,tasks} [args ...]
+run_tests.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+....................................................................................................................
+----------------------------------------------------------------------
+Ran 148 tests in 71.314s
+
+OK

@@ -1,0 +1,16 @@
+{
+  "branch": "spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "candidate": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "changed": [
+    "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+    "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/scratch.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "kc-dev-flow-2/scripts/test_scratch.py"
+  ],
+  "code_worktree_clean": true,
+  "python_caches": 0
+}

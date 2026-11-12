@@ -1,0 +1,7 @@
+Command: independent wc -w on emitted notes_for and scratch_lines outputs
+
+
+Scratch: /tmp/dev2/kc-claude-plugins/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1
+Put every file or checkout you create outside the task worktree and the state checkout under that folder. Copy what your report cites into evidence/implementation-1/ in the task folder, and nothing that holds a secret or a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. Before your report, run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py close /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch implementation-1` and paste the lines it prints.
+
+next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py close /tmp/dev2/kc-claude-plugins/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/words-fixture/records/sample validation-1`; that dispatch has ended. Commit the scratch-removed.txt it writes with the task path.

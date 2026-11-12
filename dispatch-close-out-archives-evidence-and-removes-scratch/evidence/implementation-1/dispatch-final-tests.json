@@ -1,0 +1,198 @@
+[
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_a_missing_role_checker_refuses_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_an_unresolvable_committed_task_holds_on_exit_two",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_ideation_builds_even_when_a_call_is_owed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_index_entry_without_worktree_file_is_preserved",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_staged_record_survives_refused_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_preexisting_untracked_record_survives_refused_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_rejects_incomplete_scope_notes_without_prompt_or_record",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_rejects_stage_only_flags_and_unknown_roles",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_git_failure_is_a_nonmutating_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stage_lf_inputs_keep_raw_bytes",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_symlinked_entity_is_a_nonmutating_hold",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_the_third_dispatch_counts_before_it_is_committed",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_unreadable_native_stage_does_not_make_design_presentable",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it",
+    "status": "passed"
+  },
+  {
+    "name": "test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values",
+    "status": "passed"
+  }
+]

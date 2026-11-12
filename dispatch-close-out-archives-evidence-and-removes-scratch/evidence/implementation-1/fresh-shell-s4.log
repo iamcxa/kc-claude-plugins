@@ -1,0 +1,7 @@
+report names removed /tmp path -> exit 0 | S4 in output: False
+FO message names the same path -> exit 1 | ['Captain steps record fails: message S4: missing path /tmp/ccx-ideation-removed-scratch-worktree']
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 2.279s
+
+OK
