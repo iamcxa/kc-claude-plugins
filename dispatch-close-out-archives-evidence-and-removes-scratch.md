@@ -3,7 +3,7 @@ title: When a dispatch closes, its necessary evidence is archived compressed and
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
