@@ -1,0 +1,19 @@
+{
+  "evidence_commit_before_removal": "9d4ca8ffee6a2add9834652cf515be81c61ab3cc",
+  "removed_owned_roots": [
+    "/tmp/gate-facts-validation2-ghuxn5s7"
+  ],
+  "removed_child_directories": [
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1",
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1-complete",
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1-final",
+    "/tmp/gate-facts-validation2-ghuxn5s7/ac1-retry",
+    "/tmp/gate-facts-validation2-ghuxn5s7/base",
+    "/tmp/gate-facts-validation2-ghuxn5s7/candidate",
+    "/tmp/gate-facts-validation2-ghuxn5s7/captain",
+    "/tmp/gate-facts-validation2-ghuxn5s7/poc"
+  ],
+  "verified_absent": true,
+  "retained_tmp_evidence_copies": 0,
+  "completed_at": "2026-11-12T19:25:49.040586+08:00"
+}
