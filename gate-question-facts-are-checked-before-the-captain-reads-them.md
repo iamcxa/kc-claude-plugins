@@ -15,6 +15,10 @@ gates:
                 id: briefing:gate-question-facts-are-checked-before-the-captain-reads-them:backlog:attempt-1:revision-1
                 digest: sha256:ab7abf3920dd5c06228fc87eabeee3a493b7bb32aea8b905da77f71bffdcd594
                 room-ref: ./gate-question-facts-are-checked-before-the-captain-reads-them/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-12T05:11:42.508362Z"
+                reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
 ---
 
 ## Scope
