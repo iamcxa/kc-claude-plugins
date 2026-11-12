@@ -1,0 +1,11 @@
+{
+  "command": "python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py",
+  "exit": 0,
+  "head": "6da9a765ee04e1e2c7836517ba01f75b0ea91d73",
+  "log": "result-1.log",
+  "pr": "iamcxa/kc-claude-plugins#841",
+  "seconds": 14.6,
+  "time": "2026-11-12T05:31:11Z",
+  "tree": "0cea91ffa2eb9b267e2f972fb63abc8970fdb382",
+  "trunk": "546a136386c94c58e430c91a6f3457b38bd73880"
+}

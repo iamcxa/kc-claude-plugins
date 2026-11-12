@@ -1,0 +1,10 @@
+$ grep -n 'test_\|unittest' _archive/budget-overrun-holds-and-findings-meet-non-goals/validation-2/captain.sh  (2026-11-12)
+23:python3 -B -m unittest -v \
+24:  test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build \
+25:  test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended \
+26:  test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results
+30:python3 -B -m unittest -v \
+31:  test_role_triggers.BudgetTest.test_amendment_needs_the_same_entry_verbatim_words \
+32:  test_role_triggers.BudgetTest.test_total_cap_counts_only_messages_with_a_named_header_symptom \
+33:  test_role_triggers.BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers
+test_design_surfaces mentions: 0

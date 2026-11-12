@@ -1,0 +1,25 @@
+$ delivery_gate.py check (gate=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/delivery_gate.py, trunk=eeee002303aca7c14237258253cd9318a5b3248c, status=diverged, result=None, not_run=True)
+exit=0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 3 unchecked
+unchecked count: Necessity: the fourteen files gh pr view 841 lists change against origin/main,
+unchecked count: Merge with main: git merge-tree --write-tree origin/main 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 exit 0 after PRs
+unchecked count: ADR 0077 records the bound
+PR head 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 equals dispatched candidate 6da9a765ee04e1e2c7836517ba01f75b0ea91d73; no second reviewer outcome is missing
+point: merge-result: not run (the ask says so)
+point: deferred: '- F1 Deferred risk: upgrading and'
+point: deferred: 'FO declines the two Codex findings'
+point: deferred: 'Validation rounds: 2. validation-1 recommended REJECTED'
+point: not-run: 'copilot not run: "Copilot was unable'
+point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'
+point: path: 'docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-th'
+point: path: 'kc-dev-flow-2/references/sd/workflow.md'
+point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'
+point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'
+point: path: 'kc-dev-flow-2/scripts/lint-skills.py'
+point: path: 'kc-dev-flow-2/scripts/role_triggers.py'
+point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'
+point: more: 7 not shown
+class: never (verdict ask)
+record: budget-overrun-holds-and-findings-meet-non-goals/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.

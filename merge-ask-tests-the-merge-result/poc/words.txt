@@ -1,0 +1,7 @@
+$ for f in <replay logs>; do sed 1,2d $f | wc -w; done   (2026-11-12; lines 1-2 are the replay header and exit)
+187 replay-control-base.log
+117 replay-candidate-no-run.log
+197 replay-candidate-green-record-at-its-trunk.log
+195 replay-candidate-not-run-line.log
+187 replay-candidate-trunk-not-moved.log
+merge-run output words (runs printed lines, green run): 17

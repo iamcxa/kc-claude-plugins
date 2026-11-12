@@ -1,0 +1,55 @@
+...........................................................................................................s.................................................................................FF..................
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (__main__.SettledChecksTests.test_required_check_read_adds_one_gh_call) [plain]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 673, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [306 chars]cket', 'api repos/o/r/compare/main...40c714a60[28 chars]000'] != ['pr [306 chars]cket']
+
+First list contains 1 additional elements.
+First extra element 4:
+'api repos/o/r/compare/main...40c714a600000000000000000000000000000000'
+
+  ['pr view 9 --repo o/r --json '
+   'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+-  'pr checks 9 --repo o/r --required --json name,bucket',
+?                                                        ^
+
++  'pr checks 9 --repo o/r --required --json name,bucket']
+?                                                        ^
+
+-  'api repos/o/r/compare/main...40c714a600000000000000000000000000000000']
+
+======================================================================
+FAIL: test_required_check_read_adds_one_gh_call (__main__.SettledChecksTests.test_required_check_read_adds_one_gh_call) [skipped and neutral]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-tests-the-merge-result/kc-dev-flow-2/scripts/test_delivery_gate.py", line 673, in test_required_check_read_adds_one_gh_call
+    self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+AssertionError: Lists differ: ['pr [306 chars]cket', 'api repos/o/r/compare/main...40c714a60[28 chars]000'] != ['pr [306 chars]cket']
+
+First list contains 1 additional elements.
+First extra element 4:
+'api repos/o/r/compare/main...40c714a600000000000000000000000000000000'
+
+  ['pr view 9 --repo o/r --json '
+   'headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles,body',
+   'api --paginate repos/o/r/pulls/9/files',
+   'api '
+   'repos/o/r/actions/runs?head_sha=40c714a600000000000000000000000000000000&per_page=100',
+-  'pr checks 9 --repo o/r --required --json name,bucket',
+?                                                        ^
+
++  'pr checks 9 --repo o/r --required --json name,bucket']
+?                                                        ^
+
+-  'api repos/o/r/compare/main...40c714a600000000000000000000000000000000']
+
+----------------------------------------------------------------------
+Ran 208 tests in 155.159s
+
+FAILED (failures=2, skipped=1)

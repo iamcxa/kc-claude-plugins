@@ -1,0 +1,6 @@
+$ gh run view 42979280852 --repo iamcxa/kc-claude-plugins --log | grep 'HEAD is now at'  (2026-11-12)
+unit tests (python3)	UNKNOWN STEP	2026-11-11T07:24:37.8992856Z HEAD is now at 6499e41 Merge 6da9a765ee04e1e2c7836517ba01f75b0ea91d73 into 546a136386c94c58e430c91a6f3457b38bd73880
+$ gh api repos/iamcxa/kc-claude-plugins/branches/main/protection --jq .required_status_checks.strict
+false
+$ gh api repos/iamcxa/kc-claude-plugins/rulesets
+[]
