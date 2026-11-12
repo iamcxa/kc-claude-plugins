@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Historical held-task listing",
+    "status": "passed",
+    "message": "5 of 5 offered tasks named held"
+  },
+  {
+    "name": "True control",
+    "status": "passed",
+    "message": "0 of 5 offered tasks named held"
+  },
+  {
+    "name": "Hold-removal falsifier",
+    "status": "passed",
+    "message": "Acceptance exits 1 after mutation loses 5 detections"
+  }
+]
