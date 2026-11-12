@@ -6,6 +6,14 @@
   "nested_implementation_scratch": "/tmp/gate-facts-validation-20261112-183348/impl-gate-question-facts-36h0g6jl",
   "acceptance_removed": true,
   "nested_removed": true,
-  "export_root_removal": "after evidence commit",
-  "product_worktree_removed": false
+  "product_worktree_removed": false,
+  "evidence_commit": "8622e27e6ca05a137614acbc3957e91ce7065481",
+  "export_root_removed": true,
+  "all_owned_roots_absent": true,
+  "verified_at_utc": "2026-11-12T10:45:38.181595+00:00",
+  "list": [
+    "/tmp/gate-facts-validation-20261112-183348",
+    "/tmp/gate-facts-captain-8Xtvmj"
+  ],
+  "nested_directories": "All tests and independent/implementation replay scratch were under the first exact root; self-cleaned or removed with that root."
 }
