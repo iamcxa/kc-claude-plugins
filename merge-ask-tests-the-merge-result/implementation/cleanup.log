@@ -1,0 +1,5 @@
+Evidence committed: df8e1040c
+Removed exact scratch path: /tmp/impl-merge-ask-tests-the-merge-result-sd-root
+Removed control source: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-tests-the-merge-result/.context/merge-ask-tests-the-merge-result-control (acceptance runner cleanup)
+Retained for FO: /tmp/impl-merge-ask-tests-the-merge-result-pr.md
+Verified removed paths absent and retained PR text present.

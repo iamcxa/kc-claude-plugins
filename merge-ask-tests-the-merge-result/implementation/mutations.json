@@ -70,5 +70,10 @@
     "test": "MergeResultTests.test_another_trunk_head_or_command_cannot_satisfy",
     "failures": 2,
     "errors": 0
+  },
+  {
+    "name": "AC-2 recorded exit changed to 1",
+    "status": "passed",
+    "message": "same green record with mutated exit holds the replay, exit 1"
   }
 ]

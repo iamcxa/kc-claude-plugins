@@ -424,3 +424,35 @@ ADR: 0078
 ### Summary
 
 The PoC adds a hold to `delivery_gate.py check` when main's tip is not an ancestor of the PR head and no passing run on that head-and-trunk merge result is recorded, plus a `merge-run` subcommand that builds the merge with `git merge-tree --write-tree` (Spacedock's own mechanism) and runs a command on it. It reproduces the #841 break exactly (1 of 226 on the landed tree, 224 of 224 on the head) and holds the replayed ask where origin/main passes it. Findings that shape the design: the #841 acceptance script would not have caught the break, GitHub's PR CI tested a merge onto a pre-#843 main, and the trunk had moved under 24 of the last 40 merges; the full unit list costs about 10 minutes per run. Three decisions go to the Captain (D1 command source, D2 trigger, D3 how the Stop condition's pass half is shown); no CI or repository setting change is proposed.
+
+## Stage Report: implementation
+
+- DONE: Start from the approved proof of concept on the assigned branch, based on current origin/main; only the design's four files.
+  Base 8ce0eb6050c889b21baccf50fec35231bc888d66; PoC cherry-pick edf6b548b; candidate d79053d0836c558a9269f9cf1ba222933935b820 on spacedock-ensign/merge-ask-tests-the-merge-result, locally committed; product tree clean.
+- DONE: ADR 0078 records the ruling the design names, quoting the Captain's words from the task file and its gate records.
+  docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md quotes the ideation approval and bound-question excerpts; D1-D3 retained, pointer checked by adr-lint.log.
+- DONE: AC-1 and AC-2: hold the historical ask without a run; accept a real passing run at its asked earlier trunk.
+  implementation/replay-control.log exit 0; replay-AC-1.log exit 1; replay-AC-2.log exit 0. Restoring the control removes the hold; mutation-AC-2-record-exit.log changes the green record's exit to 1 and holds with exit 1.
+- DONE: AC-3 and AC-4: refuse a stale trunk and a failing run at the asked trunk.
+  replay-AC-3.log and replay-AC-4.log exit 1; mutations.json shows dropping the trunk match and accepting failed exits each makes its behavioral test fail.
+- DONE: AC-5 and AC-6: explicit not-run disclosure passes; an ancestor trunk adds no requirement.
+  replay-AC-5.log exit 0, without the line replay-AC-1.log exits 1; replay-AC-6.log equals control at 187 words. Removing disclosure recognition or treating ahead as moved each fails its mutation test.
+- DONE: AC-7 and AC-8: run on the landed tree and remove the temporary tree.
+  tree-equality.log: 3ba409485baf equals landed tree; runtime-red has 226 run, 1 failure, 4 skipped; head-only and runtime-green each have 224 run, 220 passed, 4 skipped. scratch-cleanup.log has 0 TMPDIR entries; running the head tree or removing cleanup each fails its behavioral test.
+- DONE: The implementable items under Not provable now: command match, question-only disclosure, full delivery-gate tests and all three pinned-Spacedock checks.
+  full-unit-suite.log: 1345 run, 1334 passed, 11 skipped across 24 scripts; delivery gate 221 run, 220 passed, 1 skipped, including the two repaired gh-call-count subtests. Three integration scripts passed with Spacedock 0.27.2 and source 4d158a484ec73e184861067f8ed1e20087fdc26a; test-dispatch-stage.log has 46 passed. Question disclosure and command mismatch controls pass.
+- DONE: Repository lint-skills.py, package adr_lint.py --since <base> --require 0078, number_guards.py check and comment_ratio.py.
+  implementation/{lint-skills,adr-lint,number-guards,design-surfaces,comment-ratio}.log each exit 0; comment ratio 0.3%, maximum 5%. Number guards uses the dispatched split-root workflow, not the candidate README's absent state checkout.
+- DONE: Affected documents from doc_impact.py, at the candidate.
+  0044 unaffected: split summary reviewer checks unchanged; 0051 unaffected: external-round hold unchanged; 0062 unaffected: quoted grant unchanged; 0071 unaffected: newest-record head/clause binding retained; 0072 unaffected: count disclosure unchanged; 0078 updated: approved merge-result rule. Full paths in implementation/doc-impact.log.
+- DONE: Commit evidence, remove owned scratch by exact path, retain prepared PR text for FO.
+  Evidence commit df8e1040c; implementation/cleanup.log verifies /tmp/impl-merge-ask-tests-the-merge-result-sd-root removed, acceptance control removed, and /tmp/impl-merge-ask-tests-the-merge-result-pr.md retained. Private repositories inspected: 0.
+- SKIPPED: One Draft PR, product push, RoboRev and hosted CI.
+  Explicit dispatch hands product publication, Draft PR and RoboRev to FO; not run, not clean. PR title/body prepared at /tmp/impl-merge-ask-tests-the-merge-result-pr.md. CI cost not measured; CI definitions/settings unchanged; local unit wall time 607.97 seconds once.
+- SKIPPED: A live merge ask on an open PR in this workflow or an adopter after release.
+  No product publication grant; this remains the design's post-release check, not established by replay. Adopter workflows were not changed.
+
+### Summary
+
+Implemented the approved Pilot expansion without a new script or CI change. Of the PoC's 112 added lines, 84 remain unchanged and 28 were replaced/removed during expansion; both PoC files and mechanisms remain, with no whole component discarded (implementation/poc-retention.json).
+Started approximately 17:25 Asia/Taipei on 2026-11-12; implementation/report prepared at 17:48. Local validation and evidence are complete; FO still owns independent validation, publication, review and hosted CI.

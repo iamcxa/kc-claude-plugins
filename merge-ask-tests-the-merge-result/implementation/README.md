@@ -13,8 +13,8 @@ and serves the saved PR facts under ../poc/pr841-facts/. It creates and removes
 its control source under CODE/.context; no model or real merge ask is issued.
 The red and green runtime records came from real commands on the historical merge
 trees; replay does not rerun those tests. Their commands, head, trunk and trees
-are in runtime-red and runtime-green. The head-only run passed 224 tests; the
-actual ask's merge tree failed 1 of 226. tree-equality.log checks the landed tree.
+are in runtime-red and runtime-green. The head-only run had 224 tests, 220 passed and 4 skipped; the
+actual ask's merge tree had 226 tests, 1 failure and 4 skipped. tree-equality.log checks the landed tree.
 
 full-unit-suite.log is 24 scripts, 1345 tests run (1334 passed, 11 skipped), exit 0.
 The configured README command additionally prefixes lint-skills.py, run separately
