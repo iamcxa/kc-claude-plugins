@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-12T05:11:42.508362Z"
                 reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
+            - id: gate-attempt:gate-question-facts-are-checked-before-the-captain-reads-them-backlog-2
+              briefing:
+                id: briefing:gate-question-facts-are-checked-before-the-captain-reads-them:backlog:attempt-2:revision-1
+                digest: sha256:e7c2ec3f8a86e3421463c2cdb688b335db038471b38756669febb492c3efccb8
+                room-ref: ./gate-question-facts-are-checked-before-the-captain-reads-them/review/backlog/briefing-2
 ---
 
 ## Scope
