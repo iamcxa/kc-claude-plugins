@@ -1,0 +1,5 @@
+measured 2026-11-12T05:31:02Z: du -sk /private/tmp/* | sort -rn (raw listing kept off this public branch; it names other projects' tasks)
+all /tmp entries: 3470, 121.2 GiB
+entries named <slug>-<stage>-<N>: 78, 56.2 GiB
+of those, slug is a task in this workflow: 1, 0.00 GiB
+entries of 1 GiB or more: 30

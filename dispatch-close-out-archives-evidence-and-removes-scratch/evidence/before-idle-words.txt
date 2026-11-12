@@ -1,0 +1,4 @@
+$ pr_watch.py --state <scratch> tasks <workflow dir> (0.39.1, 2026-11-12T05:30:40Z)
+output words:      901
+lines naming scratch or /tmp: 2
+note: both matching lines name /tmp or scratch only through a task slug (delivery-gate-s4-skips-removed-scratch) and this run's own --state path; lines instructing a scratch step: 0

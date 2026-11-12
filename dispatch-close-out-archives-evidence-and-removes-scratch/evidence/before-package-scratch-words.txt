@@ -1,0 +1,2 @@
+$ git grep -c -i scratch origin/main -- <workflow.md, mods/kc-dev-flow-2.md, pr_watch.py, dispatch_stage.py>  (2026-11-12T05:30:02Z, origin/main 8ce0eb605)
+exit=1

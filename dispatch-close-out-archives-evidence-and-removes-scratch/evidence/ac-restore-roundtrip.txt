@@ -1,0 +1,3 @@
+$ git -C <state> show origin/spacedock-state/dev2:_archive/special-role-dispatch-records-built-by-script/validation/independent-2/evidence/stage-calls.jsonl | gzip -9c | gunzip -c | cmp - <(git -C <state> show origin/spacedock-state/dev2:_archive/special-role-dispatch-records-built-by-script/validation/independent-2/evidence/stage-calls.jsonl)   (2026-11-12T05:31:13Z)
+raw bytes:  1621352  gzip -9 bytes:    74708
+cmp exit=0

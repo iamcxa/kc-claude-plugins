@@ -1,0 +1,7 @@
+measured 2026-11-12T05:29:51Z: git -C <code repo> worktree list --porcelain
+registered worktrees:       90
+under /tmp or /private/tmp: 3
+of those, path missing (stale registration): 0
+$ git -C <code repo> worktree list --porcelain | grep -c '^worktree /\(private/\)\?tmp/dev2/'   (2026-11-12T05:33:38Z)
+0
+exit=1

@@ -1,0 +1,3 @@
+$ grep -c '^Scratch: /tmp/dev2/' <task folder>/dispatch/ideation-1.md   (2026-11-12T05:31:19Z)
+0
+exit=1
