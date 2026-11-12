@@ -1,0 +1,31 @@
+STEP 1 PASS: 188ba44f427a15bfff69d9d4e24b2446af0b69dc
+............
+----------------------------------------------------------------------
+Ran 12 tests in 2.256s
+
+OK
+STEP 2 PASS: helper suite
+{
+  "intervals": [
+    "10..20 before, 20..30 Captain wait, 30..60 after",
+    "80..90 before, 90..100 Captain wait, 100..110 after"
+  ],
+  "expected": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 20.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 40.0
+  },
+  "observed": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 20.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 40.0
+  },
+  "fixture": "/tmp/stage-time-acceptance-2.UpDNHv/timeline-test-nu3k64fc"
+}
+STEP 3 PASS: repeated split 20/20/40; real after-gate 30.3 minutes
+71 ADR file(s) checked, 0 legacy
+STEP 4 PASS: required ADR lint; acceptance passed
+removed /tmp/stage-time-acceptance-2.UpDNHv
+exit=0

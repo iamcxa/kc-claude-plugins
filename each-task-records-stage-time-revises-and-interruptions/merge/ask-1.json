@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+  "model": "not run",
+  "necessity": ".github/workflows/kc-dev-flow-2-tests.yml, docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-12'",
+    "point: amendment: 'Amendment 2 dated 2026-11-12'",
+    "point: path: '.github/workflows/kc-dev-flow-2-tests.yml'",
+    "point: path: 'docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/task_timeline.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_task_timeline.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#852",
+  "sufficiency": "on archived tasks the helper's stage boundaries match the state commit times read by hand, its repeat counts match the existing budget counter where both can count, a question recorded with the ask co",
+  "time": "2026-11-12T16:00:45Z",
+  "verdict": "ask"
+}
