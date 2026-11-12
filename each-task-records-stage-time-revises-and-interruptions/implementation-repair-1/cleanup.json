@@ -4,5 +4,10 @@
     "/tmp/tt-ask-smoke.SWueHI"
   ],
   "note": "ask-smoke already removed by EXIT trap; all other fixture/mutant scratch is inside the exact dispatch root",
-  "keep_for_fo": "/tmp/impl-each-task-records-stage-time-revises-and-interruptions-pr.md"
+  "keep_for_fo": "/tmp/impl-each-task-records-stage-time-revises-and-interruptions-pr.md",
+  "verified_removed": [
+    "/tmp/impl-stage-timing-repair-8fcbee7d",
+    "/tmp/tt-ask-smoke.SWueHI"
+  ],
+  "retained_pr_text_exists": true
 }
