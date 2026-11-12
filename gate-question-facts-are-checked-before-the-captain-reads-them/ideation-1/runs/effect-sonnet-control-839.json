@@ -1,0 +1,50 @@
+{
+ "question": "control-839",
+ "state": "58c02d8c08baff0fb66549e96bec6b6d1e8bd6f7",
+ "record_lines": 25,
+ "record_chars": 9274,
+ "runs": [
+  {
+   "run": 1,
+   "sentence_no": 1,
+   "sentence": "這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this",
+   "why": "The automatic report at archive only appears after both releases reach relay, which matches the claim that it takes effect only once the second half is merged and released; the record does not mention #843 by number.",
+   "seconds": 8.4,
+   "input_tokens": 6550,
+   "output_tokens": 556,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.\", \"why\": \"The automatic report at archive only appears after both releases reach relay, which matches the claim that it takes effect only once the second half is merged and released; the record does not mention #843 by number.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 2,
+   "sentence": "在 relay 上的真實歸檔回報要等發版後才驗",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this",
+   "why": "AC-10 says the real use on relay is not yet verified and needs the release and rollout first, matching the sentence.",
+   "seconds": 4.8,
+   "input_tokens": 6514,
+   "output_tokens": 206,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.\", \"why\": \"AC-10 says the real use on relay is not yet verified and needs the release and rollout first, matching the sentence.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 3,
+   "sentence": "Copilot 因額度不足沒有審過這個版本",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "The record only shows a truncated 'copilot not run: \"Copilot was unable' line, so it never states that insufficient quota was the cause.",
+   "seconds": 5.3,
+   "input_tokens": 6509,
+   "output_tokens": 243,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"The record only shows a truncated 'copilot not run: \\\"Copilot was unable' line, so it never states that insufficient quota was the cause.\"}"
+  }
+ ]
+}

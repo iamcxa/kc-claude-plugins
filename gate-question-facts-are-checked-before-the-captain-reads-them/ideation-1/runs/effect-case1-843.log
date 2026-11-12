@@ -1,0 +1,17 @@
+case1-843: 31 record lines (9714 chars) at state 4436282c2
+run 1 s1 ok   SUPPORTED verbatim=True 9.5s 7583+1354tok | 已經開好的舊任務不會被要求補標
+run 1 s2 ok   SUPPORTED verbatim=True 6.9s 7588+1173tok | 合併後要等發版、各採用 repo 同步後才生效
+run 1 s3 ok   SUPPORTED verbatim=True 5.5s 7590+627tok | 在 relay 上的真實歸檔回報要等那之後才驗
+run 1 s4 ok   NOT_FOUND verbatim=False 6.4s 7585+627tok | Copilot 因額度不足沒有審過這個版本
+run 1 s5 ok   NOT_FOUND verbatim=False 6.2s 7605+713tok | #839 合併後我沒有重跑驗收，只確認了兩者合起來的內容和驗證過的一樣
+run 2 s1 ok   SUPPORTED verbatim=True 6.6s 7583+777tok | 已經開好的舊任務不會被要求補標
+run 2 s2 ok   SUPPORTED verbatim=True 8.8s 7588+1345tok | 合併後要等發版、各採用 repo 同步後才生效
+run 2 s3 ok   SUPPORTED verbatim=True 5.8s 7590+691tok | 在 relay 上的真實歸檔回報要等那之後才驗
+run 2 s4 ok   SUPPORTED verbatim=True 6.9s 7585+989tok | Copilot 因額度不足沒有審過這個版本
+run 2 s5 ok   NOT_FOUND verbatim=False 5.6s 7605+655tok | #839 合併後我沒有重跑驗收，只確認了兩者合起來的內容和驗證過的一樣
+run 3 s1 ok   SUPPORTED verbatim=True 6.5s 7583+841tok | 已經開好的舊任務不會被要求補標
+run 3 s2 ok   SUPPORTED verbatim=True 6.9s 7588+1021tok | 合併後要等發版、各採用 repo 同步後才生效
+run 3 s3 ok   SUPPORTED verbatim=True 5.6s 7590+793tok | 在 relay 上的真實歸檔回報要等那之後才驗
+run 3 s4 ok   SUPPORTED verbatim=True 7.4s 7585+913tok | Copilot 因額度不足沒有審過這個版本
+run 3 s5 ok   NOT_FOUND verbatim=False 7.1s 7605+804tok | #839 合併後我沒有重跑驗收，只確認了兩者合起來的內容和驗證過的一樣
+exit 0

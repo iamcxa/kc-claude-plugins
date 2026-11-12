@@ -1,0 +1,7 @@
+case2-841: 32 record lines (9355 chars) at state ca1513f83
+run 1 s1 ok   NOT_FOUND verbatim=False 6.4s 6467+390tok | 我追加給工人的修正訊息在送出前不會檢查預算，超過上限要到下一次派工、閒置檢查或合併前才擋下，也就是可能多做一則訊息的工
+run 1 s2 FLAG CONTRADICTED verbatim=True 6.5s 6430+306tok | 直接改任務檔裡的預算那一行可以解除擋下而不留修正案
+run 1 s3 ok   SUPPORTED verbatim=True 5.4s 6448+273tok | 升級後，還沒過設計關卡、又沒寫「值不值得」那一節的舊設計會被擋下，要補寫才能過
+run 1 s4 ok   NOT_FOUND verbatim=False 5.0s 6438+220tok | 實作時順帶找到的 15 個同類檢查漏洞（都在這張任務範圍外）不修
+run 1 s5 ok   NOT_FOUND verbatim=False 6.6s 6436+461tok | 另外累計代理分鐘不在這張，Copilot 因額度不足沒有審過這個版本
+exit 1

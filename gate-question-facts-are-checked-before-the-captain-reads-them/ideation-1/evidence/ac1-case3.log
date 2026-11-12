@@ -1,0 +1,7 @@
+FLAG gate-summary-names-each-decline: status ideation, latest ruling hold at ideation 2026-11-05
+FLAG fo-write-checks-parse-top-level: status ideation, latest ruling hold at ideation 2026-10-21
+FLAG adoption-asks-which-extensions: status ideation, latest ruling hold at ideation 2026-10-25
+FLAG seed-check-requires-alignment-result: status ideation, latest ruling hold at ideation 2026-10-29
+FLAG step-back-answer-has-a-record-line: status ideation, latest ruling hold at ideation 2026-11-05
+case3-five-tasks: asserts 'waiting in design, past intake, no Captain question needed'; 5 of 5 tasks flagged at state c59bfffd6
+exit 1

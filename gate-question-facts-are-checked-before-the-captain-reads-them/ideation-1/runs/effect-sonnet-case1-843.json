@@ -1,0 +1,78 @@
+{
+ "question": "case1-843",
+ "state": "4436282c26c2e581a3ec1ea99688fc21287f9329",
+ "record_lines": 31,
+ "record_chars": 9714,
+ "runs": [
+  {
+   "run": 1,
+   "sentence_no": 1,
+   "sentence": "已經開好的舊任務不會被要求補標",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- ask sufficiency: in a workflow that lists the journey-map extension a new seed is refused without a Story record or a stated none with its reason, tasks filed before the rule are not refused, the idle reminder names a",
+   "why": "The record says tasks filed before the rule are not refused, matching that already-opened old tasks won't be required to add the story label.",
+   "seconds": 5.3,
+   "input_tokens": 6759,
+   "output_tokens": 134,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- ask sufficiency: in a workflow that lists the journey-map extension a new seed is refused without a Story record or a stated none with its reason, tasks filed before the rule are not refused, the idle reminder names a\", \"why\": \"The record says tasks filed before the rule are not refused, matching that already-opened old tasks won't be required to add the story label.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 2,
+   "sentence": "合併後要等發版、各採用 repo 同步後才生效",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this",
+   "why": "AC-10 says the effect on relay only appears after both releases reach it and the rollout happens, matching the sentence that it takes effect only after release and adopting repos sync.",
+   "seconds": 4.5,
+   "input_tokens": 6764,
+   "output_tokens": 224,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.\", \"why\": \"AC-10 says the effect on relay only appears after both releases reach it and the rollout happens, matching the sentence that it takes effect only after release and adopting repos sync.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 3,
+   "sentence": "在 relay 上的真實歸檔回報要等那之後才驗",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this",
+   "why": "AC-10 says the real archive report on relay is verified only after the release and rollout, matching the sentence.",
+   "seconds": 5.5,
+   "input_tokens": 6766,
+   "output_tokens": 203,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-10** (stop condition, real use) — On relay, after both releases reach it, the next archive of a task on a declared story has FO's archive message carrying the report lines, or `journey progress not run: <reason>`. Evidence: the archive message quoted with its task slug. Not yet verified: this needs the release and rollout (see release-rollout-reaches-adopters-and-laws-pin); validation may record it as an unverified future check.\", \"why\": \"AC-10 says the real archive report on relay is verified only after the release and rollout, matching the sentence.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 4,
+   "sentence": "Copilot 因額度不足沒有審過這個版本",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "The record shows Copilot was not run (\"copilot not run: \\\"Copilot was unable\"), but the line is cut off and no record line gives insufficient quota as the reason.",
+   "seconds": 5.6,
+   "input_tokens": 6761,
+   "output_tokens": 304,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"The record shows Copilot was not run (\\\"copilot not run: \\\\\\\"Copilot was unable\\\"), but the line is cut off and no record line gives insufficient quota as the reason.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 5,
+   "sentence": "#839 合併後我沒有重跑驗收，只確認了兩者合起來的內容和驗證過的一樣",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "No record line mentions #839, a merge of it, or whether acceptance was rerun or the merged content compared with what was verified.",
+   "seconds": 5.7,
+   "input_tokens": 6781,
+   "output_tokens": 364,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"No record line mentions #839, a merge of it, or whether acceptance was rerun or the merged content compared with what was verified.\"}"
+  }
+ ]
+}

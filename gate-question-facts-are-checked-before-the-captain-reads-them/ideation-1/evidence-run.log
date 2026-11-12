@@ -1,0 +1,14 @@
+ac1-case3: exit 1
+ac1-control: exit 0
+ac2-scope-case1-843: exit 1
+ac2-scope-case2-841: exit 1
+ac2-scope-control-839: exit 0
+ac2-scope-control-849: exit 1
+ac2-scope-control-849-cited: exit 0
+ac2-scope-control-849-badcite: exit 1
+ac2-scope-case2-841-marked: exit 0
+ac3-corpus: exit 1
+falsifier-ac1-no-hold: exit 0
+falsifier-ac2-english-only: exit 0
+falsifier-ac2-no-exists: exit 0
+removed /tmp/gqf-mutants.VkKFPh

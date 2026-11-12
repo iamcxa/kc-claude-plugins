@@ -1,0 +1,78 @@
+{
+ "question": "case2-841",
+ "state": "ca1513f83231da0f3ad8750058821fd603ecb2e2",
+ "record_lines": 32,
+ "record_chars": 9355,
+ "runs": [
+  {
+   "run": 1,
+   "sentence_no": 1,
+   "sentence": "我追加給工人的修正訊息在送出前不會檢查預算，超過上限要到下一次派工、閒置檢查或合併前才擋下，也就是可能多做一則訊息的工",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "The record says follow-up messages count toward the total cap (AC-13) but never says whether a message is budget-checked before sending, nor mentions an idle check or merge-time block as the stopping points.",
+   "seconds": 6.4,
+   "input_tokens": 6467,
+   "output_tokens": 390,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"The record says follow-up messages count toward the total cap (AC-13) but never says whether a message is budget-checked before sending, nor mentions an idle check or merge-time block as the stopping points.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 2,
+   "sentence": "直接改任務檔裡的預算那一行可以解除擋下而不留修正案",
+   "verdict": "CONTRADICTED",
+   "quote_verbatim": true,
+   "flag": true,
+   "quote": "- **AC-9** The ideation principles ask the three worth questions per scope part in a `### Worth questions` section. `design_surfaces.py check` refuses an ideation design without that section and passes one with it. An amendment `Budget:` line counts only when its value appears verbatim in the same e",
+   "why": "The record says a hold clears only via a later amendment whose Budget value appears verbatim in the Asked/Captain line, and an FO-invented bound does not clear it, so editing the task file's Budget line without an amendment does not lift the hold.",
+   "seconds": 6.5,
+   "input_tokens": 6430,
+   "output_tokens": 306,
+   "raw": "{\"verdict\": \"CONTRADICTED\", \"quote\": \"- **AC-9** The ideation principles ask the three worth questions per scope part in a `### Worth questions` section. `design_surfaces.py check` refuses an ideation design without that section and passes one with it. An amendment `Budget:` line counts only when its value appears verbatim in the same entry's `Asked:` or `Captain:` line. Evidence: `test_design_surfaces.py` cases for a missing and a present section; `test_role_triggers.py` cases for a matching and a non-matching amendment `Budget:`. Falsifier: a design with no section passes, or an FO-invented bound clears the hold.\", \"why\": \"The record says a hold clears only via a later amendment whose Budget value appears verbatim in the Asked/Captain line, and an FO-invented bound does not clear it, so editing the task file's Budget line without an amendment does not lift the hold.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 3,
+   "sentence": "升級後，還沒過設計關卡、又沒寫「值不值得」那一節的舊設計會被擋下，要補寫才能過",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- - F1 Deferred risk: upgrading and re-presenting an old design without Worth questions now refuses (validation-2/legacy-design.json: base 0, candidate 1, same bytes).",
+   "why": "The record shows that an old design without Worth questions is refused after the upgrade (base exit 0, candidate exit 1), so it must be backfilled to pass.",
+   "seconds": 5.4,
+   "input_tokens": 6448,
+   "output_tokens": 273,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- - F1 Deferred risk: upgrading and re-presenting an old design without Worth questions now refuses (validation-2/legacy-design.json: base 0, candidate 1, same bytes).\", \"why\": \"The record shows that an old design without Worth questions is refused after the upgrade (base exit 0, candidate exit 1), so it must be backfilled to pass.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 4,
+   "sentence": "實作時順帶找到的 15 個同類檢查漏洞（都在這張任務範圍外）不修",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "No record line mentions 15 same-kind check gaps found during implementation or a decision to leave them unfixed as out of scope.",
+   "seconds": 5.0,
+   "input_tokens": 6438,
+   "output_tokens": 220,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"No record line mentions 15 same-kind check gaps found during implementation or a decision to leave them unfixed as out of scope.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 5,
+   "sentence": "另外累計代理分鐘不在這張，Copilot 因額度不足沒有審過這個版本",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "The record shows Copilot was not run and that minutes are not counted (AC-11), but the Copilot line is cut off at 'Copilot was unable' and never gives insufficient quota as the reason.",
+   "seconds": 6.6,
+   "input_tokens": 6436,
+   "output_tokens": 461,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"The record shows Copilot was not run and that minutes are not counted (AC-11), but the Copilot line is cut off at 'Copilot was unable' and never gives insufficient quota as the reason.\"}"
+  }
+ ]
+}

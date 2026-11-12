@@ -1,0 +1,3 @@
+FLAG case1-843 | 同意即接受：已經開好的舊任務不會被要求補標
+scope: 1 questions, 7 sentences, 1 existing-item sentences, 1 questions flagged
+exit 1

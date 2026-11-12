@@ -1,0 +1,20 @@
+control-849: 19 record lines (4921 chars) at state b5a403ac8
+run 1 s1 FLAG CONTRADICTED verbatim=True 4.9s 5646+215tok | 檢查只看任務現在的階段，所以一張任務只要離開設計階段就不再被問那三個問題，即使它的設計是新版之後才寫的
+run 1 s2 ok   SUPPORTED verbatim=True 5.8s 5606+690tok | 階段讀不到時照舊擋下
+run 1 s3 ok   SUPPORTED verbatim=True 10.9s 5605+1816tok | 觀察員技能多改了一句話
+run 1 s4 ok   SUPPORTED verbatim=True 5.1s 5667+493tok | 驗證留一項延後的風險不修（CI 在安裝 spacedock 程式之前就跑設計檢查的測試，其中兩個要用到它的案例在 CI 
+run 1 s5 ok   NOT_FOUND verbatim=False 5.9s 5637+661tok | 合併後還要發 0.39.1 並同步 kc-claude-plugins 和 qnow 才生效，發版我另外問你
+run 1 s6 ok   SUPPORTED verbatim=True 7.4s 5611+1123tok | Copilot 因額度不足沒有審過這個版本
+run 2 s1 FLAG CONTRADICTED verbatim=True 3.7s 5646+227tok | 檢查只看任務現在的階段，所以一張任務只要離開設計階段就不再被問那三個問題，即使它的設計是新版之後才寫的
+run 2 s2 ok   SUPPORTED verbatim=True 8.1s 5606+982tok | 階段讀不到時照舊擋下
+run 2 s3 ok   NOT_FOUND verbatim=False 8.5s 5605+1288tok | 觀察員技能多改了一句話
+run 2 s4 ok   SUPPORTED verbatim=True 6.5s 5667+948tok | 驗證留一項延後的風險不修（CI 在安裝 spacedock 程式之前就跑設計檢查的測試，其中兩個要用到它的案例在 CI 
+run 2 s5 ok   NOT_FOUND verbatim=False 6.8s 5637+831tok | 合併後還要發 0.39.1 並同步 kc-claude-plugins 和 qnow 才生效，發版我另外問你
+run 2 s6 ok   NOT_FOUND verbatim=False 6.0s 5611+798tok | Copilot 因額度不足沒有審過這個版本
+run 3 s1 FLAG CONTRADICTED verbatim=True 3.8s 5646+206tok | 檢查只看任務現在的階段，所以一張任務只要離開設計階段就不再被問那三個問題，即使它的設計是新版之後才寫的
+run 3 s2 ok   SUPPORTED verbatim=True 3.7s 5606+348tok | 階段讀不到時照舊擋下
+run 3 s3 ok   NOT_FOUND verbatim=False 7.3s 5605+1094tok | 觀察員技能多改了一句話
+run 3 s4 ok   SUPPORTED verbatim=True 5.7s 5667+786tok | 驗證留一項延後的風險不修（CI 在安裝 spacedock 程式之前就跑設計檢查的測試，其中兩個要用到它的案例在 CI 
+run 3 s5 ok   NOT_FOUND verbatim=False 5.9s 5637+772tok | 合併後還要發 0.39.1 並同步 kc-claude-plugins 和 qnow 才生效，發版我另外問你
+run 3 s6 ok   NOT_FOUND verbatim=False 6.3s 5611+877tok | Copilot 因額度不足沒有審過這個版本
+exit 1

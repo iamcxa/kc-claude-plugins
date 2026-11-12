@@ -1,0 +1,16 @@
+{
+ "name": "case2-841-marked",
+ "kind": "merge",
+ "asked_at": "2026-11-11T08:55:42.941Z",
+ "source": "FO session transcript 8fcbee7d (host question dialog), jsonl line 5139",
+ "state_commit_before_ask": "ca1513f83231da0f3ad8750058821fd603ecb2e2",
+ "task": "budget-overrun-holds-and-findings-meet-non-goals",
+ "question": "決定：合併 #841（預算任務：任務的預算寫成數得出來的上限，每次派工顯示已用多少，第一次超過時保留成果並回到你這裡；設計要先回答三個「值不值得」的問題）嗎？建議合併，Codex 提的兩個中等問題和驗證留的一項風險這次不修、另開任務。同意即接受四件沒修的事：一、我追加給工人的修正訊息在送出前不會檢查預算，超過上限要到下一次派工、閒置檢查或合併前才擋下，也就是可能多做一則訊息的工；二、直接改任務檔裡的預算那一行可以解除擋下而不留修正案；三、升級後，還沒過設計關卡、又沒寫「值不值得」那一節的舊設計會被擋下，要補寫才能過（未驗證）；四、實作時順帶找到的 15 個同類檢查漏洞（都在這張任務範圍外）不修。另外累計代理分鐘不在這張，Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit 6da9a765ee04e1e2c7836517ba01f75b0ea91d73, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+ "options": [
+  "合併，時間另開任務（建議）",
+  "先修訊息那一項再合併",
+  "先不合併，把時間做進這張"
+ ],
+ "derived_from": "case2-841.json",
+ "derivation": "the false sentence carries the unverified marker the Captain would read"
+}

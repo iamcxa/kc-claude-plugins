@@ -1,0 +1,14 @@
+{
+ "name": "control-839",
+ "kind": "merge",
+ "asked_at": "2026-11-11T07:41:13.365Z",
+ "source": "FO session transcript 8fcbee7d (host question dialog), jsonl line 4604",
+ "state_commit_before_ask": "58c02d8c08baff0fb66549e96bec6b6d1e8bd6f7",
+ "task": "story-done-reports-release-remaining",
+ "question": "決定：合併 #839（故事進度的前半：旅程地圖的進度工具改成回報「這個故事和這個切片各有幾張已開的任務做完」，並列出完成它的 PR）嗎？建議合併。同意即接受：這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你；在 relay 上的真實歸檔回報要等發版後才驗；Copilot 因額度不足沒有審過這個版本。 Squash merge with --match-head-commit fd1caa475f85483cf5c4031a1e58656ff5d3eaff, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+ "options": [
+  "合併（建議）",
+  "我自己合併",
+  "先不合併"
+ ]
+}

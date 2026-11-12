@@ -1,0 +1,42 @@
+{
+ "question": "control-five-new-tasks",
+ "state": "2c60d50f365a09beb6e614a87c70060cca8917a0",
+ "rows": [
+  {
+   "task": "merge-ask-tests-the-merge-result",
+   "status": "backlog",
+   "archived": false,
+   "latest_ruling": null,
+   "flag": false
+  },
+  {
+   "task": "held-and-closed-tasks-leave-the-design-queue",
+   "status": "backlog",
+   "archived": false,
+   "latest_ruling": null,
+   "flag": false
+  },
+  {
+   "task": "each-task-records-stage-time-revises-and-interruptions",
+   "status": "backlog",
+   "archived": false,
+   "latest_ruling": null,
+   "flag": false
+  },
+  {
+   "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+   "status": "backlog",
+   "archived": false,
+   "latest_ruling": null,
+   "flag": false
+  },
+  {
+   "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+   "status": "backlog",
+   "archived": false,
+   "latest_ruling": null,
+   "flag": false
+  }
+ ],
+ "flagged": 0
+}

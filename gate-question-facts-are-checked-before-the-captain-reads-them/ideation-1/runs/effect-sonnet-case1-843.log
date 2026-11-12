@@ -1,0 +1,7 @@
+case1-843: 31 record lines (9714 chars) at state 4436282c2
+run 1 s1 ok   SUPPORTED verbatim=True 5.3s 6759+134tok | 已經開好的舊任務不會被要求補標
+run 1 s2 ok   SUPPORTED verbatim=True 4.5s 6764+224tok | 合併後要等發版、各採用 repo 同步後才生效
+run 1 s3 ok   SUPPORTED verbatim=True 5.5s 6766+203tok | 在 relay 上的真實歸檔回報要等那之後才驗
+run 1 s4 ok   NOT_FOUND verbatim=False 5.6s 6761+304tok | Copilot 因額度不足沒有審過這個版本
+run 1 s5 ok   NOT_FOUND verbatim=False 5.7s 6781+364tok | #839 合併後我沒有重跑驗收，只確認了兩者合起來的內容和驗證過的一樣
+exit 0

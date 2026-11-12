@@ -1,0 +1,26 @@
+{
+ "name": "case3-five-tasks",
+ "kind": "state",
+ "asked_at": "2026-11-12T03:06:51.126Z",
+ "source": "FO session transcript 8fcbee7d (host question dialog), jsonl line 6691",
+ "state_commit_before_ask": "c59bfffd6c8eaafd05b9c86c36dafeb9e2c51ad6",
+ "task": null,
+ "question": "「證明先跑過」的試行要用哪 5 張任務？我建議從已經停在設計階段、屬於我這個席位的任務裡挑這 5 張：一、關卡摘要婉拒發現時要逐項寫明理由；二、我寫入紀錄的檢查只讀最上層（關掉兩個已知漏洞）；三、擴充列入之前寫的派工紀錄不被新擴充的規則追溯；四、進場檢查擋下「說要先對齊卻沒記結果」的任務；五、「退一步想」的回答有固定的紀錄行。理由：它們已過進場關卡、不用再問你；前三張的驗收條件大量用「重播」「找一個全新代理」這類難產生的證據，最能試出東西；而且它們的舊設計都沒寫「值不值得」那一節，本來就得重派設計。變差的：這是「重寫舊設計」不是「從零設計」，設計時間會比全新任務短；其中二、四兩張改同一個檔，要排隊做。",
+ "options": [
+  "就用這 5 張（建議）",
+  "改用全新的任務",
+  "先只跑 2 張看看",
+  "我要自己挑"
+ ],
+ "claims": {
+  "asserts": "waiting in design, past intake, no Captain question needed",
+  "tasks": [
+   "gate-summary-names-each-decline",
+   "fo-write-checks-parse-top-level",
+   "adoption-asks-which-extensions",
+   "seed-check-requires-alignment-result",
+   "step-back-answer-has-a-record-line"
+  ],
+  "mapping": "items 一..五 of the question matched by title: 一 'A gate summary that declines findings names each finding and its reason'; 二 'The FO-write checks parse only top-level declines and unfenced Scope'; 三 'A dispatch record written before an extension was listed is not judged against it'; 四 'The seed check refuses a task whose FO alignment says needed and records no Result line'; 五 'The step-back answer has a fixed record line'"
+ }
+}

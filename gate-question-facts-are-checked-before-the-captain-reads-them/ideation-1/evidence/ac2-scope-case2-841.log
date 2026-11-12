@@ -1,0 +1,3 @@
+FLAG case2-841 | 升級後，還沒過設計關卡、又沒寫「值不值得」那一節的舊設計會被擋下，要補寫才能過
+scope: 1 questions, 9 sentences, 1 existing-item sentences, 1 questions flagged
+exit 1

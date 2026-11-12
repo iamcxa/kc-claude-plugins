@@ -1,0 +1,62 @@
+{
+ "question": "case3-five-tasks",
+ "state": "c59bfffd6c8eaafd05b9c86c36dafeb9e2c51ad6",
+ "rows": [
+  {
+   "task": "gate-summary-names-each-decline",
+   "status": "ideation",
+   "archived": false,
+   "latest_ruling": {
+    "at": "2026-11-05T10:48:31.513279Z",
+    "stage": "ideation",
+    "decision": "hold"
+   },
+   "flag": true
+  },
+  {
+   "task": "fo-write-checks-parse-top-level",
+   "status": "ideation",
+   "archived": false,
+   "latest_ruling": {
+    "at": "2026-10-21T09:48:01.32697Z",
+    "stage": "ideation",
+    "decision": "hold"
+   },
+   "flag": true
+  },
+  {
+   "task": "adoption-asks-which-extensions",
+   "status": "ideation",
+   "archived": false,
+   "latest_ruling": {
+    "at": "2026-10-25T13:52:52.554299Z",
+    "stage": "ideation",
+    "decision": "hold"
+   },
+   "flag": true
+  },
+  {
+   "task": "seed-check-requires-alignment-result",
+   "status": "ideation",
+   "archived": false,
+   "latest_ruling": {
+    "at": "2026-10-29T01:27:36.420412Z",
+    "stage": "ideation",
+    "decision": "hold"
+   },
+   "flag": true
+  },
+  {
+   "task": "step-back-answer-has-a-record-line",
+   "status": "ideation",
+   "archived": false,
+   "latest_ruling": {
+    "at": "2026-11-05T10:38:18.360884Z",
+    "stage": "ideation",
+    "decision": "hold"
+   },
+   "flag": true
+  }
+ ],
+ "flagged": 5
+}

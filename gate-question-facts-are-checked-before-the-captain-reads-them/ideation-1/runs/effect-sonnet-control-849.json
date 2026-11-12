@@ -1,0 +1,92 @@
+{
+ "question": "control-849",
+ "state": "b5a403ac8aeba4cc3b0ce2099f79df5f8000fac2",
+ "record_lines": 19,
+ "record_chars": 4921,
+ "runs": [
+  {
+   "run": 1,
+   "sentence_no": 1,
+   "sentence": "檢查只看任務現在的階段，所以一張任務只要離開設計階段就不再被問那三個問題，即使它的設計是新版之後才寫的",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-2** A task whose frontmatter stage is `ideation` and that has no Worth section is refused, with or without `## Design`. So is a `backlog` task with `## Design`. Tasks at `implementation`, `validation` and `done` with `## Design` and no Worth section are not refused for it.",
+   "why": "The check keys only on the task's current stage, so tasks past ideation are not refused for a missing Worth section whenever their design was written.",
+   "seconds": 7.6,
+   "input_tokens": 4822,
+   "output_tokens": 573,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-2** A task whose frontmatter stage is `ideation` and that has no Worth section is refused, with or without `## Design`. So is a `backlog` task with `## Design`. Tasks at `implementation`, `validation` and `done` with `## Design` and no Worth section are not refused for it.\", \"why\": \"The check keys only on the task's current stage, so tasks past ideation are not refused for a missing Worth section whenever their design was written.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 2,
+   "sentence": "階段讀不到時照舊擋下",
+   "verdict": "CONTRADICTED",
+   "quote_verbatim": true,
+   "flag": true,
+   "quote": "**AC-3** When the stage cannot be read, a frontmatter task with `## Design` and no Worth section gets one `cannot read stage for Worth questions:` error and no Worth line. Evidence: a test that points `SPACEDOCK_BIN` at a command that exits non-zero. Falsifier: dropping the `errors.append` in the `e",
+   "why": "The sentence says unreadable stage is blocked as before (old behavior), but the record shows the new behavior is a distinct 'cannot read stage' error that refuses the task, and the Worth line is no longer printed, which differs from the prior 'unchanged' blocking.",
+   "seconds": 4.8,
+   "input_tokens": 4782,
+   "output_tokens": 247,
+   "raw": "{\"verdict\": \"CONTRADICTED\", \"quote\": \"**AC-3** When the stage cannot be read, a frontmatter task with `## Design` and no Worth section gets one `cannot read stage for Worth questions:` error and no Worth line. Evidence: a test that points `SPACEDOCK_BIN` at a command that exits non-zero. Falsifier: dropping the `errors.append` in the `except` branch makes the test pass a task it should refuse.\", \"why\": \"The sentence says unreadable stage is blocked as before (old behavior), but the record shows the new behavior is a distinct 'cannot read stage' error that refuses the task, and the Worth line is no longer printed, which differs from the prior 'unchanged' blocking.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 3,
+   "sentence": "觀察員技能多改了一句話",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- **AC-6** Only if D2 is approved: the observer skill's historical-copy sentence also covers the `design needs '### Worth questions'` line. A briefing copy whose event-time README does not name worth answers is reported as current-schema incompatibility, not as a `violation`. Evidence: the skill tex",
+   "why": "AC-6 describes a change to one sentence in the observer skill (the historical-copy sentence), and the ask-necessity line records that SKILL.md changes on the Captain's approval.",
+   "seconds": 6.0,
+   "input_tokens": 4781,
+   "output_tokens": 552,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- **AC-6** Only if D2 is approved: the observer skill's historical-copy sentence also covers the `design needs '### Worth questions'` line. A briefing copy whose event-time README does not name worth answers is reported as current-schema incompatibility, not as a `violation`. Evidence: the skill text at the candidate, plus one observer replay of `merge-guard-stops-unasked-merges` at briefing sha `d57ed9b75ba5` with README from before 0.39.0, reporting incompatibility. Falsifier: the unchanged sentence yields `violation` for the same replay.\", \"why\": \"AC-6 describes a change to one sentence in the observer skill (the historical-copy sentence), and the ask-necessity line records that SKILL.md changes on the Captain's approval.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 4,
+   "sentence": "驗證留一項延後的風險不修（CI 在安裝 spacedock 程式之前就跑設計檢查的測試，其中兩個要用到它的案例在 CI 會被跳過，本機都有跑過）",
+   "verdict": "SUPPORTED",
+   "quote_verbatim": true,
+   "flag": false,
+   "quote": "- F1 Deferred risk: existing CI runs design tests before Spacedock installation and can skip the two native cases (`validation/no-cli.log`); no current defect was reproduced, and both ran locally. `value-ac[AC-2]` protects stage refusal/release; it becomes Material on a demonstrated faulty supported",
+   "why": "The record states the same deferred risk: CI runs design tests before Spacedock installation, skips two native cases, and both ran locally, matching the sentence.",
+   "seconds": 4.8,
+   "input_tokens": 4843,
+   "output_tokens": 239,
+   "raw": "{\"verdict\": \"SUPPORTED\", \"quote\": \"- F1 Deferred risk: existing CI runs design tests before Spacedock installation and can skip the two native cases (`validation/no-cli.log`); no current defect was reproduced, and both ran locally. `value-ac[AC-2]` protects stage refusal/release; it becomes Material on a demonstrated faulty supported path or delivery without the required real-reader merge-result run. See the four evidence fields in `validation/assessment.md`; no Material, Polish or Needs decision finding is added.\", \"why\": \"The record states the same deferred risk: CI runs design tests before Spacedock installation, skips two native cases, and both ran locally, matching the sentence.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 5,
+   "sentence": "合併後還要發 0.39.1 並同步 kc-claude-plugins 和 qnow 才生效，發版我另外問你",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "The record shows the fix title makes release-please propose 0.39.1, but says nothing about syncing kc-claude-plugins and qnow before the fix takes effect, or about asking the Captain separately for the release.",
+   "seconds": 5.5,
+   "input_tokens": 4813,
+   "output_tokens": 337,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"The record shows the fix title makes release-please propose 0.39.1, but says nothing about syncing kc-claude-plugins and qnow before the fix takes effect, or about asking the Captain separately for the release.\"}"
+  },
+  {
+   "run": 1,
+   "sentence_no": 6,
+   "sentence": "Copilot 因額度不足沒有審過這個版本",
+   "verdict": "NOT_FOUND",
+   "quote_verbatim": false,
+   "flag": false,
+   "quote": "",
+   "why": "One line records that Copilot was not run ('Copilot was unable'), but it is truncated and no line gives insufficient quota as the reason.",
+   "seconds": 6.0,
+   "input_tokens": 4787,
+   "output_tokens": 335,
+   "raw": "{\"verdict\": \"NOT_FOUND\", \"quote\": \"\", \"why\": \"One line records that Copilot was not run ('Copilot was unable'), but it is truncated and no line gives insufficient quota as the reason.\"}"
+  }
+ ]
+}

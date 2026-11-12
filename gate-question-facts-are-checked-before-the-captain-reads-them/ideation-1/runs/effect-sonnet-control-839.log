@@ -1,0 +1,5 @@
+control-839: 25 record lines (9274 chars) at state 58c02d8c0
+run 1 s1 ok   SUPPORTED verbatim=True 8.4s 6550+556tok | 這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你
+run 1 s2 ok   SUPPORTED verbatim=True 4.8s 6514+206tok | 在 relay 上的真實歸檔回報要等發版後才驗
+run 1 s3 ok   NOT_FOUND verbatim=False 5.3s 6509+243tok | Copilot 因額度不足沒有審過這個版本
+exit 0

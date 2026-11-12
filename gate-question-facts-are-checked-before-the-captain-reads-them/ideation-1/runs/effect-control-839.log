@@ -1,0 +1,11 @@
+control-839: 25 record lines (9274 chars) at state 58c02d8c0
+run 1 s1 FLAG CONTRADICTED verbatim=True 11.6s 7374+1990tok | 這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你
+run 1 s2 ok   SUPPORTED verbatim=True 7.0s 7338+702tok | 在 relay 上的真實歸檔回報要等發版後才驗
+run 1 s3 ok   NOT_FOUND verbatim=False 5.8s 7333+663tok | Copilot 因額度不足沒有審過這個版本
+run 2 s1 FLAG CONTRADICTED verbatim=True 8.4s 7374+1451tok | 這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你
+run 2 s2 ok   SUPPORTED verbatim=True 6.3s 7338+704tok | 在 relay 上的真實歸檔回報要等發版後才驗
+run 2 s3 ok   NOT_FOUND verbatim=False 5.3s 7333+610tok | Copilot 因額度不足沒有審過這個版本
+run 3 s1 FLAG CONTRADICTED verbatim=True 15.9s 7374+2760tok | 這一半合併後還不會自動回報，要等後半 #843（任務必須標故事、歸檔後提醒回報）合併並發版才生效，#843 我會另外問你
+run 3 s2 ok   SUPPORTED verbatim=True 5.9s 7338+636tok | 在 relay 上的真實歸檔回報要等發版後才驗
+run 3 s3 ok   NOT_FOUND verbatim=False 5.9s 7333+730tok | Copilot 因額度不足沒有審過這個版本
+exit 1

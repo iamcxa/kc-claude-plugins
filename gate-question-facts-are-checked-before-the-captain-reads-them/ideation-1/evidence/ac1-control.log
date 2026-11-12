@@ -1,0 +1,7 @@
+ok merge-ask-tests-the-merge-result: status backlog, latest ruling no ruling
+ok held-and-closed-tasks-leave-the-design-queue: status backlog, latest ruling no ruling
+ok each-task-records-stage-time-revises-and-interruptions: status backlog, latest ruling no ruling
+ok dispatch-close-out-archives-evidence-and-removes-scratch: status backlog, latest ruling no ruling
+ok gate-question-facts-are-checked-before-the-captain-reads-them: status backlog, latest ruling no ruling
+control-five-new-tasks: asserts 'new tasks waiting for the backlog gate to enter design'; 0 of 5 tasks flagged at state 2c60d50f3
+exit 0
