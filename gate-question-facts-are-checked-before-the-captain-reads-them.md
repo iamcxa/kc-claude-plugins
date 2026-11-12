@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:gate-question-facts-are-checked-before-the-captain-reads-them:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:gate-question-facts-are-checked-before-the-captain-reads-them-validation-1
+              briefing:
+                id: briefing:gate-question-facts-are-checked-before-the-captain-reads-them:validation:attempt-1:revision-1
+                digest: sha256:cd88fde17b6cad6c64c3e3dc69bd17b9d7bd5b3c4ff398058d20b789a5b02aca
+                room-ref: ./gate-question-facts-are-checked-before-the-captain-reads-them/review/validation/briefing-1
 started: 2026-11-12T05:16:48Z
 worktree: .worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them
 pr: iamcxa/kc-claude-plugins#855
