@@ -1,0 +1,19 @@
+{
+  "source_cases": 1,
+  "source_validation_reports": 4,
+  "absent_report_paths": 2,
+  "historical_s4": 3,
+  "current_s4": 1,
+  "current_other_problems": 0,
+  "historical_report_only_s4": 2,
+  "current_report_only_s4": 0,
+  "question_exit": 0,
+  "check_exit": 0,
+  "missing_message_exit": 1,
+  "missing_message_s4": 1,
+  "missing_asked_exit": 1,
+  "missing_asked_s4": 1,
+  "mutant_report_only_s4": 1,
+  "assertions": 11,
+  "failed_assertions": 1
+}

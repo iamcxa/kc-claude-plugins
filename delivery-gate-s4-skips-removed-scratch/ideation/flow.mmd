@@ -1,0 +1,12 @@
+flowchart TD
+  A[Worker reads pinned main and source snapshot] --> B[Replay historical S4]
+  B --> C[Replay current S4 and missing requested path]
+  C --> D{Current main already meets path outcome?}
+  D -->|yes observed| E[Stop product work: premise overturned]
+  D -->|no| F[Return bounded repair evidence to FO]
+  E --> G[First Officer presents one scope choice]
+  F --> G
+  G --> H[Captain rules which paths S4 reads]
+  H --> I{Explicit further authority?}
+  I -->|no| J[Keep local probe and wait]
+  I -->|yes| K[FO dispatches approved next stage]

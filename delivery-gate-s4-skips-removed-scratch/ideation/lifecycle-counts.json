@@ -1,0 +1,36 @@
+{
+  "instruction_sources_checked": 4,
+  "changed_instruction_sources": 0,
+  "moments": [
+    {
+      "name": "startup",
+      "affected_words_before": 0,
+      "affected_words_after": 0,
+      "total_words_measured": false
+    },
+    {
+      "name": "idle-open-pr",
+      "affected_words_before": 0,
+      "affected_words_after": 0,
+      "total_words_measured": false
+    },
+    {
+      "name": "idle-merged-pr",
+      "affected_words_before": 0,
+      "affected_words_after": 0,
+      "total_words_measured": false
+    },
+    {
+      "name": "after-archive",
+      "affected_words_before": 0,
+      "affected_words_after": 0,
+      "total_words_measured": false
+    },
+    {
+      "name": "merge-ask",
+      "affected_words_before": 0,
+      "affected_words_after": 0,
+      "total_words_measured": false
+    }
+  ]
+}
