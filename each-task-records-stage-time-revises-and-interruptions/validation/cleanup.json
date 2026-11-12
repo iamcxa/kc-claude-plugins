@@ -1,0 +1,38 @@
+{
+  "evidence_commit": "9cc4739d4c30c9f8adc1751d2ae35783d961f95f",
+  "evidence_commit_only_task_paths": true,
+  "checked_at_utc": "2026-11-12T10:02:30.946089+00:00",
+  "scratch_roots": [
+    {
+      "path": "/tmp/validate-stage-time-a3266ec9-497zjyqm",
+      "existed_at_final_cleanup": true,
+      "status": "removed; absence verified",
+      "includes_children": true
+    },
+    {
+      "path": "/tmp/tt-ask-smoke.mhWtCJ",
+      "existed_at_final_cleanup": false,
+      "status": "removed; absence verified",
+      "includes_children": true
+    },
+    {
+      "path": "/tmp/stage-time-acceptance.N7VlTv",
+      "existed_at_final_cleanup": false,
+      "status": "removed; absence verified",
+      "includes_children": true
+    },
+    {
+      "path": "/tmp/tt-ask-smoke.rtnhts",
+      "existed_at_final_cleanup": false,
+      "status": "removed; absence verified",
+      "includes_children": true
+    },
+    {
+      "path": "/tmp/tt-falsify.4Q2P44",
+      "existed_at_final_cleanup": false,
+      "status": "removed; absence verified",
+      "includes_children": true
+    }
+  ],
+  "tmp_evidence_copies_retained": 0
+}

@@ -326,3 +326,7 @@ Captain steps: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claud
 
 Cleanup: all evidence is in validation/; after its commit, remove the exact owned scratch root and verify every path in validation/cleanup-plan.json. The post-commit receipt will be validation/cleanup.json. No private repository was read; no private repository content was copied.
 
+
+### Validation cleanup
+
+Evidence commit: 9cc4739d4c30c9f8adc1751d2ae35783d961f95f (pushed). All five exact scratch roots, including their children, are absent; no /tmp evidence copy remains (validation/cleanup.json). Only this task's paths were committed.
