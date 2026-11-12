@@ -1,0 +1,26 @@
+{
+  "task": "denied-command-denies-only-that-command",
+  "source_commits": [
+    "e3e7426631e897a7b7922bdf3541cf8c04a0762c",
+    "1b89f44c428f87020de1a1095be6b053e45d1b97"
+  ],
+  "dispatch_starts": [
+    "2026-11-11T14:40:01+08:00",
+    "2026-11-11T15:26:59+08:00"
+  ],
+  "gate_closes_from_task_frontmatter": {
+    "1": "2026-11-11T07:03:48.07088Z",
+    "2": "2026-11-11T07:59:45.912526Z"
+  },
+  "segment_ends": [
+    "2026-11-11T15:26:59+08:00",
+    "2026-11-11T08:06:49Z"
+  ],
+  "expected_after_gate_parts_min": [
+    23.2,
+    7.1
+  ],
+  "expected_after_gate_total_min": 30.3,
+  "observed_after_gate_min": 7.1,
+  "post_gate_minutes_shifted_to_before_gate": 23.2
+}

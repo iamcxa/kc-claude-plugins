@@ -1,0 +1,26 @@
+[
+  {
+    "name": "tests",
+    "count": 11,
+    "status": "passed",
+    "evidence": "tests.log"
+  },
+  {
+    "name": "lint-tests",
+    "count": 47,
+    "status": "passed",
+    "evidence": "lint-tests.log"
+  },
+  {
+    "name": "ledger-tests",
+    "count": 23,
+    "status": "passed",
+    "evidence": "ledger-tests.log"
+  },
+  {
+    "name": "role-tests",
+    "count": 63,
+    "status": "passed",
+    "evidence": "role-tests.log"
+  }
+]

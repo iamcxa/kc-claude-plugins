@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_finished_boundaries_use_author_dates_even_after_rebase (test_task_timeline.TimelineTests.test_finished_boundaries_use_author_dates_even_after_rebase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-stage-time-a3266ec9-497zjyqm/rerun/mutant/test_task_timeline.py", line 86, in test_finished_boundaries_use_author_dates_even_after_rebase
+    self.assertEqual(result["done"], self.stamp(60))
+AssertionError: None != '2026-01-01T01:00:00Z'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.265s
+
+FAILED (failures=1)

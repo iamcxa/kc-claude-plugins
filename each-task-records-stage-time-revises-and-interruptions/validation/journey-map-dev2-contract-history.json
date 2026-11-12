@@ -1,0 +1,129 @@
+[
+  {
+    "at": "2026-10-13T03:04:32Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/review/backlog/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T03:05:11Z",
+    "subject": "dispatch: journey-map-dev2-contract entering ideation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T03:28:06Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/review/ideation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T04:15:06Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/review/ideation/briefing-2/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T04:15:29Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/review/ideation/briefing-3/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T04:30:34Z",
+    "subject": "dispatch: journey-map-dev2-contract entering implementation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T04:58:59Z",
+    "subject": "dispatch: journey-map-dev2-contract entering validation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T05:13:08Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/ideation-1.md",
+      "journey-map-dev2-contract/dispatch/ideation-2.md",
+      "journey-map-dev2-contract/dispatch/ideation-3.md",
+      "journey-map-dev2-contract/dispatch/implementation-1.md",
+      "journey-map-dev2-contract/dispatch/implementation-2.md",
+      "journey-map-dev2-contract/dispatch/validation-1.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T05:59:00Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/implementation-3.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:00:54Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/implementation-4.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:07:15Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/validation-2.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:17:43Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/implementation-5.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:20:14Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/implementation-6.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:28:48Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/dispatch/validation-3.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:40:10Z",
+    "subject": "state: update journey-map-dev2-contract",
+    "added": [
+      "journey-map-dev2-contract/review/validation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T06:59:28Z",
+    "subject": "archive journey-map-dev2-contract (merge guard)",
+    "added": [
+      "_archive/journey-map-dev2-contract/dispatch/ideation-1.md",
+      "_archive/journey-map-dev2-contract/dispatch/ideation-2.md",
+      "_archive/journey-map-dev2-contract/dispatch/ideation-3.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-1.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-2.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-3.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-4.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-5.md",
+      "_archive/journey-map-dev2-contract/dispatch/implementation-6.md",
+      "_archive/journey-map-dev2-contract/dispatch/validation-1.md",
+      "_archive/journey-map-dev2-contract/dispatch/validation-2.md",
+      "_archive/journey-map-dev2-contract/dispatch/validation-3.md",
+      "_archive/journey-map-dev2-contract/review/backlog/briefing-1/index.json",
+      "_archive/journey-map-dev2-contract/review/ideation/briefing-1/index.json",
+      "_archive/journey-map-dev2-contract/review/ideation/briefing-2/index.json",
+      "_archive/journey-map-dev2-contract/review/ideation/briefing-3/index.json",
+      "_archive/journey-map-dev2-contract/review/validation/briefing-1/index.json"
+    ]
+  }
+]

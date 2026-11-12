@@ -1,0 +1,6 @@
+{
+  "startup_before": 6008,
+  "startup_after": 6033,
+  "delta": 25,
+  "idle_archive_merge_ask": "unchanged"
+}

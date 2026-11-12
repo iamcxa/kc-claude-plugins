@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_gate_only_stage_has_no_before_gate_minutes (test_task_timeline.TimelineTests.test_gate_only_stage_has_no_before_gate_minutes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-stage-time-a3266ec9-497zjyqm/rerun/mutant/test_task_timeline.py", line 121, in test_gate_only_stage_has_no_before_gate_minutes
+    self.assertEqual((row["before_gate_min"], row["captain_wait_min"], row["after_gate_min"]), (0.0, 4.0, 8.0))
+AssertionError: Tuples differ: (8.0, 4.0, 0.0) != (0.0, 4.0, 8.0)
+
+First differing element 0:
+8.0
+0.0
+
+- (8.0, 4.0, 0.0)
+?  ^         ^
+
++ (0.0, 4.0, 8.0)
+?  ^         ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.177s
+
+FAILED (failures=1)

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_running_stage_minutes_reach_now (test_task_timeline.TimelineTests.test_running_stage_minutes_reach_now)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-stage-time-a3266ec9-497zjyqm/rerun/mutant/test_task_timeline.py", line 137, in test_running_stage_minutes_reach_now
+    self.assertEqual(row["elapsed_min"], 30.0)
+AssertionError: 0.0 != 30.0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.084s
+
+FAILED (failures=1)

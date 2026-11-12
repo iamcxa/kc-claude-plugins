@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_ask_cli_appends_utc_questions_and_rejects_empty_without_write (test_task_timeline.TimelineTests.test_ask_cli_appends_utc_questions_and_rejects_empty_without_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/validate-stage-time-a3266ec9-497zjyqm/rerun/mutant/test_task_timeline.py", line 170, in test_ask_cli_appends_utc_questions_and_rejects_empty_without_write
+    self.assertEqual(result["asks_outside_gate"], 2)
+AssertionError: None != 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.248s
+
+FAILED (failures=1)

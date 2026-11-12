@@ -1,0 +1,22 @@
+[
+  {
+    "id": "F1",
+    "severity": "high",
+    "class": "Material",
+    "kind": "build",
+    "title": "Repeated stages move earlier post-gate time into before-gate time",
+    "file": "kc-dev-flow-2/scripts/task_timeline.py",
+    "line": 130,
+    "status": "open",
+    "detail": "The stage row sums every active segment, but after_gate_min uses only the latest gate close. Earlier decision-to-next-dispatch intervals become before_gate_min. A real archived repair cycle loses 23.2 post-gate minutes; a clean two-cycle fixture expects 20/20/40 but prints 50/20/10.",
+    "fix": "Compute and sum before/wait/after per active dispatch interval; retain separate diagnostic treatment for incomplete historical records. Do not change accepted counter definitions.",
+    "released_user_and_normal_workflow": "First Officer reads an archived task that was revised and dispatched again, using the documented timeline command.",
+    "observable_harm": "Waiting after an earlier Captain decision is attributed to time before the gate, corrupting the approved split used to improve agentic DX.",
+    "affected_boundary": "value-ac[AC-1] accurate per-stage timing under the accepted Design PRFAQ before-gate / Captain-wait / after-gate definitions",
+    "trigger_evidence": [
+      "validation/real-cycle-split.json",
+      "validation/probe-repeated-stage.log",
+      "validation/acceptance.log"
+    ]
+  }
+]

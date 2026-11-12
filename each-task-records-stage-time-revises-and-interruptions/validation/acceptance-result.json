@@ -1,0 +1,7 @@
+{
+  "command": "bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation/acceptance.sh",
+  "exit": 1,
+  "steps": 4,
+  "observed": "Existing 11 tests and three-task comparison passed; repeated-stage split assertion failed; scratch removed by trap.",
+  "coverage_limit": "Does not establish post-release timing accuracy, host parity, or FO ask completeness."
+}

@@ -1,0 +1,200 @@
+...........
+----------------------------------------------------------------------
+Ran 11 tests in 3.345s
+
+OK
+{
+  "archived_tasks": 3,
+  "stage_rows": 9,
+  "all_matched": true,
+  "comparisons": [
+    {
+      "task": "worth-questions-asked-only-before-the-design-gate",
+      "stage": "ideation",
+      "expected_from_git": {
+        "start": "2026-11-11T14:24:19Z",
+        "end": "2026-11-11T14:46:03Z",
+        "elapsed_min": 21.7,
+        "source_commits": [
+          "7fa26e4391fb13df6ceb450775d3a271e46080c8"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T14:24:19Z",
+        "end": "2026-11-11T14:46:03Z",
+        "elapsed_min": 21.7
+      },
+      "matched": true
+    },
+    {
+      "task": "worth-questions-asked-only-before-the-design-gate",
+      "stage": "implementation",
+      "expected_from_git": {
+        "start": "2026-11-11T14:46:03Z",
+        "end": "2026-11-11T15:01:44Z",
+        "elapsed_min": 15.7,
+        "source_commits": [
+          "253dc86a3f43f36b90939477bebe5fd813b6fecd"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T14:46:03Z",
+        "end": "2026-11-11T15:01:44Z",
+        "elapsed_min": 15.7
+      },
+      "matched": true
+    },
+    {
+      "task": "worth-questions-asked-only-before-the-design-gate",
+      "stage": "validation",
+      "expected_from_git": {
+        "start": "2026-11-11T15:01:44Z",
+        "end": "2026-11-11T15:44:32Z",
+        "elapsed_min": 42.8,
+        "source_commits": [
+          "677419a737d4cce2d0e39c91960216db65d89fb9"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T15:01:44Z",
+        "end": "2026-11-11T15:44:32Z",
+        "elapsed_min": 42.8
+      },
+      "matched": true
+    },
+    {
+      "task": "main-tests-pass-with-worth-check-and-story-test",
+      "stage": "ideation",
+      "expected_from_git": {
+        "start": "2026-11-11T09:02:14Z",
+        "end": "2026-11-11T09:23:36Z",
+        "elapsed_min": 21.4,
+        "source_commits": [
+          "77d6b3685e1ed281477379fd981668801f0d597a"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T09:02:14Z",
+        "end": "2026-11-11T09:23:36Z",
+        "elapsed_min": 21.4
+      },
+      "matched": true
+    },
+    {
+      "task": "main-tests-pass-with-worth-check-and-story-test",
+      "stage": "implementation",
+      "expected_from_git": {
+        "start": "2026-11-11T09:23:36Z",
+        "end": "2026-11-11T09:35:21Z",
+        "elapsed_min": 11.8,
+        "source_commits": [
+          "7c655bb60a53f486a8319123c2689e44490698d7"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T09:23:36Z",
+        "end": "2026-11-11T09:35:21Z",
+        "elapsed_min": 11.8
+      },
+      "matched": true
+    },
+    {
+      "task": "main-tests-pass-with-worth-check-and-story-test",
+      "stage": "validation",
+      "expected_from_git": {
+        "start": "2026-11-11T09:35:21Z",
+        "end": "2026-11-11T10:20:37Z",
+        "elapsed_min": 45.3,
+        "source_commits": [
+          "784a77c74235dada81cde91022fdbfacbc182cdf"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T09:35:21Z",
+        "end": "2026-11-11T10:20:37Z",
+        "elapsed_min": 45.3
+      },
+      "matched": true
+    },
+    {
+      "task": "denied-command-denies-only-that-command",
+      "stage": "ideation",
+      "expected_from_git": {
+        "start": "2026-11-11T01:19:20Z",
+        "end": "2026-11-11T03:59:51Z",
+        "elapsed_min": 160.5,
+        "source_commits": [
+          "608a0d2af7218707c62b7426419d52dc4f2d15ea"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T01:19:20Z",
+        "end": "2026-11-11T03:59:51Z",
+        "elapsed_min": 160.5
+      },
+      "matched": true
+    },
+    {
+      "task": "denied-command-denies-only-that-command",
+      "stage": "implementation",
+      "expected_from_git": {
+        "start": "2026-11-11T03:59:51Z",
+        "end": "2026-11-11T06:40:01Z",
+        "elapsed_min": 160.2,
+        "source_commits": [
+          "82f9d8c32c8f3b8ec5672a5a4495a10373fda5e0"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T03:59:51Z",
+        "end": "2026-11-11T06:40:01Z",
+        "elapsed_min": 160.2
+      },
+      "matched": true
+    },
+    {
+      "task": "denied-command-denies-only-that-command",
+      "stage": "validation",
+      "expected_from_git": {
+        "start": "2026-11-11T06:40:01Z",
+        "end": "2026-11-11T08:06:49Z",
+        "elapsed_min": 86.8,
+        "source_commits": [
+          "e3e7426631e897a7b7922bdf3541cf8c04a0762c",
+          "1b89f44c428f87020de1a1095be6b053e45d1b97"
+        ]
+      },
+      "observed": {
+        "start": "2026-11-11T06:40:01Z",
+        "end": "2026-11-11T08:06:49Z",
+        "elapsed_min": 86.8
+      },
+      "matched": true
+    }
+  ]
+}
+{
+  "intervals": [
+    "10..20 before, 20..30 Captain wait, 30..60 after",
+    "80..90 before, 90..100 Captain wait, 100..110 after"
+  ],
+  "expected": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 20.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 40.0
+  },
+  "observed": {
+    "elapsed_min": 80.0,
+    "before_gate_min": 50.0,
+    "captain_wait_min": 20.0,
+    "after_gate_min": 10.0
+  },
+  "fixture": "/tmp/stage-time-acceptance.N7VlTv/tmp/timeline-test-v9s2ccu_"
+}
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation/probe_repeated_stage.py", line 29, in <module>
+    assert observed == expected, "Earlier post-gate time must remain post-gate across a repair cycle"
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: Earlier post-gate time must remain post-gate across a repair cycle
+removed /tmp/stage-time-acceptance.N7VlTv

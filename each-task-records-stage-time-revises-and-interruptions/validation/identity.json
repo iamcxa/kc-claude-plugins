@@ -1,0 +1,9 @@
+{
+  "head": "a3266ec91c7d46d36864c471c0cc26b389130b3c",
+  "base": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+  "state_start": "88ef5a646df3b260ce4ab62827b03f8037ee0379",
+  "start_taipei": "2026-11-12T17:42:50+08:00",
+  "scratch": "/tmp/validate-stage-time-a3266ec9-497zjyqm",
+  "code": "/tmp/validate-stage-time-a3266ec9-497zjyqm/candidate",
+  "evidence": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/each-task-records-stage-time-revises-and-interruptions/validation"
+}

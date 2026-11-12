@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/tmp/validate-stage-time-a3266ec9-497zjyqm",
+    "status": "remove after evidence commit"
+  },
+  {
+    "path": "/tmp/tt-ask-smoke.mhWtCJ",
+    "status": "already removed by test trap"
+  },
+  {
+    "path": "/tmp/stage-time-acceptance.N7VlTv",
+    "status": "already removed by acceptance trap"
+  },
+  {
+    "path": "/tmp/tt-ask-smoke.rtnhts",
+    "status": "already removed by test trap"
+  },
+  {
+    "path": "/tmp/tt-falsify.4Q2P44",
+    "status": "already removed by test trap"
+  }
+]

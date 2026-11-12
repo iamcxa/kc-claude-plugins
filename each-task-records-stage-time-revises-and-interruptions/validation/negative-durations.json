@@ -1,0 +1,144 @@
+[
+  {
+    "task": "dispatch-and-report-hygiene",
+    "row": {
+      "stage": "validation",
+      "start": "2026-09-30T04:58:11Z",
+      "end": "2026-09-30T07:03:27Z",
+      "elapsed_min": 125.3,
+      "before_gate_min": 0.0,
+      "captain_wait_min": -4.5,
+      "after_gate_min": 129.8,
+      "dispatches": 0,
+      "repeat_dispatches": 0,
+      "dispatch_records": 0,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-09-30T04:58:11Z",
+          "closed": "2026-09-30T04:53:38Z",
+          "outcome": "withdrawn"
+        },
+        {
+          "attempt": 2,
+          "opened": "2026-09-30T06:49:56Z",
+          "closed": "2026-09-30T06:49:56Z",
+          "outcome": "revise"
+        },
+        {
+          "attempt": 3,
+          "opened": "2026-09-30T07:03:27Z",
+          "closed": "2026-09-30T07:03:27Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    }
+  },
+  {
+    "task": "journey-map-dev2-contract",
+    "row": {
+      "stage": "ideation",
+      "start": "2026-10-13T03:05:11Z",
+      "end": "2026-10-13T05:13:08Z",
+      "elapsed_min": 85.4,
+      "before_gate_min": -0.9,
+      "captain_wait_min": 43.1,
+      "after_gate_min": 43.2,
+      "dispatches": 3,
+      "repeat_dispatches": 2,
+      "dispatch_records": 3,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-10-13T03:28:06Z",
+          "closed": "2026-10-13T03:56:22Z",
+          "outcome": "revise"
+        },
+        {
+          "attempt": 2,
+          "opened": "2026-10-13T04:15:06Z",
+          "closed": "2026-10-13T04:15:24Z",
+          "outcome": "withdrawn"
+        },
+        {
+          "attempt": 3,
+          "opened": "2026-10-13T04:15:29Z",
+          "closed": "2026-10-13T04:29:56Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    }
+  },
+  {
+    "task": "observer-before-merge-guard",
+    "row": {
+      "stage": "validation",
+      "start": "2026-10-13T08:04:17Z",
+      "end": "2026-10-13T09:08:05Z",
+      "elapsed_min": 37.5,
+      "before_gate_min": -26.3,
+      "captain_wait_min": 63.8,
+      "after_gate_min": 0.0,
+      "dispatches": 3,
+      "repeat_dispatches": 2,
+      "dispatch_records": 3,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-10-13T08:59:32Z",
+          "closed": "2026-10-13T09:56:44Z",
+          "outcome": "withdrawn"
+        },
+        {
+          "attempt": 2,
+          "opened": "2026-10-13T09:57:01Z",
+          "closed": "2026-10-13T10:03:37Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    }
+  },
+  {
+    "task": "ops-metric-event-protocol",
+    "row": {
+      "stage": "validation",
+      "start": "2026-10-27T05:31:56Z",
+      "end": "2026-10-27T05:37:58Z",
+      "elapsed_min": 6.0,
+      "before_gate_min": -53.3,
+      "captain_wait_min": 58.4,
+      "after_gate_min": 0.9,
+      "dispatches": 3,
+      "repeat_dispatches": 2,
+      "dispatch_records": 1,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-10-27T03:17:01Z",
+          "closed": "2026-10-27T04:06:53Z",
+          "outcome": "revise"
+        },
+        {
+          "attempt": 2,
+          "opened": "2026-10-27T04:59:11Z",
+          "closed": "2026-10-27T05:02:31Z",
+          "outcome": "revise"
+        },
+        {
+          "attempt": 3,
+          "opened": "2026-10-27T05:31:56Z",
+          "closed": "2026-10-27T05:37:05Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    }
+  }
+]

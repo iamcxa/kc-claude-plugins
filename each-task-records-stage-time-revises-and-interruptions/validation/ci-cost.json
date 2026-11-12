@@ -1,0 +1,12 @@
+{
+  "name": "added test_task_timeline.py step",
+  "seconds": 3.466232042061165,
+  "exit": 0,
+  "runs": 1,
+  "host": "local macOS",
+  "hosted_per_run": "one observed PR run, GitHub timestamps at one-second resolution",
+  "money_per_PR": "not measured",
+  "hosted_per_run_seconds": 1.0,
+  "hosted_job": "https://github.com/iamcxa/kc-claude-plugins/actions/runs/43193806094/job/131099493024",
+  "hosted_step_conclusion": "success"
+}

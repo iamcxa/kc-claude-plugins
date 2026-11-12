@@ -1,0 +1,19 @@
+== AC-1: drop the archive match
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AssertionError: if ARCHIVE.match(subject) and done is None:
+  validation: 2026-11-11T15:01:44Z -> 2026-11-11T15:44:32Z  42.8 min (before gate 36.2, Captain wait 1.0, after gate 5.6); dispatches 1, repeats 0
+  done: 2026-11-11T15:44:32Z
+== AC-1: committer date instead of author date
+no change on this task
+== AC-2: count record files instead of the highest record number
+differ: paseo-codex-dispatch-practice: role_triggers 1,6; task_timeline 1,4
+differ: peers-paseo-rule-matches-practice: role_triggers 6,3; task_timeline 5,3
+tasks with a budget line: 62; same: 60; differ: 2
+exit 1
+== AC-3: ignore asks.jsonl
+AssertionError: {'task': 'demo', 'stages': [{'stage': 'ideation', 'start': '2026-11-12T05:00:00Z', 'end': None, 'elapsed_min': 296.8, 'before_gate_min': 296.8, 'captain_wait_min': 0, 'after_gate_min': 0.0, 'dispatches': 1, 'repeat_dispatches': 0, 'dispatch_records': 0, 'gate_attempts': [], 'asks': [], 'asks_outside_gate': None}], 'done': None, 'withdrawn_gate_attempts': 0, 'gate_revise_decisions': 0, 'stages_without_start': [], 'unassigned_asks': [], 'amendments_outside_gate': 0, 'asks_outside_gate': None}
+exit 1
+== AC-5: running stage ends at its start
+  ideation: 2026-11-12T05:16:44Z -> 2026-11-12T09:25:18Z  248.6 min (before gate 234.3, Captain wait 12.7, after gate 1.6); dispatches 1, repeats 0
+removed /tmp/tt-falsify.4Q2P44

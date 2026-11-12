@@ -1,0 +1,56 @@
+[
+  {
+    "at": "2026-11-11T14:18:48Z",
+    "subject": "state: update worth-questions-asked-only-before-the-design-gate",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/review/backlog/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-11-11T14:24:19Z",
+    "subject": "dispatch: worth-questions-asked-only-before-the-design-gate entering ideation",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/dispatch/ideation-1.md"
+    ]
+  },
+  {
+    "at": "2026-11-11T14:44:13Z",
+    "subject": "state: update worth-questions-asked-only-before-the-design-gate",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/review/ideation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-11-11T14:46:03Z",
+    "subject": "dispatch: worth-questions-asked-only-before-the-design-gate entering implementation",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/dispatch/implementation-1.md"
+    ]
+  },
+  {
+    "at": "2026-11-11T15:01:44Z",
+    "subject": "dispatch: worth-questions-asked-only-before-the-design-gate entering validation",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/dispatch/validation-1.md"
+    ]
+  },
+  {
+    "at": "2026-11-11T15:37:56Z",
+    "subject": "state: update worth-questions-asked-only-before-the-design-gate",
+    "added": [
+      "worth-questions-asked-only-before-the-design-gate/review/validation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-11-11T15:44:32Z",
+    "subject": "archive worth-questions-asked-only-before-the-design-gate (merge guard)",
+    "added": [
+      "_archive/worth-questions-asked-only-before-the-design-gate/dispatch/ideation-1.md",
+      "_archive/worth-questions-asked-only-before-the-design-gate/dispatch/implementation-1.md",
+      "_archive/worth-questions-asked-only-before-the-design-gate/dispatch/validation-1.md",
+      "_archive/worth-questions-asked-only-before-the-design-gate/review/backlog/briefing-1/index.json",
+      "_archive/worth-questions-asked-only-before-the-design-gate/review/ideation/briefing-1/index.json",
+      "_archive/worth-questions-asked-only-before-the-design-gate/review/validation/briefing-1/index.json"
+    ]
+  }
+]

@@ -1,0 +1,93 @@
+{
+  "task": "worth-questions-asked-only-before-the-design-gate",
+  "stages": [
+    {
+      "stage": "backlog",
+      "start": "2026-11-11T14:18:48Z",
+      "end": "2026-11-11T14:24:06Z",
+      "elapsed_min": 5.3,
+      "before_gate_min": 0.0,
+      "captain_wait_min": 5.3,
+      "after_gate_min": 0.0,
+      "dispatches": 0,
+      "repeat_dispatches": 0,
+      "dispatch_records": 0,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-11-11T14:18:48Z",
+          "closed": "2026-11-11T14:24:06Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    },
+    {
+      "stage": "ideation",
+      "start": "2026-11-11T14:24:19Z",
+      "end": "2026-11-11T14:46:03Z",
+      "elapsed_min": 21.7,
+      "before_gate_min": 19.9,
+      "captain_wait_min": 1.5,
+      "after_gate_min": 0.3,
+      "dispatches": 1,
+      "repeat_dispatches": 0,
+      "dispatch_records": 1,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-11-11T14:44:13Z",
+          "closed": "2026-11-11T14:45:43Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    },
+    {
+      "stage": "implementation",
+      "start": "2026-11-11T14:46:03Z",
+      "end": "2026-11-11T15:01:44Z",
+      "elapsed_min": 15.7,
+      "before_gate_min": 15.7,
+      "captain_wait_min": 0,
+      "after_gate_min": 0.0,
+      "dispatches": 1,
+      "repeat_dispatches": 0,
+      "dispatch_records": 1,
+      "gate_attempts": [],
+      "asks": [],
+      "asks_outside_gate": null
+    },
+    {
+      "stage": "validation",
+      "start": "2026-11-11T15:01:44Z",
+      "end": "2026-11-11T15:44:32Z",
+      "elapsed_min": 42.8,
+      "before_gate_min": 36.2,
+      "captain_wait_min": 1.0,
+      "after_gate_min": 5.6,
+      "dispatches": 1,
+      "repeat_dispatches": 0,
+      "dispatch_records": 1,
+      "gate_attempts": [
+        {
+          "attempt": 1,
+          "opened": "2026-11-11T15:37:56Z",
+          "closed": "2026-11-11T15:38:55Z",
+          "outcome": "approve"
+        }
+      ],
+      "asks": [],
+      "asks_outside_gate": null
+    }
+  ],
+  "done": "2026-11-11T15:44:32Z",
+  "withdrawn_gate_attempts": 0,
+  "gate_revise_decisions": 0,
+  "stages_without_start": [],
+  "unassigned_asks": [],
+  "amendments_outside_gate": 0,
+  "asks_outside_gate": null
+}

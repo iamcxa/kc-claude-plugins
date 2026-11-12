@@ -1,0 +1,32 @@
+[
+  {
+    "path": ".github/workflows/kc-dev-flow-2-tests.yml",
+    "sha256": "f7cb2d858998b0f6eaf533543dda9c71ac93b9730f21ed55ad2c12c93a4366e8",
+    "matches_candidate": true
+  },
+  {
+    "path": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "sha256": "b87f129fdac8c5c52b1773ac88083051315b7dfa15e150d3bbbeef154bce6972",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/workflow.md",
+    "sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/lint-skills.py",
+    "sha256": "024d22ccb6f8fcc891fec23e1521040f40293eb843b6ec52ce51695725998770",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/task_timeline.py",
+    "sha256": "af33ac746b09e2af3a9e043126d3489f2f0b1dcd0bc356a7617036b585152b43",
+    "matches_candidate": true
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "sha256": "1ad65b7c2c3b90b0351024fa52835bd69fc509e47aa7092ddae4131b0b92d002",
+    "matches_candidate": true
+  }
+]

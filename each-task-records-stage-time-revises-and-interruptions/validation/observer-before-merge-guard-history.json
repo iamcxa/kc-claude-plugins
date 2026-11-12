@@ -1,0 +1,151 @@
+[
+  {
+    "at": "2026-10-13T07:12:44Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/review/backlog/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T07:17:39Z",
+    "subject": "dispatch: observer-before-merge-guard entering ideation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T07:18:02Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/ideation-1.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T07:30:53Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/review/ideation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T07:48:55Z",
+    "subject": "dispatch: observer-before-merge-guard entering implementation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T07:49:10Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-1.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:04:17Z",
+    "subject": "dispatch: observer-before-merge-guard entering validation",
+    "added": []
+  },
+  {
+    "at": "2026-10-13T08:04:46Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/validation-1.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:17:35Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-2.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:18:54Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-3.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:26:24Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/validation-2.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:32:48Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-4.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:34:35Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-5.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:41:35Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-6.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:50:16Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/validation-3.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T08:59:32Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/review/validation/briefing-1/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T09:08:05Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-7.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T09:54:09Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/dispatch/implementation-8.md"
+    ]
+  },
+  {
+    "at": "2026-10-13T09:57:01Z",
+    "subject": "state: update observer-before-merge-guard",
+    "added": [
+      "observer-before-merge-guard/review/validation/briefing-2/index.json"
+    ]
+  },
+  {
+    "at": "2026-10-13T10:40:12Z",
+    "subject": "archive observer-before-merge-guard (merge guard)",
+    "added": [
+      "_archive/observer-before-merge-guard/dispatch/ideation-1.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-1.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-2.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-3.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-4.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-5.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-6.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-7.md",
+      "_archive/observer-before-merge-guard/dispatch/implementation-8.md",
+      "_archive/observer-before-merge-guard/dispatch/validation-1.md",
+      "_archive/observer-before-merge-guard/dispatch/validation-2.md",
+      "_archive/observer-before-merge-guard/dispatch/validation-3.md",
+      "_archive/observer-before-merge-guard/review/backlog/briefing-1/index.json",
+      "_archive/observer-before-merge-guard/review/ideation/briefing-1/index.json",
+      "_archive/observer-before-merge-guard/review/validation/briefing-1/index.json",
+      "_archive/observer-before-merge-guard/review/validation/briefing-2/index.json"
+    ]
+  }
+]
