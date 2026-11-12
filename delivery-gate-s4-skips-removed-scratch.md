@@ -45,6 +45,7 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; which paths S4 reads is the Captain's call.
+Result: the Captain admitted this task into the route trial with 「五張都准，授權代記設計關卡（建議）」 (host question dialog, 2026-11-13); he has not yet ruled which paths the check reads, so FO does not record this task's ideation gate under the grant: the probe's result and the options go to him at that gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
