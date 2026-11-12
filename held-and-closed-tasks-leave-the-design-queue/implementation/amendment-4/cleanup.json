@@ -6,5 +6,7 @@
   "all_absent": true,
   "pr_text_not_modified": "/tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md",
   "pr_text_retained": false,
-  "no_product_change_push_or_amend": true
+  "no_product_change_push_or_amend": true,
+  "pr_text_absent_at_cleanup": true,
+  "worker_touched_pr_text_this_round": false
 }
