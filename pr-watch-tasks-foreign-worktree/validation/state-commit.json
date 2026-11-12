@@ -1,0 +1,8 @@
+{
+  "evidence_commit": "b98b6346e4a37813248d513227ba3eda6d7055d8",
+  "all_changed_paths_belong_to_this_task": true,
+  "path_count": 80,
+  "state_branch": "spacedock-state/dev2",
+  "pushed": true,
+  "sandbox_attempt": "initial commit could not create external shared index.lock; same authorized task-scoped helper succeeded with escalation"
+}
