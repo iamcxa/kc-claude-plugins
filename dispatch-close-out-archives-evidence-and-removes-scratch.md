@@ -77,6 +77,7 @@ pr: iamcxa/kc-claude-plugins#854
 ## FO alignment
 
 Alignment: not needed: the Captain's words under Source name the outcome; where the archive lives is compared in the design and ruled at the ideation gate.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 2 scopes AC-3 to the dispatch's own scratch root, which is what the independent validator proposed in finding F2 of validation-1 after showing that a whole-repository zero count conflicts with removing only one's own root; the Captain chose it in the gate dialog, and the second validation judges the replacement criterion.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
