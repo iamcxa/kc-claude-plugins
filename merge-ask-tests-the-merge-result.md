@@ -387,6 +387,10 @@ Ran: exit 0, 0 entries left; `poc/ac_tree_and_scratch.log`.
 - The three CI tests that need the pinned Spacedock were not run in the cost
   measurement; the local run does not equal CI.
 
+## Number guards
+
+ADR: 0078
+
 ## Stage Report: ideation
 
 - DONE: The Captain's experiment for this task (his words are in the task's backlog gate record): ideation is a proof of concept plus an expansion plan. First build a working throwaway proof of concept of this task's outcome on a local branch poc/merge-ask-tests-the-merge-result in a worktree you create under the workflow checkout's .worktrees/ from origin/main, commit it locally, never push it and open no PR; run it against the real cases the task's Bite names and save what it showed in the task folder. Then write the design as what the proof of concept showed, the expansion plan (what it lacks to meet the Pilot bar and the task's Stop condition), and the acceptance criteria. Record the branch name and commit in the design so the implementation worker can start from it. For every acceptance criterion, run its evidence command or procedure once now and write beside the criterion the exact command, its exit and the path of its saved output in the task folder; a criterion whose proof cannot be run now is not written under Acceptance criteria but under a 'Not provable now' list with the reason, for the Captain to see at the design gate, run on the proof of concept
