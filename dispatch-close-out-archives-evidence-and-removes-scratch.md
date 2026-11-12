@@ -88,6 +88,16 @@ Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
 Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
 Supersedes: none
 
+### Amendment 2 — 2026-11-12, host question dialog
+Captain: 「一次授權，跑完（建議）」 (host question dialog, 2026-11-12)
+Asked: 「實驗裡還沒過驗證的三張任務（收尾清理、問題裡的事實、擱置的任務）要怎麼走完？我建議一次給足授權讓它們跑完：一、這三張的預算都改成「1 implementation and 2 validation cycles」，退回後用追加訊息修正、再驗一次；第二次驗證再被退回就停下來回到你這裡。二、收尾清理那條「收尾後整個 repo 的暫存工作目錄是零」的驗收條件，改成只看這次派工自己的暫存資料夾，不為了湊到零去刪別的派工的資料夾。三、問題裡的事實那條要拿「擱置的任務」成品重播的條件不改，等那張的成品出來後補跑。這些會記成三張任務各一筆修正案。變差的是：三張各多一輪驗證（每輪約 15 到 20 分鐘），今天會跑到晚上；而且這段期間我不會再為「程式缺陷修完重驗」回來問你。」
+Supersedes: AC-3
+Budget: 1 implementation and 2 validation cycles
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-12): validation-1 on #854 head 223dbb6d1 recommended REJECTED with two findings: F1 assessed Material and owned (kind build; the generated dispatch instruction omits the Captain's rule that private repository evidence is never archived and bans only secrets and personal data); F2 Needs decision (kind aim or scope; AC-3's whole-repository zero-worktree count conflicts with the rule that a close-out removes only its own scratch root), settled by Captain amendment 2. Routed to the implementation worker as a repair message.
+
 ## Design
 
 ### PRFAQ
