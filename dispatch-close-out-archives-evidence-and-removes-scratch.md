@@ -15,6 +15,10 @@ gates:
                 id: briefing:dispatch-close-out-archives-evidence-and-removes-scratch:backlog:attempt-1:revision-1
                 digest: sha256:385f8a76e9972e37f5d2d3227b89582f45e161d19cf571788289a44b509b42ec
                 room-ref: ./dispatch-close-out-archives-evidence-and-removes-scratch/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-12T05:11:39.090063Z"
+                reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
 ---
 
 ## Scope
