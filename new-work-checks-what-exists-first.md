@@ -227,6 +227,10 @@ Verified by: `python3 -B "$P/scripts/lint-skills.py"` exit 0 (`ideation/lint-ski
 - Mermaid picture rendering: no local renderer verified; the diagram's actors/order/branches were inspected, rendering is not claimed.
 - Release, adopter sync, sustained use, measured time/cost benefit and full test/hosted CI coverage: outside this local trial; no production obligation is accepted.
 
+## Number guards
+
+ADR: 0083
+
 ## Stage Report: ideation
 
 - DONE: Before building: need, existing chain, standard, smaller route, component boundary and facts home
