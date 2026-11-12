@@ -1,0 +1,12 @@
+{
+  "evidence_commit": "e0b2108519c537cd2a306d6ab268e388e340ecf3",
+  "removed_directories": [
+    "/tmp/validate-held-closed-v2-20261112-193629"
+  ],
+  "removed_files": [
+    "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md"
+  ],
+  "all_absent": true,
+  "tmp_evidence_copies_remaining": 0,
+  "checked_at": "2026-11-12T19:50:30.844137+08:00"
+}
