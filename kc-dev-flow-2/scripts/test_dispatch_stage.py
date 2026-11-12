@@ -53,6 +53,7 @@ class DispatchStageTests(unittest.TestCase):
                                "status: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n")
         self.commit_task()
         self.folder = self.state / self.slug
+        self.scratch_namespace = scratch.repository(self.repo, self.state)
         self.checklist = self.base / "checklist.txt"
         self.checklist.write_text("Inspect the real dispatch seam\nKeep the received second checklist line\n")
         self.notes = self.base / "notes.txt"
@@ -66,7 +67,10 @@ class DispatchStageTests(unittest.TestCase):
         self.spy.chmod(0o755)
 
     def remove_artifacts(self):
-        shutil.rmtree(scratch.BASE / "dispatch-code" / self.slug, ignore_errors=True)
+        shutil.rmtree(scratch.BASE / self.scratch_namespace / self.slug, ignore_errors=True)
+        namespace = scratch.BASE / self.scratch_namespace
+        if namespace.is_dir() and not any(namespace.iterdir()):
+            namespace.rmdir()
         for path in Path("/tmp/spacedock-dispatch").glob(f"*{self.slug}*"):
             if path.is_file():
                 path.unlink()
@@ -376,7 +380,7 @@ class DispatchStageTests(unittest.TestCase):
         original = self.notes.read_bytes()
         result = self.build()
         record = self.record().read_text()
-        expected = f'Scratch: /tmp/dev2/dispatch-code/{self.slug}/ideation-1'
+        expected = f'Scratch: /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1'
         self.assertEqual(record.splitlines().count(expected), 1)
         artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
         self.assertEqual(artifact.splitlines().count(expected), 1)
@@ -386,7 +390,7 @@ class DispatchStageTests(unittest.TestCase):
 
     def test_scope_notes_outside_scratch_refuse_before_record_and_build(self):
         for path in ('/tmp/x', '/private/tmp/x',
-                     f'/tmp/dev2/dispatch-code/{self.slug}/ideation-1/../escape'):
+                     f'/tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/../escape'):
             with self.subTest(path=path):
                 self.notes.write_text(f'Package root: {ROOT}\nSend your completion message to `main`.\nRead {path}\n')
                 result = self.build(extra=('--spacedock', self.spy), expected=1)
@@ -395,9 +399,20 @@ class DispatchStageTests(unittest.TestCase):
                 self.assertFalse(self.record().exists())
 
     def test_scope_notes_inside_scratch_are_kept(self):
-        self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/dispatch-code/{self.slug}/ideation-1/checkout\n')
+        self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/checkout\n')
         self.build()
         self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
+
+    def test_foreign_root_owner_refuses_before_build_or_notes_write(self):
+        root = scratch.claim_root(self.repo, self.folder, 'ideation-1')
+        notes = root / 'scope-notes.md'
+        notes.write_text('peer notes')
+        (root / '.owner.json').write_text('{"repository":"foreign"}')
+        result = self.build(extra=('--spacedock', self.spy), expected=1)
+        self.assertIn('ownership', result.stderr)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record().exists())
+        self.assertEqual(notes.read_text(), 'peer notes')
 
     def assert_committed(self, path, subject):
         self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)

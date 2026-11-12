@@ -13,7 +13,7 @@ import sys
 from design_surfaces import task_folder
 from number_guards import Misconfigured, frontmatter
 from role_triggers import budget_text, rank
-from scratch import notes_for, root_for
+from scratch import claim_root, notes_for
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -233,6 +233,12 @@ def main(argv=None):
         return 1
     for line in dict.fromkeys(line for check in checks for line in check.stderr.splitlines(keepends=True)):
         sys.stderr.write(line)
+    try:
+        scratch = claim_root(args.workflow_dir, folder, path.stem)
+    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+        remove_uncommitted(path, wrote)
+        print(f"dispatch_stage: dispatch not built; {error}", file=sys.stderr)
+        return 1
     # see docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md
     # see docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md
     if args.role:
@@ -250,8 +256,6 @@ def main(argv=None):
         sys.stdout.buffer.write(path.read_bytes())
         return 0
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
-    scratch = root_for(args.workflow_dir, folder.name, path.stem)
-    scratch.mkdir(parents=True, exist_ok=True)
     scoped = scratch / "scope-notes.md"
     scoped.write_bytes(notes_for(args.workflow_dir, folder, path.stem, notes, SCRIPTS.parent).encode("utf-8"))
     for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):

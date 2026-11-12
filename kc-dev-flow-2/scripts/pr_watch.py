@@ -558,7 +558,7 @@ def archived_learning(workflow, state, ask):
 def scratch_lines(workflow, state, found, merged=()):
     if not scratch.BASE.exists():
         return []
-    directory = scratch.BASE / scratch.repository(toplevel(workflow))
+    directory = scratch.BASE / scratch.repository(toplevel(workflow), state)
     if not directory.exists():
         return []
     scratch.safe_path(directory)

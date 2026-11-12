@@ -1017,7 +1017,7 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, 'commit', '-qm', 'test: dispatch')
 
     def scratch_root(self, slug, record):
-        root = watch.scratch.BASE / 'r' / slug / record
+        root = watch.scratch.BASE / watch.scratch.repository(self.repo, self.state) / slug / record
         root.mkdir(parents=True, exist_ok=True)
         return root
 

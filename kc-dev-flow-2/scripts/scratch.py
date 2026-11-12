@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime, timezone
 import gzip
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -22,12 +23,24 @@ def git(repo, *args):
                           text=True, check=True).stdout.strip()
 
 
-def repository(repo):
+def identity(repo, state):
     url = git(repo, 'remote', 'get-url', 'origin').rstrip('/')
     name = re.split(r'[/\\:]', url)[-1].removesuffix('.git')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', name):
         raise ValueError('origin has no usable repository name')
-    return name
+    common = Path(git(repo, 'rev-parse', '--git-common-dir'))
+    common = (common if common.is_absolute() else Path(repo) / common).resolve()
+    digest = hashlib.sha256(json.dumps([url, str(common), str(state.resolve())]).encode()).hexdigest()
+    return name, digest
+
+
+def repository(repo, state):
+    name, digest = identity(repo, state)
+    return name + '-' + digest[:16]
+
+
+def state_of(folder):
+    return folder.parent.parent if folder.parent.name == '_archive' else folder.parent
 
 
 def dispatch_name(record):
@@ -36,10 +49,38 @@ def dispatch_name(record):
     return re.sub(r'-message-[1-9][0-9]*$', '', record)
 
 
-def root_for(repo, slug, record):
+def root_for(repo, folder, record):
+    folder = Path(folder)
+    slug = folder.name
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', slug):
         raise ValueError('invalid task folder name')
-    return BASE / repository(repo) / slug / dispatch_name(record)
+    return BASE / repository(repo, state_of(folder)) / slug / dispatch_name(record)
+
+
+def owner_for(repo, folder, record):
+    return dict(repository=identity(repo, state_of(folder))[1], task=folder.name, record=dispatch_name(record))
+
+
+def check_owner(root, owner):
+    marker = root / '.owner.json'
+    safe_path(root)
+    safe_path(marker)
+    if not root.is_dir() or not marker.is_file() or json.loads(marker.read_text()) != owner:
+        raise ValueError(f'scratch ownership missing or differs: {root}')
+
+
+def claim_root(repo, folder, record):
+    root = root_for(repo, folder, record)
+    safe_path(root)
+    owner = owner_for(repo, folder, record)
+    try:
+        root.mkdir(parents=True)
+    except FileExistsError:
+        check_owner(root, owner)
+    else:
+        with (root / '.owner.json').open('x') as output:
+            json.dump(owner, output, sort_keys=True)
+    return root
 
 
 def safe_path(path):
@@ -48,8 +89,10 @@ def safe_path(path):
 
 
 def notes_for(repo, folder, record, notes, package):
-    root = root_for(repo, folder.name, record)
+    root = root_for(repo, folder, record)
     safe_path(root)
+    if root.exists():
+        check_owner(root, owner_for(repo, folder, record))
     for raw in re.findall(r'(?<![\w/])/(?:private/)?tmp/[^\s`\'"<>()\[\]{};,]+', notes):
         path = Path(os.path.abspath(raw.rstrip('.')))
         if str(path).startswith('/tmp/'):
@@ -109,8 +152,10 @@ def close(folder, record):
     safe_path(source)
     if not source.is_file():
         raise ValueError(f'dispatch record missing: {source}')
-    root = root_for(folder, folder.name, name)
+    root = root_for(folder, folder, name)
     safe_path(root)
+    if root.exists():
+        check_owner(root, owner_for(folder, folder, name))
     stated = re.findall(r'^Scratch: (.+)$', source.read_text(), re.M)
     if stated and (len(stated) != 1 or Path(stated[0]).resolve() != root):
         raise ValueError('record scratch root differs from the derived path')

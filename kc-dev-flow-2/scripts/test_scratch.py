@@ -36,8 +36,7 @@ class ScratchTests(unittest.TestCase):
         (self.folder / 'dispatch').mkdir(parents=True)
         self.record = self.folder / 'dispatch/validation-1.md'
         self.record.write_text('# validation-1\n')
-        self.root = scratch.root_for(self.repo, self.folder.name, 'validation-1')
-        self.root.mkdir(parents=True)
+        self.root = scratch.claim_root(self.repo, self.folder, 'validation-1')
         self.addCleanup(shutil.rmtree, self.root.parent.parent, True)
         self.evidence = self.folder / 'evidence/validation-1'
         self.evidence.mkdir(parents=True)
@@ -106,7 +105,7 @@ class ScratchTests(unittest.TestCase):
         sentinel = self.repo / 'sentinel'
         sentinel.mkdir()
         (sentinel / 'keep').write_text('keep')
-        self.root.rmdir()
+        shutil.rmtree(self.root)
         self.root.symlink_to(sentinel, target_is_directory=True)
         with self.assertRaisesRegex(ValueError, 'symlinked'):
             self.close()
@@ -154,7 +153,7 @@ class ScratchTests(unittest.TestCase):
     def test_follow_up_uses_parent_dispatch_root(self):
         follow = self.folder / 'dispatch/validation-1-message-2.md'
         follow.write_text('# continuation\n')
-        self.assertEqual(scratch.root_for(self.repo, 'task', follow.stem), self.root)
+        self.assertEqual(scratch.root_for(self.repo, self.folder, follow.stem), self.root)
         self.close(follow.stem)
         self.assertFalse(self.root.exists())
         self.assertFalse((self.folder / 'evidence' / follow.stem).exists())
@@ -165,6 +164,67 @@ class ScratchTests(unittest.TestCase):
         self.assertEqual(done.returncode, 1, done.stderr)
         self.assertIn('dispatch record missing', done.stderr)
         self.assertTrue(self.root.exists())
+
+    def test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees(self):
+        origin = self.git('remote', 'get-url', 'origin').strip()
+        for number, url in enumerate((origin.replace('/fixtures/', '/another-owner/'), origin)):
+            with self.subTest(origin=url):
+                self.root = scratch.claim_root(self.repo, self.folder, 'validation-1')
+                other = self.repo / f'clone-{number}'
+                other.mkdir()
+                def git(*args):
+                    result = subprocess.run(['git', '-C', str(other), *map(str, args)],
+                                            capture_output=True, text=True, env=self.env)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    return result.stdout
+                git('init', '-q', '-b', 'main')
+                git('remote', 'add', 'origin', url)
+                (other / 'tracked').write_text('original')
+                git('add', 'tracked'); git('commit', '-qm', 'test: peer clone')
+                folder = other / 'task'
+                folder.mkdir()
+                peer = scratch.claim_root(other, folder, 'validation-1')
+                self.addCleanup(shutil.rmtree, peer.parent.parent, True)
+                self.assertNotEqual(self.root, peer)
+                checkout = peer / 'checkout'
+                git('worktree', 'add', '--detach', checkout)
+                (checkout / 'uncommitted').write_text('peer work')
+                self.close()
+                self.assertEqual((checkout / 'uncommitted').read_text(), 'peer work')
+                self.assertIn(str(checkout), git('worktree', 'list', '--porcelain'))
+                git('worktree', 'remove', '--force', checkout)
+
+    def test_foreign_or_unowned_root_refuses_notes_reuse_and_close(self):
+        notes = self.root / 'scope-notes.md'
+        notes.write_text('peer notes')
+        marker = self.root / '.owner.json'
+        for content in (None, '{"repository":"other","task":"task","record":"validation-1"}'):
+            with self.subTest(marker=content):
+                marker.unlink(missing_ok=True)
+                if content is not None:
+                    marker.write_text(content)
+                with self.assertRaisesRegex(ValueError, 'ownership'):
+                    scratch.claim_root(self.repo, self.folder, 'validation-1')
+                with self.assertRaisesRegex(ValueError, 'ownership'):
+                    scratch.notes_for(self.repo, self.folder, 'validation-1', 'notes', self.repo)
+                with self.assertRaisesRegex(ValueError, 'ownership'):
+                    self.close()
+                self.assertEqual(notes.read_text(), 'peer notes')
+                self.assertFalse((self.evidence / 'SHA256SUMS').exists())
+
+    def test_archive_move_and_linked_worktree_keep_identity(self):
+        other_workflow = self.repo / 'another-workflow/task'
+        self.assertNotEqual(scratch.root_for(self.repo, other_workflow, 'validation-1'), self.root)
+        linked = self.repo / 'linked'
+        self.git('worktree', 'add', '--detach', linked)
+        self.assertEqual(scratch.root_for(linked, self.folder, 'validation-1'), self.root)
+        self.git('worktree', 'remove', linked)
+        (self.repo / '_archive').mkdir()
+        archived = self.repo / '_archive/task'
+        self.folder.rename(archived)
+        self.assertEqual(scratch.root_for(self.repo, archived, 'validation-1'), self.root)
+        scratch.close(archived, 'validation-1')
+        self.assertFalse(self.root.exists())
 
 
 if __name__ == '__main__':
