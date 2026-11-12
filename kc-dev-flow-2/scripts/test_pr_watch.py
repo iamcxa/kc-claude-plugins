@@ -1439,13 +1439,15 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(list(self.watched()), ["o/r#7"])
         self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green", lines)
 
-    def test_an_empty_pr_whose_worktree_is_gone_says_to_record_it_and_one_with_no_worktree_field_stays_silent(self):
+    def test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent(self):
         self.readme("roborev")
         self.task("gone")
         shutil.rmtree(self.repo / ".worktrees/gone")
         self.task("bare", worktree=False)
         code, lines = self.tasks({})
-        self.assertEqual((code, lines), (0, ["next: record gone's PR with status --set gone pr=<owner/repo>#<N>; its worktree is not on this machine."]))
+        self.assertEqual((code, lines), (0, ["fact: gone has no recorded PR; its worktree is not on this machine."]))
+        self.assertFalse(any(line.startswith("next:") for line in lines))
+        self.assertFalse(self.watch.exists())
 
     def test_a_sentinel_and_a_task_without_a_pr_or_worktree_print_nothing(self):
         self.readme("learn")
