@@ -212,3 +212,7 @@ Evidence state commit: `10e586243`；在該提交後按以下精確路徑刪除�
 - `/tmp/delivery-s4-prs.json`
 
 探針 context manager 的隨機暫存目錄已於結束時精確刪除；先前隨機名稱未留存，不能列成完整名稱清單，已確認這輪兩個專用前綴殘留目錄數為 0。原生測試自己的 TemporaryDirectory 亦隨測試結束清理。派工檔由 FO 建立，不刪除；本機探針工作樹及分支保留。
+
+## Closed
+
+The Captain chose 「關掉，接受現行範圍（建議）」 (host question dialog, 2026-11-13), answering 「「合併檢查不該要求已刪除的暫存路徑」這張要不要直接關掉？我建議關掉。worker 重播原案例發現問題在 0.36.0 就修好了：現在只檢查「問你的文字」和「要你執行的步驟」裡的路徑，驗證報告裡提到的已刪暫存不再誤擋，要你執行卻不存在的路徑仍會擋。關掉等於接受現行檢查範圍，不再寫任何程式。」; closed with nothing built: the premise was overturned in trial round 1 (already fixed on main by PR #799, released in 0.36.0). The task stays at the ideation gate because Spacedock cannot archive a held task (spacedock-dev/spacedock#847); it is not work waiting.
