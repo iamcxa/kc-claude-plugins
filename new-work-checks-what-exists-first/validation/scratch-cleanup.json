@@ -1,0 +1,17 @@
+{
+  "evidence_commit": "0dc8ff2622b66835aa65cfd418297116090d58ad",
+  "removed_after_commit": true,
+  "paths": [
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-design-surfaces-task-dir-crash-ideation.md",
+      "removed": true,
+      "exists_after": false
+    },
+    {
+      "path": "/tmp/validate-new-work-checks-20261113",
+      "removed": true,
+      "exists_after": false
+    }
+  ],
+  "acceptance_temporary_export": "The four-step script removed its resolved mktemp directory through its EXIT trap; pathname was not retained. No prior scratch path is needed to rerun acceptance."
+}

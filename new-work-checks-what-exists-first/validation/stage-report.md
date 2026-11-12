@@ -40,4 +40,3 @@ REJECTED for missing independent cold behavior evidence, not a demonstrated prod
 
 Start: 2026-11-13 01:55:37 Asia/Taipei; report seal: 2026-11-13 02:05:23 Asia/Taipei. Time source: clock__curr_time UTC 2026-11-12 17:55:37 and 18:05:23, converted UTC+08:00; no billed-agent-minute claim.
 Candidate remains 1fc2f05f88b18a62d4eda598158ffa385df9fae8. Source controls, native integration and fresh-shell acceptance pass; cold proof did not progress after the authorised replacement, so the no-third-attempt stop fired. One verified private root replayed; two not reproduced. Evidence committed before retained-scratch cleanup; receipt appended after removal.
-
