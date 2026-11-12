@@ -1,0 +1,152 @@
+next: adr-required-statement has no dispatch record for completed validation; hold advancement and gate preparation and report the gap to Captain.
+next: record adr-required-statement's PR with status --set adr-required-statement pr=<owner/repo>#<N>; its worktree is not on this machine.
+next: record journey-server-host-pilot's PR with status --set journey-server-host-pilot pr=<owner/repo>#<N>; its worktree is not on this machine.
+next: record ops-inbox-r1-setup-and-isolation's PR with status --set ops-inbox-r1-setup-and-isolation pr=<owner/repo>#<N>; its worktree is not on this machine.
+next: pr-review-lite-value-pilot has no dispatch record for completed implementation; hold advancement and gate preparation and report the gap to Captain.
+next: record pr-review-lite-value-pilot's PR with status --set pr-review-lite-value-pilot pr=<owner/repo>#<N>; its worktree is not on this machine.
+next: record validation-reads-pr-review-comments's PR with status --set validation-reads-pr-review-comments pr=<owner/repo>#<N>; its worktree is not on this machine.
+next: adr-required-statement has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+next: journey-server-host-pilot has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what is the smallest next step, given the findings so far?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+next: journey-server-host-pilot has replacing amendment 6; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+next: ops-inbox-r1-setup-and-isolation has 4 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.
+next: ops-inbox-r1-setup-and-isolation has replacing amendments 1, 2, 3, 4; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+budget: Budget: at most 3 days (FO proposal; the Captain sets it).; spent implementation 2, validation 0; states no cycles
+next: pr-review-lite-value-pilot has 31 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what is the smallest next step, given the findings so far?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+next: the seed check fails for these backlog tasks (agents-md-holds-instructions, autopilot-l3-dogfood-spacedock-bridge, built-screen-check-round3-followups, ci-pinned-spacedock-survives-release-download-outage, delivery-gate-s4-skips-removed-scratch, delivery-gate-skipped-run-settles, deprecate-kc-dev-flow-v1, design-director-model-follows-task, design-director-runs-where-it-pays, design-surfaces-task-dir-crash, dispatch-sets-reasoning-effort, domain-note-reaches-worker-poc, fo-asks-to-raise-concurrency, fo-narrates-outward-writes, gpt-partner-extension-proposal, ideation-preview-is-one-static-file, interrogation-strangers-isolated, journey-card-notes, journey-fold-answers-open-placeholders, journey-map-contract-round3-followups, journey-review-check-round3-followups, kc-adr-dev2-sharing-better-way, learn-fallback-pr-after-wrong-evidence, learn-names-agents-md-candidates, local-agent-roles-and-profiles, local-extensions-load-automatically, new-work-checks-what-exists-first, observer-check-learn-only-when-listed, paseo-fo-board, prod-split-owes-chief-engineer-route-review, published-ui-docs-checked-on-screen-change, repair-dispatch-asks-for-sibling-sites, retire-task-with-unconsumed-approval, review-briefing-links-repeated-in-chat, reviewer-negative-claim-shows-reach, rewalk-binds-prior-and-carries-complaints, unattended-browser-check-without-repo-tool, workflow-checkout-round3-followups, workflow-readme-in-invocation-test); before preparing the gate of one, fix the reported seed fields and run `python3 /private/tmp/impl-held-closed-fwzgjmij/legacy/kc-dev-flow-2/scripts/design_surfaces.py check --seed <task>`.
+next: run kc-dev-flow-2:learn for a-worker-holds-while-a-role-call-is-owed.
+next: run kc-dev-flow-2:learn for adr-lint-tells-supersession-assertion-from-pointer.
+next: run kc-dev-flow-2:learn for adr-protected-path-guard.
+next: run kc-dev-flow-2:learn for adr-reservation-crosses-workflows.
+next: run kc-dev-flow-2:learn for adr-reserved-when-design-names-one.
+next: run kc-dev-flow-2:learn for agent-reads-governing-adr.
+next: run kc-dev-flow-2:learn for amendment-checked-when-written.
+next: run kc-dev-flow-2:learn for amendment-form-check.
+next: run kc-dev-flow-2:learn for batch-reaches-each-gate-together.
+next: run kc-dev-flow-2:learn for batch10-after-release-obligations.
+next: run kc-dev-flow-2:learn for board-optout.
+next: run kc-dev-flow-2:learn for budget-overrun-holds-and-findings-meet-non-goals.
+next: run kc-dev-flow-2:learn for canvas-document-popup.
+next: run kc-dev-flow-2:learn for captain-amendment-form-checked.
+next: run kc-dev-flow-2:learn for captain-question-load.
+next: run kc-dev-flow-2:learn for chat-only-evidence-observer-blind.
+next: run kc-dev-flow-2:learn for claims-name-their-source.
+next: run kc-dev-flow-2:learn for codex-reader-counts-code-review-only.
+next: run kc-dev-flow-2:learn for codex-reader-reads-receipt-marker.
+next: run kc-dev-flow-2:learn for codex-reader-resolved-mark-adr.
+next: run kc-dev-flow-2:learn for codex-reader-same-head-unresolved.
+next: run kc-dev-flow-2:learn for codex-review-hang-detected.
+next: run kc-dev-flow-2:learn for codex-security-only-prompts-code-review.
+next: run kc-dev-flow-2:learn for commissioned-by-names-spacedock.
+next: run kc-dev-flow-2:learn for copilot-not-run-line-carries-quote.
+next: run kc-dev-flow-2:learn for copilot-quota-refusal-is-not-a-review.
+next: run kc-dev-flow-2:learn for counts-name-the-run-that-produced-them.
+next: run kc-dev-flow-2:learn for db-surface-without-migrations.
+next: run kc-dev-flow-2:learn for decline-becomes-task-only-with-a-bite.
+next: run kc-dev-flow-2:learn for delivery-check-before-ask-is-provable.
+next: run kc-dev-flow-2:learn for delivery-check-passes-a-skipped-by-design-run.
+next: run kc-dev-flow-2:learn for delivery-check-resolves-links-from-the-task.
+next: run kc-dev-flow-2:learn for delivery-gate-ignores-url-paths-and-data-fences.
+next: run kc-dev-flow-2:learn for delivery-gate-pr-body-attribution-link.
+next: run kc-dev-flow-2:learn for delivery-gate-reads-folder-tasks.
+next: run kc-dev-flow-2:learn for delivery-gate-settles-skipped-checks.
+next: run kc-dev-flow-2:learn for delivery-gate-verdict-form.
+next: run kc-dev-flow-2:learn for delivery-question-requires-worktree-clause.
+next: run kc-dev-flow-2:learn for denied-command-denies-only-that-command.
+next: run kc-dev-flow-2:learn for design-check-says-not-run-without-a-scope.
+next: run kc-dev-flow-2:learn for design-director-runs-ui-design-review.
+next: run kc-dev-flow-2:learn for dev2-laws-check.
+next: run kc-dev-flow-2:learn for diagnosis-rounds-count-toward-step-back.
+next: run kc-dev-flow-2:learn for dispatch-and-report-hygiene.
+next: run kc-dev-flow-2:learn for dispatch-build-writes-the-dispatch-record.
+next: run kc-dev-flow-2:learn for extension-defaults-and-install-choice.
+next: run kc-dev-flow-2:learn for extension-instruction-check-sees-every-listed-extension.
+next: run kc-dev-flow-2:learn for extension-instruction-reaches-dispatch.
+next: run kc-dev-flow-2:learn for fo-answers-own-worker-permissions-by-listed-id.
+next: run kc-dev-flow-2:learn for fo-batch-sittings.
+next: run kc-dev-flow-2:learn for fo-interviews-extension.
+next: run kc-dev-flow-2:learn for fo-lifecycle-mod.
+next: run kc-dev-flow-2:learn for fo-record-checks.
+next: run kc-dev-flow-2:learn for fo-tries-what-it-asks-the-captain.
+next: run kc-dev-flow-2:learn for fo-write-checks.
+next: run kc-dev-flow-2:learn for fo-write-rules-checked.
+next: run kc-dev-flow-2:learn for fo-written-lines-checked-before-dispatch.
+next: run kc-dev-flow-2:learn for followup-dispatch-records-checked.
+next: run kc-dev-flow-2:learn for gate-presentation-asks-one-thing-plainly.
+next: run kc-dev-flow-2:learn for gate-requires-recorded-reviews.
+next: run kc-dev-flow-2:learn for ideation-gaps.
+next: run kc-dev-flow-2:learn for idle-hook-names-merged-tasks-without-learn.
+next: run kc-dev-flow-2:learn for idle-names-failing-seeds.
+next: run kc-dev-flow-2:learn for issue-815-fo-record-gaps.
+next: run kc-dev-flow-2:learn for journey-map-dev2-contract.
+next: run kc-dev-flow-2:learn for journey-probe-finds-nested-maps.
+next: run kc-dev-flow-2:learn for journey-render-keeps-annotations.
+next: run kc-dev-flow-2:learn for kc-adr-format-source.
+next: run kc-dev-flow-2:learn for kc-adr-tools-with-dev2-copy.
+next: run kc-dev-flow-2:learn for kc-decision-log-cli.
+next: run kc-dev-flow-2:learn for kept-data-lifecycle-at-ui-ideation.
+next: run kc-dev-flow-2:learn for learn-delivery-follow-through.
+next: run kc-dev-flow-2:learn for learning-serialize-evaluation.
+next: run kc-dev-flow-2:learn for main-tests-pass-with-worth-check-and-story-test.
+next: run kc-dev-flow-2:learn for merge-ask-holds-missing-clauses.
+next: run kc-dev-flow-2:learn for merge-gatekeeper.
+next: run kc-dev-flow-2:learn for migration-and-number-guards.
+next: run kc-dev-flow-2:learn for model-roster-per-repo.
+next: run kc-dev-flow-2:learn for model-roster-question-needs-both-families.
+next: run kc-dev-flow-2:learn for names-check-before-dispatch.
+next: run kc-dev-flow-2:learn for names-check-says-what-it-skipped.
+next: run kc-dev-flow-2:learn for new-work-starts-from-a-story-map.
+next: run kc-dev-flow-2:learn for number-guards-readme-shrink.
+next: run kc-dev-flow-2:learn for observer-before-merge-guard.
+next: run kc-dev-flow-2:learn for observer-lists-unasked-merges.
+next: run kc-dev-flow-2:learn for ops-metric-event-protocol.
+next: run kc-dev-flow-2:learn for override-recorded-when-captain-departs.
+next: run kc-dev-flow-2:learn for paseo-codex-dispatch-practice.
+next: run kc-dev-flow-2:learn for paseo-human-surfaces-visible-and-reachable.
+next: run kc-dev-flow-2:learn for patch-0102.
+next: run kc-dev-flow-2:learn for patch-0103.
+next: run kc-dev-flow-2:learn for peer-status-reaches-fresh.
+next: run kc-dev-flow-2:learn for peers-paseo-rule-matches-practice.
+next: run kc-dev-flow-2:learn for peers-rules-name-each-host-binding.
+next: run kc-dev-flow-2:learn for poc-no-migrations.
+next: run kc-dev-flow-2:learn for pr-watch-state-per-session.
+next: run kc-dev-flow-2:learn for prod-security-review-gates.
+next: run kc-dev-flow-2:learn for prod-security-validation-gate.
+next: run kc-dev-flow-2:learn for read-adr-honors-adr-folder.
+next: run kc-dev-flow-2:learn for read-adr-reporting-rule-followup.
+next: run kc-dev-flow-2:learn for reflow-order.
+next: run kc-dev-flow-2:learn for release-acceptance.
+next: run kc-dev-flow-2:learn for release-please-exclude-paths.
+next: run kc-dev-flow-2:learn for release-review.
+next: run kc-dev-flow-2:learn for release-review-staleness-held-at-dispatch.
+next: run kc-dev-flow-2:learn for release-rollout-reaches-adopters-and-laws-pin.
+next: run kc-dev-flow-2:learn for release-walk-due-trigger.
+next: run kc-dev-flow-2:learn for release-walk-off-production-before-release.
+next: run kc-dev-flow-2:learn for release-walk-picky-reviewers-and-director.
+next: run kc-dev-flow-2:learn for reused-worker-dispatch-leaves-a-record.
+next: run kc-dev-flow-2:learn for review-cadence.
+next: run kc-dev-flow-2:learn for rewritten-criteria-checked-against-captain-words.
+next: run kc-dev-flow-2:learn for role-call-asks-for-the-mechanism.
+next: run kc-dev-flow-2:learn for role-triggers-owe-ce-on-review-drift.
+next: run kc-dev-flow-2:learn for second-round-prompts-a-step-back.
+next: run kc-dev-flow-2:learn for seed-check-requires-schema-fields.
+next: run kc-dev-flow-2:learn for special-role-calls-fire-when-needed.
+next: run kc-dev-flow-2:learn for special-role-dispatch-records-built-by-script.
+next: run kc-dev-flow-2:learn for special-role-triggers.
+next: run kc-dev-flow-2:learn for special-roles-follow-the-model-table.
+next: run kc-dev-flow-2:learn for stage-report-correction-path.
+next: run kc-dev-flow-2:learn for story-done-reports-release-remaining.
+next: run kc-dev-flow-2:learn for ui-design-review-in-ideation.
+next: run kc-dev-flow-2:learn for validation-gate-requires-the-question-check.
+next: run kc-dev-flow-2:learn for validation-rerun-accepts-report-fixed-before-ruling.
+next: run kc-dev-flow-2:learn for validation-rerun-survives-repaired-history.
+next: run kc-dev-flow-2:learn for validation-rerun-waits-for-captain-ruling.
+next: run kc-dev-flow-2:learn for worker-browser-checks-use-paseo-browser.
+next: run kc-dev-flow-2:learn for worker-completion-goes-to-main.
+next: run kc-dev-flow-2:learn for worker-completion-reaches-fo-on-paseo.
+next: run kc-dev-flow-2:learn for worker-knows-the-team-and-asks-early.
+next: run kc-dev-flow-2:learn for worker-loads-declared-package.
+next: run kc-dev-flow-2:learn for workflow-budget-ratchet.
+next: run kc-dev-flow-2:learn for workflow-checkout-must-match-trunk-readme.
+next: run kc-dev-flow-2:learn for worth-questions-asked-only-before-the-design-gate.
+next: report merge-guard-stops-unasked-merges to the Captain: error connecting to api.github.com
+check your internet connection or https://githubstatus.com.

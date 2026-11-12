@@ -1,0 +1,9 @@
+{
+  "held_line_added": 32,
+  "base_output": 1234,
+  "candidate_output": 1265,
+  "idle": 1313,
+  "startup": 7321,
+  "base_other_output_equal": false,
+  "projection_only": true
+}

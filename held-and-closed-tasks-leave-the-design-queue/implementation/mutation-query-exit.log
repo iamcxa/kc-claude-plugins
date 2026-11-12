@@ -1,0 +1,222 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.14, pytest-8.4.2, pluggy-1.6.0
+rootdir: /private/tmp/impl-held-closed-fwzgjmij/candidate
+plugins: mypy-1.0.1, flake8-1.3.0, anyio-4.11.0, schemathesis-4.7.8, asyncio-1.3.0, subtests-0.15.0, hypothesis-6.148.8, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 155 items / 144 deselected / 11 selected
+
+kc-dev-flow-2/scripts/test_pr_watch.py ...........  [100%]
+
+=================================== FAILURES ===================================
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='FAIL') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: stub spacedock: held query down.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='not JSON') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: Expecting value: line 1 column 1 (char 0).']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='null') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ["next: report held-task query failure to the Captain: 'NoneType' object is not subscriptable."]
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='[]') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: list indices must be integers or slices, not str.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ["next: report held-task query failure to the Captain: 'entities'."]
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": null}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: invalid held-task rows.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [{"slug": "paused"}]}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: invalid held-task rows.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [{"slug": "paused", "status": "ideation"}, {"slug": "paused", "status": "ideation"}]}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: duplicate held-task rows.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [], "pagination": {"has_next": "true"}}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: incomplete held-task rows.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [], "pagination": {"total": "1"}}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : ['next: report held-task query failure to the Captain: incomplete held-task rows.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+=========================== short test summary info ============================
+(text='FAIL') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='not JSON') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='null') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='[]') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": null}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [{"slug": "paused"}]}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [{"slug": "paused", "status": "ideation"}, {"slug": "paused", "status": "ideation"}]}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [], "pagination": {"has_next": "true"}}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [], "pagination": {"total": "1"}}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+================ 10 failed, 11 passed, 144 deselected in 9.19s =================

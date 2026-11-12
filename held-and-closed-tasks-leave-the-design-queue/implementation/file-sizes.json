@@ -1,0 +1,282 @@
+[
+  {
+    "path": "AC-5-real.json",
+    "bytes": 30
+  },
+  {
+    "path": "mutation-quote-comparison.log",
+    "bytes": 6054
+  },
+  {
+    "path": "np2-unit.xml",
+    "bytes": 1987
+  },
+  {
+    "path": "number-guards-fresh.log",
+    "bytes": 131
+  },
+  {
+    "path": "adr-quote-check.json",
+    "bytes": 100
+  },
+  {
+    "path": "ac2-next.log",
+    "bytes": 7936
+  },
+  {
+    "path": "summary.json",
+    "bytes": 9883
+  },
+  {
+    "path": "mutation-query-exit.log",
+    "bytes": 13681
+  },
+  {
+    "path": "handoff.json",
+    "bytes": 926
+  },
+  {
+    "path": "ac1-query.log",
+    "bytes": 553
+  },
+  {
+    "path": "spacedock-version.log",
+    "bytes": 152
+  },
+  {
+    "path": "NP-1-real.json",
+    "bytes": 1009
+  },
+  {
+    "path": "AC-2-mutated.json",
+    "bytes": 8807
+  },
+  {
+    "path": "AC-5-mutated.json",
+    "bytes": 30
+  },
+  {
+    "path": "np1-candidate.log",
+    "bytes": 16132
+  },
+  {
+    "path": "number-guards.log",
+    "bytes": 249
+  },
+  {
+    "path": "NP-1-mutated.json",
+    "bytes": 1035
+  },
+  {
+    "path": "open-pr-fresh-error.log",
+    "bytes": 0
+  },
+  {
+    "path": "AC-3-real.json",
+    "bytes": 15290
+  },
+  {
+    "path": "doc-impact.json",
+    "bytes": 186
+  },
+  {
+    "path": "mutation-held-list.log",
+    "bytes": 29663
+  },
+  {
+    "path": "ac5-archive.log",
+    "bytes": 218
+  },
+  {
+    "path": "AC-4-mutated.json",
+    "bytes": 21
+  },
+  {
+    "path": "AC-3-mutated.json",
+    "bytes": 15328
+  },
+  {
+    "path": "NP-4-projection-real.json",
+    "bytes": 16025
+  },
+  {
+    "path": "lint.log",
+    "bytes": 236
+  },
+  {
+    "path": "falsifiers.json",
+    "bytes": 12488
+  },
+  {
+    "path": "AC-4-real.json",
+    "bytes": 21
+  },
+  {
+    "path": "held-tests.xml",
+    "bytes": 1987
+  },
+  {
+    "path": "acceptance.log",
+    "bytes": 1823
+  },
+  {
+    "path": "acceptance.py",
+    "bytes": 12057
+  },
+  {
+    "path": "np1-query.log",
+    "bytes": 1008
+  },
+  {
+    "path": "AC-2-real.json",
+    "bytes": 8763
+  },
+  {
+    "path": "mutation-no-held.log",
+    "bytes": 4133
+  },
+  {
+    "path": "mutation-newest-hold.log",
+    "bytes": 1885
+  },
+  {
+    "path": "comment-ratio.log",
+    "bytes": 115
+  },
+  {
+    "path": "mutation-tests.json",
+    "bytes": 633
+  },
+  {
+    "path": "open-pr-error.log",
+    "bytes": 94
+  },
+  {
+    "path": "adr-lint.log",
+    "bytes": 33
+  },
+  {
+    "path": "open-pr.json",
+    "bytes": 0
+  },
+  {
+    "path": "unit-tests.log",
+    "bytes": 1187
+  },
+  {
+    "path": "real-workflow-tasks.log",
+    "bytes": 0
+  },
+  {
+    "path": "commands.json",
+    "bytes": 9883
+  },
+  {
+    "path": "ac3-legacy.log",
+    "bytes": 14746
+  },
+  {
+    "path": "np3-all-held-projection.log",
+    "bytes": 15488
+  },
+  {
+    "path": "held-tests.log",
+    "bytes": 979
+  },
+  {
+    "path": "design-surfaces.log",
+    "bytes": 136
+  },
+  {
+    "path": "candidate-removed.log",
+    "bytes": 29663
+  },
+  {
+    "path": "AC-7-real.json",
+    "bytes": 2736
+  },
+  {
+    "path": "identity.json",
+    "bytes": 577
+  },
+  {
+    "path": "falsifiers.py",
+    "bytes": 5510
+  },
+  {
+    "path": "open-pr-fresh.json",
+    "bytes": 3
+  },
+  {
+    "path": "NP-3-real.json",
+    "bytes": 23
+  },
+  {
+    "path": "ac5-merge-guard.log",
+    "bytes": 254
+  },
+  {
+    "path": "AC-1-real.json",
+    "bytes": 826
+  },
+  {
+    "path": "falsifiers.log",
+    "bytes": 12489
+  },
+  {
+    "path": "unit-tests.xml",
+    "bytes": 25890
+  },
+  {
+    "path": "ac5-terminal-status.log",
+    "bytes": 465
+  },
+  {
+    "path": "removed-dispatch-paths.json",
+    "bytes": 91
+  },
+  {
+    "path": "words.json",
+    "bytes": 176
+  },
+  {
+    "path": "np2-unit.log",
+    "bytes": 862
+  },
+  {
+    "path": "AC-6-real.json",
+    "bytes": 4599
+  },
+  {
+    "path": "NP-3-mutated.json",
+    "bytes": 23
+  },
+  {
+    "path": "AC-1-mutated.json",
+    "bytes": 778
+  },
+  {
+    "path": "AC-6-mutated.json",
+    "bytes": 3631
+  },
+  {
+    "path": "actual-state-counts.json",
+    "bytes": 99
+  },
+  {
+    "path": "NP-4-projection-mutated.json",
+    "bytes": 16026
+  },
+  {
+    "path": "ac4-dispatch.log",
+    "bytes": 838
+  },
+  {
+    "path": "np3-stacked-base.log",
+    "bytes": 14913
+  },
+  {
+    "path": "AC-7-mutated.json",
+    "bytes": 2737
+  }
+]

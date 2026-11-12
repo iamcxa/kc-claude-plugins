@@ -1,0 +1,28 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.14, pytest-8.4.2, pluggy-1.6.0
+rootdir: /private/tmp/impl-held-closed-fwzgjmij/candidate
+plugins: mypy-1.0.1, flake8-1.3.0, anyio-4.11.0, schemathesis-4.7.8, asyncio-1.3.0, subtests-0.15.0, hypothesis-6.148.8, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 155 items / 144 deselected / 11 selected
+
+kc-dev-flow-2/scripts/test_pr_watch.py ......F....  [100%]
+
+=================================== FAILURES ===================================
+______________ TasksTests.test_held_quote_uses_newest_hold_reason ______________
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_uses_newest_hold_reason>
+
+    def test_held_quote_uses_newest_hold_reason(self):
+        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
+        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
+                 "                decision: hold\n                reason: wait for a different condition\n")
+        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+>       self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
+E       AssertionError: False is not true : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:900: AssertionError
+=========================== short test summary info ============================
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_uses_newest_hold_reason
+================= 1 failed, 10 passed, 144 deselected in 8.67s =================

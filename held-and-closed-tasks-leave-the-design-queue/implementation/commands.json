@@ -1,0 +1,437 @@
+[
+  {
+    "name": "ac1-query",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--where",
+      "status=ideation",
+      "--where",
+      "gate-readiness=not-applicable",
+      "--fields",
+      "slug",
+      "--json",
+      "--limit",
+      "0"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  },
+  {
+    "name": "AC-1",
+    "ok": true,
+    "note": "held ideation rows=10, expected=10"
+  },
+  {
+    "name": "AC-1 mutation",
+    "ok": true,
+    "note": "deleting one query row is rejected"
+  },
+  {
+    "name": "ac2-next",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--next",
+      "--json"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  },
+  {
+    "name": "AC-2",
+    "ok": true,
+    "note": "scheduler rows=56, held intersection=0"
+  },
+  {
+    "name": "AC-2 mutation",
+    "ok": true,
+    "note": "injecting one held scheduler row is rejected"
+  },
+  {
+    "name": "ac3-legacy",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/impl-held-closed-fwzgjmij/legacy/kc-dev-flow-2/scripts/pr_watch.py",
+      "--state",
+      "/tmp/impl-held-closed-fwzgjmij/ac3-legacy.json",
+      "tasks",
+      "/tmp/impl-held-closed-fwzgjmij/legacy/docs/dev2"
+    ],
+    "exit": 2,
+    "expected": 0,
+    "ok": false
+  },
+  {
+    "name": "AC-3",
+    "ok": true,
+    "note": "base held names=0, words=1217"
+  },
+  {
+    "name": "AC-3 mutation",
+    "ok": true,
+    "note": "adding a held slug rejects the base-gap predicate"
+  },
+  {
+    "name": "ac4-dispatch",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--entity-path",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2/.spacedock-state/adoption-asks-which-extensions.md",
+      "--stage",
+      "ideation",
+      "--checklist-file",
+      "/tmp/impl-held-closed-fwzgjmij/checklist.txt"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  },
+  {
+    "name": "AC-4",
+    "ok": true,
+    "note": "real held-task dispatch build exits zero"
+  },
+  {
+    "name": "AC-4 mutation",
+    "ok": true,
+    "note": "a simulated refusal fails the success predicate"
+  },
+  {
+    "name": "ac5-merge-guard",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "merge",
+      "guard",
+      "fo-write-checks-parse-top-level",
+      "--verdict",
+      "rejected",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "AC-5 merge-guard",
+    "ok": true,
+    "note": "unforced close refused"
+  },
+  {
+    "name": "ac5-terminal-status",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--set",
+      "fo-write-checks-parse-top-level",
+      "status=done",
+      "verdict=REJECTED"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "AC-5 terminal-status",
+    "ok": true,
+    "note": "unforced close refused"
+  },
+  {
+    "name": "ac5-archive",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--archive",
+      "fo-write-checks-parse-top-level"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "AC-5 archive",
+    "ok": true,
+    "note": "unforced close refused"
+  },
+  {
+    "name": "AC-5 mutation",
+    "ok": true,
+    "note": "one successful close fails the refusal predicate"
+  },
+  {
+    "name": "AC-6",
+    "ok": true,
+    "note": "real archive has a same-stage successor after hold"
+  },
+  {
+    "name": "AC-6 mutation",
+    "ok": true,
+    "note": "removing successor attempts fails the reopen predicate"
+  },
+  {
+    "name": "AC-7",
+    "ok": true,
+    "note": "verbatim proposed quotes=7"
+  },
+  {
+    "name": "AC-7 mutation",
+    "ok": true,
+    "note": "one-character changes fail verbatim comparison"
+  },
+  {
+    "name": "np1-query",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2",
+      "--where",
+      "gate-readiness=not-applicable",
+      "--fields",
+      "slug,status",
+      "--json",
+      "--limit",
+      "0"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  },
+  {
+    "name": "np1-candidate",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/kc-dev-flow-2/scripts/pr_watch.py",
+      "--state",
+      "/tmp/impl-held-closed-fwzgjmij/np1-candidate.json",
+      "tasks",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2"
+    ],
+    "exit": 2,
+    "expected": 0,
+    "ok": false
+  },
+  {
+    "name": "NP-1",
+    "ok": true,
+    "note": "native held rows=14, fact lines=1, listed=14"
+  },
+  {
+    "name": "NP-1 mutation",
+    "ok": true,
+    "note": "missing and duplicated slugs fail equality or uniqueness"
+  },
+  {
+    "name": "np3-all-held-projection",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/kc-dev-flow-2/scripts/pr_watch.py",
+      "--state",
+      "/tmp/impl-held-closed-fwzgjmij/np3-all-held-projection.json",
+      "tasks",
+      "/tmp/impl-held-closed-fwzgjmij/candidate/docs/dev2"
+    ],
+    "exit": 2,
+    "expected": 0,
+    "ok": false
+  },
+  {
+    "name": "np3-stacked-base",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/tmp/impl-held-closed-fwzgjmij/base/kc-dev-flow-2/scripts/pr_watch.py",
+      "--state",
+      "/tmp/impl-held-closed-fwzgjmij/np3-stacked-base.json",
+      "tasks",
+      "/tmp/impl-held-closed-fwzgjmij/base/docs/dev2"
+    ],
+    "exit": 2,
+    "expected": 0,
+    "ok": false
+  },
+  {
+    "name": "NP-3",
+    "ok": false,
+    "note": "{\"held_line_added\": 32, \"base_output\": 1234, \"candidate_output\": 1265, \"idle\": 1313, \"startup\": 7321, \"base_other_output_equal\": false, \"projection_only\": true}"
+  },
+  {
+    "name": "NP-3 mutation",
+    "ok": true,
+    "note": "adding 31 words fails the approved increase bound"
+  },
+  {
+    "name": "NP-4 projection",
+    "ok": true,
+    "note": "scratch Held lines accepted; actual state edits remain FO-owned"
+  },
+  {
+    "name": "np2-unit",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "--junitxml=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/np2-unit.xml"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  },
+  {
+    "name": "NP-2",
+    "ok": true,
+    "note": "held behavior cases pass with caches cleared and -B"
+  },
+  {
+    "name": "mutation-quote-comparison",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "NP mutation quote-comparison",
+    "ok": true,
+    "note": "changed behavior is caught by the held tests"
+  },
+  {
+    "name": "mutation-query-exit",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "NP mutation query-exit",
+    "ok": true,
+    "note": "changed behavior is caught by the held tests"
+  },
+  {
+    "name": "mutation-no-held",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "NP mutation no-held",
+    "ok": true,
+    "note": "changed behavior is caught by the held tests"
+  },
+  {
+    "name": "mutation-newest-hold",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "NP mutation newest-hold",
+    "ok": true,
+    "note": "changed behavior is caught by the held tests"
+  },
+  {
+    "name": "mutation-held-list",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "NP mutation held-list",
+    "ok": true,
+    "note": "changed behavior is caught by the held tests"
+  },
+  {
+    "name": "candidate-removed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "ok": true
+  },
+  {
+    "name": "candidate removed",
+    "ok": true,
+    "note": "stacked base fails new held tests"
+  },
+  {
+    "name": "spacedock-version",
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "--version"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "ok": true
+  }
+]

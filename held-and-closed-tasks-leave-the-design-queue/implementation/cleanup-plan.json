@@ -1,0 +1,11 @@
+{
+  "remove_after_evidence_commit": [
+    "/tmp/impl-held-closed-fwzgjmij"
+  ],
+  "already_removed_generated_dispatch": [
+    "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md"
+  ],
+  "keep": [
+    "/tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md"
+  ]
+}

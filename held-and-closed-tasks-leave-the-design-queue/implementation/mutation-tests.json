@@ -1,0 +1,32 @@
+[
+  {
+    "name": "quote-comparison",
+    "status": "passed",
+    "message": "mutation caught: ('4', '10')"
+  },
+  {
+    "name": "query-exit",
+    "status": "passed",
+    "message": "mutation caught: ('10', '11')"
+  },
+  {
+    "name": "no-held",
+    "status": "passed",
+    "message": "mutation caught: ('2', '9')"
+  },
+  {
+    "name": "newest-hold",
+    "status": "passed",
+    "message": "mutation caught: ('1', '10')"
+  },
+  {
+    "name": "held-list",
+    "status": "passed",
+    "message": "mutation caught: ('23', '9')"
+  },
+  {
+    "name": "candidate removed",
+    "status": "passed",
+    "message": "23 failed, 9 passed"
+  }
+]

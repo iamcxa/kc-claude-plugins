@@ -1,0 +1,28 @@
+AC-1 PASS held ideation rows=10, expected=10
+AC-1 mutation PASS deleting one query row is rejected
+AC-2 PASS scheduler rows=56, held intersection=0
+AC-2 mutation PASS injecting one held scheduler row is rejected
+AC-3 PASS base held names=0, words=1217
+AC-3 mutation PASS adding a held slug rejects the base-gap predicate
+AC-4 PASS real held-task dispatch build exits zero
+AC-4 mutation PASS a simulated refusal fails the success predicate
+AC-5 merge-guard PASS unforced close refused
+AC-5 terminal-status PASS unforced close refused
+AC-5 archive PASS unforced close refused
+AC-5 mutation PASS one successful close fails the refusal predicate
+AC-6 PASS real archive has a same-stage successor after hold
+AC-6 mutation PASS removing successor attempts fails the reopen predicate
+AC-7 PASS verbatim proposed quotes=7
+AC-7 mutation PASS one-character changes fail verbatim comparison
+NP-1 PASS native held rows=14, fact lines=1, listed=14
+NP-1 mutation PASS missing and duplicated slugs fail equality or uniqueness
+NP-3 FAIL {"held_line_added": 32, "base_output": 1234, "candidate_output": 1265, "idle": 1313, "startup": 7321, "base_other_output_equal": false, "projection_only": true}
+NP-3 mutation PASS adding 31 words fails the approved increase bound
+NP-4 projection PASS scratch Held lines accepted; actual state edits remain FO-owned
+NP-2 PASS held behavior cases pass with caches cleared and -B
+NP mutation quote-comparison PASS changed behavior is caught by the held tests
+NP mutation query-exit PASS changed behavior is caught by the held tests
+NP mutation no-held PASS changed behavior is caught by the held tests
+NP mutation newest-hold PASS changed behavior is caught by the held tests
+NP mutation held-list PASS changed behavior is caught by the held tests
+candidate removed PASS stacked base fails new held tests

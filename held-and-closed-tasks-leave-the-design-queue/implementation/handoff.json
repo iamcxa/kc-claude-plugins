@@ -1,0 +1,26 @@
+{
+  "candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "base": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "unit_tests": {
+    "passed": 164,
+    "failed": 0,
+    "report": "unit-tests.xml",
+    "junit_entries_with_subtests": 250
+  },
+  "acceptance": "failed: NP-3 adds 32 words, maximum 30",
+  "native_scratch_limit": "Full origin-less tasks commands exit 2: parent scratch lookup requires origin while ambient /tmp/dev2 exists, and sandbox GitHub access failed. New held fact line still matches the native query.",
+  "actual_state": "0 of 14 Held sections present; ten ideation body edits remain FO-owned; journey-canvas stays unchanged under its ruling.",
+  "publication": "not run: product push, Draft PR, RoboRev and hosted CI are FO-owned",
+  "ci_cost": "not measured; no CI configuration changed",
+  "doc_impact": [
+    {
+      "doc": "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md",
+      "disposition": "updated"
+    }
+  ],
+  "real_workflow_entrance": {
+    "exit": 0,
+    "log": "real-workflow-tasks.log",
+    "github_read_access": "normal network, public PR reads only"
+  }
+}
