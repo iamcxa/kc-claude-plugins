@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:gate-question-facts-are-checked-before-the-captain-reads-them:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:gate-question-facts-are-checked-before-the-captain-reads-them-ideation-1
+              briefing:
+                id: briefing:gate-question-facts-are-checked-before-the-captain-reads-them:ideation:attempt-1:revision-1
+                digest: sha256:7dddf6f10f09f7694ceadc2f17f1b05ce183e41a3884aaeda28ef62b4335aa05
+                room-ref: ./gate-question-facts-are-checked-before-the-captain-reads-them/review/ideation/briefing-1
 started: 2026-11-12T05:16:48Z
 ---
 
