@@ -73,5 +73,10 @@
     "output": "probe-prs-stderr.txt",
     "command": "gh pr list --repo iamcxa/kc-claude-plugins --head poc/design-surfaces-task-dir-crash --state all --json number,state,headRefName",
     "exit": 1
+  },
+  {
+    "output": "probe-prs.json and probe-prs-stderr-final.txt",
+    "command": "gh pr list --repo iamcxa/kc-claude-plugins --head poc/design-surfaces-task-dir-crash --state all --json number,state,headRefName (same query, authorized network context)",
+    "exit": 0
   }
 ]

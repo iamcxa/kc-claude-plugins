@@ -9,6 +9,7 @@
     "extensions/learn/EXTENSION.md": true
   },
   "private_adopter_path_scan": "clean",
-  "report_lines": 39,
-  "remote_probe_PR_query": "unavailable; no PR created by this worker"
+  "report_lines": 41,
+  "remote_probe_PR_query": "verified empty; exit 0 using the same query outside the network sandbox",
+  "scratch_removed": true
 }

@@ -1,0 +1,18 @@
+{
+  "time_Asia_Taipei": "2026-11-13 01:22:00",
+  "time_source": "host system clock via Python datetime.now(timezone(+08:00))",
+  "evidence_commit_before_cleanup": "51ba14766",
+  "removed": [
+    {
+      "path": "/tmp/design-surfaces-task-dir-crash-ideation",
+      "removed": true
+    },
+    {
+      "path": "/tmp/design-surfaces-task-dir-crash-ideation-final",
+      "removed": true
+    }
+  ],
+  "retained_worktree": ".worktrees/poc-design-surfaces-task-dir-crash",
+  "retained_branch": "poc/design-surfaces-task-dir-crash",
+  "temporary_test_fixtures": "TemporaryDirectory-managed fixtures self-cleaned; no manually retained test fixture"
+}
