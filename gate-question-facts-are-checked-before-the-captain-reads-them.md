@@ -3,7 +3,7 @@ title: A factual claim in a question FO puts to the Captain has been checked aga
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
