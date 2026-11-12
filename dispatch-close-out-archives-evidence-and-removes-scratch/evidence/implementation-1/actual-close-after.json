@@ -1,0 +1,22 @@
+{
+  "candidate": "77e240d46ced4980ec1f6f2dc61a692f27857af1",
+  "removed_exact_paths": [
+    "/tmp/dev2/kc-claude-plugins/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1",
+    "/tmp/dev2/kc-claude-plugins/dispatch-close-out-archives-evidence-and-removes-scratch",
+    "/tmp/dev2/dispatch-code",
+    "/tmp/dev2/kc-claude-plugins"
+  ],
+  "retained_exact_paths": [
+    "/tmp/impl-dispatch-close-out-archives-evidence-and-removes-scratch-pr.md"
+  ],
+  "code_repo_dev2_worktrees": 0,
+  "remote_restore": {
+    "ref": "origin/spacedock-state/dev2",
+    "file": "first-dispatch-run.txt.gz",
+    "sha256": "235be0a3b0431f5f6c27bd0eaab2c12c6674b6258b9ad4d18def98d57a697887",
+    "original_bytes": 335294,
+    "matches_manifest": true
+  },
+  "verified_evidence_files": 42,
+  "uncommitted_files_removed": 2
+}
