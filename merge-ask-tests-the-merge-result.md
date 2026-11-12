@@ -3,7 +3,7 @@ title: A merge ask for a PR whose base moved since validation carries a test run
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
