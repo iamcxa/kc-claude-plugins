@@ -15,6 +15,10 @@ gates:
                 id: briefing:each-task-records-stage-time-revises-and-interruptions:backlog:attempt-1:revision-1
                 digest: sha256:34a62b970da873e147a12ba0bb7b6c7b26551529acdc7259ff6e670129ab6f69
                 room-ref: ./each-task-records-stage-time-revises-and-interruptions/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-12T05:11:35.580927Z"
+                reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
 ---
 
 ## Scope
