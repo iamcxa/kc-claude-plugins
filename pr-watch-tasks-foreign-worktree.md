@@ -265,3 +265,34 @@ The official implementation preserves the approved probe's product bytes, meets 
 ### Trial round 2
 
 Premise and goal check: the base still issues the unsafe unknown-PR action (test-first red, exit 1); the candidate emits facts and its fresh acceptance exits 0. Start 2026-11-13 01:26:00 Asia/Taipei; end of verification 2026-11-13 01:46:39 Asia/Taipei, both `clock.curr_time` UTC observations converted +08:00. Base `8125e6d516d32abbf79c6772de10cde2c20900a8`; candidate `e1fbb6ee5abbd7cefd67f57493ab1481a04ed073`. Check: `bash --noprofile --norc "$E/accept.sh" "$P" "$W" "$SD"`, exact argv in `implementation/implementation-run.json`, exit 0, saved `implementation/accept.log`; fourteen falsifiers reject and local checks pass. Blocked: no local code/proof blocker; FO-owned external steps remain unrun. Moved since round 1: official assigned branch off fetched main, test-first replay, cold mutation evidence, complete local CI command coverage with pinned SD source, required checks and prepared PR text. Stop fired: none — no premise overturned, scope/criterion/trade-off decision, new component boundary/Production obligation, out-of-design file or budget change. Runner-only temporary-path corrections are documented; product files stayed unchanged throughout verification. This is build round 2 of at most 3.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #858 head e1fbb6ee against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `e1fbb6ee5abbd7cefd67f57493ab1481a04ed073`, base `8125e6d516d32abbf79c6772de10cde2c20900a8`; independent archive run, `validation/verdict.json`, `validation/limits.md`.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `bash --noprofile --norc "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/validation/accept.sh"` exited 0 as written; six steps and prerequisites in `validation/acceptance.md`, observed `validation/accept.log`; exact dispatch ADR command exit 0 in `validation/adr-lint-dispatch.log`.
+- DONE: AC-1 — absent stamped worktree is factual, no recording instruction/watch entry; no-worktree-field remains silent.
+  `validation/accept-AC-1.log` passes; baseline fails on the actual old action (`validation/base-AC-1.log`, exit 1); restore-action, missing-fact and write-watch mutations all fail.
+- DONE: AC-2 — local discovery/status/commit steps, closed-only filtering and recorded bare PR survive.
+  `validation/accept-AC-2.log` passes; guard-before-recorded, suppress-lookup, remove-status and remove-commit mutations all fail (`validation/mutation-results.json`).
+- DONE: AC-3 — the original two public Scope records yield facts, with zero provider queries and no watch-list write.
+  `validation/accept-AC-3.log` captures original byte hashes/native status; `validation/base-AC-3.log` reproduces both old actions; either-case revert, added query and added recording action all fail.
+- DONE: AC-4 — common lifecycle source bytes unchanged and all paired bounded outputs do not grow.
+  `validation/accept-AC-4.log` shows six fewer words at each of five moments; output-growth and both common-document mutations fail; no live-fleet reading-total claim.
+- DONE: Exercise all recorded falsifiers and the full watcher suite independently.
+  `validation/mutation-results.json`: 14 behavioral failures expected, driver exit 0; `validation/test-pr-watch.log` and `validation/suite-result.json`: 136 tests, zero failures/errors/skips; temporary test fixtures removed.
+- DONE: Run role, dispatch, design, ADR, comment-ratio, doc-impact, package lint and diff checks; review comments and necessity.
+  `validation/required-checks.json` records all exits 0; `validation/role-triggers.log` exit 0; 73 ADRs, no new/reserved ADR or migration, no Number guards section; no new comments, zero impacted retained documents; docstring matches behavior.
+- DONE: Preserve exact candidate, public-only evidence, shared-state ownership and declared proof boundaries.
+  `validation/candidate.json` pins export bytes; only this task's report/folder changes; private adopters were not read; `validation/implementation-evidence-audit.json` checks recorded suite arithmetic without claiming an independent full-matrix rerun.
+- SKIPPED: Full package CI matrix rerun, hosted CI verdict, review approval, merge, release/adopter rollout, and integrated-head validation.
+  The changed watcher suite was independently rerun; implementation's joined matrix remains attributed to its author. PR head/draft state verified via GitHub connector; review/CI/delivery and later overlap integration remain FO-owned.
+
+### Summary
+
+PASSED for the exact candidate: the baseline exercises the unsafe instruction, the candidate removes it, and the retained local/recorded-PR behavior passes independent checks. The behavior change, regression assertions and docstring are necessary and sufficient for the accepted narrow goal; this is not gate approval or delivery. Verification started 2026-11-13 01:51:53 Asia/Taipei and completed 01:56:15, from `clock.curr_time` UTC +08:00; publication/cleanup completion time is recorded separately.
+
+### Review-finding disposition
+
+- F1 Deferred risk: PR #854 and #856 still edit the same watcher files and remain open at their recorded heads (`validation/overlap-prs.json`); no integrated-head harm is observed. Protected claim: value-ac[AC-2], retained PR discovery/watch behavior. It becomes Material if integration produces a supported workflow failing an accepted criterion; rerun watcher tests and the six-step acceptance on the integrated head before relying on this verdict there. No Material, Polish or Needs decision finding on the current candidate.

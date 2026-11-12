@@ -1,0 +1,11 @@
+{
+  "python": "3.15.0 (main, Oct  9 2026, 11:16:41) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "python_executable": "/opt/homebrew/opt/python@3.15/bin/python3.15",
+  "git": "git version 2.54.0 (Apple Git-157)",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "script_package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+  "export_has_git_metadata": false,
+  "mutations_reused_from": "implementation/mutations.py",
+  "probe_reused_from": "implementation/probe_checks.py",
+  "adaptation": "Only git show/archive uses PR_WATCH_SOURCE_REPO; candidate files and test predicates unchanged. Explicit head replaces HEAD for disposable mutation exports."
+}

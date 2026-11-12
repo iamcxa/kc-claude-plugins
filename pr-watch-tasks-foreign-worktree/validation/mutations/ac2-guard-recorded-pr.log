@@ -1,0 +1,21 @@
+MUTATION ac2-guard-recorded-pr criterion AC-2
+test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched) ... ok
+test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing) ... ok
+test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone (probe_tests.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone) ... FAIL
+
+======================================================================
+FAIL: test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone (probe_tests.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1440, in test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone
+    self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green", lines)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'fact: hash has no recorded PR; its worktree is not on this machine.' != 'fact: o/r#7 OPEN draft=False checks=green'
+- fact: hash has no recorded PR; its worktree is not on this machine.
++ fact: o/r#7 OPEN draft=False checks=green
+ : ['fact: hash has no recorded PR; its worktree is not on this machine.', 'fact: o/r#7 OPEN draft=False checks=green', 'fact: o/r#7 OPEN draft=False checks=green', 'fact: number has no recorded PR; its worktree is not on this machine.', 'fact: o/r#7 OPEN draft=False checks=green', 'next: run `python3 /private/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/pr_watch.py --state /tmp/tmp2ste143z/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.621s
+
+FAILED (failures=1)

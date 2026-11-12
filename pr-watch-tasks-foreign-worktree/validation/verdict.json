@@ -1,0 +1,35 @@
+{
+  "verdict": "PASSED",
+  "candidate": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "criteria": [
+    {
+      "name": "AC-1",
+      "status": "passed",
+      "evidence": "accept-AC-1.log"
+    },
+    {
+      "name": "AC-2",
+      "status": "passed",
+      "evidence": "accept-AC-2.log"
+    },
+    {
+      "name": "AC-3",
+      "status": "passed",
+      "evidence": "accept-AC-3.log"
+    },
+    {
+      "name": "AC-4",
+      "status": "passed",
+      "evidence": "accept-AC-4.log"
+    }
+  ],
+  "acceptance_exit": 0,
+  "mutation_driver_exit": 0,
+  "baseline_AC1_exit": 1,
+  "baseline_AC3_exit": 0,
+  "watcher_suite_exit": 0,
+  "implementation_full_matrix": "read and arithmetic checked; not rerun",
+  "record_frontmatter_unchanged": true,
+  "author": "independent Codex validator"
+}

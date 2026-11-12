@@ -1,0 +1,27 @@
+MUTATION ac2-suppress-local-lookup criterion AC-2
+test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched) ... ERROR
+test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing) ... ERROR
+test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone (probe_tests.TasksTests.test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone) ... ok
+
+======================================================================
+ERROR: test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched (probe_tests.TasksTests.test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1263, in test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched
+    self.assertEqual(lines[0], f"next: run `spacedock status --workflow-dir {self.workflow.resolve()} --set some-task pr=o/r#7`.")
+                     ~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_a_branch_whose_only_pr_is_closed_records_nothing (probe_tests.TasksTests.test_a_branch_whose_only_pr_is_closed_records_nothing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1273, in test_a_branch_whose_only_pr_is_closed_records_nothing
+    self.assertIn("pr=o/r#8", lines[0])
+                              ~~~~~^^^
+IndexError: list index out of range
+
+----------------------------------------------------------------------
+Ran 3 tests in 2.110s
+
+FAILED (errors=2)

@@ -1,0 +1,110 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": true,
+    "exit": 0,
+    "output": "adr-lint.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": true,
+    "exit": 0,
+    "output": "comment-ratio.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": true,
+    "exit": 0,
+    "output": "doc-impact.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": false,
+    "exit": 0,
+    "output": "dispatch-records.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree.md"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": false,
+    "exit": 0,
+    "output": "design-surfaces.log"
+  },
+  {
+    "name": "lint-skills",
+    "command": [
+      "python3",
+      "/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": false,
+    "exit": 0,
+    "output": "lint-skills.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+      "diff",
+      "--check",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8",
+      "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": false,
+    "exit": 0,
+    "output": "diff-check.log"
+  },
+  {
+    "name": "adr-lint-dispatch",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8125e6d516d32abbf79c6772de10cde2c20900a8"
+    ],
+    "cwd": "/tmp/pr-watch-validation-858-pipwrbzd/candidate",
+    "git_metadata_env": true,
+    "exit": 0,
+    "output": "adr-lint-dispatch.log"
+  }
+]

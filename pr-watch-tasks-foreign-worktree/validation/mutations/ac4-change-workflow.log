@@ -1,0 +1,11 @@
+MUTATION ac4-change-workflow actual changed copy: /tmp/pr-watch-validation-858-pipwrbzd/candidate/.context/pr-watch-mutations/ac4-change-workflow/kc-dev-flow-2/references/sd/workflow.md
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/validation/mutations.py", line 114, in main
+    result = execute(args)
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/validation/mutations.py", line 66, in execute
+    checks.words(target)
+    ~~~~~~~~~~~~^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pr-watch-tasks-foreign-worktree/validation/probe_checks.py", line 155, in words
+    assert source.read_bytes() == original, "the common lifecycle passage changed; recount its actual loading"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: the common lifecycle passage changed; recount its actual loading

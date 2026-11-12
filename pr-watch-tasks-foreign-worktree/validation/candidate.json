@@ -1,0 +1,12 @@
+{
+  "head": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "archive_sha256": "2cd60218ef7ef5e9af003f5bdd8e0c4a552638d9206a325884fa104f90a3e1ef",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree",
+  "start": "2026-11-13 01:51:53 +08:00",
+  "time_source": "clock.curr_time UTC +08:00",
+  "archive_files": {
+    "kc-dev-flow-2/scripts/pr_watch.py": "e981240aa63775edeec916c46da44559f8c5adc80c551133ae45832889eee584",
+    "kc-dev-flow-2/scripts/test_pr_watch.py": "4626b6678ce3770f7a89fe360c10bd97c792c869cc14d58eb39ca802d7140a29"
+  }
+}

@@ -1,0 +1,23 @@
+MUTATION ac1-remove-fact criterion AC-1
+test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent (probe_tests.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent) ... FAIL
+
+======================================================================
+FAIL: test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent (probe_tests.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-watch-validation-858-pipwrbzd/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1448, in test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent
+    self.assertEqual((code, lines), (0, ["fact: gone has no recorded PR; its worktree is not on this machine."]))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, []) != (0, ['fact: gone has no recorded PR; its worktree is not on this machine.'])
+
+First differing element 1:
+[]
+['fact: gone has no recorded PR; its worktree is not on this machine.']
+
+- (0, [])
++ (0, ['fact: gone has no recorded PR; its worktree is not on this machine.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.595s
+
+FAILED (failures=1)

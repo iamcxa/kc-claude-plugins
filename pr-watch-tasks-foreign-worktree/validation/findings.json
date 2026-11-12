@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "info",
+    "classification": "Deferred risk",
+    "title": "Overlapping pending PRs require integrated-head verification",
+    "detail": "No current-candidate harm observed; rerun accepted criteria after integration.",
+    "status": "open",
+    "criterion": "value-ac[AC-2]",
+    "evidence": "overlap-prs.json"
+  }
+]
