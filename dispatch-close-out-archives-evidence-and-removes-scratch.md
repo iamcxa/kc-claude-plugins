@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-12T05:11:39.090063Z"
                 reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
+            - id: gate-attempt:dispatch-close-out-archives-evidence-and-removes-scratch-backlog-2
+              briefing:
+                id: briefing:dispatch-close-out-archives-evidence-and-removes-scratch:backlog:attempt-2:revision-1
+                digest: sha256:26fa43c8e6d66c114da66525c5c343ed33b1d75f1de9f9a85e1e1b876e0f26b5
+                room-ref: ./dispatch-close-out-archives-evidence-and-removes-scratch/review/backlog/briefing-2
 ---
 
 ## Scope
