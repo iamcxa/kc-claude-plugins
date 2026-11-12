@@ -61,6 +61,9 @@ elif a[:2] == ["pr", "checks"]:
 elif a[0] == "api" and "actions/runs" in " ".join(a):
     runs = os.path.join(d, "runs.json")
     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
+elif a[0] == "api" and "/compare/" in " ".join(a):
+    cmp = os.path.join(d, "compare.json")
+    print(open(cmp).read() if os.path.exists(cmp) else '{{"status": "ahead", "base_commit": {{"sha": "{"b" * 40}"}}}}')
 elif a[0] == "api" and "/contents/" in " ".join(a):
     adr = os.path.join(d, "adr.txt")
     at = os.path.join(d, "adr-" + " ".join(a).split("?ref=")[1].split()[0] + ".txt")

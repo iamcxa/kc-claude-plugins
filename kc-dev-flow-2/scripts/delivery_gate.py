@@ -125,6 +125,7 @@ ASK = "next: merge this head if the approved question named the merge and he did
 # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
 ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
 ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
+MERGE_NOT_RUN = re.compile(r"^Merge result:[ \t]+not run:[ \t]*\S.*$", re.M)
 CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
 
@@ -531,6 +532,87 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
     return problems, nexts
 
 
+def trunk_position(repo, trunk, head):
+    data = json.loads(gh("api", f"repos/{repo}/compare/{trunk}...{head}"))
+    return data["status"], str(data["base_commit"]["sha"]).lower()
+
+
+def merge_results(task):
+    found = []
+    for path in (task_folder(task) / "merge").glob("result-*.json"):
+        if (m := re.fullmatch(r"result-(\d+)\.json", path.name)):
+            found.append((int(m.group(1)), path))
+    return [(path, json.loads(path.read_text())) for _, path in sorted(found)]
+
+
+def merge_result_problem(task, gate_text, head, status, trunk_sha):
+    if status in ("ahead", "identical"):
+        return None, None
+    matching = [(p, r) for p, r in merge_results(task) if r.get("head") == head and r.get("trunk") == trunk_sha]
+    if matching:
+        path, rec = matching[-1]
+        if rec.get("exit") == 0:
+            return None, f"point: merge-result: {tok(rec.get('command'), words=12, chars=120)} exit 0 on {rec.get('tree', '')[:12]} ({path.name})"
+        return (f"the merge-result run {path.name} on trunk {trunk_sha[:12]} exited {tok(rec.get('exit'), words=1, chars=12)}",
+                None)
+    if MERGE_NOT_RUN.search("\n".join(outside_fences(gate_text))):
+        return None, "point: merge-result: not run (the ask says so)"
+    return (f"the trunk moved since this head ({status}, trunk {trunk_sha[:12]}) and no merge-result run is recorded at this head and trunk",
+            None)
+
+
+def merge_run(args):
+    task = Path(args.task)
+    if task.is_dir():
+        task = task / "index.md"
+    pr = PR.match(args.pr)
+    if not pr or not args.run:
+        emit("merge-run needs --pr owner/repo#N and a command after --")
+        return 2
+    repo, number = pr.groups()
+    try:
+        workflow_dir, scalars, _ = find_readme(task, args.workflow_dir)
+        trunk = scalars.get("trunk") or "main"
+        head = (args.head or run_gh(repo, number)).lower()
+        trunk_sha = (args.trunk or trunk_position(repo, trunk, head)[1]).lower()
+        git_dir = args.repo_dir or str(repo_root(workflow_dir))
+        for ref in (trunk_sha, head):
+            if subprocess.run(["git", "-C", git_dir, "cat-file", "-e", ref + "^{commit}"], capture_output=True).returncode:
+                subprocess.run(["git", "-C", git_dir, "fetch", "-q", "origin", trunk, f"+refs/pull/{number}/head"], capture_output=True, timeout=300)
+        merged = subprocess.run(["git", "-C", git_dir, "merge-tree", "--write-tree", trunk_sha, head], capture_output=True, text=True, timeout=300)
+    except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+        emit(f"cannot prepare the merge result: {error}")
+        return 2
+    tree = merged.stdout.split()[0] if merged.stdout.split() else ""
+    folder = task_folder(task) / "merge"
+    folder.mkdir(parents=True, exist_ok=True)
+    taken = [int(m.group(1)) for p in folder.glob("result-*.json") if (m := re.fullmatch(r"result-(\d+)\.json", p.name))]
+    n = max(taken, default=0) + 1
+    log = folder / f"result-{n}.log"
+    rec = {"pr": args.pr, "head": head, "trunk": trunk_sha, "tree": tree, "command": " ".join(args.run)}
+    start = utcnow()
+    if merged.returncode:
+        log.write_text(merged.stdout + merged.stderr)
+        rec.update(exit=f"merge-tree {merged.returncode}")
+    else:
+        import shutil, tempfile
+        scratch = Path(tempfile.mkdtemp(prefix="merge-result-"))
+        try:
+            archive = subprocess.run(["git", "-C", git_dir, "archive", tree], capture_output=True, timeout=300)
+            subprocess.run(["tar", "-x", "-C", str(scratch)], input=archive.stdout, check=True)
+            with log.open("w") as out:
+                done = subprocess.run(args.run, cwd=scratch, stdout=out, stderr=subprocess.STDOUT)
+            rec.update(exit=done.returncode)
+        finally:
+            shutil.rmtree(scratch, ignore_errors=True)
+    rec.update(seconds=round((utcnow() - start).total_seconds(), 1), time=utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), log=log.name)
+    path = folder / f"result-{n}.json"
+    path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
+    emit(f"merge result {tree[:12]} of {head[:12]} onto trunk {trunk_sha[:12]}: {rec['command']} exit {rec['exit']} in {rec['seconds']}s",
+         f"record: {task_folder(task).name}/merge/{path.name}")
+    return 0 if rec["exit"] == 0 else 1
+
+
 def check(args):
     emit(CLAIM_SOURCE)
     task, text_file = Path(args.task), Path(args.text_file)
@@ -577,6 +659,7 @@ def check(args):
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
     facts = files = runs = required = None
+    merge_point = None
     try:
         facts, files = pr_facts(repo, number), pr_files(repo, number)
         runs = pr_runs(repo, str(facts["headRefOid"]).lower())
@@ -611,6 +694,18 @@ def check(args):
         if scalars.get("trunk") and facts.get("baseRefName") != scalars["trunk"]:
             problems.append(f"the PR base {tok(facts.get('baseRefName'), words=1, chars=60)} is not the trunk {tok(scalars['trunk'], words=1, chars=60)}")
             nexts.append("next: hold the ask; the PR does not target the trunk, tell the Captain.")
+        merge_point = None
+        if scalars.get("trunk") and head and full.startswith(head):
+            try:
+                status, trunk_sha = trunk_position(repo, scalars["trunk"], full)
+                why, merge_point = merge_result_problem(task, gate_text, full, status, trunk_sha)
+            except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+                holds.append(f"cannot compare the trunk with {full[:12]}: {error}")
+            else:
+                if why:
+                    problems.append(why)
+                    nexts.append(f"next: hold the ask; run `delivery_gate.py merge-run <task> --pr {args.pr} -- <test command>` on the merge result, "
+                                 "or write `Merge result: not run: <reason>` in the question the Captain reads.")
         if len(files) != facts.get("changedFiles"):
             problems.append(f"the changed-file list has {len(files)} files but the PR reports {tok(facts.get('changedFiles'), words=1, chars=12)}")
             nexts.append("next: hold the ask; the changed-file list is incomplete, tell the Captain.")
@@ -699,6 +794,8 @@ def check(args):
     profile_prod = bool(front and (m := FM_PROFILE.search(front.group(1))) and m.group(1) == "prod")
     cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
     points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
+    if merge_point:
+        points = [merge_point] + points
     verdict = "merge" if not points and cls != "never" else "ask"
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
@@ -1030,11 +1127,21 @@ def main(argv=None):
     ask.add_argument("--text-file", required=True)
     ask.add_argument("--workflow-dir")
     ask.add_argument("--summary-file")
+    run_merge = commands.add_parser("merge-run")
+    run_merge.add_argument("task")
+    run_merge.add_argument("--pr", required=True)
+    run_merge.add_argument("--head")
+    run_merge.add_argument("--trunk")
+    run_merge.add_argument("--repo-dir")
+    run_merge.add_argument("--workflow-dir")
     run_steps = commands.add_parser("steps")
     run_steps.add_argument("record")
     run_steps.add_argument("--text-file", required=True)
-    args = parser.parse_args(argv)
-    return {"question": question, "check": check, "steps": steps}[args.command](args)
+    argv = list(sys.argv[1:] if argv is None else argv)
+    cut = argv.index("--") if "--" in argv else len(argv)
+    args = parser.parse_args(argv[:cut])
+    args.run = argv[cut + 1:]
+    return {"question": question, "check": check, "steps": steps, "merge-run": merge_run}[args.command](args)
 
 
 if __name__ == "__main__":
