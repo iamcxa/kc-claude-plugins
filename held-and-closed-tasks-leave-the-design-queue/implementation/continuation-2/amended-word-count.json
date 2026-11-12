@@ -1,0 +1,26 @@
+{
+  "captain_bound_words": "每張擱置的任務最多多 3 個字，另加固定 6 個字",
+  "held_tasks": 14,
+  "measured_added_words": 32,
+  "per_task": 3,
+  "fixed": 6,
+  "maximum": 48,
+  "passed": true,
+  "fact_line": "fact: held by the Captain, not waiting: backlog product-review-path-before-backlog, superseded-criterion-without-dispatch-caught; ideation adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, fo-write-checks-parse-top-level, gate-summary-names-each-decline, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, step-back-answer-has-a-record-line; validation adr-required-statement, journey-server-host-pilot; each ## Held section says what reopens it.",
+  "slugs": [
+    "adr-required-statement",
+    "journey-server-host-pilot",
+    "adoption-asks-which-extensions",
+    "adr-silent-undo-probe",
+    "captain-ruling-sources-checked",
+    "comment-check-reaches-delivery-gate",
+    "fo-write-checks-parse-top-level",
+    "gate-summary-names-each-decline",
+    "journey-canvas-hosted-poc",
+    "picky-reviewers-may-run-on-gemini",
+    "seed-check-requires-alignment-result",
+    "step-back-answer-has-a-record-line",
+    "product-review-path-before-backlog",
+    "superseded-criterion-without-dispatch-caught"
+  ]
+}
