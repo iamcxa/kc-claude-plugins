@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-12T05:11:32.038275Z"
                 reason: The Captain answered the joint question with a change to the experiment instead of a decision (host question dialog, 2026-11-12); FO asks again with the experiment written into the question.
+            - id: gate-attempt:held-and-closed-tasks-leave-the-design-queue-backlog-2
+              briefing:
+                id: briefing:held-and-closed-tasks-leave-the-design-queue:backlog:attempt-2:revision-1
+                digest: sha256:10424044da7b32efe9a970fdcd509aefc7784f284cd357eecae4d77a845c3f6c
+                room-ref: ./held-and-closed-tasks-leave-the-design-queue/review/backlog/briefing-2
 ---
 
 ## Scope
