@@ -80,6 +80,13 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-12, host question dialog
+Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
+Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
+Supersedes: none
+
 ## Design
 
 ### PRFAQ
@@ -241,6 +248,10 @@ Falsifier: a candidate that makes S4 read reports again.
 Evidence: `git -C <code repo> worktree list --porcelain | grep -c '^worktree /\(private/\)\?tmp/dev2/'`; pass is count 0, which `grep -c` reports with exit 1.
 Run now: 90 worktrees registered, 3 under `/tmp`, none under `/tmp/dev2/`; count 0, exit 1 (`evidence/code-repo-tmp-worktrees.txt`). This shows the command works; it proves nothing about close yet.
 Falsifier: a `git worktree add` inside a root that close leaves registered.
+
+## Number guards
+
+ADR: 0079
 
 ## Stage Report: ideation
 
