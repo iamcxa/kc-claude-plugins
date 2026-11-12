@@ -77,6 +77,7 @@ pr: iamcxa/kc-claude-plugins#856
 
 Alignment: not needed: one observed defect with one outcome; the mechanism is compared in the design and ruled at the ideation gate.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 2 replaces only the added-words bound of the held-task line (30 words fixed, to 3 words for each held task plus a fixed 6), in the option the Captain chose after the count of 14 held tasks and 32 words was put to him; the line's content, the program and every acceptance criterion stand, and the validator is asked to judge the new bound.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 4 replaces only the numbers of the added-words bound with the counts the independent validator measured in validation-1 (17 words with one held task, 32 with fourteen); the line, the program and every acceptance criterion stand, and the second validation judges the bound at one, fourteen and more held tasks.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
@@ -99,6 +100,15 @@ Captain: 「一次授權，跑完（建議）」 (host question dialog, 2026-11-
 Asked: 「實驗裡還沒過驗證的三張任務（收尾清理、問題裡的事實、擱置的任務）要怎麼走完？我建議一次給足授權讓它們跑完：一、這三張的預算都改成「1 implementation and 2 validation cycles」，退回後用追加訊息修正、再驗一次；第二次驗證再被退回就停下來回到你這裡。二、收尾清理那條「收尾後整個 repo 的暫存工作目錄是零」的驗收條件，改成只看這次派工自己的暫存資料夾，不為了湊到零去刪別的派工的資料夾。三、問題裡的事實那條要拿「擱置的任務」成品重播的條件不改，等那張的成品出來後補跑。這些會記成三張任務各一筆修正案。變差的是：三張各多一輪驗證（每輪約 15 到 20 分鐘），今天會跑到晚上；而且這段期間我不會再為「程式缺陷修完重驗」回來問你。」
 Supersedes: none
 Budget: 1 implementation and 2 validation cycles
+
+### Amendment 4 — 2026-11-12, host question dialog
+Captain: 「可以，照列名稱（建議）」 (host question dialog, 2026-11-12); before it he answered the same question with 「比較第一跟第二方案」, and FO compared the two.
+Asked: 「「擱置的任務」那一行的字數上限，可以改成「每張擱置的任務最多多 1 個字，另加固定 20 個字」嗎？我建議可以。這取代我上一題請你同意的「每張 3 個字加固定 6 個字」，那組數字是我沒數過就寫的，只有 1 張擱置時做不到。新的數字我實際數過那一行：固定的字 15 個、每個階段名稱 1 個、每張任務名稱 1 個；驗證者量到 1 張時是 17 個字、14 張時是 32 個字，新上限分別是 21 和 34。程式不改，這一行照樣列出每張的名稱。變差的是：擱置的越多這一行越長，這點不變。」
+Supersedes: none
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-12): validation-1 on #856 head 455846c6d recommended REJECTED with one finding, Needs decision (kind design): the added-words bound of amendment 2 (3 for each held task plus a fixed 6) fails at small counts, 17 words against 9 with one held task, while 14 tasks pass at 32 against 48. The numbers in amendment 2's question were FO's and had not been counted. Settled by Captain amendment 4 (1 word for each held task plus a fixed 20); the program does not change.
 
 ## Design
 
