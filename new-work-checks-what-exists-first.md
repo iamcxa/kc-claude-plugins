@@ -74,6 +74,10 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-13): validation-1 on #859 head 1fc2f05f8 recommended REJECTED with one finding, F1 Needs decision (kind evidence): the independent cold behaviour proof AC-2 asks for was not established because both of the validator's test setups were unusable; no candidate defect was found and the other checks passed. The Captain chose 「派第二次驗證補證（建議）」 (host question dialog, 2026-11-13), answering 「#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。」: the candidate and the criteria are unchanged; a fresh validator supplies the observation inside the Budget's second validation cycle; a second rejection stops the task.
+
 ## Design
 
 ### Before building
