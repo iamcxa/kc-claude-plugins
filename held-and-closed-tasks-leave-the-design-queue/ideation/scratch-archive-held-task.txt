@@ -1,0 +1,19 @@
+$ spacedock status --archive fo-write-checks-parse-top-level
+Error: entity fo-write-checks-parse-top-level cannot be archived — workflow has merge hook(s) [pr-merge] that have not run (pr field is empty and mod-block is empty). Invoke the hook first, or use --force to bypass.
+exit=1
+$ spacedock status --archived --fields slug,status,verdict,archived,gate-readiness
+ID     SLUG                           STATUS               TITLE                          SCORE    VERDICT              ARCHIVED             GATE-READINESS
+--     ----                           ------               -----                          -----    -------              --------             --------------
+adoption-asks-which-extensions adoption-asks-which-extensions ideation             A dispatch record written before an extension was listed is not judged against it                                                    not-applicable
+fo-write-checks-parse-top-level fo-write-checks-parse-top-level ideation             The FO-write checks parse only top-level declines and unfenced Scope, closing two Codex round-3 edge cases                                                    not-applicable
+seed-check-requires-alignment-result seed-check-requires-alignment-result ideation             The seed check refuses a task whose FO alignment says needed and records no Result line                                                    not-applicable
+exit=0
+$ spacedock status --validate
+Warning: retained gate room does not resolve: ./adoption-asks-which-extensions/review/backlog/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=adoption-asks-which-extensions id= display=adoption-asks-which-extensions path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/adoption-asks-which-extensions.md
+Warning: retained gate room does not resolve: ./adoption-asks-which-extensions/review/ideation/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=adoption-asks-which-extensions id= display=adoption-asks-which-extensions path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/adoption-asks-which-extensions.md
+Warning: retained gate room does not resolve: ./fo-write-checks-parse-top-level/review/backlog/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=fo-write-checks-parse-top-level id= display=fo-write-checks-parse-top-level path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/fo-write-checks-parse-top-level.md
+Warning: retained gate room does not resolve: ./fo-write-checks-parse-top-level/review/ideation/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=fo-write-checks-parse-top-level id= display=fo-write-checks-parse-top-level path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/fo-write-checks-parse-top-level.md
+Warning: retained gate room does not resolve: ./seed-check-requires-alignment-result/review/backlog/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=seed-check-requires-alignment-result id= display=seed-check-requires-alignment-result path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/seed-check-requires-alignment-result.md
+Warning: retained gate room does not resolve: ./seed-check-requires-alignment-result/review/ideation/briefing-1: workflow=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state scope=active slug=seed-check-requires-alignment-result id= display=seed-check-requires-alignment-result path=/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/seed-check-requires-alignment-result.md
+VALID
+exit=0

@@ -1,0 +1,21 @@
+$ spacedock status --set fo-write-checks-parse-top-level status=done verdict=REJECTED
+Error: entity fo-write-checks-parse-top-level: terminal status --set refused — its gate authority cannot be classified (entity carries no binding pending terminal-target approval (condition "not-applicable")); merge guard fo-write-checks-parse-top-level is the sole terminal consumer while that authority is unreadable, stale, or in force. (--force bypasses this guard.)
+exit=1
+On branch spacedock-state/dev2
+nothing to commit, working tree clean
+$ spacedock merge guard fo-write-checks-parse-top-level --verdict rejected
+Error: merge guard: refusing to finalize fo-write-checks-parse-top-level: entity carries no binding pending terminal-target approval (condition "not-applicable")
+exit=1
+$ spacedock status --archived --fields slug,status,verdict,archived
+ID     SLUG                           STATUS               TITLE                          SCORE    VERDICT              ARCHIVED             GATE-READINESS
+--     ----                           ------               -----                          -----    -------              --------             --------------
+adoption-asks-which-extensions adoption-asks-which-extensions ideation             A dispatch record written before an extension was listed is not judged against it                                                    not-applicable
+fo-write-checks-parse-top-level fo-write-checks-parse-top-level ideation             The FO-write checks parse only top-level declines and unfenced Scope, closing two Codex round-3 edge cases                                                    not-applicable
+seed-check-requires-alignment-result seed-check-requires-alignment-result ideation             The seed check refuses a task whose FO alignment says needed and records no Result line                                                    not-applicable
+exit=0
+ls: /tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state/_archive: No such file or directory
+/tmp/held-closed-scratch.XeFd2u/repo/docs/dev2/.spacedock-state:
+README.md
+adoption-asks-which-extensions.md
+fo-write-checks-parse-top-level.md
+seed-check-requires-alignment-result.md

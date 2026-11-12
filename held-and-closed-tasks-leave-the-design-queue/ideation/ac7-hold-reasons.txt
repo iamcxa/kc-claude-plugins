@@ -1,0 +1,20 @@
+adoption-asks-which-extensions | ideation | 2026-10-25 | Captain 「准」 (chat, 2026-10-25) answering the ideation briefing-1 question, accepting FO's recommended hold: the measured bite is three historical records and no live task; reopen when a late listing flags a live record
+
+adr-silent-undo-probe | ideation | 2026-10-23 | Captain 「准」 (2026-10-23) to the hold: the task moved to dev2-poc as adr-silent-undo-poc (amendment 1); this copy stays at ideation and is not dispatched again.
+
+captain-ruling-sources-checked | ideation | 2026-10-28 | The Captain 「照建議」 (chat, 2026-10-28), answering FO's joint batch-9 ideation sitting of five gates whose ask was 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; accepts FO's recommendation to hold and defer: the design stays on file and nothing is built until the peers rule of 2026-10-27 fails in an adopter that has it.
+
+comment-check-reaches-delivery-gate | ideation | 2026-10-20 | Captain 「那就按建議不做」 (chat, 2026-10-20, batch-4 sitting, question 4): D1 not built, as FO recommended; D2 and D3 lapse. The task is closed with the measurement as the reason.
+
+fo-write-checks-parse-top-level | ideation | 2026-10-21 | Captain 「關掉」 (chat, 2026-10-21), on FO's recommendation 「我的答案是不值得，建議關掉」: both findings are reviewer-constructed and the ideation measurement over 305 task files and 735 gate questions in four state checkouts changed 0 verdicts; questions 7 to 9 lapse. Override: recommended building the two fixes (design); Captain chose closing, on FO's revised recommendation in chat; area: round-3 parser edge cases.
+
+gate-summary-names-each-decline | ideation | 2026-11-05 | The Captain 「可以，但是該怎樣紀錄合理的followup」 (chat, 2026-11-05), answering 「這張擱置，改開「刪掉第三輪婉拒要開待辦」的小任務，好嗎？」, after his 「退一步想想」. Override: recommended approve D1-D3; Captain chose hold and a replacement task; area: none. Basis: of 20 archived follow-up tasks filed from declined findings, 2 were built (verdict PASSED) and 18 were closed together on 2026-10-20 (「照建議關掉 19 張。」), most as already done on main by other work; 11 more sit in backlog.
+
+journey-canvas-hosted-poc | ideation | 2026-10-11 | Captain 2026-10-11 on the Cloudflare Workers + Durable Object design: 「不要走這個方案，事實上這也不是“正式環境”只是把臨時環境由本地搬到某個線上。relay 走 exe.dev 就蠻好的，但是那邊也是要付費。先說明為何 Netlify 撐不住即時同步」. Design not taken; direction open (exe.dev noted as paid).
+
+picky-reviewers-may-run-on-gemini | ideation | 2026-11-02 | The Captain 「照建議」 (chat, 2026-11-02), answering 「決定：五張設計進實作、Gemini 這張停在這裡，四個決定都照建議嗎？要改哪件直接說。」; the task stops with no package change until Paseo offers an Antigravity mode a test shows refusing a write.
+
+seed-check-requires-alignment-result | ideation | 2026-10-29 | The Captain 「照建議」 (chat, 2026-10-29), answering FO's joint batch-10 ideation sitting whose ask was 「決定：五張全照建議（一張擱著、四張照表改）；如果哪張要調整，直接說。」; accepts FO's recommendation to hold and build nothing (the check exists since 0.31.0; FO's scripts checked a /tmp copy).
+
+step-back-answer-has-a-record-line | ideation | 2026-11-05 | The Captain 「可以」 (chat, 2026-11-05), answering 「這張先擱置，下一批手動試，好嗎？」, after asking 「這個做法真的可以來讓退一步想想發生在該發生的時候嗎？」. Hold: neither the advisory line nor a hold variant is built. Trial by hand for the next batch: when role_triggers.py prints the step-back reminder, FO brings the three questions with its own answers to the Captain as one item in the next sitting; after that batch, a direction change keeps the task, none deletes it. Recommendation followed.
+

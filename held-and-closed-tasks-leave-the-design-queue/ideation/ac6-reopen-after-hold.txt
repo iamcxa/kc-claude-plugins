@@ -1,0 +1,5 @@
+backlog gate-attempt:fo-interviews-extension-backlog-1 approve consumed
+ideation gate-attempt:fo-interviews-extension-ideation-1 approve consumed
+validation gate-attempt:fo-interviews-extension-validation-1 hold None
+validation gate-attempt:fo-interviews-extension-validation-2 approve consumed
+successor attempt after hold: True

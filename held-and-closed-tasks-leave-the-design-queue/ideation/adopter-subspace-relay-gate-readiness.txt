@@ -1,0 +1,67 @@
+ID     SLUG                           STATUS               TITLE                          SCORE    GATE-READINESS
+--     ----                           ------               -----                          -----    --------------
+extension-program-plugin-pairing extension-program-plugin-pairing validation           On each channel, an extension's program and its plugin come from the same release          withdrawn-awaiting-…
+link-trust-per-revision link-trust-per-revision        validation           A reader who ticks "Don't ask again" on a link stops being asked for the other links in that review's revision          validating
+ops-inbox-ceiling-emitter ops-inbox-ceiling-emitter      validation           Relay tells kc-ops-inbox when a daily publishing ceiling reaches 80% and full          validating
+owner-decision-after-sent-comments owner-decision-after-sent-comments validation           An owner's decision names the comments they already sent, and is sent on its own          validating
+pairing-and-agents-protocol pairing-and-agents-protocol    validation           One protocol document states how a device is paired and how a paired agent acts for a person          awaiting-captain
+reviewers-see-each-others-comments reviewers-see-each-others-comments validation           The owner chooses whether reviewers see each other's comments, and by default they do          validating
+revise-after-pairing-uses-paired-quota revise-after-pairing-uses-paired-quota validation           After rr pair, revising a share published unpaired uses the paired quota          needs-preparation
+signed-in-specs-run signed-in-specs-run            validation           The signed-in browser specs run somewhere, and the owner's comment flow passes on Web 0.2.21          needs-preparation
+browser-agent-finds-llms browser-agent-finds-llms       implementation       An agent driving a browser on a share link is told to read /llms.txt before it acts          
+comment-sent-when-added-relay comment-sent-when-added-relay  implementation       Relay accepts each comment as it is added, for reviewers and owners, with the owner's decision sent separately          
+limit-telemetry-posthog limit-telemetry-posthog        implementation       Relay's refusal and daily traffic lines also reach PostHog, so their history outlives the function log          
+room-shell-boundary-contract room-shell-boundary-contract   implementation       The Room page and the Web shell meet at one written contract that both sides check          
+rr-pair-for-requester rr-pair-for-requester          implementation       An unattended host can declare which account will approve its rr pair, and binds only to that account          
+try-comment-flood-cap try-comment-flood-cap          implementation       An outsider cannot fill the public Try Room's comments in minutes          
+browser-started-pairing-contract browser-started-pairing-contract ideation             A written contract lets a client and the relay build browser-started pairing independently          needs-preparation
+ci-browser-deps-install-survives-ipv6 ci-browser-deps-install-survives-ipv6 ideation             A pull request's browser jobs do not go red because the runner could not reach the package mirror          awaiting-captain
+ci-failure-evidence ci-failure-evidence            ideation             A failed browser-driven CI leg leaves enough evidence to classify the failure          needs-preparation
+feedback-reads-cost-less feedback-reads-cost-less       ideation             Reading a Room's comments costs far fewer storage reads, for the holder's list and for a device's pull          awaiting-captain
+fetch-only-agent-reads-share fetch-only-agent-reads-share   ideation             An agent that only fetches a share link gets the document, not an HTML page it cannot use          validating
+held-comments-survive-try-renewal held-comments-survive-try-renewal ideation             Held comments survive a Try renewal during sign-in          validating
+holder-reads-every-page holder-reads-every-page        ideation             A holder reads every page of a large Room's comments          approved-awaiting-a…
+my-agent-comments-are-mine my-agent-comments-are-mine     ideation             Comments my paired agent sends as me are mine, and I always see them, even when reviewers cannot see each other's          validating
+observability-sentry-posthog observability-sentry-posthog   ideation             Relay's errors reach an error monitor and its product events reach PostHog, without shipping identifiers or bloating functions          validating
+owner-decides-before-sign-in owner-decides-before-sign-in   ideation             An owner who opens their share address signed out can still reach the decision without hunting for Sign in          validating
+pi-review-command-name pi-review-command-name         ideation             On Pi, the review skill names /skill:review when it tells the user how to change the choice          validating
+review-static-html-prototype review-static-html-prototype   ideation             A reviewer opens a self-contained HTML prototype in the Room, clicks through it and comments on it          validating
+review-ui-room-asks-through-shell review-ui-room-asks-through-shell ideation             The Room asks its three questions through the shell, and the link pages wear Web's stylesheet          needs-preparation
+reviewer-sees-comment-was-sent reviewer-sees-comment-was-sent ideation             A reviewer who signs in at the question can see their comments were sent, and under whose name          approved-awaiting-a…
+try-page-current-install try-page-current-install       ideation             The Try playground teaches today's install commands and the rr pair flow          validating
+web-identity-accepts-version web-identity-accepts-version   ideation             Relay accepts an optional version field in the Web identity file          not-applicable
+agent-front-door-publish agent-front-door-publish       backlog              Given only review.spacedock.md, an agent wanting to publish is pointed at installing Spacedock Review          needs-preparation
+author-handle author-handle                  backlog              A signed-in comment carries a short per-account handle, so two people with one name can be told apart          needs-preparation
+capacity-raise-and-respond capacity-raise-and-respond     backlog              A person or an agent can respond to a full signed-in ceiling, raising it from a link without a terminal          needs-preparation
+capacity-triage-prompt capacity-triage-prompt         backlog              A local agent reads relay's capacity notice and recommends whether to raise the signed-in ceiling          needs-preparation
+card-sign-in-keeps-unsent-comments card-sign-in-keeps-unsent-comments backlog              A sign-in started from the profile card keeps unsent comments and the overall note          needs-preparation
+ci-design-review ci-design-review               backlog              The CI design is reviewed against what today's runs measured          needs-preparation
+cl-perspective-reviewer cl-perspective-reviewer        backlog              After each meeting, a reviewer role simulates what CL would ask about relay's work          needs-preparation
+close-race-slot-log close-race-slot-log            backlog              Research: a numbered slot log so nothing can commit after the owner's decision, even across a crash          needs-preparation
+continuity-revision-times continuity-revision-times      backlog              When a Briefing changes at the same address, relay keeps each revision's publish time and counts expiry from the latest          needs-preparation
+dev-secrets-wrapper dev-secrets-wrapper            backlog              A relay worker reaches a development secret only through one wrapper backed by a 1Password vault          needs-preparation
+extension-beta-opt-in extension-beta-opt-in          backlog              One user can opt in to an extension's beta through spacedock update          needs-preparation
+inbox-home inbox-home                     backlog              After signing in, a home page lists my reviews and manages my devices          needs-preparation
+owner-link-spec-hosted owner-link-spec-hosted         backlog              The owner-link spec reads its control comment back on a hosted relay          needs-preparation
+pairing-copy-button-touch-target pairing-copy-button-touch-target backlog              The inline Copy button on pairing ending pages is easy to tap on a phone          needs-preparation
+pairing-pages-assume-agent pairing-pages-assume-agent     backlog              Pairing pages assume an agent pairs for the person          needs-preparation
+pairing-scope-beyond-one-computer pairing-scope-beyond-one-computer backlog              Pairing scope beyond one computer state (per project or per account)          needs-preparation
+product-feedback-channel product-feedback-channel       backlog              A reviewer can send feedback about Spacedock Review itself          needs-preparation
+refusal-never-suggests-bare-location refusal-never-suggests-bare-location backlog              A refusal never offers a bare location such as plan.md web as an extra option          needs-preparation
+relay-first-officer relay-first-officer            backlog              The SD Review FO lives inside Spacedock Review, diagnoses the service on events, records each diagnosis, and answers people about its health          needs-preparation
+remove-owner-link-require-current-client remove-owner-link-require-current-client backlog              Remove the owner-link mechanism and require the current Subspace client          needs-preparation
+replaced-session-keeps-commenting replaced-session-keeps-commenting backlog              A reader whose Room session was replaced can keep commenting without a reload          needs-preparation
+review-comment-names-product review-comment-names-product   backlog              A review comment that names Spacedock Review is explained by the saved choice, not as a Web upload          needs-preparation
+review-deck-parts review-deck-parts              backlog              One gate briefing carries several design alternatives or several tasks, and the owner answers each part inside it          needs-preparation
+room-presentation-requested-by room-presentation-requested-by backlog              The Room presentation names who asked for the review when relay can vouch for the name          needs-preparation
+rr-pair-confirm-choice-prompt rr-pair-confirm-choice-prompt  backlog              rr pair asks its confirmation as an explained Yes/No choice instead of a bare [y/N]          needs-preparation
+sent-comment-edit-delete-relay sent-comment-edit-delete-relay backlog              A reader can edit or delete a comment they already sent, relay half          needs-preparation
+share-names-its-requester share-names-its-requester      backlog              A reviewer sees who asked for the review when the owner is signed in          needs-preparation
+shared-host-credential-sandbox shared-host-credential-sandbox backlog              One presenter's job on the shared agent host cannot read another presenter's rr credential          needs-preparation
+shared-team-identity shared-team-identity           backlog              The team publishes and reads the Try playground as one shared identity, not the Captain's own account          needs-preparation
+staging-branch-deploy staging-branch-deploy          backlog              Staging verifies releases on a branch deploy instead of a production deploy          needs-preparation
+staging-limits-every-context staging-limits-every-context   backlog              Every staging context the release gates use has the anonymous limits they need          needs-preparation
+staging-pin-read-retry staging-pin-read-retry         backlog              A release does not fail when GitHub answers the staging pin with a stale ref          needs-preparation
+unpair-and-repair-leave-room-authority unpair-and-repair-leave-room-authority backlog              After an unpair or a re-pair, who still has authority over the device's earlier reviews          needs-preparation
+unsent-comments-kept-in-browser unsent-comments-kept-in-browser backlog              Unsent comments stay in the browser, and a reader who looks away is asked whether to send them          needs-preparation
+workos-signout workos-signout                 backlog              Signing out ends the WorkOS session, so switching account works for every sign-in method          needs-preparation

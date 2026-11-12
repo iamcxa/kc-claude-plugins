@@ -1,0 +1,17 @@
+ID     SLUG                           STATUS               TITLE                          SCORE    GATE-READINESS
+--     ----                           ------               -----                          -----    --------------
+host-contract-defined-once host-contract-defined-once     validation           The shell's host contract is defined once in Web, versioned, and published with every build          awaiting-captain
+unsent-comments-kept-in-browser unsent-comments-kept-in-browser ideation             Unsent comments survive a reload, and the inert send-on-add code is archived for later restore          feedback-pending
+author-handle-after-name author-handle-after-name       backlog              A signed-in author's card shows a short per-account handle after the name, and the author's colour comes from the handle          needs-preparation
+bound-agent-comment-shows-person-avatar bound-agent-comment-shows-person-avatar backlog              A bound agent's comment shows its person's avatar with the tool badge beside it          needs-preparation
+briefing-content-can-be-translated briefing-content-can-be-translated backlog              A reviewer can read a briefing's document in their own language          needs-preparation
+code-first-line-clears-copy-button code-first-line-clears-copy-button backlog              A code block's long first line does not run behind its copy button          needs-preparation
+front-matter-anchors-place-on-web front-matter-anchors-place-on-web backlog              A terminal comment on the first front-matter fields places on Web          needs-preparation
+new-comments-reach-a-background-tab new-comments-reach-a-background-tab backlog              New comments reach a reader whose review tab is in the background          needs-preparation
+peer-mark-limit-raised peer-mark-limit-raised         backlog              The document highlights more than 200 comments          needs-preparation
+phone-shell-controls-reach-and-notes-read phone-shell-controls-reach-and-notes-read backlog              On a phone, the shell's small controls are easy to hit, the lights control stays reachable, and a failure note neither covers controls nor hides its second line          needs-preparation
+review-deck-carries-design-pictures review-deck-carries-design-pictures backlog              A gate briefing shows each design alternative as a picture and takes the Captain's answer per part          needs-preparation
+sent-comment-can-be-edited-or-deleted sent-comment-can-be-edited-or-deleted backlog              A reader can edit or delete a comment they already sent          needs-preparation
+web-deploy-records web-deploy-records             backlog              Each subspace-web deploy leaves a GitHub deployment record, marked by its real outcome          needs-preparation
+web-draw-figures web-draw-figures               backlog              Draw a document's figures in the Room and the terminal (Release 2.2c-3)          needs-preparation
+webkit-dialog-tab-check-counts-the-dialog webkit-dialog-tab-check-counts-the-dialog backlog              The WebKit dialog Tab-walk check fails a dialog whose controls lost their Tab stops          needs-preparation

@@ -1,0 +1,11 @@
+adoption-asks-which-extensions	Reopen when	verbatim in hold reason
+captain-ruling-sources-checked	Reopen when	verbatim in hold reason
+picky-reviewers-may-run-on-gemini	Reopen when	verbatim in hold reason
+step-back-answer-has-a-record-line	Reopen when	verbatim in hold reason
+comment-check-reaches-delivery-gate	Closed	verbatim in hold reason
+fo-write-checks-parse-top-level	Closed	verbatim in hold reason
+adr-silent-undo-probe	Closed	verbatim in hold reason
+seed-check-requires-alignment-result	Needs ruling	no line proposed
+gate-summary-names-each-decline	Needs ruling	no line proposed
+journey-canvas-hosted-poc	Needs ruling	no line proposed
+mismatches 0

@@ -1,0 +1,4 @@
+$ spacedock dispatch build --entity-path <held adoption-asks-which-extensions> --stage ideation --checklist-file checklist.txt
+[build] effective_model=opus (from stage) → Agent model=opus
+{'schema_version': 2, 'subagent_type': 'spacedock:ensign', 'description': 'A dispatch record written before an extension was listed is not judged against it: ideation', 'fetch_commands': ['/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /tmp/held-closed-scratch.XeFd2u/repo/docs/dev2 --stage ideation'], 'dispatch_file_path': '/tmp/spacedock-dispatch/4410bdcf-2b0c-49a7-81f5-5e2cf5b7f2e3-spacedock-ensign-adoption-asks-which-extensions-ideation.md', 'prompt': 'Skill(skill="spacedock:ensign"); then Read /tmp/spacedock-dispatch/4410bdcf-2b0c-49a7-81f5-5e2cf5b7f2e3-spacedock-ensign-adoption-asks-which-extensions-ideation', 'model': 'opus', 'name': 'spacedock-ensign-adoption-asks-which-extensions-ideation', 'run_in_background': True}
+exit=0
