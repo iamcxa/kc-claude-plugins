@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:each-task-records-stage-time-revises-and-interruptions:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:each-task-records-stage-time-revises-and-interruptions-ideation-1
+              briefing:
+                id: briefing:each-task-records-stage-time-revises-and-interruptions:ideation:attempt-1:revision-1
+                digest: sha256:244cbc3a65ad2fd7a519105de11f00a756071d0f2ee2c1c3739c47b809ccdfd5
+                room-ref: ./each-task-records-stage-time-revises-and-interruptions/review/ideation/briefing-1
 started: 2026-11-12T05:16:44Z
 ---
 
