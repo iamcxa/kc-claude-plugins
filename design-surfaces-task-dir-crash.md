@@ -34,6 +34,20 @@ gates:
                 id: briefing:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1
                 digest: sha256:2aa4f9eb5475c38ea806ef0f581c444f1a3729a30bc432f11c9e5c233d8be22e
                 room-ref: ./design-surfaces-task-dir-crash/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:design-surfaces-task-dir-crash:ideation:1
+                briefing: briefing:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-12T17:24:38.140168Z"
+                decision: approve
+                reason: 'Round 1 fired no stop condition (worker''s Trial round 1 line: none; Unresolved Captain decisions: none within the admitted Scope and budget). design_surfaces.py check exit 0 (FO run 2026-11-13). The probe on local branch poc/design-surfaces-task-dir-crash at 54424755e reproduces the crash on base 8125e6d51 and matches the explicit .md run; four criteria ran on the probe. One behaviour change inside Scope''s ''or fail with a usage message'': an unresolved argument exits 2 where a missing seed file exited 1.'
+                conn:
+                    quote: 五張都准，授權代記設計關卡（建議）
+                    source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-12T17:02:31Z
 ---
 
