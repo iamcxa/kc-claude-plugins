@@ -1,0 +1,11 @@
+{
+  "removed": [
+    {
+      "title": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-question-facts-are-checked-before-the-captain-reads-them/.context/ac1-followup-era98hvl",
+      "detail": "Removed after evidence commit f37ef8166; absence verified",
+      "value": true
+    }
+  ],
+  "tmp_roots_created": [],
+  "evidence_commit": "f37ef8166"
+}

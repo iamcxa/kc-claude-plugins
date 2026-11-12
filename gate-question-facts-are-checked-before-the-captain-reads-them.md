@@ -323,3 +323,35 @@ The approved deterministic scope scan now writes its disclosure through check an
 REJECTED for the whole task at `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`: owned behavior passes, but AC-1's explicitly required integration evidence is missing. F1 Needs decision (kind: evidence or form) returns the missing candidate/replay to FO or the acceptance amendment to the Captain; it is not authorization to add a state reader or repair product code. Checks, report and evidence are confined to this task; private source content is not published.
 
 - F1 Needs decision (kind: evidence or form): `value-ac[AC-1]` lacks the dependent-candidate listing replay and falsifier; supply that evidence or seek a Captain amendment. Primary trigger and boundary fields: `validation-1/assessment.md#finding`.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and amendment 1 from the local proof of concept on the PR #853 base; named product files only, no version bump.
+  Product remains `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`, base `d79053d0836c558a9269f9cf1ba222933935b820`; `implementation-1/ac1-followup/identity.json` verifies the same four product-file hashes. No product change, amendment, or new product commit was needed in this continuation.
+- DONE: ADR 0082 records the Captain's approved D1/D2 and amendment 1's permission to add the record.
+  Its bytes are unchanged; `implementation-1/ac1-followup/adr-lint.log` exits 0 with --since d79053d0836c558a9269f9cf1ba222933935b820 --require 0082. Amendment 2 preserves AC-1 and changes the task budget, already recorded in this task; no new ruling or ADR was added here.
+- DONE: Every acceptance criterion green with the evidence each names; applicable falsifiers exercised with python3 -B and caches absent.
+  AC-1 is now exercised against PR #856's actual listing at `455846c6d30d4ab650c1c4503bc591722231586d`, not the POC: `implementation-1/ac1-followup/result.json` and `run.log`. AC-2/3/4 remain PASSED in the independent validation-1 assessment at the unchanged product head; the earlier English-only and missing-file falsifiers remain in `implementation-1/replay-final.json`.
+- DONE: Run AC-1's replay at the two historical states against the sibling candidate's held-task line in pr_watch.py tasks.
+  Each fixture copies its five original task files byte-for-byte from state c59bfffd6 or 2c60d50f3 into an isolated committed state repository. Real Spacedock 0.27.2 queries return 5 and 0 held rows; actual `python3 -B pr_watch.py --state <scratch>/watch.json tasks <workflow>` processes exit 0 and print 1 and 0 held-fact lines, naming 5/5 and 0/5 offered tasks. The criterion's flag adapter exits 1 and 0 respectively; these are distinct from the CLI exits.
+- DONE: Run AC-1's hold-removal falsifier against that same pinned listing.
+  The scratch-only mutant filters hold-resolution rows out of held_rows' native-query results. Native query still reports 5; the mutated CLI exits 0, names 0/5, and its flag adapter exits 0; the unchanged five-required acceptance assertion fails (exit 1). Control remains 0/5. No upstream binary, live state, sibling branch, or product worktree was mutated; the isolated clone has no bytecode cache and every Python process disables cache writes.
+- DONE: Retain the replay's evidence boundary and public-data limit.
+  `result.json` contains counts, public source identity and binary digest only. The native held query and listing are unmocked; the fixture includes the five offered tasks only, unchanged gate/stage configuration, and disables unrelated extensions to omit review/learning work. Neither fixture contains PR/worktree fields; no GitHub or model call is needed. No private task names, rulings or raw runtime output were copied into public evidence.
+- DONE: Repository lint, ADR lint, number guards, comment maximum and design-surface check exit 0.
+  Fresh logs in `implementation-1/ac1-followup/`: lint.log, adr-lint.log, number-guards.log, comments.log and design-surfaces.log. Number guard refreshed refs without warning; comments are still 2/163, 1.2%, within 5%. Diff check is clean.
+- SKIPPED: Repeat the unaffected behavior suites and per-document scan.
+  No product bytes changed. Prior affected suites remain 230 delivery tests discovered (229 pass, 1 optional historical-state skip), 50 learning passes and 9 ADR-documentation passes, with independent validation-1 rerun evidence; this is not a whole-repository suite claim. `implementation-1/doc-verdicts.json` remains applicable: 0082 updated; 0044 summary location, 0051 rounds, 0062 quoted approval, 0071 check-record binding, 0072 prior disclosure law and 0078 inherited merge-result rules unaffected.
+- DONE: Preserve lifecycle-word and cost reporting.
+  No new product/workflow text this round. Earlier measured check output remains 89→89 words without a match and 89→98 for one Chinese claim (`implementation-1/replay-final.json`); startup/idle/archive unchanged. CI cost per PR not measured; no CI definition changed.
+- SKIPPED: Second corpus, Captain answers, plain-dialog coverage and model-reader evidence.
+  Still not verified or excluded as validation-1 records: no independent authorized corpus or observed Captain use; plain dialog has no script and D2 relies on consulting the listing; the approved design excludes the model reader. AC-1's listing proof now closes the missing integration evidence without claiming those outcomes.
+- DONE: Commit aggregate replay evidence, then remove the exact owned scratch root and record cleanup.
+  Evidence committed as `f37ef8166` before deletion; `implementation-1/ac1-followup/cleanup.json` lists the removed worktree-local root and verified absence. No /tmp root was created in this continuation. Only this task's entity/evidence paths are state-committed.
+- SKIPPED: Product push, opening or changing PR #855, RoboRev, hosted CI and validation stage progression.
+  PR #855 already exists as Draft at the dispatched head; none of those external actions were run by this worker. No push or amend was made to the product branch. FO owns the second validation; the earlier prepared PR text is retained for FO.
+
+### Summary
+
+This complete report supersedes the earlier implementation report. The missing AC-1 replay and hold-removal falsifier now pass their acceptance assertions against sibling head 455846c6d; the product remains 8d083d3b9 with no code defect or repair established. The two observational unknowns and plain-dialog limit remain explicit, and FO must dispatch the second independent validation before acceptance.
