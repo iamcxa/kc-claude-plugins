@@ -14,6 +14,13 @@ status: backlog
 - Bite: none recorded in dev2, because FO's dispatch line supplied it; his global instructions record the class costing two days in his fleet.
 - Rulings are existing state: the Captain 「都准」 (chat, 2026-10-23, kc-adr FO's Paseo session) to the kc-adr FO's 「准不准我在 dev2 那張任務的範圍裡加上「ADR 也算既有狀態」這一句」, whose proposed sentence was 「生效中的 ADR 也算既有狀態，worker 必須列出管到這次要動的檔案或行為的 ADR，沒有就寫「無」。」, after his 「讓 agent 務必先查既有狀態的機制，ADR也是一種既有狀態」. Related: dev2 task `adr-protected-path-guard` adds an optional ADR field listing the files it protects, which this check can read. (Bullet written by the kc-adr FO, Paseo agent 1bcf070c; the quotes are relayed from its session, not a ruling in this one; FO confirms them at this task's backlog gate.)
 - Non-goals: naming any particular project's upstream in the package.
+- Trial (2026-11-13): admitted by the Captain's 「五張都准，授權代記設計關卡（建議）」 (host question dialog, 2026-11-13) as one of five tasks run by hand under the trial route rules: one worker builds a working probe during ideation and continues into implementation, a different worker validates, at most 3 build rounds counted by hand; stop for the Captain on an overturned premise, spent budget, two rounds without progress or a second validation rejection, a change of scope or criterion, or a component boundary or Prod trigger.
+
+## Budget
+1 implementation and 2 validation cycles, in one package PR.
+
+## Stop condition
+- Return to the Captain after the first round with where the check sits; the alignment line makes that his to accept. Done when a worker dispatched with the candidate text states what it checked and found before designing, shown on one replayed dispatch.
 
 ## FO alignment
 
