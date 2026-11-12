@@ -1,0 +1,33 @@
+usage: test_design_surfaces.py [-h] {check} ...
+test_design_surfaces.py: error: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+E
+======================================================================
+ERROR: test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback (__main__.SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1239, in main
+    path.read_text()
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1059, in read_text
+    return f.read()
+           ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 515, in test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback
+    self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1241, in main
+    parser.error(str(exc))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (errors=1)

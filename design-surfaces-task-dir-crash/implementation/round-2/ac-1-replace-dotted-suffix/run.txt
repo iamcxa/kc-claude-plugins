@@ -1,0 +1,19 @@
+F.
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (__main__.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task.with.dots')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1769, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual((bare.returncode, bare.stdout, bare.stderr),
+AssertionError: Tuples differ: (2, '', 'usage: design_surfaces.py [-h] {c[111 chars]e\n') != (0, 'task.with.dots.md: design surfaces pr[443 chars], '')
+
+First differing element 0:
+2
+0
+
+Diff is 736 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.738s
+
+FAILED (failures=1)

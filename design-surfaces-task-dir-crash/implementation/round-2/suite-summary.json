@@ -1,0 +1,14 @@
+{
+  "commands": 29,
+  "passed_commands": 29,
+  "unittest_total": 1417,
+  "unittest_skipped": 11,
+  "commands_without_unittest_total": [
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "kc-dev-flow-2/scripts/test_observer_recovery.py"
+  ],
+  "CI_environment_equivalent": false,
+  "limit": "Local macOS uses the loaded Spacedock 0.28.0 source with launcher 0.27.2; hosted CI pins its own source/runtime. No install/download step is run.",
+  "completeness": "Initial runner omitted the python3 -B timeline line; that command was run separately, and the runner regex corrected. All 29 workflow Python lines now have exactly one result."
+}

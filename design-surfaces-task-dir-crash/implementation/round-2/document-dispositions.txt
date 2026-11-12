@@ -1,0 +1,9 @@
+Affected-document dispositions (candidate changes only checker main() and its tests):
+- docs/adr/0041-seed-admission-enforces-required-fields.md — unaffected: seed required fields and their validation are unchanged; only task filename selection precedes them.
+- docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md — unaffected: added_words and dispatch amendment comparison are unchanged.
+- docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md — unaffected: journey extension/story rules are unchanged and see the same task file as explicit .md.
+- docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md — unaffected: countable Budget grammar, Worth questions and cycle guards are unchanged.
+ADRs: none added or changed; this is the approved local CLI bug repair, with no new product ruling or number reservation.
+CI cost per PR: not measured. CI files, triggers and jobs are unchanged.
+roborev not run: delegated to FO; never reported clean.
+Product branch push, Draft PR creation, CI observation and independent validation: delegated to FO, not performed by this worker.

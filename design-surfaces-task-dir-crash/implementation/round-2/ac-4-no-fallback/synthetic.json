@@ -1,0 +1,226 @@
+[
+  {
+    "argument": "task",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'task'\n"
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'task'\n"
+    }
+  },
+  {
+    "argument": "task.md",
+    "seed": false,
+    "base": {
+      "exit": 0,
+      "stdout": "task.md: design surfaces presentable\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 0,
+      "stdout": "task.md: design surfaces presentable\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "loose",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'loose'\n"
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'loose'\n"
+    }
+  },
+  {
+    "argument": "bad",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'bad'\n"
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'bad'\n"
+    }
+  },
+  {
+    "argument": "bad.md",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "bad.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "bad.md: 'Surfaces:' has unknown value(s) unknown\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "exact",
+    "seed": false,
+    "base": {
+      "exit": 0,
+      "stdout": "exact: design surfaces presentable\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 0,
+      "stdout": "exact: design surfaces presentable\nscope check not run: no frontmatter\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "orphan",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'orphan'\n"
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nIsADirectoryError: [Errno 21] Is a directory: 'orphan'\n"
+    }
+  },
+  {
+    "argument": "missing.md",
+    "seed": false,
+    "base": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/tmp/design-surfaces-task-dir-crash-mutations/ac-4-no-fallback/base/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'missing.md'\n"
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1257, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 1236, in main\n    verdict, why = (\"clean\", \"\") if args.seed else scope_hold(path)\n                                                   ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py\", line 955, in scope_hold\n    text = task.read_text()\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1058, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py\", line 1044, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'missing.md'\n"
+    }
+  },
+  {
+    "argument": "task",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "task: cannot read task: [Errno 21] Is a directory: 'task'\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "task: cannot read task: [Errno 21] Is a directory: 'task'\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "task.md",
+    "seed": true,
+    "base": {
+      "exit": 0,
+      "stdout": "task.md: seed fields and FO alignment recorded\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 0,
+      "stdout": "task.md: seed fields and FO alignment recorded\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "loose",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "loose: cannot read task: [Errno 2] No such file or directory: 'loose'\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "loose: cannot read task: [Errno 2] No such file or directory: 'loose'\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "bad",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "bad: cannot read task: [Errno 21] Is a directory: 'bad'\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "bad: cannot read task: [Errno 21] Is a directory: 'bad'\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "bad.md",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "bad.md: 'Surfaces:' has unknown value(s) unknown\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "bad.md: 'Surfaces:' has unknown value(s) unknown\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "exact",
+    "seed": true,
+    "base": {
+      "exit": 0,
+      "stdout": "exact: seed fields and FO alignment recorded\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 0,
+      "stdout": "exact: seed fields and FO alignment recorded\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "orphan",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "orphan: cannot read task: [Errno 21] Is a directory: 'orphan'\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "orphan: cannot read task: [Errno 21] Is a directory: 'orphan'\n",
+      "stderr": ""
+    }
+  },
+  {
+    "argument": "missing.md",
+    "seed": true,
+    "base": {
+      "exit": 1,
+      "stdout": "missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'\n",
+      "stderr": ""
+    },
+    "probe": {
+      "exit": 1,
+      "stdout": "missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'\n",
+      "stderr": ""
+    }
+  }
+]

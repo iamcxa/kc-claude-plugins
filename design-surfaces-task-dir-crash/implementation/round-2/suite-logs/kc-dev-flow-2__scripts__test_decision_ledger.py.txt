@@ -1,0 +1,6 @@
+.......not a directory: /tmp/design-surfaces-task-dir-crash-tests/tmp736k0djp/nope
+................
+----------------------------------------------------------------------
+Ran 23 tests in 0.489s
+
+OK

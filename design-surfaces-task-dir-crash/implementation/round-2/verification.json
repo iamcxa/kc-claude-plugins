@@ -1,0 +1,28 @@
+{
+  "candidate": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+  "all_four_criteria_green": true,
+  "mutation_summary": {
+    "mutants": 9,
+    "detected": 9,
+    "restored_sha256": "c83645d817295277d2d67f8357a5e308d329822139d5bdaa4ed885193a5da4b6",
+    "python_bytecode": "-B plus PYTHONDONTWRITEBYTECODE=1; checker pyc cleared before each mutation"
+  },
+  "suite_summary": {
+    "commands": 29,
+    "passed_commands": 29,
+    "unittest_total": 1417,
+    "unittest_skipped": 11,
+    "commands_without_unittest_total": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "CI_environment_equivalent": false,
+    "limit": "Local macOS uses the loaded Spacedock 0.28.0 source with launcher 0.27.2; hosted CI pins its own source/runtime. No install/download step is run.",
+    "completeness": "Initial runner omitted the python3 -B timeline line; that command was run separately, and the runner regex corrected. All 29 workflow Python lines now have exactly one result."
+  },
+  "workflow_python_check_list_complete": true,
+  "source_clean_after_mutations": true,
+  "PR_text_sha256": "9bc2aef8d1e824765f0b0043f926f77285a61631712f36b409ead5c659018078",
+  "PR_title": "fix(kc-dev-flow-2): resolve task files beside evidence directories"
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "adopter": 1,
+    "collision_tasks": 31,
+    "mode_checks": 62,
+    "stable_bytes": 62,
+    "explicit_unchanged": 0,
+    "alias_matches_explicit": 62,
+    "base_alias_tracebacks": 31,
+    "probe_alias_tracebacks": 0,
+    "probe_passes": 0,
+    "probe_refusals": 62,
+    "unavailable": 0,
+    "historical_scope_case_files": 0
+  },
+  {
+    "adopter": 2,
+    "collision_tasks": 2,
+    "mode_checks": 4,
+    "stable_bytes": 4,
+    "explicit_unchanged": 0,
+    "alias_matches_explicit": 4,
+    "base_alias_tracebacks": 2,
+    "probe_alias_tracebacks": 0,
+    "probe_passes": 0,
+    "probe_refusals": 4,
+    "unavailable": 0,
+    "historical_scope_case_files": 0
+  },
+  {
+    "adopter": 3,
+    "collision_tasks": 14,
+    "mode_checks": 28,
+    "stable_bytes": 28,
+    "explicit_unchanged": 0,
+    "alias_matches_explicit": 28,
+    "base_alias_tracebacks": 14,
+    "probe_alias_tracebacks": 0,
+    "probe_passes": 0,
+    "probe_refusals": 28,
+    "unavailable": 0,
+    "historical_scope_case_files": 0
+  }
+]

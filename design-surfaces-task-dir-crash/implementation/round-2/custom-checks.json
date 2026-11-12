@@ -1,0 +1,14 @@
+[
+  {
+    "script": "kc-dev-flow-2__scripts__test_sd_dispatch.py.txt",
+    "passed_groups": 11,
+    "limits": [
+      "Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge"
+    ]
+  },
+  {
+    "script": "kc-dev-flow-2__scripts__test_observer_recovery.py.txt",
+    "passed_groups": 1,
+    "limits": []
+  }
+]

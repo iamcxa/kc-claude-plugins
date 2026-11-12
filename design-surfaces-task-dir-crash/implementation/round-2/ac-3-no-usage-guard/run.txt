@@ -1,0 +1,175 @@
+FFFFFFFFFF
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='missing.md', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : missing.md: cannot read task: [Errno 2] No such file or directory: 'missing.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'directory.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='directory', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : directory.md: cannot read task: [Errno 2] No such file or directory: 'directory.md'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='.', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '.'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1259, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 1238, in main
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+                                                   ^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/design_surfaces.py", line 955, in scope_hold
+    text = task.read_text()
+           ^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/'
+
+
+======================================================================
+FAIL: test_unresolved_names_and_directories_are_usage_errors (__main__.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors) (argument='/', seed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1808, in test_unresolved_names_and_directories_are_usage_errors
+    self.assertEqual(done.returncode, 2, done.stdout + done.stderr)
+AssertionError: 1 != 2 : : cannot read task: [Errno 21] Is a directory: '/'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.503s
+
+FAILED (failures=10)

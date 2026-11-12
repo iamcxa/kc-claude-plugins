@@ -1,0 +1,62 @@
+.......s.............../tmp/design-surfaces-task-dir-crash-tests/tmp5lrg0n9j/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp_5o8f8o1/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpauaanrit/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../tmp/design-surfaces-task-dir-crash-tests/tmpe99r1c4e/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpepvdhc42/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp9ny20cxy/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmp5o945831/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./tmp/design-surfaces-task-dir-crash-tests/tmpuf22m74w/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp6znaged0/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpj0zj9hly/task/dispatch/validation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmphb0u54p2/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp_e91trte/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmp88guzzqu/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmp0cdfyeak/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpe731wke4/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp3z9j5xqo/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmplplzrc0k/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmplcho3w4c/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpfp4tb_om/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmpfiv3d836/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpfqr0attr/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp4b9r2v8m/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmpu6fw4308/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+../tmp/design-surfaces-task-dir-crash-tests/tmpv9kzbnur/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp3yfjraye/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpu0j2htbn/task/dispatch/validation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmpzxjaqd76/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./tmp/design-surfaces-task-dir-crash-tests/tmpj7z0gf0z/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmp6nsf8ptw/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpei9ueu1w/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpp4rmtfwu/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpzog5j4dv/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+./tmp/design-surfaces-task-dir-crash-tests/tmpldu8pjt5/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmppdi6nnky/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmppk_1__aa/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpse6j5uy2/task/dispatch/ideation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpg1nq_zyq/task/elsewhere/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/design-surfaces-task-dir-crash-tests/tmprnj8shpf/task/dispatch/validation-x.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpda6q1cqr/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpq7nkrz40/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmp_49yykbc/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmp57_jdqvg/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpcbenm1xp/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+/tmp/design-surfaces-task-dir-crash-tests/tmpji8_x2do/task/dispatch/validation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+./tmp/design-surfaces-task-dir-crash-tests/tmp82kur7rb/r.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+./tmp/design-surfaces-task-dir-crash-tests/tmp6t81qp39/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/design-surfaces-task-dir-crash-tests/tmpn6t2l79h/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+/tmp/design-surfaces-task-dir-crash-tests/tmp4d5107wf/validation-1.md:1: context checks not run: Candidate eligibility, task facts, validation ruling history; record is outside task/dispatch; run on the saved record.
+....../tmp/design-surfaces-task-dir-crash-tests/tmpq2iz33cp/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpgznzird0/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpxqxbm0db/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../tmp/design-surfaces-task-dir-crash-tests/tmpa1annhwo/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+......../tmp/design-surfaces-task-dir-crash-tests/tmpsofmsoj1/task/dispatch/implementation-3.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.../tmp/design-surfaces-task-dir-crash-tests/tmp3ebkns7s/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+................................................................./tmp/design-surfaces-task-dir-crash-tests/tmpv31h843f/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+.........../tmp/design-surfaces-task-dir-crash-tests/tmpo5oyg0h4/task/dispatch/implementation-2.md:1: no 'Symptom:' line; before first '## ' heading add 'Symptom: <failure, named the same way each time>' or 'Symptom: none'
+/tmp/design-surfaces-task-dir-crash-tests/tmpxm0n0huo/task/dispatch/implementation-1.md:1: context checks not run: task facts, validation ruling history; no adjacent task file; restore it before dispatch.
+..
+----------------------------------------------------------------------
+Ran 136 tests in 134.072s
+
+OK (skipped=1)

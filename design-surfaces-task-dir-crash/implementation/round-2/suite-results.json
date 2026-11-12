@@ -1,0 +1,410 @@
+[
+  {
+    "name": "kc-dev-flow-2/scripts/lint-skills.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": null,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__lint-skills.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 47,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_lint_skills.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 234,
+    "skipped": 4,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_design_surfaces.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 9,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_adr_doc_checks.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 9,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_poc_readme.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 14,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_comment_ratio.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 38,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_number_guards.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 36,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__extensions__codex__test_codex_review.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 5,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__extensions__roborev__test_roborev_gate.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 15,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__extensions__copilot__test_copilot_review.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 23,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__extensions__journey-map__test_map_footprint.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 122,
+    "skipped": 4,
+    "output": "suite-logs/kc-dev-flow-2__extensions__release-acceptance__test_release_acceptance.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 136,
+    "skipped": 1,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_dispatch_records.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 230,
+    "skipped": 1,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_delivery_gate.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 5,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_validation_security.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 136,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_pr_watch.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 8,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_replay_dispatch.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 23,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_decision_ledger.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 23,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_package_version.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 13,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_workflow_checkout.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 19,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_observer_check.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 17,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_merge_audit.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 63,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_role_triggers.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 84,
+    "skipped": 1,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_laws_check.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 50,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_learning.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 46,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_dispatch_stage.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": null,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_sd_dispatch.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": null,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_observer_recovery.py.txt"
+  },
+  {
+    "name": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "status": "passed",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_task_timeline.py"
+    ],
+    "exit": 0,
+    "timeout": false,
+    "test_total": 12,
+    "skipped": 0,
+    "output": "suite-logs/kc-dev-flow-2__scripts__test_task_timeline.py.txt"
+  }
+]

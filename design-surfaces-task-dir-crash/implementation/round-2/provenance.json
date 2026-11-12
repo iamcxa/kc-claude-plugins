@@ -1,0 +1,18 @@
+{
+  "base": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+  "candidate": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+  "branch": "spacedock-ensign/design-surfaces-task-dir-crash",
+  "tree": "f287a41893ca6fa2bb8846d76d751b5182eee2ca",
+  "probe_tree_identical": true,
+  "changed_files": [
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py"
+  ],
+  "loaded_host_workflow": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/references/sd/workflow.md",
+  "loaded_host_workflow_sha256": "075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb",
+  "product_branch_pushed": false,
+  "PR_created": false,
+  "PR_text": "/tmp/impl-design-surfaces-task-dir-crash-pr.md",
+  "CI_cost_per_PR": "not measured; triggers and jobs unchanged",
+  "roborev": "not run; FO owns this review"
+}
