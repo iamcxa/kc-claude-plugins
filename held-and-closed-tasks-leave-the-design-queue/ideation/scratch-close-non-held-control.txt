@@ -1,0 +1,6 @@
+$ spacedock merge guard dispatch-carries-reserved-adr-number --verdict rejected   # not held: ideation, needs-preparation
+Error: merge guard: refusing to finalize dispatch-carries-reserved-adr-number: gate authority unreadable or digest-stale: attempt gate-attempt:dispatch-carries-reserved-adr-number-backlog-1 selected source: git-root commit is not an exact full local commit object
+exit=1
+$ spacedock status --set dispatch-carries-reserved-adr-number status=done verdict=REJECTED
+Error: entity dispatch-carries-reserved-adr-number: terminal status --set refused — its gate authority cannot be classified (gate authority unreadable or digest-stale: attempt gate-attempt:dispatch-carries-reserved-adr-number-backlog-1 selected source: git-root commit is not an exact full local commit object); merge guard dispatch-carries-reserved-adr-number is the sole terminal consumer while that authority is unreadable, stale, or in force. (--force bypasses this guard.)
+exit=1

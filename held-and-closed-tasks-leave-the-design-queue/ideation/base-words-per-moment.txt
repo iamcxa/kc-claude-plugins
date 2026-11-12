@@ -1,3 +1,6 @@
 origin/main 8ce0eb6050c889b21baccf50fec35231bc888d66
-workflow.md words:     6008
-pr_watch tasks words (idle):     1353
+workflow.md words: 6008
+_mods/kc-dev-flow-2.md words: 48 (runs pr_watch.py tasks at startup and idle)
+pr_watch tasks output words: 1353
+startup total: 7409
+idle total: 1401
