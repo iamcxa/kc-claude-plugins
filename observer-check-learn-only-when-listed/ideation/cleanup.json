@@ -1,0 +1,21 @@
+{
+  "after_evidence_commit": "b0a5e7295",
+  "scratch": [
+    {
+      "path": "/tmp/observer-learn-focused.log",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": "/tmp/observer-learn-probe-8fcbee7d",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": "/tmp/observer-learn-puppeteer-8fcbee7d.json",
+      "existed": true,
+      "removed": true
+    }
+  ],
+  "probe_worktree_and_branch_retained": true
+}
