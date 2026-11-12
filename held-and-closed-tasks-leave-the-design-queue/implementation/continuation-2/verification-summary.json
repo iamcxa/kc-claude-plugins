@@ -1,0 +1,32 @@
+{
+  "candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "product_unchanged": true,
+  "role_triggers_exit": 0,
+  "native_legacy_exit": 0,
+  "native_candidate_exit": 0,
+  "native_fact_equals_projection": true,
+  "held_tasks": 14,
+  "added_words": 32,
+  "allowed_words": 48,
+  "pytest_items_passed": 164,
+  "junit_cases_with_subtests": 250,
+  "package_checks": {
+    "lint": 0,
+    "adr_lint_require_0081": 0,
+    "number_guards_fresh": 0,
+    "comment_ratio": 0,
+    "design_surfaces": 0,
+    "doc_impact": 0
+  },
+  "not_run": [
+    "Product push",
+    "Draft PR creation",
+    "RoboRev",
+    "hosted CI",
+    "FO-owned actual Held body edits",
+    "upstream plain-status display change (out of accepted scope)"
+  ],
+  "ci_cost": "not measured; no CI changes",
+  "scope": "pilot; amendment 2 changes the acceptance bound only",
+  "budget_amendment_3": "1 implementation and 2 validation cycles; role_triggers.py exit 0 after this late FO record"
+}

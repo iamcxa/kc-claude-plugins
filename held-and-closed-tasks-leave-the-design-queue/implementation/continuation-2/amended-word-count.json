@@ -1,5 +1,4 @@
 {
-  "captain_bound_words": "每張擱置的任務最多多 3 個字，另加固定 6 個字",
   "held_tasks": 14,
   "measured_added_words": 32,
   "per_task": 3,
@@ -22,5 +21,7 @@
     "step-back-answer-has-a-record-line",
     "product-review-path-before-backlog",
     "superseded-criterion-without-dispatch-caught"
-  ]
+  ],
+  "bound_from_asked": "每張擱置的任務最多多 3 個字，另加固定 6 個字",
+  "captain_answer": "照列名稱，上限隨張數算（建議）"
 }

@@ -1,1 +1,1 @@
-budget: Budget: 1 cycle per stage, in one package PR or none if the design finds an existing mechanism and only state changes are owed.; spent implementation 1, validation 0
+budget: Budget: 1 implementation and 2 validation cycles; spent implementation 1, validation 0

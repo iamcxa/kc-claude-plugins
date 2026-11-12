@@ -1,0 +1,22 @@
+{
+  "legacy": {
+    "command": "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B LEGACY/kc-dev-flow-2/scripts/pr_watch.py --state SCRATCH/legacy-watch.json tasks LEGACY/docs/dev2",
+    "exit": 0,
+    "legacy": "/tmp/impl-held-amendment2-jdjv483t/legacy"
+  },
+  "candidate": {
+    "command": "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B CANDIDATE/kc-dev-flow-2/scripts/pr_watch.py --state SCRATCH/live-watch.json tasks WORKFLOW",
+    "exit": 0,
+    "candidate": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue",
+    "workflow": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+  },
+  "declared_inputs": {
+    "scratch": "/tmp/impl-held-amendment2-jdjv483t",
+    "product_candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+    "legacy": "8ce0eb6050c889b21baccf50fec35231bc888d66",
+    "state_snapshot": "eae5ea47cec926f35d164f8a88d31579196d7634",
+    "spacedock": "0.27.2",
+    "python": "3.11 with PyYAML and pytest",
+    "network": "public GitHub reads through gh"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "AC-1": {
+    "held_count": 10,
+    "matches_ten": true
+  },
+  "AC-2": {
+    "scheduler_count": 56,
+    "held_intersection": 0
+  },
+  "AC-3": {
+    "held_names": 0,
+    "words": 1353
+  }
+}

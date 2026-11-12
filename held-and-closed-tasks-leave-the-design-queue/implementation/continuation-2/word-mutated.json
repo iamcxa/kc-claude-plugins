@@ -1,0 +1,19 @@
+{
+  "name": "amended bound mutated",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/continuation-2/check-word-bound.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/continuation-2/over-bound-held-line.txt",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/continuation-2/held-query.json"
+  ],
+  "exit": 1,
+  "expected": 1,
+  "status": "passed",
+  "result": {
+    "words": 49,
+    "held_tasks": 14,
+    "maximum": 48,
+    "passed": false
+  }
+}
