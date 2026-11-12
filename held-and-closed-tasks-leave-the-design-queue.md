@@ -78,6 +78,13 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-12, host question dialog
+Captain: 「四張都允許（建議）」 (host question dialog, 2026-11-12)
+Asked: 「要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來等這個答案）、計時紀錄、擱置的任務、問題裡的事實。這是修改你已核准的設計範圍，會記成各張任務的一筆修正案；決策紀錄只寫你在關卡上核准的內容，不加新的決定。收尾清理那張我用追加訊息讓原本的工人接著做，不算新的一次派工。變差的是：四張任務各多一個檔，而且實驗要記上「設計核准後改範圍」四筆，其中三筆是我預先處理、還沒真的發生。」
+Supersedes: none
+
 ## Design
 
 Ideation evidence folder: `held-and-closed-tasks-leave-the-design-queue/ideation/` in this state checkout (state pinned at `eae5ea47cec926f35d164f8a88d31579196d7634`, package at origin/main `8ce0eb6050c889b21baccf50fec35231bc888d66`, kc-dev-flow-2 0.39.1, `spacedock 0.27.2`). The exact commands for every criterion, and the origin-less scratch recipe, are in `ideation/commands.md`.
@@ -227,6 +234,10 @@ These need the candidate. Each is written with its planned command and falsifier
 - **NP-3** With all ten carrying `## Held`, idle words at the candidate are at most 1431 (base 1401) and startup at most 7439 (base 7409). Planned evidence: the NP-1 command on a copy where the ten carry `## Held`, then `wc -w` added to the unchanged 48 mod words and 6008 `workflow.md` words. Falsifier: more than 30 added words at either moment.
 - **NP-4** After the state change, each of the ten carries a `## Held` line passing the NP-2 rule, and each task's frontmatter is byte-identical to state eae5ea47. Planned evidence: `git -C <state> diff eae5ea47 -- <ten files>` shows body-only hunks, and the NP-1 command prints no `next: write ## Held` line. Falsifier: any frontmatter hunk, or a remaining `next:` line. This needs D1's ruling for three tasks.
 - **NP-5** A reader of plain `spacedock status`, without `--fields`, telling held tasks from waiting ones. This needs an upstream Spacedock change outside this package (D2), so no planned command.
+
+## Number guards
+
+ADR: 0081
 
 ## Stage Report: ideation
 
