@@ -1,0 +1,18 @@
+{
+  "branch": "spacedock-ensign/gate-question-facts-are-checked-before-the-captain-reads-them",
+  "base": "d79053d0836c558a9269f9cf1ba222933935b820",
+  "candidate": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+  "files": {
+    "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md": "ef25c345cd2cad9ac275207a30e9e32d2c6388f34b717847b82f4fcda7807aad",
+    "kc-dev-flow-2/scripts/count_tokens.py": "04b4bd99912bc2b888cbc9d0aaec257af80ae9d5d8bc9add20bd1e1e268923ad",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "bc9f97f228dbd51c40d504f43526787ee2f7432040129bbbe2b64dc9d7dc845f",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "3cc54be60027e538347e9e130aa1ac175b527ef6ab768e2b376f59d73f2f0065"
+  },
+  "cache_directories_cleared_before_final_tests": 1,
+  "published": false,
+  "ci_cost_per_pr": "not measured; no CI topology changes",
+  "reservation_fetch_exit": 0,
+  "number_guards_warning": "Initial sandboxed checks could not write FETCH_HEAD; authorized number-guard rerun exited 0 without fetch warning",
+  "reservation_fetch_log": "state-reservations-fetch-final.log",
+  "number_guards_log": "number-guards-authorized.log"
+}

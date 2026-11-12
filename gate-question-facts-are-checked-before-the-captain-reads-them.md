@@ -248,3 +248,35 @@ The proof of concept shows that a task-state claim is checkable mechanically: ca
 It also found that the existing count disclosure reads no Chinese sentence: 0 of 111 questions. The design therefore extends that seam, marking without a hold per ADR 0072, and leaves case 3 to held-and-closed.
 
 Timing (Asia/Taipei): the proof of concept ran 13:23:51 to about 13:34 (about 11 minutes, including the model runs and evidence script). The design and report ran about 13:34 to 13:38 (about 4 minutes), after about 6 minutes of orientation from 13:17:46.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and amendment 1 from the local proof of concept on the PR #853 base; named product files only, no version bump.
+  Branch `spacedock-ensign/gate-question-facts-are-checked-before-the-captain-reads-them`, base `d79053d0836c558a9269f9cf1ba222933935b820`, candidate `8d083d3b9b2c48c10e32cee3e5ef693b374c6183`; `implementation-1/identity.json` binds the four net changed files. POC commits cherry-picked as `29441bf05` and `57e479c6a`; scope predicates kept, runtime/citations/split rewritten, standalone 235-line POC with model/state readers removed.
+- DONE: ADR 0082 records only the Captain's ideation ruling and amendment 1's permission to add the record.
+  `docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md`; required ADR lint exits 0 (`implementation-1/adr-lint.log`). No older ADR edited.
+- SKIPPED: Every acceptance criterion green with its evidence and falsifier: AC-1 task-state replay against held-and-closed's listing.
+  Not run, including its hold-removal mutation: FO's `dispatch/implementation-1-message-1.md` says that candidate will not exist in this dispatch because it waits for another task's merge; finish independent work and report this here.
+- DONE: AC-2 false merge-ask sentences, AC-3 controls/citation/mark, AC-4 session corpus, and the runnable items under Not provable now.
+  `implementation-1/replay-final.json`: case 1 and case 2 each write exactly one mark on the named false sentence; control 839 writes none; control 849 writes one, cited writes none, missing citation writes one, pre-marked case 2 writes none. Real question CLI exits equal baseline (0); PR-body check writes one mark and preserves exit 0. Repeats preserve bytes. Corpus: 111 questions, 11 matches in 9 questions, all 4 known false ones marked; shared line/English split yields 549 spans versus POC's 505, without changing these matches.
+- DONE: Run the applicable falsifiers with python3 -B and caches cleared; compare the goal without the change.
+  One code cache directory cleared; `implementation-1/run-evidence.py` compiles mutants in memory. English-only matching and accepting a missing cited file each lose the warning and fail one acceptance assertion; English mutant catches 0 of 4 known false questions. Actual base has 0 marks on the false-claim probe, candidate 1 (`replay-final.json`).
+- SKIPPED: Remaining Not provable now: second corpus, Captain answers, plain dialog and model-reader claim.
+  FO's same message confirms second corpus and Captain answers remain not verified; no authorized independent corpus or observed use. Plain dialog has no script; held-and-closed owns the listing. The model reader is excluded by the approved design and was not rerun.
+- DONE: Candidate behavior tests, repository lint, number guards, comment maximum and design-surface check.
+  `implementation-1/tests.json`: delivery 230 tests (1 optional historical-state replay skipped), learning 50 and ADR docs 9; all pass. `lint-final.log`, `adr-lint.log`, `number-guards-authorized.log`, `comments.log`, `design-surfaces.log`: exit 0. Number guard's initial sandbox FETCH_HEAD denial is retained; the authorized rerun refreshes refs with no warning. Comment ratio: 2/163, 1.2%, maximum 5%.
+- DONE: The words FO reads at each lifecycle moment, base versus candidate; CI cost stated.
+  `replay-final.json` measures check output: no match 89→89 words; one Chinese match 89→98 (+9). Startup/idle/archive and workflow instruction files unchanged; +0 there. Matching summary line adds 6 words plus 2 and up to 12 per marked sentence. CI cost per PR not measured; no CI definition changed.
+- DONE: Affected-document disposition for every doc_impact result.
+  `implementation-1/doc-impact.json`: 0082 updated; 0044 unaffected: optional summary/reviewer-location rules retained; 0051 unaffected: external-round hold retained; 0062 unaffected: quoted-approval comparison retained; 0071 unaffected: head/clause/reference binding retained; 0072 unaffected: existing disclosure/reference rules retained, Chinese matching extended by 0082; 0078 unaffected: inherited merge-result command/head/trunk rules retained. These are the `docs/adr/NNNN-*.md` paths in that JSON; immutable older rulings are not rewritten.
+- DONE: Commit locally and prepare the PR text and reproducible acceptance commands; keep public evidence aggregate-only.
+  `/tmp/impl-gate-question-facts-are-checked-before-the-captain-reads-them-pr.md` contains scoped Conventional Commit title/body; `implementation-1/acceptance.sh CODE STATE PACKAGE OUTPUT` repeats the checked commands at the pinned candidate. Raw private corpus/records are not copied to implementation evidence or PR text.
+- SKIPPED: Product push, opening the one Draft PR, RoboRev, and hosted CI.
+  Delegated to FO by dispatch; not run, never claimed clean. Product branch remains local; no PR opened: no push grant.
+- DONE: Remove scratch and list exact paths; retain the requested PR text for FO cleanup.
+  `implementation-1/cleanup.json` lists both replay scratch roots and verified absence; both scripts remove their own temporary tree in finally. No /tmp scratch remains except the required `/tmp/impl-gate-question-facts-are-checked-before-the-captain-reads-them-pr.md`, intentionally retained.
+
+### Summary
+
+The approved deterministic scope scan now writes its disclosure through check and question without a new content hold, reuses task-folder citation resolution and shares the Chinese-aware count split. All independent local checks pass at the candidate; AC-1's dependent listing replay and the two observational checks remain explicitly not run per FO. Publication, local RoboRev, hosted CI and workflow progression remain FO-owned.

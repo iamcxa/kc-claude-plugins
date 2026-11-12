@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Delivery gate",
+    "status": "passed",
+    "message": "230 tests; 1 skipped"
+  },
+  {
+    "name": "Learning",
+    "status": "passed",
+    "message": "50 tests; none skipped"
+  },
+  {
+    "name": "ADR documentation",
+    "status": "passed",
+    "message": "9 tests; none skipped"
+  }
+]

@@ -1,0 +1,61 @@
+[
+  {
+    "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "Optional summary input and reviewer location rules retained"
+  },
+  {
+    "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "External-round presence hold retained"
+  },
+  {
+    "doc": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "Quoted approval comparison retained"
+  },
+  {
+    "doc": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "Head, clause and reference binding retained"
+  },
+  {
+    "doc": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/count_tokens.py",
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "Existing disclosure/reference law retained; 0082 adds Chinese matching and scope marks"
+  },
+  {
+    "doc": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "state": "unaffected",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "reason": "Inherited merge-result command, head and trunk checks retained"
+  },
+  {
+    "doc": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/count_tokens.py",
+      "kc-dev-flow-2/scripts/delivery_gate.py",
+      "scope_disclosure"
+    ],
+    "reason": "Records the approved scope-mark ruling and Chinese count extension"
+  }
+]
