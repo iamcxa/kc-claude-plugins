@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:gate-question-facts-are-checked-before-the-captain-reads-them:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:gate-question-facts-are-checked-before-the-captain-reads-them-backlog-1
+              briefing:
+                id: briefing:gate-question-facts-are-checked-before-the-captain-reads-them:backlog:attempt-1:revision-1
+                digest: sha256:ab7abf3920dd5c06228fc87eabeee3a493b7bb32aea8b905da77f71bffdcd594
+                room-ref: ./gate-question-facts-are-checked-before-the-captain-reads-them/review/backlog/briefing-1
 ---
 
 ## Scope
