@@ -1,0 +1,122 @@
+[
+  {
+    "case": "one",
+    "kind": "real",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/one-fact.txt",
+      "1"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 1,
+      "measured_words": 17,
+      "maximum_words": 21,
+      "passed": true
+    }
+  },
+  {
+    "case": "one",
+    "kind": "mutated",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/one-over-bound.txt",
+      "1"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 1,
+      "measured_words": 22,
+      "maximum_words": 21,
+      "passed": false
+    }
+  },
+  {
+    "case": "current",
+    "kind": "real",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/current-fact.txt",
+      "14"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 14,
+      "measured_words": 32,
+      "maximum_words": 34,
+      "passed": true
+    }
+  },
+  {
+    "case": "current",
+    "kind": "mutated",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/current-over-bound.txt",
+      "14"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 14,
+      "measured_words": 35,
+      "maximum_words": 34,
+      "passed": false
+    }
+  },
+  {
+    "case": "larger",
+    "kind": "real",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/larger-fact.txt",
+      "100"
+    ],
+    "exit": 0,
+    "expected": 0,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 100,
+      "measured_words": 120,
+      "maximum_words": 120,
+      "passed": true
+    }
+  },
+  {
+    "case": "larger",
+    "kind": "mutated",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/check-bound.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/larger-over-bound.txt",
+      "100"
+    ],
+    "exit": 1,
+    "expected": 1,
+    "status": "passed",
+    "measurement": {
+      "held_tasks": 100,
+      "measured_words": 121,
+      "maximum_words": 120,
+      "passed": false
+    }
+  }
+]

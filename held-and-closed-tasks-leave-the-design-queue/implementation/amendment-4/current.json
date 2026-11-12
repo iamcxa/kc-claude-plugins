@@ -1,0 +1,33 @@
+{
+  "case": "current",
+  "held_tasks": 14,
+  "stages_present": [
+    "backlog",
+    "ideation",
+    "validation"
+  ],
+  "configured_stages": [
+    "backlog",
+    "ideation",
+    "implementation",
+    "validation",
+    "done"
+  ],
+  "all_stages_present": false,
+  "measured_words": 32,
+  "maximum_words": 34,
+  "passed": true,
+  "measured_fixed_words": 15,
+  "bound_from_approved_asked": "每張擱置的任務最多多 1 個字，另加固定 20 個字",
+  "captain_answer": "可以，照列名稱（建議）",
+  "synthetic_rows": false,
+  "fact_line": "fact: held by the Captain, not waiting: backlog product-review-path-before-backlog, superseded-criterion-without-dispatch-caught; ideation adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, fo-write-checks-parse-top-level, gate-summary-names-each-decline, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, step-back-answer-has-a-record-line; validation adr-required-statement, journey-server-host-pilot; each ## Held section says what reopens it.",
+  "wc_command": [
+    "wc",
+    "-w",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/current-fact.txt"
+  ],
+  "wc_output": "32 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/amendment-4/current-fact.txt",
+  "candidate": "455846c6d30d4ab650c1c4503bc591722231586d",
+  "formatter_sha256": "a7cd0741e604248dd31e33e39cd8d1a675a2d5fb520d3bcea915a243d1ceee1a"
+}

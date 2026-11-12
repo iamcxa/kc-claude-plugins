@@ -1,0 +1,23 @@
+[
+  {
+    "case": "one",
+    "expected_names": 1,
+    "listed_names": 1,
+    "each_name_once": true,
+    "all_stages_present": false
+  },
+  {
+    "case": "current",
+    "expected_names": 14,
+    "listed_names": 14,
+    "each_name_once": true,
+    "all_stages_present": false
+  },
+  {
+    "case": "larger",
+    "expected_names": 100,
+    "listed_names": 100,
+    "each_name_once": true,
+    "all_stages_present": true
+  }
+]

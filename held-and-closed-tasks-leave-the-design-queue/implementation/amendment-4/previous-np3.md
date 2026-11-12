@@ -1,0 +1,1 @@
+- **NP-3** With all ten carrying `## Held`, idle words at the candidate are at most 1431 (base 1401) and startup at most 7439 (base 7409). Planned evidence: the NP-1 command on a copy where the ten carry `## Held`, then `wc -w` added to the unchanged 48 mod words and 6008 `workflow.md` words. Falsifier: more than 30 added words at either moment.
