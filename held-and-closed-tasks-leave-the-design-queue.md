@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:held-and-closed-tasks-leave-the-design-queue:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:held-and-closed-tasks-leave-the-design-queue-ideation-1
+              briefing:
+                id: briefing:held-and-closed-tasks-leave-the-design-queue:ideation:attempt-1:revision-1
+                digest: sha256:a3a30efc77421ed02e76aecd03cf1768a9969bd1a08a6866f4a5383ee0a13d84
+                room-ref: ./held-and-closed-tasks-leave-the-design-queue/review/ideation/briefing-1
 started: 2026-11-12T05:16:56Z
 ---
 
