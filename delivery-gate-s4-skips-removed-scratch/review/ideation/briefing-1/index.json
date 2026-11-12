@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1",
+  "question": "「合併檢查不該要求已刪除的暫存路徑」這張要不要直接關掉？我建議關掉。worker 重播原案例發現問題在 0.36.0 就修好了：現在只檢查「問你的文字」和「要你執行的步驟」裡的路徑，驗證報告裡提到的已刪暫存不再誤擋，要你執行卻不存在的路徑仍會擋。關掉等於接受現行檢查範圍，不再寫任何程式。",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f44c0c78e176e64b7178b15bda6f82b34a399ffb/delivery-gate-s4-skips-removed-scratch.md",
+      "rev": "sha256:6d1a159e1bbd6cd0a267d12be07044abe2ac8d191206d9854030b7745302bd64",
+      "mediaType": "text/markdown",
+      "summary": "Trial round 1 exit: premise overturned. The worker's replay on main 8125e6d51 shows 0 report-path holds and a missing requested path still held; FO checked commit 629cf7326 (PR #799) is on main, tagged from 0.36.0, and its test exists. No product code written."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-s4-skips-removed-scratch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-s4-skips-removed-scratch-ideation-1
+              briefing:
+                id: briefing:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1
+                digest: sha256:e45c5dbb427a5821d04964c2da935b39f5a8edccf289da7769f78d03a9d874b7
+                room-ref: ./delivery-gate-s4-skips-removed-scratch/review/ideation/briefing-1
 started: 2026-11-12T17:03:37Z
 ---
 
