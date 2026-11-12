@@ -1,0 +1,21 @@
+[
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/role_triggers.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "held-and-closed-tasks-leave-the-design-queue"
+    ],
+    "exit": 0,
+    "output": "budget: Budget: 1 implementation and 2 validation cycles; spent implementation 1, validation 2\n"
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue"
+    ],
+    "exit": 0,
+    "output": "6 dispatch record(s) complete\n"
+  }
+]

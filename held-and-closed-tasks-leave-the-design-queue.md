@@ -512,3 +512,36 @@ This report supersedes all earlier implementation reports for the word-bound dis
 ### Summary
 
 This complete report supersedes all earlier implementation reports, correcting only the PR-text cleanup description in the immediately preceding report: Captain amendment 4 is applied to NP-3 and the one, fourteen and hundred-task cases pass at 17/21, 32/34 and 120/120, with each one-word-over-bound counterexample rejected. The product remains exactly 455846c6d30d4ab650c1c4503bc591722231586d on Draft PR #856; this is new acceptance evidence and task text only, with independent validation-2, actual Held edits and delivery still FO-owned.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #856 head 455846c6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED recommendation at 455846c6d30d4ab650c1c4503bc591722231586d; validation-2/review.md maps every criterion, command, falsifier and reported limit. This is not gate or delivery approval.
+- DONE: Recheck after Feedback Cycle 1, allowed by Captain amendment 3 (budget 1 implementation and 2 validation cycles): the product head is unchanged; Captain amendment 4 replaces the added-words bound with 1 word for each held task plus a fixed 20: measure the line yourself with one held task, the current fourteen, and a larger made-up count with every stage present, and judge the item rewritten for it against his words; amendments 1 and 2 stay in scope; this PR stays stacked on PR #854's branch; FO recorded that the chief-engineer was not called at four repair passes, with its reason under FO alignment: judge that reason
+  validation-2/measurements.json independently measures one 17/21, fourteen 32/34 and fabricated 125 across all five stages 145/145; bound-falsifiers.json records expected exits. NP-3 matches his approved words; the decline is adequate, with five reports/four repair passes corrected in review.md.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-2/captain-acceptance.sh has four steps, ran under /bin/bash --noprofile --norc and exits 0 (captain-acceptance.log). ADR lint since 77e240d46ced4980ec1f6f2dc61a692f27857af1 with --require 0081 exits 0 from both installed paths (adr-lint*.log).
+- DONE: AC-1 through AC-7 and each falsifier
+  validation-2/recheck-results.json proves ten native ideation holds, none scheduled, held dispatch build exit 0, three unforced closes exit 1, a real successor and seven verbatim quotes. legacy-full-state.log exits 0 with zero of ten names; row/quote/successor/output and exit-observation mutations are detected. This does not prove semantic labels or mutate upstream binaries.
+- DONE: NP-1 and NP-2 through the real candidate entrance
+  validation-2/candidate-live-network.log exits 0 with one fact naming fourteen rows once. Five source mutations and candidate removal fail held tests; recheck-results.json and source-hashes.json prove the falsifiers and restored exact candidate bytes.
+- DONE: Amendment 4 measurements and original evidence commands
+  validation-2/implementation-command-rerun/commands.json reruns one/fourteen/hundred at 17/21, 32/34, 120/120; independent measurements.json adds 125 across all five stages at 145/145. bound-falsifiers.json rejects 22/21, 35/34 and 146/145. Terminal done is fabricated formatter input only.
+- DONE: Related tests and required package checks
+  validation-2/tests.xml records 164 passed, zero failures/errors/skips, from two related files, not the full suite. Skill lint, fresh number guards, comment ratio 0.7% <= 5%, dispatch records, design surfaces and doc-impact pass (named logs); only ADR 0081 is listed as affected, updated with the accepted quote.
+- DONE: Candidate scope, stacked branch and necessity
+  validation-2/source-diff.patch contains only the two named Python files and permitted ADR 0081 relative to 77e240d4; removing the change fails held tests. pr-856.json confirms the exact head and stacked target; sibling/base revisions have advanced and are outside this artifact verdict.
+- DONE: Evidence committed before exact-path cleanup
+  Primary evidence commit e0b2108519c537cd2a306d6ab268e388e340ecf3 preceded removal of /tmp/validate-held-closed-v2-20261112-193629 and generated /tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md; validation-2/cleanup.json verifies both absent and zero tmp copies. No product worktree was created or removed.
+- SKIPPED: NP-4 live Held body edits, NP-5 plain upstream status and delivery checks
+  validation-2/native-summary.json records zero valid of fourteen live Held sections; FO owns their post-delivery edits. Scratch projections accept fourteen without frontmatter changes and detect a frontmatter mutation. Hosted CI, RoboRev, stack integration and gate/delivery remain FO-owned; no live Held task or product bytes changed.
+
+### Summary
+
+Cycle 2 recommends PASSED at 455846c6d30d4ab650c1c4503bc591722231586d under amendments 1–4, with no rejecting finding: fresh measurements resolve the old word-bound failure, and the fresh-shell acceptance passes. Live Held state edits, gate approval, sibling integration and delivery remain separate FO/Captain work; CI configuration is unchanged and cost per PR was not measured.
+validation-2/review.md retains the initial sandbox network failures and sparse-export setup error, then records passing runs at the same source and expectations after authorized network reads and full frozen-state setup. The first publication attempt was rejected for possible private exposure; public-source-proof.json proves the sole repository is public, the task snapshot equals its public remote blob and private sources are zero, after which the same state command was approved and pushed.
+
+### Findings
+
+- F1 Polish — kind: evidence or form. PR #856 still describes superseded 3N+6 (validation-2/pr-856.json); no current product or protected-boundary loss was demonstrated. FO should update that explanation before delivery.
+- F2 Polish — kind: evidence or form. FO alignment says four implementation reports; there are five and four counted repair passes (validation-2/task-at-entry.md, role-triggers.log). The unchanged-source/single-formula rationale is supported, so the count correction does not require a fresh role call or product repair.
