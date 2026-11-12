@@ -78,6 +78,7 @@ pr: iamcxa/kc-claude-plugins#856
 Alignment: not needed: one observed defect with one outcome; the mechanism is compared in the design and ruled at the ideation gate.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 2 replaces only the added-words bound of the held-task line (30 words fixed, to 3 words for each held task plus a fixed 6), in the option the Captain chose after the count of 14 held tasks and 32 words was put to him; the line's content, the program and every acceptance criterion stand, and the validator is asked to judge the new bound.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 4 replaces only the numbers of the added-words bound with the counts the independent validator measured in validation-1 (17 words with one held task, 32 with fourteen); the line, the program and every acceptance criterion stand, and the second validation judges the bound at one, fourteen and more held tasks.
+Reviewer: kc-dev-flow-2:chief-engineer not run: the four implementation reports are one build, one stop on the word bound, one stop waiting for a reviewer record, and one criterion-text update after Captain amendment 4; the product head has not changed since the first report, the changes all concern one added-words bound whose numbers the Captain has now set from the validator's measurements, and the next step is already fixed: the second and last validation in the budget.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
