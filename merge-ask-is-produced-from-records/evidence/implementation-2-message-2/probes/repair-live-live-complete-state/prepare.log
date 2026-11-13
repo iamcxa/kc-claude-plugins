@@ -1,0 +1,4 @@
+room=<scratch>/repair-live-live-complete-state/workflow/.spacedock-state/task/review/validation/briefing-1
+briefing=briefing:task:validation:attempt-1:revision-1
+digest=sha256:2ab8b806e5f5983e65c0dc8aa2ef55d6f7257e6908d90c6882517bccf84988ee
+state=open

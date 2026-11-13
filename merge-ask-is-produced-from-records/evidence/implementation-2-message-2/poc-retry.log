@@ -1,0 +1,39 @@
+..FF......
+======================================================================
+FAIL: test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes (__main__.DeriveTests.test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes) (mode='valid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 61, in test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes
+    self.assertEqual(code, expected, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+record: task/merge/observation-1.json
+configured remote reviewers differ from the delivery observation
+next: hold delivery; the saved record describes the observations, not approval.
+
+
+======================================================================
+FAIL: test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes (__main__.DeriveTests.test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 63, in test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes
+    with self.assertRaises(AssertionError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: AssertionError not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.961s
+
+FAILED (failures=2)
+POC README matches the five-stage README without ideation
+--- derived
++++ <scratch>/tmpyblkkg9k/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

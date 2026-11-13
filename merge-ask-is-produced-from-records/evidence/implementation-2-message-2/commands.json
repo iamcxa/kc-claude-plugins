@@ -1,0 +1,587 @@
+[
+  {
+    "name": "lint-skills",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "lint-skills.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_lint_skills",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_lint_skills.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_design_surfaces",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_design_surfaces.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_adr_doc_checks",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_adr_doc_checks.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_poc_readme",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_poc_readme.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_comment_ratio",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_comment_ratio.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_number_guards",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_number_guards.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_codex_review",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_codex_review.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_roborev_gate",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_roborev_gate.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_copilot_review",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_copilot_review.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_map_footprint",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_map_footprint.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_release_acceptance",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_release_acceptance.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_dispatch_records",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_dispatch_records.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_delivery_gate",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_delivery_gate.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_validation_security",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_validation_security.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_pr_watch",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_pr_watch.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_replay_dispatch",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_replay_dispatch.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_task_timeline",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_task_timeline.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_task_timeline.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_decision_ledger",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_decision_ledger.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_package_version",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_package_version.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_workflow_checkout",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_workflow_checkout.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_observer_check",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_observer_check.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_merge_audit",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_merge_audit.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_merge_audit.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_role_triggers",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_role_triggers.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_laws_check",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_laws_check.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_learning",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_learning.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_dispatch_stage",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_dispatch_stage.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_sd_dispatch",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "<scratch>/sd-plugin"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_sd_dispatch.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "test_observer_recovery",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "test_observer_recovery.log",
+    "environment": {
+      "TMPDIR": "<scratch>",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "SPACEDOCK_BIN": "<spacedock>"
+    }
+  },
+  {
+    "name": "initial interrupted suite",
+    "command": "python3 -B <scratch>/run_ci.py",
+    "exit": 130,
+    "output": "ci-initial/ci-run.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "baseline six classes",
+    "command": "python3 -B <scratch>/base_control.py",
+    "exit": 0,
+    "output": "base-control-run.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "six guard mutations",
+    "command": "python3 -B <scratch>/mutations.py",
+    "exit": 0,
+    "output": "mutations-final-run.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "archive replays",
+    "command": "python3 -B <scratch>/round2_probe.py replay",
+    "exit": 0,
+    "output": "replay-final.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "round inventories",
+    "command": "python3 -B <scratch>/round2_probe.py rounds",
+    "exit": 0,
+    "output": "rounds-final.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "live blocked network",
+    "command": "python3 -B <scratch>/round2_probe.py live",
+    "exit": 1,
+    "output": "live-network-denied.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "live authorized network retry",
+    "command": "python3 -B <scratch>/round2_probe.py live",
+    "exit": 0,
+    "output": "live-final.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "AC-6 reverse guards",
+    "command": "python3 -B <scratch>/candidate_mutations.py",
+    "exit": 0,
+    "output": "candidate-mutations-final.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "base goal and local-round mutation",
+    "command": "python3 -B <scratch>/goal_and_mutation.py",
+    "exit": 0,
+    "output": "goal-and-mutation-final.log",
+    "note": "Observed holds/test failures in a falsifier are expected; see result metadata. Network retry was read-only."
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/comment_ratio.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "HEAD",
+      "--workflow-dir",
+      "<workflow>"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "comment-ratio-final.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "bfc53d82510006b52baf41569c1e25176e99d87a"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "adr-lint-final.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "<workflow>",
+      "--task",
+      "<task>"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "number-guards-final.log"
+  },
+  {
+    "name": "role-triggers",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/role_triggers.py",
+      "<state>",
+      "merge-ask-is-produced-from-records"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "role-triggers-final.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/design_surfaces.py",
+      "check",
+      "<task>"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "design-surfaces-final.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/doc_impact.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "HEAD"
+    ],
+    "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "exit": 0,
+    "output": "doc-impact-final.log"
+  }
+]

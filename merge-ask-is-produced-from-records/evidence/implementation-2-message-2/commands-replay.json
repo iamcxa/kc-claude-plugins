@@ -1,0 +1,76 @@
+[
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/report-read.log"
+  },
+  {
+    "command": [
+      "<spacedock>",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:691c0c45ed615e531e44d749b3b929e89038fca0aee46a11ae26d2800f54823c>",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:1fcf8069a69f5d3f6c2f39b008f4b5617c62787464e32741529b5fafee76119a>",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/prepare.log"
+  },
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/report-read.log"
+  },
+  {
+    "command": [
+      "<spacedock>",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:082b79270667929253f79f43f99c59af2434ee0610152a112b694e2b3b2260dd>",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:5edba885a23f77be2e552fd2dffa2ef8693f719f23c0bb07df05d54f0c968cf5>",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/prepare.log"
+  }
+]

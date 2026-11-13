@@ -1,0 +1,7 @@
+{
+  "start_taipei": "2026-11-14 01:31:54",
+  "time_source": "clock.curr_time UTC +08:00",
+  "base": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "state_investigation_commit": "fa40db0ca",
+  "scope": "six confirmed classes; nine existing product paths only; no push"
+}

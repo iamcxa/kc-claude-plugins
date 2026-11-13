@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "<spacedock>",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1>",
+      "--artifact",
+      "<scratch>/repair-live-live-complete-state/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:ad9edf39735476546ca02adca666d7d99084aafa840d14c4c02300bce4199fe6>",
+      "--reference",
+      "<scratch>/repair-live-live-complete-state/workflow/.spacedock-state/task/merge/observation-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-live-live-complete-state/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-live-live-complete-state/prepare.log"
+  }
+]

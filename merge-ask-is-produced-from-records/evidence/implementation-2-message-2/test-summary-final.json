@@ -1,0 +1,16 @@
+{
+  "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+  "commands": 29,
+  "unittest_run": 1468,
+  "unittest_passed": 1457,
+  "optional_skips": 11,
+  "non_unittest_tests": [
+    "test_sd_dispatch",
+    "test_observer_recovery"
+  ],
+  "new_regression_methods": 6,
+  "guard_mutations_caught": 6,
+  "baseline_regression_methods_failed": 6,
+  "baseline_expected_failure_subcases": 7,
+  "whole_suite_passed": true
+}

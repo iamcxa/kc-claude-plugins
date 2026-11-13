@@ -1,0 +1,15 @@
+test_question_reloads_current_reviewer_configuration (test_delivery_gate.RecordRouteParityTests.test_question_reloads_current_reviewer_configuration) ... FAIL
+
+======================================================================
+FAIL: test_question_reloads_current_reviewer_configuration (test_delivery_gate.RecordRouteParityTests.test_question_reloads_current_reviewer_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3665, in test_question_reloads_current_reviewer_configuration
+    self.assertNotEqual(pair[route]["question"], 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.519s
+
+FAILED (failures=1)

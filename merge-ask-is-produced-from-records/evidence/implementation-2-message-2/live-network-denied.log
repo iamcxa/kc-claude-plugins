@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<scratch>/round2_probe.py", line 86, in <module>
+    {'replay':replay,'rounds':rounds,'live':live}[sys.argv[1]]()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "<scratch>/round2_probe.py", line 71, in live
+    head=gate.run_gh('iamcxa/kc-claude-plugins','865')
+  File "<product>/kc-dev-flow-2/scripts/delivery_gate.py", line 194, in run_gh
+    return json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid"))["headRefOid"]
+                      ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/delivery_gate.py", line 189, in gh
+    raise RuntimeError(f"gh {args[0]} {args[1]} exited {done.returncode}: {done.stderr.strip()}")
+RuntimeError: gh pr view exited 1: error connecting to api.github.com
+check your internet connection or https://githubstatus.com

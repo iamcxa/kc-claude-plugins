@@ -1,0 +1,16 @@
+{
+  "base": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "tests_run": 6,
+  "expected_failures": 7,
+  "unexpected_errors": 0,
+  "tests_that_catch_base": [
+    "test_computed_disclosures_are_record_fields_without_question_mutation",
+    "test_configured_trigger_guard_includes_quoted_prod_profiles",
+    "test_known_quota_refusal_needs_unread_and_retry_in_question",
+    "test_merge_head_token_must_be_nonempty_and_bounded",
+    "test_question_reloads_current_reviewer_configuration",
+    "test_review_findings_need_the_fo_decision_missing_from_observations"
+  ],
+  "test_source_sha256": "817da42687b3db0685ce9d65d5089531f2217607965fdb4d5371f71b95851d07",
+  "scope": "original checker in isolated in-memory module with final tests; product unchanged"
+}

@@ -477,3 +477,36 @@ Canonical close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1884098 bytes)
 Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Repair findings 1 to 5 of evidence/implementation-2-message-1/findings.json by making the record route call the guards the text route already uses (reviewer problems, profile reader, configuration reader, head-token check, unread and retry disclosure), not by a second copy of them.
+  Both commands call reviewer_problems, with the existing profile/config readers and shared retry/head predicates; final six-class tests reject missing judgments/disclosures, quoted-prod/invalid declarations, bad head tokens and changed configuration (base-control.json; mutations.json).
+- DONE: Finding 6: add the unchecked counts and the scope mark to the delivery record contract and schema as fields the check writes, so the record route discloses what the text route discloses; the question stays FO-written and unchanged.
+  Required unchecked_counts and scope_disclosure fields use existing readers, save counts/mark without claim prose, and preserve question bytes; deleting the producer fields fails the paired disclosure test (findings-fixed.json; computed-disclosures mutation).
+- DONE: Turn the paired cases that showed each of the six differences into tests (one per confirmed class, record route against text route); add no test for a class the investigation did not show failing.
+  Exactly six new methods, six owning guard mutations caught, and all six reject the original checker (seven failing subcases, zero errors); existing empty-observation fixtures now declare no remote reviewers, without extra methods.
+- DONE: Rerun the 29 CI-listed commands, kc-dev-flow-2/scripts/lint-skills.py and the comment-ratio check on the new candidate; report files, added and removed lines and workflow word counts again.
+  All 29 pass at ad41870b72f19d8ad141efaa67cda3afb23f1d4d: 1457 unit passes, 11 optional skips, two additional native scripts; lint/ratio pass (0.2%, max 5%). Repair four files +167/-14; full task nine +727/-148; workflow 5982 unchanged (ci-tests-final.json; counts-final.json).
+- DONE: Commit locally on the product branch; FO pushes, runs RoboRev and reads hosted CI. Stop and report instead of widening if a repair needs a tenth product path, a new ADR or a budget raise.
+  Product commits 925e0fc9e, c988479fb and ad41870b7 are local on spacedock-ensign/merge-ask-is-produced-from-records; no tenth path, new ADR, version or budget change. implementation/pr.md is updated for FO; CI cost per PR not measured.
+- DONE: AC-6 rerun and retained falsifiers under the original implementation checklist
+  Two public-input replays bind unchanged question/JSON bytes; live check/question hold 1/1, direct native prepare 0 proves transport only; summary/local-round/held-filename/head mutations are caught (replays.json; live.json; candidate-mutations.json; mutation.json).
+- DONE: Retain public evidence and close the owned scratch root
+  evidence/implementation-2-message-2 has normalized logs, commands, hashes and metadata; initial CI/fixture failures remain. Separate new manifest verification and canonical scratch-close outputs are in implementation/repair-2-evidence.txt and repair-2-close.txt.
+- SKIPPED: Push repaired product/state, request review, run RoboRev or claim hosted CI/merge completion
+  FO owns publication and those checks. No PR write, review request, approval or merge occurred; truthful per-finding classification and Captain-waiver authority remain human-owned.
+
+### Summary
+
+All six confirmed checker gaps are repaired and the final complete suite passes on ad41870b72f19d8ad141efaa67cda3afb23f1d4d; this complete report supersedes the prior implementation assurance and investigation-only handoff. The first CI run failed on an inconsistent empty-observation fixture and was interrupted; the corrected final run, its explicit baseline failures and six caught mutations are separately retained, with no automatic per-finding truth/waiver guarantee claimed.
+
+Investigation start 2026-11-14 00:53:19; repair start 01:31:54; evidence finalized 02:01:13 Asia/Taipei (clock.curr_time UTC +08:00). Report: implementation/repair-2.md; final state commit/delivery checks follow.
+
+Canonical close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1674771 bytes)
+Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
+```

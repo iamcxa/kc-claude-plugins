@@ -1,0 +1,90 @@
+FFFFFFF
+======================================================================
+FAIL: test_computed_disclosures_are_record_fields_without_question_mutation (__main__.RecordRouteParityTests.test_computed_disclosures_are_record_fields_without_question_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3669, in test_computed_disclosures_are_record_fields_without_question_mutation
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [0, 1] != [0, 0]
+
+First differing element 1:
+1
+0
+
+- [0, 1]
+?     ^
+
++ [0, 0]
+?     ^
+
+
+======================================================================
+FAIL: test_configured_trigger_guard_includes_quoted_prod_profiles (__main__.RecordRouteParityTests.test_configured_trigger_guard_includes_quoted_prod_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3653, in test_configured_trigger_guard_includes_quoted_prod_profiles
+    self.assertEqual(self.paired(declaration="Second reviewer: not triggered.\n", rows=rows)["record"]["question"], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_known_quota_refusal_needs_unread_and_retry_in_question (__main__.RecordRouteParityTests.test_known_quota_refusal_needs_unread_and_retry_in_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3642, in test_known_quota_refusal_needs_unread_and_retry_in_question
+    self.assertEqual(self.paired(rows=rows, refusal=True, extra="Copilot not read: Captain decides whether to proceed.\n" + RETRY + "\n")["record"]["question"], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_merge_head_token_must_be_nonempty_and_bounded (__main__.RecordRouteParityTests.test_merge_head_token_must_be_nonempty_and_bounded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3659, in test_merge_head_token_must_be_nonempty_and_bounded
+    self.assertEqual(self.paired(head=HEAD40[:9])["record"]["question"], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_question_reloads_current_reviewer_configuration (__main__.RecordRouteParityTests.test_question_reloads_current_reviewer_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3663, in test_question_reloads_current_reviewer_configuration
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [0, 1] != [0, 0]
+
+First differing element 1:
+1
+0
+
+- [0, 1]
+?     ^
+
++ [0, 0]
+?     ^
+
+
+======================================================================
+FAIL: test_review_findings_need_the_fo_decision_missing_from_observations (__main__.RecordRouteParityTests.test_review_findings_need_the_fo_decision_missing_from_observations) (reviewer='codex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3633, in test_review_findings_need_the_fo_decision_missing_from_observations
+    self.assertEqual(self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")["record"]["question"], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_review_findings_need_the_fo_decision_missing_from_observations (__main__.RecordRouteParityTests.test_review_findings_need_the_fo_decision_missing_from_observations) (reviewer='copilot')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3633, in test_review_findings_need_the_fo_decision_missing_from_observations
+    self.assertEqual(self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")["record"]["question"], 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.813s
+
+FAILED (failures=7)

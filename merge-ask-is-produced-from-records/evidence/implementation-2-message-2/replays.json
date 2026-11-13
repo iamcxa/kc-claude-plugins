@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "task": "design-surfaces-task-dir-crash",
+      "head": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+      "check_exit": 0,
+      "question_unchanged": true,
+      "validation": {
+        "dispatch": "validation-1.md",
+        "report_sha256": "2279a17f061ea76e58a9343c1c5fd1d251189810e242319e050a958063bba151",
+        "rounds": 1,
+        "verdict": "PASSED"
+      },
+      "question_exit": 0,
+      "prepare_exit": 0,
+      "bound_summary_sha256": "1fcf8069a69f5d3f6c2f39b008f4b5617c62787464e32741529b5fafee76119a",
+      "record_sha256": "1fcf8069a69f5d3f6c2f39b008f4b5617c62787464e32741529b5fafee76119a",
+      "reference_count": 1
+    },
+    {
+      "task": "held-and-closed-tasks-leave-the-design-queue",
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "check_exit": 0,
+      "question_unchanged": true,
+      "validation": {
+        "dispatch": "validation-3.md",
+        "report_sha256": "5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376",
+        "rounds": 3,
+        "verdict": "PASSED"
+      },
+      "question_exit": 0,
+      "prepare_exit": 0,
+      "bound_summary_sha256": "5edba885a23f77be2e552fd2dffa2ef8693f719f23c0bb07df05d54f0c968cf5",
+      "record_sha256": "5edba885a23f77be2e552fd2dffa2ef8693f719f23c0bb07df05d54f0c968cf5",
+      "reference_count": 1
+    }
+  ],
+  "limit": "Public archived task/report/dispatch inputs; fresh local report-reading Captain-step fixture replaces stale archived paths, without running historical acceptance;  package gh test doubles and controlled reviewer/role observations. Native gate prepare executed in isolated local repositories, no real gate or approval."
+}

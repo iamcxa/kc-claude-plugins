@@ -1,0 +1,9 @@
+{
+  "candidate": "925e0fc9e",
+  "completed_commands": 15,
+  "failed": [
+    "test_poc_readme",
+    "test_delivery_gate"
+  ],
+  "stopped": "active next command interrupted after known compatibility failure; not a complete 29-command run"
+}

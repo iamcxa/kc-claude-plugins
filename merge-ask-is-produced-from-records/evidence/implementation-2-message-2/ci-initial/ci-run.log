@@ -1,0 +1,40 @@
+lint-skills 0
+test_lint_skills 0
+test_design_surfaces 0
+test_adr_doc_checks 0
+test_poc_readme 1
+test_comment_ratio 0
+test_number_guards 0
+test_codex_review 0
+test_roborev_gate 0
+test_copilot_review 0
+test_map_footprint 0
+test_release_acceptance 0
+test_dispatch_records 0
+test_delivery_gate 1
+test_validation_security 0
+Traceback (most recent call last):
+  File "<scratch>/run_ci.py", line 13, in <module>
+    started=time.time();p=subprocess.run(cmd,cwd=WT,env=env,capture_output=True,text=True);out=p.stdout+p.stderr
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 671, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2412, in _communicate
+    new_offset, completed = _communicate_io_posix(
+                            ~~~~~~~~~~~~~~~~~~~~~^
+        selector,
+        ^^^^^^^^^
+    ...<4 lines>...
+        endtime,
+        ^^^^^^^^
+        close_on_eof=True)
+        ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 291, in _communicate_io_posix
+    ready = selector.select(remaining)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/selectors.py", line 398, in select
+    fd_event_list = self._selector.poll(timeout)
+KeyboardInterrupt

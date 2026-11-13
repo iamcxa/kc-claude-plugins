@@ -1,0 +1,123 @@
+EFFFFFF
+======================================================================
+ERROR: test_computed_disclosures_are_record_fields_without_question_mutation (__main__.RecordRouteParityTests.test_computed_disclosures_are_record_fields_without_question_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3672, in test_computed_disclosures_are_record_fields_without_question_mutation
+    self.assertEqual(pair["record"]["data"]["unchecked_counts"], 1)
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'unchecked_counts'
+
+======================================================================
+FAIL: test_configured_trigger_guard_includes_quoted_prod_profiles (__main__.RecordRouteParityTests.test_configured_trigger_guard_includes_quoted_prod_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3647, in test_configured_trigger_guard_includes_quoted_prod_profiles
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 0] != [1, 1]
+
+First differing element 1:
+0
+1
+
+- [1, 0]
+?     ^
+
++ [1, 1]
+?     ^
+
+
+======================================================================
+FAIL: test_known_quota_refusal_needs_unread_and_retry_in_question (__main__.RecordRouteParityTests.test_known_quota_refusal_needs_unread_and_retry_in_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3639, in test_known_quota_refusal_needs_unread_and_retry_in_question
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 0] != [1, 1]
+
+First differing element 1:
+0
+1
+
+- [1, 0]
+?     ^
+
++ [1, 1]
+?     ^
+
+
+======================================================================
+FAIL: test_merge_head_token_must_be_nonempty_and_bounded (__main__.RecordRouteParityTests.test_merge_head_token_must_be_nonempty_and_bounded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3658, in test_merge_head_token_must_be_nonempty_and_bounded
+    self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 0] != [1, 1]
+
+First differing element 1:
+0
+1
+
+- [1, 0]
+?     ^
+
++ [1, 1]
+?     ^
+
+
+======================================================================
+FAIL: test_question_reloads_current_reviewer_configuration (__main__.RecordRouteParityTests.test_question_reloads_current_reviewer_configuration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3665, in test_question_reloads_current_reviewer_configuration
+    self.assertNotEqual(pair[route]["question"], 0)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_review_findings_need_the_fo_decision_missing_from_observations (__main__.RecordRouteParityTests.test_review_findings_need_the_fo_decision_missing_from_observations) (reviewer='codex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3631, in test_review_findings_need_the_fo_decision_missing_from_observations
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 0] != [1, 1]
+
+First differing element 1:
+0
+1
+
+- [1, 0]
+?     ^
+
++ [1, 1]
+?     ^
+
+
+======================================================================
+FAIL: test_review_findings_need_the_fo_decision_missing_from_observations (__main__.RecordRouteParityTests.test_review_findings_need_the_fo_decision_missing_from_observations) (reviewer='copilot')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3631, in test_review_findings_need_the_fo_decision_missing_from_observations
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [1, 0] != [1, 1]
+
+First differing element 1:
+0
+1
+
+- [1, 0]
+?     ^
+
++ [1, 1]
+?     ^
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.775s
+
+FAILED (failures=6, errors=1)

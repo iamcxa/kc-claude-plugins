@@ -1,0 +1,29 @@
+{
+  "investigation_start_taipei": "2026-11-14 00:53:19",
+  "repair_start_taipei": "2026-11-14 01:31:54",
+  "evidence_finalized_taipei": "2026-11-14 02:01:13",
+  "time_source": "clock.curr_time UTC +08:00; final state commit/delivery checks follow",
+  "candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+  "tree": "7ed31d39efde3a4417d11eca562d5327312af40b",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "clean_product": true,
+  "source_file_hashes_match": true,
+  "product_path_count": 9,
+  "repair_path_count": 4,
+  "ci_commands_passed": 29,
+  "new_regression_methods": 6,
+  "mutations_caught": 6,
+  "full_suite": {
+    "passed": 1457,
+    "optional_skips": 11,
+    "additional_native_scripts": 2
+  },
+  "scratch_absent": true,
+  "frontmatter_sha256": "6e8c60b2b8f302b2db4ebf8b9d4a4e6a4b13bf3850195f295ce4a9e874918fa7",
+  "not_run": [
+    "push repaired candidate/state",
+    "RoboRev on repaired candidate",
+    "hosted CI on repaired candidate"
+  ],
+  "approval_or_merge": false
+}
