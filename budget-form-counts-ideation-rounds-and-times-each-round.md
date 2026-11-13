@@ -3,7 +3,7 @@ title: The task budget counts ideation rounds, and the timeline helper reports e
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
