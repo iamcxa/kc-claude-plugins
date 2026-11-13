@@ -3,7 +3,7 @@ title: The merge ask's summary is produced from records that already exist, and 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -56,7 +56,7 @@ gates:
                     source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-13T13:42:46Z
 ---
 
