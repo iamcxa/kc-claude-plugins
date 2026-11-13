@@ -1,0 +1,18 @@
+{
+  "distinct": {
+    "added": 4,
+    "removed": 0
+  },
+  "all-raw": {
+    "added": 5,
+    "removed": 1
+  },
+  "all-safe": {
+    "added": 21,
+    "removed": 1
+  },
+  "both": {
+    "added": 25,
+    "removed": 1
+  }
+}

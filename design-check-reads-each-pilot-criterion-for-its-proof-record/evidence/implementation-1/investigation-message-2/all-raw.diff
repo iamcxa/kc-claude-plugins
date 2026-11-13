@@ -1,0 +1,15 @@
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -219,7 +219,11 @@
+     body = section(lines, AC_HEADING) or []
+     unprovable = unprovable_entries(lines)
+     gaps = []
+-    for key, block in criterion_blocks(unfenced(body)).items():
++    text = "\n".join(body)
++    found = list(AC_DECLARATION.finditer(text))
++    for index, declaration in enumerate(found):
++        key = declaration.group(1)
++        block = text[declaration.start():found[index + 1].start() if index + 1 < len(found) else len(text)]
+         claim = FALSIFIER_PART.sub(" ", block)
+         missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
+                    if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]

@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "high",
+    "status": "confirmed",
+    "title": "One snippet can satisfy command and output cues",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 195,
+    "detail": "Both log-only and command-only repros exit 0 on 9dd03d805. The +4/-0 non-overlap probe rejects them, but still accepts a command label without a command and two path-only spans; it also rejects a complete one-span redirection record. No output or exit changes across 501 tasks in either mode; trial replays stay 1/0.",
+    "fix": "Do not use distinct spans as closure. It needs no new line, but a stronger field-role contract changes the approved loose grammar and needs Captain disposition. Candidate unchanged."
+  },
+  {
+    "severity": "high",
+    "status": "confirmed",
+    "title": "Inline and other recognized declarations escape proof coverage",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 219,
+    "detail": "Inline missing-record repro exits 0. The collector searches raw lines anywhere; the proof reader uses line-start declarations after fence removal. Siblings include multiple IDs on one line, record borrowing, tables/headings/bullets and fenced IDs.",
+    "fix": "Proof-only reader proposal: +21/-1 code; complete tested proposal +38/-2. Within approved files and no new required line; awaits separate FO authorization. New regression fails in 8 candidate subcases; proposed tree passes 249 tests (4 skipped) and SD harness. 501-task comparison and trial exits unchanged."
+  }
+]

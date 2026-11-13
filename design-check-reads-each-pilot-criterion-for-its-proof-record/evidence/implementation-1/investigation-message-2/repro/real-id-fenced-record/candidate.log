@@ -1,0 +1,2 @@
+task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: no closed backlog approval

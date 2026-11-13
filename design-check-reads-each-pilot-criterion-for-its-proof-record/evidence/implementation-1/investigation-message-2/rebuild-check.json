@@ -1,0 +1,10 @@
+{
+  "exit": 0,
+  "checker_matches": {
+    "distinct": true,
+    "all-raw": true,
+    "all-safe": true,
+    "both": true
+  },
+  "regression_test_matches": true
+}

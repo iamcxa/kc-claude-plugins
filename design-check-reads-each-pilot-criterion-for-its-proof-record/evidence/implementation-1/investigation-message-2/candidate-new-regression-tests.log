@@ -1,0 +1,77 @@
+FFFFFFFF
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='prefix **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='| **AC-1** | missing |')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='### **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='• **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='``` **AC-1**\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='```\n**AC-1** missing\n```')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='**AC-1** Result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`. **AC-2** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='**AC-1** missing **AC-2** Result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/all-safe/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.018s
+
+FAILED (failures=8)

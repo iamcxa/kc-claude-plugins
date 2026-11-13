@@ -1,0 +1,13 @@
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -223,6 +223,10 @@
+         claim = FALSIFIER_PART.sub(" ", block)
+         missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
+                    if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]
++        value = DECLARATION_LINE.sub("", claim, count=1)
++        pairs = ((c, p) for c in PROOF_COMMAND.finditer(value) for p in PROOF_PATH.finditer(value))
++        if not missing and not any(c.end() <= p.start() or p.end() <= c.start() for c, p in pairs):
++            missing.append("distinct command and output path spans")
+         if missing and key not in unprovable:
+             gaps.append((key, missing))
+     return gaps

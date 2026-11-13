@@ -1,0 +1,65 @@
+[
+  {
+    "name": "synthetic CLI matrix",
+    "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/reproduce.py",
+    "exit": 0,
+    "output": "repro.json"
+  },
+  {
+    "name": "both-mode corpus comparison",
+    "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/compare.py",
+    "exit": 0,
+    "output": "corpus-comparison.json"
+  },
+  {
+    "name": "candidate original suite",
+    "command": "python3 -B -m unittest discover -s <scratch>/reference/kc-dev-flow-2/scripts -p test_design_surfaces.py",
+    "exit": 0,
+    "output": "reference-tests.log",
+    "tests": 248,
+    "skipped": 4
+  },
+  {
+    "name": "distinct-span original suite",
+    "command": "python3 -B -m unittest discover -s <scratch>/distinct/kc-dev-flow-2/scripts -p test_design_surfaces.py",
+    "exit": 0,
+    "output": "distinct-tests.log",
+    "tests": 248,
+    "skipped": 4
+  },
+  {
+    "name": "raw reader regression",
+    "command": "python3 -B -m unittest discover -s <scratch>/all-raw/kc-dev-flow-2/scripts -p test_design_surfaces.py",
+    "exit": 1,
+    "output": "all-raw-tests.log",
+    "reason": "fenced record is accepted"
+  },
+  {
+    "name": "proposed reader suite",
+    "command": "python3 -B -m unittest discover -s <scratch>/all-safe/kc-dev-flow-2/scripts -p test_design_surfaces.py",
+    "exit": 0,
+    "output": "all-safe-final-tests.log",
+    "tests": 249,
+    "skipped": 4
+  },
+  {
+    "name": "proposed real SD harness",
+    "command": "python3 -B <scratch>/all-safe/kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <active-spacedock-0.28.0>",
+    "exit": 0,
+    "output": "all-safe-sd-tests.log",
+    "runtime": "Spacedock CLI 0.27.2; full-tree docs included"
+  },
+  {
+    "name": "new regression on candidate",
+    "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/run_candidate_regression.py",
+    "exit": 1,
+    "output": "candidate-new-regression-tests.log",
+    "failed_subcases": 8
+  },
+  {
+    "name": "rebuild archived proposals",
+    "command": "export reference/ from 9dd03d805, then python3 -B <scratch>/build_probes.py",
+    "exit": 0,
+    "output": "rebuild-check.json"
+  }
+]

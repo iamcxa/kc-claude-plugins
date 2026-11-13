@@ -266,3 +266,57 @@ The probe adds a Pilot-ideation-only proof-record rule to the existing design ch
 ### Summary
 
 This complete report and corrected candidate 9dd03d805 supersede the interim 401fc60e5 handoff facts and preliminary evidence. The new guard is implemented within the approved scope; original-corpus coverage, canonical approval-record syntax, the five unchanged-consumer findings, delegated publication/review/CI and post-release observer behavior remain explicitly bounded.
+
+
+## Stage Report: implementation
+
+- DONE: Investigate RoboRev job 1848's two findings without changing candidate 9dd03d805.
+  Exact candidate/reference checker bytes match; product HEAD is 9dd03d805d11c0c833699b1247fd11d99a74d52f and the worktree is clean. Draft PR #866/job 1848 are FO-supplied context; this worker did not rerun RoboRev or inspect hosted CI.
+- DONE: Reproduce finding 1 and assess a distinct-span rule.
+  Log-only and command-only criteria exit 0 on the candidate. The +4/-0 non-overlap probe makes both exit 1, but still accepts command-word-only/two-path cases and rejects a complete one-span redirection record. It adds no required line but is not a sufficient fix; stronger field-role grammar changes the approved loose recognizer and needs Captain disposition. Exact commands/exits/logs: evidence/implementation-1/investigation-message-2/repro.json and report.md.
+- DONE: Exercise the stricter rule on the 501-task both-mode comparison and both Stop-condition designs.
+  Fresh snapshots have 246/155/100 files; distinct, declaration-reader and combined probes change no output or exit versus 9dd03d805; seed mode and approved/archive tasks are unchanged. Every probe retains run1 exit 1 (AC-3 only) and run2 exit 0. Original private snapshot byte identity is not claimed (corpus-comparison.json; trial-replays.json).
+- DONE: Reproduce finding 2 and identify both declaration grammars.
+  Inline missing-record criterion exits 0. check_criteria searches AC_DECLARATION anywhere on raw section lines; proof_gaps uses line-start DECLARATION_LINE after fence removal. Multiple IDs on a line, tables/headings/bullets and fenced/marker-line IDs share the gap (repro.json; report.md).
+- DONE: Prepare the smallest tested declaration-coverage repair preserving current fence policy, with counts and authority assessment.
+  Raw tokenizer +5/-1 breaks the fenced-record test. The proof-only reader is +21/-1; regression +16/-0 and CLI fixture +1/-1 total +38/-2 (declarations-repair.diff/stats.json). New test fails in 8 candidate subcases; proposal passes 249 tests (4 skipped) and the real SD harness. All collected IDs are visited across the corpus. Within approved files/outcome; no new required line; separate FO repair authorization suffices.
+- DONE: List siblings among the new check's inputs.
+  report.md records field-role aliasing (including exit inside a command), declaration placement/record borrowing, backtick-only fence filtering, Evidence restart inside a Falsifier and duplicate-ID last-block-wins. Prior eligibility/approval-form limits and older status-pattern findings remain unchanged. Twenty-three synthetic cases across five checker variants are retained.
+- SKIPPED: Apply a repair, change candidate/PR text, push product changes or perform another review.
+  Investigation-only authority; all patches are isolated proposals, rebuilt from the candidate and verified byte-identical to the tested probes. FO authorizes repair separately; finding 1 is not closed by the span prototype.
+- DONE: Retain public repro evidence and private-corpus counts only before close-out.
+  Evidence and English report: evidence/implementation-1/investigation-message-2/; commands.json records runs/exits/logs. Not archived (private): adopter inputs, source mapping/revisions or per-file results; reproduction uses read-only state archives as report.md describes.
+- DONE: Close this follow-up's scratch.
+  Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/design-check-reads-each-pilot-criterion-for-its-proof-record/implementation-1 (234105469 bytes)
+  Evidence: evidence/implementation-1/ (216 files, 325.5 KiB)
+
+### Summary
+
+Both findings are real. This report completes only the implementation-1-message-2 investigation, not a repair or renewed delivery approval: candidate 9dd03d805 is unchanged, finding 1 needs recognition-contract disposition and finding 2 has an unapplied tested proposal awaiting separate FO authorization.
+
+
+## Stage Report: implementation
+
+- DONE: Investigate RoboRev job 1848's two findings without changing candidate 9dd03d805.
+  Exact candidate/reference checker bytes match; product HEAD is 9dd03d805d11c0c833699b1247fd11d99a74d52f and the worktree is clean. Draft PR #866/job 1848 are FO-supplied context; this worker did not rerun RoboRev or inspect hosted CI.
+- DONE: Reproduce finding 1 and assess a distinct-span rule.
+  Log-only and command-only criteria exit 0 on the candidate. The +4/-0 non-overlap probe makes both exit 1, but still accepts command-word-only/two-path cases and rejects a complete one-span redirection record. It adds no required line but is not a sufficient fix; stronger field-role grammar changes the approved loose recognizer and needs Captain disposition. Exact commands/exits/logs: evidence/implementation-1/investigation-message-2/repro.json and report.md.
+- DONE: Exercise the stricter rule on the 501-task both-mode comparison and both Stop-condition designs.
+  Fresh snapshots have 246/155/100 files; distinct, declaration-reader and combined probes change no output or exit versus 9dd03d805; seed mode and approved/archive tasks are unchanged. Every probe retains run1 exit 1 (AC-3 only) and run2 exit 0. Original private snapshot byte identity is not claimed (corpus-comparison.json; trial-replays.json).
+- DONE: Reproduce finding 2 and identify both declaration grammars.
+  Inline missing-record criterion exits 0. check_criteria searches AC_DECLARATION anywhere on raw section lines; proof_gaps uses line-start DECLARATION_LINE after fence removal. Multiple IDs on a line, tables/headings/bullets and fenced/marker-line IDs share the gap (repro.json; report.md).
+- DONE: Prepare the smallest tested declaration-coverage repair preserving current fence policy, with counts and authority assessment.
+  Raw tokenizer +5/-1 breaks the fenced-record test. The proof-only reader is +21/-1; regression +16/-0 and CLI fixture +1/-1 total +38/-2 (declarations-repair.diff and declarations-repair-stats.json). New test fails in 8 candidate subcases; proposal passes 249 tests (4 skipped) and the real SD harness. All collected IDs are visited across the corpus. Within approved files/outcome; no new required line; separate FO repair authorization suffices.
+- DONE: List siblings among the new check's inputs.
+  report.md records field-role aliasing (including exit inside a command), declaration placement/record borrowing, backtick-only fence filtering, Evidence restart inside a Falsifier and duplicate-ID last-block-wins. Prior eligibility/approval-form limits and older status-pattern findings remain unchanged. Twenty-three synthetic cases across five checker variants are retained.
+- SKIPPED: Apply a repair, change candidate/PR text, push product changes or perform another review.
+  Investigation-only authority; all patches are isolated proposals, rebuilt from the candidate and verified byte-identical to the tested probes. FO authorizes repair separately; finding 1 is not closed by the span prototype.
+- DONE: Retain public repro evidence and private-corpus counts only before close-out.
+  Evidence and English report: evidence/implementation-1/investigation-message-2/; commands.json records runs/exits/logs. Not archived (private): adopter inputs, source mapping/revisions or per-file results; reproduction uses read-only state archives as report.md describes.
+- DONE: Close this follow-up's scratch.
+  Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/design-check-reads-each-pilot-criterion-for-its-proof-record/implementation-1 (234105469 bytes)
+  Evidence: evidence/implementation-1/ (216 files, 325.5 KiB)
+
+### Summary
+
+This complete report supersedes the immediately preceding investigation report, correcting its evidence-filename reference; conclusions are unchanged. Both findings are real. This report completes only the implementation-1-message-2 investigation, not a repair or renewed delivery approval: candidate 9dd03d805 is unchanged, finding 1 needs recognition-contract disposition and finding 2 has an unapplied tested proposal awaiting separate FO authorization.

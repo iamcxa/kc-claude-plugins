@@ -1,0 +1,1606 @@
+[
+  {
+    "case": "log-only",
+    "body": "**AC-1** Evidence: exit 0; `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/log-only/task.md"
+        ],
+        "output": "<scratch>/repro/log-only/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/log-only/task.md"
+        ],
+        "output": "<scratch>/repro/log-only/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/log-only/task.md"
+        ],
+        "output": "<scratch>/repro/log-only/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/log-only/task.md"
+        ],
+        "output": "<scratch>/repro/log-only/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/log-only/task.md"
+        ],
+        "output": "<scratch>/repro/log-only/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "command-only",
+    "body": "**AC-1** Evidence: exit 0; `python3 scripts/check.py`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/command-only/task.md"
+        ],
+        "output": "<scratch>/repro/command-only/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/command-only/task.md"
+        ],
+        "output": "<scratch>/repro/command-only/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/command-only/task.md"
+        ],
+        "output": "<scratch>/repro/command-only/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/command-only/task.md"
+        ],
+        "output": "<scratch>/repro/command-only/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/command-only/task.md"
+        ],
+        "output": "<scratch>/repro/command-only/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "word-command-log-only",
+    "body": "**AC-1** Evidence command: exit 0; `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-log-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-log-only/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-log-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-log-only/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-log-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-log-only/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-log-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-log-only/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-log-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-log-only/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "word-command-command-only",
+    "body": "**AC-1** Evidence command: exit 0; `python3 scripts/check.py`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-command-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-command-only/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-command-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-command-only/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-command-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-command-only/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-command-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-command-only/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/word-command-command-only/task.md"
+        ],
+        "output": "<scratch>/repro/word-command-command-only/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "two-paths-only",
+    "body": "**AC-1** Evidence: exit 0; `input.log`; `output.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/two-paths-only/task.md"
+        ],
+        "output": "<scratch>/repro/two-paths-only/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/two-paths-only/task.md"
+        ],
+        "output": "<scratch>/repro/two-paths-only/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/two-paths-only/task.md"
+        ],
+        "output": "<scratch>/repro/two-paths-only/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/two-paths-only/task.md"
+        ],
+        "output": "<scratch>/repro/two-paths-only/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/two-paths-only/task.md"
+        ],
+        "output": "<scratch>/repro/two-paths-only/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "one-span-redirection-complete",
+    "body": "**AC-1** Evidence: ran `python3 scripts/check.py > evidence/result.log`; observed exit 0.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/one-span-redirection-complete/task.md"
+        ],
+        "output": "<scratch>/repro/one-span-redirection-complete/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/one-span-redirection-complete/task.md"
+        ],
+        "output": "<scratch>/repro/one-span-redirection-complete/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/one-span-redirection-complete/task.md"
+        ],
+        "output": "<scratch>/repro/one-span-redirection-complete/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/one-span-redirection-complete/task.md"
+        ],
+        "output": "<scratch>/repro/one-span-redirection-complete/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/one-span-redirection-complete/task.md"
+        ],
+        "output": "<scratch>/repro/one-span-redirection-complete/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "complete",
+    "body": "**AC-1** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/complete/task.md"
+        ],
+        "output": "<scratch>/repro/complete/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/complete/task.md"
+        ],
+        "output": "<scratch>/repro/complete/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/complete/task.md"
+        ],
+        "output": "<scratch>/repro/complete/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/complete/task.md"
+        ],
+        "output": "<scratch>/repro/complete/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/complete/task.md"
+        ],
+        "output": "<scratch>/repro/complete/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "inline-missing",
+    "body": "The required result is **AC-1** a bounded outcome.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-missing/task.md"
+        ],
+        "output": "<scratch>/repro/inline-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-missing/task.md"
+        ],
+        "output": "<scratch>/repro/inline-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-missing/task.md"
+        ],
+        "output": "<scratch>/repro/inline-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-missing/task.md"
+        ],
+        "output": "<scratch>/repro/inline-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-missing/task.md"
+        ],
+        "output": "<scratch>/repro/inline-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "inline-complete",
+    "body": "The required result is **AC-1** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-complete/task.md"
+        ],
+        "output": "<scratch>/repro/inline-complete/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-complete/task.md"
+        ],
+        "output": "<scratch>/repro/inline-complete/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-complete/task.md"
+        ],
+        "output": "<scratch>/repro/inline-complete/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-complete/task.md"
+        ],
+        "output": "<scratch>/repro/inline-complete/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/inline-complete/task.md"
+        ],
+        "output": "<scratch>/repro/inline-complete/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "second-id-missing",
+    "body": "**AC-1** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`. **AC-2** another outcome without a record.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/second-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/second-id-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/second-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/second-id-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/second-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/second-id-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-2 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/second-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/second-id-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-2 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/second-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/second-id-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-2 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "first-id-borrows-second",
+    "body": "**AC-1** no record. **AC-2** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/first-id-borrows-second/task.md"
+        ],
+        "output": "<scratch>/repro/first-id-borrows-second/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/first-id-borrows-second/task.md"
+        ],
+        "output": "<scratch>/repro/first-id-borrows-second/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/first-id-borrows-second/task.md"
+        ],
+        "output": "<scratch>/repro/first-id-borrows-second/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/first-id-borrows-second/task.md"
+        ],
+        "output": "<scratch>/repro/first-id-borrows-second/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/first-id-borrows-second/task.md"
+        ],
+        "output": "<scratch>/repro/first-id-borrows-second/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "fence-marker-id-missing",
+    "body": "``` **AC-1**\n",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fence-marker-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fence-marker-id-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fence-marker-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fence-marker-id-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fence-marker-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fence-marker-id-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fence-marker-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fence-marker-id-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fence-marker-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fence-marker-id-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "fenced-id-missing",
+    "body": "```\n**AC-1** a bounded outcome.\n```",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "fenced-id-complete",
+    "body": "```\n**AC-1** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.\n```",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-complete/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-complete/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-complete/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-complete/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-complete/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-complete/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-complete/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-complete/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/fenced-id-complete/task.md"
+        ],
+        "output": "<scratch>/repro/fenced-id-complete/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "real-id-fenced-record",
+    "body": "**AC-1** a bounded outcome.\n```\nEvidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.\n```",
+    "results": {
+      "candidate": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/real-id-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/real-id-fenced-record/candidate.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/real-id-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/real-id-fenced-record/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/real-id-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/real-id-fenced-record/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/real-id-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/real-id-fenced-record/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/real-id-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/real-id-fenced-record/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "heading-id-missing",
+    "body": "### **AC-1** a bounded outcome.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/heading-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/heading-id-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/heading-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/heading-id-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/heading-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/heading-id-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/heading-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/heading-id-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/heading-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/heading-id-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "table-id-missing",
+    "body": "| **AC-1** | a bounded outcome |",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/table-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/table-id-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/table-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/table-id-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/table-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/table-id-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/table-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/table-id-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/table-id-missing/task.md"
+        ],
+        "output": "<scratch>/repro/table-id-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "unsupported-bullet-missing",
+    "body": "\u2022 **AC-1** a bounded outcome.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/unsupported-bullet-missing/task.md"
+        ],
+        "output": "<scratch>/repro/unsupported-bullet-missing/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/unsupported-bullet-missing/task.md"
+        ],
+        "output": "<scratch>/repro/unsupported-bullet-missing/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/unsupported-bullet-missing/task.md"
+        ],
+        "output": "<scratch>/repro/unsupported-bullet-missing/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/unsupported-bullet-missing/task.md"
+        ],
+        "output": "<scratch>/repro/unsupported-bullet-missing/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/unsupported-bullet-missing/task.md"
+        ],
+        "output": "<scratch>/repro/unsupported-bullet-missing/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "tilde-fenced-record",
+    "body": "**AC-1** a bounded outcome.\n~~~\nEvidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.\n~~~",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/tilde-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/tilde-fenced-record/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/tilde-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/tilde-fenced-record/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/tilde-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/tilde-fenced-record/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/tilde-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/tilde-fenced-record/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/tilde-fenced-record/task.md"
+        ],
+        "output": "<scratch>/repro/tilde-fenced-record/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "exit-only-inside-command",
+    "body": "**AC-1** Evidence: `python3 -c 'exit 0'`; saved `evidence/result.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/exit-only-inside-command/task.md"
+        ],
+        "output": "<scratch>/repro/exit-only-inside-command/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/exit-only-inside-command/task.md"
+        ],
+        "output": "<scratch>/repro/exit-only-inside-command/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/exit-only-inside-command/task.md"
+        ],
+        "output": "<scratch>/repro/exit-only-inside-command/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/exit-only-inside-command/task.md"
+        ],
+        "output": "<scratch>/repro/exit-only-inside-command/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/exit-only-inside-command/task.md"
+        ],
+        "output": "<scratch>/repro/exit-only-inside-command/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "proof-path-in-declaration",
+    "body": "**AC-1 \u2014 evidence/result.log** Evidence: `true`; exit 0.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/proof-path-in-declaration/task.md"
+        ],
+        "output": "<scratch>/repro/proof-path-in-declaration/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/proof-path-in-declaration/task.md"
+        ],
+        "output": "<scratch>/repro/proof-path-in-declaration/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/proof-path-in-declaration/task.md"
+        ],
+        "output": "<scratch>/repro/proof-path-in-declaration/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/proof-path-in-declaration/task.md"
+        ],
+        "output": "<scratch>/repro/proof-path-in-declaration/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/proof-path-in-declaration/task.md"
+        ],
+        "output": "<scratch>/repro/proof-path-in-declaration/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no distinct command and output path spans in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  },
+  {
+    "case": "falsifier-evidence-restart",
+    "body": "**AC-1** No observed record. Falsifier: fabricate Evidence: `python3 scripts/check.py`; exit 0; `out.log`.",
+    "results": {
+      "candidate": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/falsifier-evidence-restart/task.md"
+        ],
+        "output": "<scratch>/repro/falsifier-evidence-restart/candidate.log",
+        "proof_lines": []
+      },
+      "distinct": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/falsifier-evidence-restart/task.md"
+        ],
+        "output": "<scratch>/repro/falsifier-evidence-restart/distinct.log",
+        "proof_lines": []
+      },
+      "all-raw": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/falsifier-evidence-restart/task.md"
+        ],
+        "output": "<scratch>/repro/falsifier-evidence-restart/all-raw.log",
+        "proof_lines": []
+      },
+      "all-safe": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/falsifier-evidence-restart/task.md"
+        ],
+        "output": "<scratch>/repro/falsifier-evidence-restart/all-safe.log",
+        "proof_lines": []
+      },
+      "both": {
+        "exit": 0,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/falsifier-evidence-restart/task.md"
+        ],
+        "output": "<scratch>/repro/falsifier-evidence-restart/both.log",
+        "proof_lines": []
+      }
+    }
+  },
+  {
+    "case": "duplicate-id-late-empty",
+    "body": "**AC-1** Evidence: `python3 scripts/check.py`; exit 0; `evidence/result.log`.\n**AC-1** no record.",
+    "results": {
+      "candidate": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/reference/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/duplicate-id-late-empty/task.md"
+        ],
+        "output": "<scratch>/repro/duplicate-id-late-empty/candidate.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "distinct": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/distinct/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/duplicate-id-late-empty/task.md"
+        ],
+        "output": "<scratch>/repro/duplicate-id-late-empty/distinct.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-raw": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-raw/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/duplicate-id-late-empty/task.md"
+        ],
+        "output": "<scratch>/repro/duplicate-id-late-empty/all-raw.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "all-safe": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/all-safe/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/duplicate-id-late-empty/task.md"
+        ],
+        "output": "<scratch>/repro/duplicate-id-late-empty/all-safe.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      },
+      "both": {
+        "exit": 1,
+        "command": [
+          "/opt/homebrew/opt/python@3.15/bin/python3.15",
+          "-B",
+          "<scratch>/both/kc-dev-flow-2/scripts/design_surfaces.py",
+          "check",
+          "<scratch>/repro/duplicate-id-late-empty/task.md"
+        ],
+        "output": "<scratch>/repro/duplicate-id-late-empty/both.log",
+        "proof_lines": [
+          "task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,35 @@
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -215,11 +215,31 @@
+     return named
+ 
+ 
++def proof_blocks(lines):
++    kept, inside = [], False
++    for line in lines:
++        if FENCE.match(line):
++            inside = not inside
++            kept.append(" ".join(m.group(0) for m in AC_DECLARATION.finditer(line)))
++        elif inside:
++            kept.append(" ".join(m.group(0) for m in AC_DECLARATION.finditer(line)))
++        else:
++            kept.append(line)
++    text = "\n".join(kept)
++    found = list(AC_DECLARATION.finditer(text))
++    blocks = {}
++    for index, declaration in enumerate(found):
++        tail = text[declaration.end():found[index + 1].start() if index + 1 < len(found) else len(text)]
++        tail = re.split(r"\n[ \t]*#{1,6}(?:[ \t]+|$)", tail, maxsplit=1)[0]
++        blocks[declaration.group(1)] = declaration.group(0) + tail
++    return blocks
++
++
+ def proof_gaps(lines):
+     body = section(lines, AC_HEADING) or []
+     unprovable = unprovable_entries(lines)
+     gaps = []
+-    for key, block in criterion_blocks(unfenced(body)).items():
++    for key, block in proof_blocks(body).items():
+         claim = FALSIFIER_PART.sub(" ", block)
+         missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
+                    if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]

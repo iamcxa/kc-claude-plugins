@@ -1,0 +1,10 @@
+{
+  "candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
+  "tree": "3011545bbf5fb8151c6a14e0221e7cee36b48de4",
+  "candidate_clean": true,
+  "checker_sha256": "5fe18064420ce40a9fb4d84fec116af68be25ee995845324a42fc25dd878df26",
+  "reference_matches_candidate": true,
+  "authority": "investigation only; no candidate repair or product publication",
+  "snapshot_identity": "fresh 501-task snapshots; counts match prior run, private bytes not claimed identical",
+  "private_evidence": "not archived: source map, revisions, task files and per-file outputs"
+}
