@@ -1,0 +1,89 @@
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -364,7 +364,26 @@
+     return second, extensions
+ 
+ 
+-def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None):
++def record_review_question_problems(text, rows, extensions):
++    plain = "\n".join(outside_fences(text))
++    problems = []
++    if {row["reviewer"] for row in rows} != set(extensions) & {"codex", "copilot", "roborev"}:
++        problems.append("configured reviewers differ from the delivery observation")
++    for row in rows:
++        reviewer, outcome, identity = row["reviewer"], row["outcome"], row.get("evidence")
++        if outcome in {"findings", "answered"}:
++            decisions = re.findall(rf"^Review decision:[ \t]*{re.escape(reviewer)}[ \t]+{re.escape(identity or '')}[ \t]+(clean|disposed):[ \t]+(\S.*)$", plain, re.M | re.I)
++            if not identity or len(decisions) != 1 or (outcome == "findings" and decisions[0][0].lower() != "disposed"):
++                problems.append(f"{reviewer} needs one FO review decision at {identity or 'a missing evidence identity'}")
++        if reviewer == "copilot" and outcome == "not-run":
++            if not re.search(r"(?im)^Copilot (?:not read|not run):[ \t]*\S", plain):
++                problems.append("the question needs the Copilot unread decision")
++            if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", plain):
++                problems.append("the question needs the conditional Copilot retry offer")
++    return problems
++
++
++def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None, observations=None):
+     problems = []
+     if second:
+         rows = re.findall(r"(?i)\bsecond reviewer:[ \t]*([^\n]*)", text)
+@@ -377,6 +396,9 @@
+                 problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
+         elif not re.match(re.escape(second) + r"[ \t]+because[ \t]+\S", rows[0], re.I):
+             problems.append(f"second reviewer declaration must name {second} because <nonempty trigger>, or not triggered")
++    if observations is not None:
++        problems += record_review_question_problems(text, observations, extensions)
++        return problems, (["next: hold the ask; record the FO review decision or unread/retry decision in the question."] if problems else [])
+     if "copilot" in extensions:
+         for skipped in re.finditer(r"(?i)\bcopilot skipped:[ \t]*([^\n]*)", text):
+             kind = re.fullmatch(r"([a-z]+) PR[.]?[ \t]*", skipped[1], re.I)
+@@ -793,9 +815,10 @@
+     if observed:
+         try:
+             reviewers = reviewer_facts(repo, number, extensions, str((facts or {}).get("headRefOid", "")))
++            found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions, observations=reviewers)
++            problems += found
++            nexts += wanted
+             untriggered = bool(second and re.search(r"(?im)^Second reviewer:[ \t]*not triggered[.; \t]*$", gate_text))
+-            if untriggered and (re.search(r"^profile:[ \t]*prod[ \t]*$", task_text, re.M) or re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)):
+-                problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
+             if any(row["outcome"] == "error" for row in reviewers):
+                 holds.append("cannot read a configured reviewer")
+             if any(row["outcome"] == "pending" and not (untriggered and row["reviewer"] == second) for row in reviewers):
+@@ -1360,9 +1383,16 @@
+             raise ValueError("validation changed since facts were observed")
+         if data.get("result", {}).get("exit") != 0:
+             raise ValueError("delivery check is held")
+-        if GRANT.search(text) and (any(not data["head"].startswith(x) for x in re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})", text))):
++        grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
++        if GRANT.search(text) and (not grants or any(not data["head"].startswith(x) for x in grants)):
+             raise ValueError("delivery is held or the merge head differs")
+         problems, _ = text_problems(task.read_text(), text, at_gate=True, confirmations=False)
++        workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
++        if not workflow_dir:
++            raise ValueError("cannot read current reviewer configuration")
++        second, extensions = reviewer_config(scalars, lists)
++        found, _ = reviewer_problems(task, task.read_text(), text, second, extensions, observations=data["reviewers"])
++        problems += found
+         if GRANT.search(text) and not WORKTREE_REMOVAL.search(text):
+             problems.append("question omits removing its clean, pushed worktree")
+         if data.get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(text))):
+--- a/kc-dev-flow-2/references/delivery-record.md
++++ b/kc-dev-flow-2/references/delivery-record.md
+@@ -56,6 +56,15 @@
+ no round. This counts saved observations, not unobserved review history.
+ `answered` means the adapter saw a review, not that FO found it clean.
+ FO still reads findings and applies the workflow's disposition rules.
++Before a passing check, FO writes one `Review decision: <reviewer> <evidence> clean: <judgment>`
++or `Review decision: <reviewer> <evidence> disposed: <judgment>` in the question for
++`answered` or `findings`; `findings` needs `disposed`. These are head/evidence-bound
++FO judgments, not new adapter outcomes or machine proof of a Captain waiver.
++A configured second reviewer still needs one trigger declaration or not-triggered declaration.
++Both record commands use the shared declaration/decision reader with current
++configuration, including quoted prod profiles. A merge-naming question needs a valid 7–40-hex head. An unread Copilot needs a `Copilot not read: <decision>` or
++`Copilot not run: <decision>` line and the conditional retry line in the question.
++The existing workflow still requires Captain authority for a P1 waiver.
+ 
+ List an unread reviewer in the question when the record cannot establish its
+ status; the Captain decides. An untriggered conditional second reviewer is

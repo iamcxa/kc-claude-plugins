@@ -1,0 +1,28 @@
+{
+  "kind": "unapplied illustrative proposal, not a repair or tested candidate",
+  "numstat": [
+    {
+      "added": "34",
+      "removed": "4",
+      "file": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "added": "9",
+      "removed": "0",
+      "file": "kc-dev-flow-2/references/delivery-record.md"
+    }
+  ],
+  "context_check_exit": 0,
+  "context_check_output": "",
+  "production_delta_applied": {
+    "added": 0,
+    "removed": 0
+  },
+  "tests": "not authored/applied for the proposed grammar; investigation cases name the required regressions",
+  "limits": [
+    "Decision syntax is a proposal requiring FO authorization.",
+    "A presence check cannot authenticate reviewer reading, per-finding classification, actual repairs or Captain waiver truth.",
+    "No new factual record field; question_sha256 binds the FO judgments.",
+    "The count includes checker/contract only; future regression-test delta is not measured."
+  ]
+}

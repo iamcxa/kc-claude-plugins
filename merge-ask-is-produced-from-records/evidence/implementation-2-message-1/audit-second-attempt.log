@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<scratch>/audit_probe.py", line 75, in <module>
+    run('captain-step-missing',B,setup=no_steps)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/audit_probe.py", line 48, in run
+    assert actual==expected,(name,actual,expected)
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('captain-step-missing', {'legacy': [0, 2], 'record': [1, 1]}, {'legacy': [1, 1], 'record': [1, 1]})

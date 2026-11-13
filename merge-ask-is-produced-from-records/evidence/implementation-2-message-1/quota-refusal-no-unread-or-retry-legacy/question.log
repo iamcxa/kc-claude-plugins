@@ -1,0 +1,6 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses
+copilot not run needs the conditional retry offer
+next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.
+next: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer.

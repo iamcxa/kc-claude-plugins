@@ -1,0 +1,45 @@
+{
+  "start_taipei": "2026-11-14 00:53:19",
+  "time_source": "clock.curr_time UTC +08:00",
+  "candidate": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "clean": true,
+  "scope": "investigation only; product bytes unchanged; no repair patch is applied or tested",
+  "files": [
+    {
+      "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+      "sha256": "e9c405b76affaff5d0989a8915b7a05b94f1c3a5c016fb7cec88ef562c1d6a77"
+    },
+    {
+      "path": "kc-dev-flow-2/references/delivery-record.md",
+      "sha256": "52f4c92a4ec0a10679d676eee53583f2f8c76157dc123c887a4ed758051e28ba"
+    },
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "sha256": "e58440ed90b82126aed2aca982d8d1619603860b720ea78a2062db1f82b49863"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "sha256": "7acc5a067dcd59ae995e0173eaabb2abb1e7d3069ee1992fa2e2209a4ba8d8e2"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/lint-skills.py",
+      "sha256": "8ccc8e2fced9d50d06098f03d2dfaae3809073b075b5bd838f9194dbf18a2cdf"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "sha256": "dc7794ebb21a80d3fb87e8a1c2770dbd48aebbe61d062090416fe57946059fda"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "sha256": "337f3eb5aafb85141fc6c11cd167dc8dc07abaeaa9ead849309aaf72f1bca86f"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "sha256": "640edd6b33a56ab59266ff5d7578efe874311fcdf188de5512b91da93f112e12"
+    },
+    {
+      "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+      "sha256": "54ccdcf6d7ec25fdad35fd3688d4449fe3555a91b5e1f41e5ea7ce0d1c24e546"
+    }
+  ]
+}

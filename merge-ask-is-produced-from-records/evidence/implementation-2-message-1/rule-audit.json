@@ -1,0 +1,310 @@
+[
+  {
+    "rule": "Task/workflow/input readability",
+    "legacy": "Unreadable inputs hold; legacy question exits 2.",
+    "record": "Writer preserves those holds; facts_question unreadable binding exits 1.",
+    "status": "preserved hold; exit-code difference",
+    "evidence": "code: check:642; question:1223; facts_question:1339"
+  },
+  {
+    "rule": "Repository-qualified PR argument",
+    "legacy": "Requires owner/repo#N.",
+    "record": "Same shared check.",
+    "status": "preserved",
+    "evidence": "code: check input validation before observed branch"
+  },
+  {
+    "rule": "Latest validation dispatch Candidate",
+    "legacy": "Highest-numbered validation dispatch supplies full candidate heads; missing holds.",
+    "record": "Same writer; reader additionally joins current dispatch/report/step data.",
+    "status": "preserved/stronger",
+    "evidence": "code: dispatched_candidates; facts_question; prior implementation-2 candidate-mutations.json (not rerun here)"
+  },
+  {
+    "rule": "PR head/dispatched candidate/read race",
+    "legacy": "Observed head must match dispatched candidate; reread PR head must match the chosen head.",
+    "record": "Same shared writer checks.",
+    "status": "preserved",
+    "evidence": "code: check:678-722"
+  },
+  {
+    "rule": "CI rollup",
+    "legacy": "Empty, unfinished, unsuccessful, or no successful check holds.",
+    "record": "Same ci_problem call before record return.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: ci_problem:467; check:721-728"
+  },
+  {
+    "rule": "Workflow-run settlement",
+    "legacy": "Newest relevant runs must settle; completed skipped runs need a nonempty required-check inventory.",
+    "record": "Same calls and settlement rule.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: runs_problem:486; check:729"
+  },
+  {
+    "rule": "Required-check inventory",
+    "legacy": "Malformed/unreadable list holds; every required name needs a pass.",
+    "record": "Same required_checks/required_problem calls.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: required_checks:499; required_problem:511"
+  },
+  {
+    "rule": "PR draft/mergeability/base/files",
+    "legacy": "Draft, unmergeable, wrong trunk base or incomplete changed-file inventory holds.",
+    "record": "Same shared predicates.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: check:730-753"
+  },
+  {
+    "rule": "Reserved ADR/sibling evidence",
+    "legacy": "Reserved ADR must exist at candidate or an eligible dispatched sibling.",
+    "record": "Same writer guard; sibling explanatory notes are not copied into the new snapshot.",
+    "status": "hold preserved; output provenance narrower",
+    "evidence": "code: check ADR loop:755-772; snapshot:847"
+  },
+  {
+    "rule": "Valid profile/prod security review",
+    "legacy": "Valid profile required; prod security report is candidate-bound and each security finding disposed.",
+    "record": "Same validation_security.check_task; distinct from remote code-review dispositions.",
+    "status": "preserved",
+    "evidence": "code: check:775-788; probe: second-not-triggered-profile-* uses a valid empty prod security report"
+  },
+  {
+    "rule": "Owed special-role call/read error",
+    "legacy": "Role reader exit 1 or 2 holds.",
+    "record": "Same guard; nonblocking next lines are not forwarded by the early record return.",
+    "status": "hold preserved; advisory output lost",
+    "evidence": "code: check:820-833; record return:874-878"
+  },
+  {
+    "rule": "Reviewer configuration validity",
+    "legacy": "Both check and question parse extensions/second-reviewer validity.",
+    "record": "check parses it; facts_question does not reread it after observation.",
+    "status": "reader parity gap",
+    "evidence": "probe: reviewer-config-invalid-before-check; reviewer-config-invalid-after-check"
+  },
+  {
+    "rule": "One conditional-reviewer declaration",
+    "legacy": "Requires exactly one configured declaration or not-triggered declaration.",
+    "record": "Not required; missing/duplicate declarations pass with completed rows.",
+    "status": "lost",
+    "evidence": "probe: second-declaration-missing; second-declaration-duplicate"
+  },
+  {
+    "rule": "Configured reviewer and nonempty trigger",
+    "legacy": "Triggered declaration must name configured reviewer and because <reason>.",
+    "record": "Wrong reviewer or empty trigger is ignored.",
+    "status": "lost",
+    "evidence": "probe: second-declaration-wrong-name; second-trigger-empty"
+  },
+  {
+    "rule": "Structured prod/db trigger forbids not-triggered",
+    "legacy": "Uses frontmatter FM_PROFILE, including quoted prod; db holds.",
+    "record": "db and plain prod hold; quoted prod bypasses the raw regex.",
+    "status": "partial preservation; quoted-prod gap",
+    "evidence": "probe: second-not-triggered-db; second-not-triggered-profile-plain/double/single"
+  },
+  {
+    "rule": "Other trigger truth/waiver authority",
+    "legacy": "Hard-to-reverse/authority/Captain triggers and actual waiver legitimacy remain FO/Captain duties; text parser checks declaration form only.",
+    "record": "Same human duties; automatic rows do not certify a waiver.",
+    "status": "not automatically enforced by either",
+    "evidence": "workflow: FO steps: review findings 1-5; contract Readers and limits"
+  },
+  {
+    "rule": "Second reviewer outcome identity/location",
+    "legacy": "Requires an outcome token/not-run reason; with --summary-file, reviewer evidence must be outside summary fences.",
+    "record": "Adapter observations supply identity in the record, replacing copied outcome/location requirements.",
+    "status": "intentional replacement; human decision is not enforced",
+    "evidence": "probe: codex-p1-no-decision-or-outcome; copilot-high-no-decision-or-outcome; code: question reviewer_text"
+  },
+  {
+    "rule": "Remote P1/High disposition truth",
+    "legacy": "No automatic per-remote-finding severity/disposition/waiver check. An unresolved P1 passes when a review identity is cited.",
+    "record": "findings/answered also pass; no FO decision is required.",
+    "status": "unsafe acceptance reproduced; historical baseline narrower than RoboRev wording",
+    "evidence": "probe: codex-p1-undisposed; copilot-high-undisposed; adapter-observations.json"
+  },
+  {
+    "rule": "Copilot refusal quote/id/source/head",
+    "legacy": "When a supplied not-run line is a refusal, validates saved stdout, quote/id, own line and any older-head disclosure.",
+    "record": "Record route intentionally saves not-run without the old quote/source boilerplate.",
+    "status": "intentional removal; do not restore copied prose as the retry fix",
+    "evidence": "probe: quota-refusal-no-saved-output; contract Legacy text route"
+  },
+  {
+    "rule": "Unread Copilot and quota retry in question",
+    "legacy": "Supplied refusal requires retry; configured second reviewer also needs an outcome. It does not independently discover every undeclared refusal.",
+    "record": "Actual exit-5 observation passes without unread decision or retry.",
+    "status": "lost retained reader duty",
+    "evidence": "probe: quota-refusal-no-unread-or-retry; quota-refusal-disclosed-control; contract Readers and limits"
+  },
+  {
+    "rule": "No wait/no quota re-request until Captain restores quota",
+    "legacy": "Workflow/extension duty; these commands neither request reviews nor enforce elapsed waiting.",
+    "record": "Same duty; not-run is not counted or clean.",
+    "status": "not mechanically enforced by either",
+    "evidence": "ADR 0013; code: reviewer_facts/saved_rounds; no remote writes in probes"
+  },
+  {
+    "rule": "Copilot configuration-error reason",
+    "legacy": "A supplied configuration-error not-run declaration needs a nonempty reason and can proceed textually.",
+    "record": "Adapter error always holds the record route.",
+    "status": "narrower fail-closed behavior",
+    "evidence": "probe: unreadable-reviewer; contract Readers and limits"
+  },
+  {
+    "rule": "Copilot unsupported PR type skip",
+    "legacy": "Checks supplied unsupported type against actual PR title at check.",
+    "record": "No skip-text validator; pending row holds unless conditional reviewer is untriggered. Contract retains intentional not-read exceptions on text route.",
+    "status": "documented narrower compatibility path",
+    "evidence": "code: reviewer_problems:382-390; record pending guard; contract:65-66"
+  },
+  {
+    "rule": "Declined item reason",
+    "legacy": "Each declined item needs a bracketed reason with at least two words.",
+    "record": "text_problems still applies it to the question.",
+    "status": "preserved",
+    "evidence": "probe: decline-without-reason; decline-short-reason; decline-reason-control"
+  },
+  {
+    "rule": "Latest validation Deferred risk/Polish join",
+    "legacy": "Decline-item count must cover those bullets in newest validation report.",
+    "record": "Same findings_join call at writer and reader.",
+    "status": "preserved",
+    "evidence": "probe: validation-deferred-and-polish-unjoined/one-missing/control"
+  },
+  {
+    "rule": "Decline identity/classification/reason truth",
+    "legacy": "Parser counts items and bracketed words, not truthful one-to-one dispositions or materiality.",
+    "record": "Same limit; human decisions remain necessary.",
+    "status": "not automatically certified by either",
+    "evidence": "code: findings_join:312; unreasoned_items:308"
+  },
+  {
+    "rule": "Sufficiency/Necessity labels",
+    "legacy": "Presence required; first 200 cleaned characters bound by legacy ask.",
+    "record": "Presence tests deliberately removed; FO judgments still belong in question.",
+    "status": "explicitly withdrawn by amendment 1",
+    "evidence": "probe: sufficiency-necessity-labels-removed; task Design Outcome and PRFAQ"
+  },
+  {
+    "rule": "External round declaration",
+    "legacy": "One top-level nonnegative External rounds line; summary location enforced when supplied. Form does not prove true activity.",
+    "record": "Machine count of distinct saved eligible PR verdict identities; local jobs and refusals excluded.",
+    "status": "intentional replacement",
+    "evidence": "probe: external-round-field-removed/malformed/duplicate; saved_rounds source and existing prior round evidence (not rerun here)"
+  },
+  {
+    "rule": "Validation verdict and validation cycle count",
+    "legacy": "No automatic PASSED/REJECTED gate or count comparison; check reads dispatched heads.",
+    "record": "Reported verdict/digest and numbered dispatch count saved; REJECTED can still yield check/question 0.",
+    "status": "new observation, not a replacement truth guarantee",
+    "evidence": "probe: validation-rejected-not-automatic-gate; validation-rounds-observed (rounds=2)"
+  },
+  {
+    "rule": "Claim-source reminder",
+    "legacy": "Prints source-attribution reminder.",
+    "record": "Both record commands still print it.",
+    "status": "preserved",
+    "evidence": "all check/question output logs"
+  },
+  {
+    "rule": "Computed unchecked-count disclosure",
+    "legacy": "Scans question/summary and PR body; writes Unchecked counts automatically without holding.",
+    "record": "Neither scan nor disclosure field is produced on record route.",
+    "status": "omitted; needs disposition against ADR 0072",
+    "evidence": "probe: count-warning-omitted; code: check:707; facts_question early branch"
+  },
+  {
+    "rule": "Existing-item claim mark/PR-body copy",
+    "legacy": "Marks uncited existing-item effect claims and copies marked PR-body claims into ask.",
+    "record": "Neither operation nor equivalent record field is produced.",
+    "status": "omitted; needs disposition against ADR 0082",
+    "evidence": "probe: scope-warning-omitted; code: scope_disclosure:1051"
+  },
+  {
+    "rule": "Captain-step path and positive numbering",
+    "legacy": "Legacy check validates path shape/placement; question opens and validates the record.",
+    "record": "Newest step source is located automatically and checked at both commands.",
+    "status": "preserved/stronger",
+    "evidence": "probe: captain-step-missing; captain-step-candidate-differs; code: captain_steps_path_problems"
+  },
+  {
+    "rule": "Captain-step fields/coverage",
+    "legacy": "Question checks Asked/Ran/Observed/Only-he-can reasons, paths, commands/links and current candidate; it does not execute or authenticate the steps.",
+    "record": "Same inspect_steps and captain_step_problems, also at record check.",
+    "status": "preserved/stronger",
+    "evidence": "probe: captain-observation-empty; source: inspect_steps:1093"
+  },
+  {
+    "rule": "Newest successful reference/head/clause binding",
+    "legacy": "Merge-naming question needs newest matching ask at dispatched head with matching clauses.",
+    "record": "Newest ask or held observation and full question hash are joined; later holds invalidate old success.",
+    "status": "preserved/stronger",
+    "evidence": "code: matching_delivery_record:1202; facts_question:1349; prior held-record regression (not rerun here)"
+  },
+  {
+    "rule": "Valid merge-head token",
+    "legacy": "Requires at least one 7-40-hex token with a word boundary.",
+    "record": "Empty/nonhex/41-hex tokens pass because parsed list can be empty or a partial token.",
+    "status": "lost",
+    "evidence": "head-results.json; head-assertions.json; facts_question:1363"
+  },
+  {
+    "rule": "Different valid merge head",
+    "legacy": "Valid parsed head must match observed/dispatched candidate.",
+    "record": "Same comparison for valid parsed tokens.",
+    "status": "preserved",
+    "evidence": "probe: head-different-valid; head-prefix-control"
+  },
+  {
+    "rule": "Merge hold-out clause",
+    "legacy": "Merge-naming question must let Captain say he merges or holds.",
+    "record": "Same text_problems(at_gate=True) check.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: question:1260; facts_question:1365"
+  },
+  {
+    "rule": "Remove clean pushed worktree clause",
+    "legacy": "Merge-naming question itself must name removal.",
+    "record": "Same reader requirement.",
+    "status": "preserved; inspected, not rerun here",
+    "evidence": "code: question:1271; facts_question:1366"
+  },
+  {
+    "rule": "Moved-trunk merge-result run",
+    "legacy": "Requires matching head/trunk/configured command and exit 0, or explicit not-run reason.",
+    "record": "Same merge_result_problem guard.",
+    "status": "preserved",
+    "evidence": "probe: moved-trunk-no-result/failed-result/wrong-command/result-control"
+  },
+  {
+    "rule": "Merge-result not-run question placement",
+    "legacy": "Reason must be in the actual question, not only summary.",
+    "record": "Same reader check; writer sees only question so it holds earlier.",
+    "status": "preserved/stronger",
+    "evidence": "probe: moved-trunk-not-run-summary-only; moved-trunk-not-run-question-control"
+  },
+  {
+    "rule": "Question/validation/step changes after check",
+    "legacy": "Legacy only rechecks truncated clauses and current step validity, not full report/step/question hashes.",
+    "record": "Question hash and validation/step hashes are compared to current sources.",
+    "status": "stronger",
+    "evidence": "probe: question-mutated-after-check; validation-report-mutated-after-check; captain-step-mutated-after-check"
+  },
+  {
+    "rule": "Human-facing class/points/authority/writing advice",
+    "legacy": "Prints bounded points/class/verdict and ASK/ASK_UNQUOTED/ASK_FORM. These do not machine-judge prose or confer merge authority.",
+    "record": "Early record return omits those displays; record route still requires the native gate and exact bound approval.",
+    "status": "output difference; no pre-existing automatic merge-authority guarantee lost",
+    "evidence": "code: check:884-928; question final emit; facts_question final emit; contract Readers and limits"
+  },
+  {
+    "rule": "Actual committed/native briefing/approval compliance",
+    "legacy": "Commands can be skipped and native preparation called directly; observer/native reference checks establish later evidence.",
+    "record": "Same cooperative-entry limit; saved JSON/digests do not authenticate execution or grant merge.",
+    "status": "outside either CLI guarantee",
+    "evidence": "contract Producer and preparation / Readers and limits; no native gate or approval performed in this investigation"
+  }
+]

@@ -1,0 +1,578 @@
+[
+  {
+    "case": "second-declaration-missing",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-declaration-duplicate",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-declaration-wrong-name",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-trigger-empty",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-pilot",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-db",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-profile-plain",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-profile-double",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-profile-single",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "decline-without-reason",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "decline-short-reason",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "decline-reason-control",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "validation-deferred-and-polish-unjoined",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "validation-deferred-and-polish-one-missing",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "validation-deferred-and-polish-control",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "validation-rejected-not-automatic-gate",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "validation-rounds-observed",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "external-round-field-removed",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "external-round-field-malformed",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "external-round-field-duplicate",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "sufficiency-necessity-labels-removed",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "captain-observation-empty",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "captain-step-candidate-differs",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "captain-step-missing",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        2
+      ],
+      "record": [
+        1,
+        1
+      ]
+    },
+    "match": false
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "candidate": [
+    "40c714a600000000000000000000000000000000"
+  ],
+  "captain_steps": {
+    "candidate_matches": true,
+    "path": "captain-steps/1.md",
+    "sha256": "c72ab5a40da61a4a88aa39c27bea9283444e8d768a3814e589c20ae4c5f42535"
+  },
+  "ci": [
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    }
+  ],
+  "external_rounds": 1,
+  "head": "40c714a600000000000000000000000000000000",
+  "merge_result": null,
+  "pr": "o/r#9",
+  "pr_state": {
+    "baseRefName": "main",
+    "isDraft": false,
+    "mergeable": "MERGEABLE"
+  },
+  "public": true,
+  "question_sha256": "47afc0a813c4cca6da7928dc80f1e0e170bdc6cfd1a1f0bf52230cc2f822d2bb",
+  "required_checks": [],
+  "result": {
+    "exit": 0,
+    "problems": 0,
+    "unreadable": 0
+  },
+  "reviewers": [
+    {
+      "evidence": "review:5",
+      "exit": 0,
+      "head": "40c714a600000000000000000000000000000000",
+      "outcome": "clean",
+      "reviewer": "codex",
+      "scope": "pr"
+    },
+    {
+      "evidence": null,
+      "exit": 5,
+      "head": "40c714a600000000000000000000000000000000",
+      "outcome": "not-run",
+      "reviewer": "copilot",
+      "scope": "pr"
+    }
+  ],
+  "role_calls": {
+    "exit": 0
+  },
+  "round_scope": "distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history",
+  "schema": "delivery-facts/v1",
+  "time": "2026-11-13T17:00:11Z",
+  "tool_version": "0.41.0",
+  "trunk": {
+    "head": "40c714a600000000000000000000000000000000",
+    "position": "ahead",
+    "trunk": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "validation": {
+    "dispatch": "validation-1.md",
+    "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+    "rounds": 1,
+    "verdict": "PASSED"
+  },
+  "workflow_runs": []
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "severity": "high",
+    "title": "Observed findings or unclassified Copilot answers need no FO decision",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 796,
+    "detail": "Real adapter fixtures yield Codex exit 1/P1 and Copilot exit 0/High line comment; record check/question both 0. The legacy citation-only control also accepts an unresolved finding, so an old automatic P1 guarantee is not claimed.",
+    "fix": "Require head/evidence-bound FO judgment for findings/answered, preserving workflow-owned P1 waiver authority.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "high",
+    "title": "Known Copilot refusal needs no unread/retry decision",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 1339,
+    "detail": "Real exit 5 is saved as not-run; question lacks unread statement and retry yet passes. Contract assigns both to FO question.",
+    "fix": "Apply one shared record-reader disclosure check at check and question; do not restore copied refusal prose.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "high",
+    "title": "Quoted prod profile bypasses conditional-reviewer trigger",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 798,
+    "detail": "Single/double quoted prod with a valid security report and pending second reviewer accepts not-triggered; legacy holds.",
+    "fix": "Reuse existing reviewer_problems/FM_PROFILE instead of duplicate raw regex.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "high",
+    "title": "Missing valid merge-head token is accepted",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 1363,
+    "detail": "Empty/nonhex/overlong merge-head question: legacy question 1, record question 0. Different valid head still holds.",
+    "fix": "Require a nonempty bounded head-token list before comparing prefixes.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "medium",
+    "title": "Current reviewer configuration is not reread by record question",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 1339,
+    "detail": "Invalid configuration after a passing observation: legacy question 2, record question 0. Fixture parity difference; no real mid-ask config change claimed.",
+    "fix": "Run the existing configuration reader at question and join the configured names to saved rows.",
+    "status": "confirmed"
+  },
+  {
+    "severity": "medium",
+    "title": "Automatic count and scope disclosures have no record-route equivalent",
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 707,
+    "detail": "Legacy emits Unchecked counts:1 and scope mark; record emits neither, with no equivalent fields. Existing ADRs and immutable-question design need an explicit disposition.",
+    "fix": "FO/Captain decision on record fields or question-writing behavior; excluded from the unapplied reviewer proposal.",
+    "status": "confirmed"
+  }
+]

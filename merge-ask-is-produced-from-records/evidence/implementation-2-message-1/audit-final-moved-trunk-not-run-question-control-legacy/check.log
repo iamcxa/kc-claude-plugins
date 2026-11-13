@@ -1,0 +1,8 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+PR head 40c714a600000000000000000000000000000000 equals dispatched candidate 40c714a600000000000000000000000000000000; no second reviewer outcome is missing
+point: merge-result: not run (the ask says so)
+point: second-reviewer: 'copilot'
+class: docs-only (verdict ask)
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.

@@ -1,0 +1,4 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+second reviewer copilot has no stated outcome: add 'copilot not run: <reason>' or a review:<id> or comment:<id> in a sentence naming copilot
+next: hold the ask until each second reviewer has an outcome.

@@ -1,0 +1,3 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+record: task/merge/ask-1.json
+next: check the FO question with --facts-record, then commit and bind that JSON as the gate summary and reference.

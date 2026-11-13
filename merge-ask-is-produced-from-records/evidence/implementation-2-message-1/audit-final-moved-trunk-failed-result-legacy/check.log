@@ -1,0 +1,4 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the merge-result run result-1.json on trunk bbbbbbbbbbbb exited '1'
+next: hold the ask; run `delivery_gate.py merge-run <task> --pr o/r#9 -- <test command>` on the merge result, using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.

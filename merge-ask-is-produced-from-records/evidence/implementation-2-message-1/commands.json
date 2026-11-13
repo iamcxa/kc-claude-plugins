@@ -1,0 +1,58 @@
+[
+  {
+    "name": "primary repro",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/investigate.py",
+    "exit": 0,
+    "output": "investigate.log",
+    "result": "results.json",
+    "note": "expected current behavior, including unsafe accepts; not repair validation"
+  },
+  {
+    "name": "unmodified adapters",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/adapter_probe.py",
+    "exit": 0,
+    "output": "adapter-probe.log",
+    "result": "adapter-observations.json",
+    "note": "expected current behavior, including unsafe accepts; not repair validation"
+  },
+  {
+    "name": "initial audit fixture calibration",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/audit_probe.py",
+    "exit": 1,
+    "output": "audit-initial.log",
+    "result": "audit-initial-assertions.json",
+    "note": "original failed harness definitions were corrected before the final run"
+  },
+  {
+    "name": "second audit expectation calibration",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/audit_probe.py",
+    "exit": 1,
+    "output": "audit-second-attempt.log",
+    "result": "audit-second-attempt-assertions.json",
+    "note": "original failed harness definitions were corrected before the final run"
+  },
+  {
+    "name": "full fresh final audit",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/audit_probe.py",
+    "exit": 0,
+    "output": "audit-final.log",
+    "result": "audit-assertions.json",
+    "note": "expected current behavior, including unsafe accepts; not repair validation"
+  },
+  {
+    "name": "merge-head parity",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/head_probe.py",
+    "exit": 0,
+    "output": "head-probe.log",
+    "result": "head-assertions.json",
+    "note": "expected current behavior, including unsafe accepts; not repair validation"
+  },
+  {
+    "name": "unapplied proposal context check",
+    "command": "TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/propose.py",
+    "exit": 0,
+    "output": "proposal-final.log",
+    "result": "proposal-counts.json",
+    "note": "expected current behavior, including unsafe accepts; not repair validation"
+  }
+]

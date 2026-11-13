@@ -1,0 +1,5 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+next: run `spacedock state commit task --workflow-dir <scratch>/copilot-high-undisposed-legacy`, then run `gate prepare` with `--reference <scratch>/copilot-high-undisposed-legacy/task/merge/ask-1.json`.

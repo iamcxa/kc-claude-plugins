@@ -1,0 +1,122 @@
+[
+  {
+    "case": "second-declaration-missing",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-declaration-duplicate",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-declaration-wrong-name",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-trigger-empty",
+    "expected": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": true
+  },
+  {
+    "case": "second-not-triggered-pilot",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        1,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "match": false
+  }
+]

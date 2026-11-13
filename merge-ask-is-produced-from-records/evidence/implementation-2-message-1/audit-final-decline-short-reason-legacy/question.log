@@ -1,0 +1,6 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+declined item has no reason: 'Deferred risk, synthetic finding (no)'
+the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses
+next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.
+next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.

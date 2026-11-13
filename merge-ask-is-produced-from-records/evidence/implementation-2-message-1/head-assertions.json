@@ -1,0 +1,117 @@
+[
+  {
+    "case": "non-hex",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "case": "empty",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "case": "overlong",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "case": "different-valid",
+    "expected": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        1
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        1
+      ],
+      "record": [
+        0,
+        1
+      ]
+    }
+  },
+  {
+    "case": "prefix-control",
+    "expected": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    },
+    "actual": {
+      "legacy": [
+        0,
+        0
+      ],
+      "record": [
+        0,
+        0
+      ]
+    }
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "case": "codex-p1",
+    "adapters": {
+      "codex": {
+        "exit": 1,
+        "stdout": "findings on 40c714a60: 1 line finding(s), 1 badge(s), 1 at P0/P1; evidence=review:5 at 2026-10-10T10:00:00Z"
+      },
+      "copilot": {
+        "exit": 0,
+        "stdout": "answered on 40c714a60: \"\ud83d\udfe2 Approval recommended\", 0 line comment(s); evidence=review:2 at 2026-10-12T08:21:29Z"
+      }
+    },
+    "record_rows": [
+      {
+        "reviewer": "codex",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 1,
+        "outcome": "findings",
+        "evidence": "review:5",
+        "scope": "pr"
+      },
+      {
+        "reviewer": "copilot",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 0,
+        "outcome": "answered",
+        "evidence": "review:2",
+        "scope": "pr"
+      }
+    ],
+    "input": {
+      "codex_p1_count": 1,
+      "copilot_high_line_comments": 0,
+      "quota_refusal": false
+    }
+  },
+  {
+    "case": "copilot-high",
+    "adapters": {
+      "codex": {
+        "exit": 0,
+        "stdout": "clean on 40c714a60: Codex review says no issues; evidence=review:5 at 2026-10-10T10:00:00Z"
+      },
+      "copilot": {
+        "exit": 0,
+        "stdout": "answered on 40c714a60: \"\ud83d\udfe1 Changes recommended\", 1 line comment(s); evidence=review:2 at 2026-10-12T08:21:29Z"
+      }
+    },
+    "record_rows": [
+      {
+        "reviewer": "codex",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 0,
+        "outcome": "clean",
+        "evidence": "review:5",
+        "scope": "pr"
+      },
+      {
+        "reviewer": "copilot",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 0,
+        "outcome": "answered",
+        "evidence": "review:2",
+        "scope": "pr"
+      }
+    ],
+    "input": {
+      "codex_p1_count": 0,
+      "copilot_high_line_comments": 1,
+      "quota_refusal": false
+    }
+  },
+  {
+    "case": "copilot-quota",
+    "adapters": {
+      "codex": {
+        "exit": 0,
+        "stdout": "clean on 40c714a60: Codex review says no issues; evidence=review:5 at 2026-10-10T10:00:00Z"
+      },
+      "copilot": {
+        "exit": 5,
+        "stdout": "not a review of 40c714a60: \"Copilot was unable to review this pull request because the user who requested the review has reached their quota limit.\"; answer=review:17 at 2026-10-27T00:00:00Z"
+      }
+    },
+    "record_rows": [
+      {
+        "reviewer": "codex",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 0,
+        "outcome": "clean",
+        "evidence": "review:5",
+        "scope": "pr"
+      },
+      {
+        "reviewer": "copilot",
+        "head": "40c714a600000000000000000000000000000000",
+        "exit": 5,
+        "outcome": "not-run",
+        "evidence": null,
+        "scope": "pr"
+      }
+    ],
+    "input": {
+      "codex_p1_count": 0,
+      "copilot_high_line_comments": 0,
+      "quota_refusal": true
+    }
+  }
+]

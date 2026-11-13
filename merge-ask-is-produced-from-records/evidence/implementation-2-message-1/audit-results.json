@@ -1,0 +1,3848 @@
+[
+  {
+    "case": "audit-final-second-declaration-missing",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-declaration-missing-legacy/check.log",
+        "question_output": "audit-final-second-declaration-missing-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-declaration-missing-record/check.log",
+        "question_output": "audit-final-second-declaration-missing-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-declaration-duplicate",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-declaration-duplicate-legacy/check.log",
+        "question_output": "audit-final-second-declaration-duplicate-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-declaration-duplicate-record/check.log",
+        "question_output": "audit-final-second-declaration-duplicate-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-declaration-wrong-name",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-declaration-wrong-name-legacy/check.log",
+        "question_output": "audit-final-second-declaration-wrong-name-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-declaration-wrong-name-record/check.log",
+        "question_output": "audit-final-second-declaration-wrong-name-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-trigger-empty",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-trigger-empty-legacy/check.log",
+        "question_output": "audit-final-second-trigger-empty-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-trigger-empty-record/check.log",
+        "question_output": "audit-final-second-trigger-empty-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-not-triggered-pilot",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-not-triggered-pilot-legacy/check.log",
+        "question_output": "audit-final-second-not-triggered-pilot-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-not-triggered-pilot-record/check.log",
+        "question_output": "audit-final-second-not-triggered-pilot-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "ef2f12533d3681160d9eca067b7ada09449c5e190e40a9612c47209232767886"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-not-triggered-db",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-db-legacy/check.log",
+        "question_output": "audit-final-second-not-triggered-db-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-db-record/check.log",
+        "question_output": "audit-final-second-not-triggered-db-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "d60ca684cf41cb6c3ca16f030ce6809d7f5e86debb35aee3f02ae28bbf378e38",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "ef2f12533d3681160d9eca067b7ada09449c5e190e40a9612c47209232767886"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-not-triggered-profile-plain",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-profile-plain-legacy/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-plain-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-profile-plain-record/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-plain-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "c07af11692dda31eec5162fcd68e1859aefc76e740f354ef1227f3619159dd3d",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "ef2f12533d3681160d9eca067b7ada09449c5e190e40a9612c47209232767886"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-not-triggered-profile-double",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-profile-double-legacy/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-double-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-not-triggered-profile-double-record/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-double-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "c07af11692dda31eec5162fcd68e1859aefc76e740f354ef1227f3619159dd3d",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "ef2f12533d3681160d9eca067b7ada09449c5e190e40a9612c47209232767886"
+      }
+    }
+  },
+  {
+    "case": "audit-final-second-not-triggered-profile-single",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-second-not-triggered-profile-single-legacy/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-single-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-second-not-triggered-profile-single-record/check.log",
+        "question_output": "audit-final-second-not-triggered-profile-single-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "c07af11692dda31eec5162fcd68e1859aefc76e740f354ef1227f3619159dd3d",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "ef2f12533d3681160d9eca067b7ada09449c5e190e40a9612c47209232767886"
+      }
+    }
+  },
+  {
+    "case": "audit-final-decline-without-reason",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-decline-without-reason-legacy/check.log",
+        "question_output": "audit-final-decline-without-reason-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "0c87a259013cb06e9c9a8b129c74b044394052f4c7a99b193eccd880f772c3c8"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-decline-without-reason-record/check.log",
+        "question_output": "audit-final-decline-without-reason-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "0c87a259013cb06e9c9a8b129c74b044394052f4c7a99b193eccd880f772c3c8"
+      }
+    }
+  },
+  {
+    "case": "audit-final-decline-short-reason",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-decline-short-reason-legacy/check.log",
+        "question_output": "audit-final-decline-short-reason-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "21bd3a196f82901607aa460ffc46480619913d6284b22f6c4424c8282ffa851b"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-decline-short-reason-record/check.log",
+        "question_output": "audit-final-decline-short-reason-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "21bd3a196f82901607aa460ffc46480619913d6284b22f6c4424c8282ffa851b"
+      }
+    }
+  },
+  {
+    "case": "audit-final-decline-reason-control",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-decline-reason-control-legacy/check.log",
+        "question_output": "audit-final-decline-reason-control-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "4339bc5abb645ac9998b0cf0a4cc6ce0cf13691c3e2084c90281f16ddadcb3ee"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-decline-reason-control-record/check.log",
+        "question_output": "audit-final-decline-reason-control-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "4339bc5abb645ac9998b0cf0a4cc6ce0cf13691c3e2084c90281f16ddadcb3ee"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-deferred-and-polish-unjoined",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-validation-deferred-and-polish-unjoined-legacy/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-unjoined-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-validation-deferred-and-polish-unjoined-record/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-unjoined-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "be1cad39e8fbb92219fbae88f2e9e5b78a5139149486549677133a294eb5c863",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-deferred-and-polish-one-missing",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-validation-deferred-and-polish-one-missing-legacy/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-one-missing-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "4339bc5abb645ac9998b0cf0a4cc6ce0cf13691c3e2084c90281f16ddadcb3ee"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-validation-deferred-and-polish-one-missing-record/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-one-missing-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "be1cad39e8fbb92219fbae88f2e9e5b78a5139149486549677133a294eb5c863",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "4339bc5abb645ac9998b0cf0a4cc6ce0cf13691c3e2084c90281f16ddadcb3ee"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-deferred-and-polish-control",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-deferred-and-polish-control-legacy/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-control-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "1b05a53c7d6a0ffadb0ca11e4d7f73f1215c6482efe144e72db912f8a116c11d"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-deferred-and-polish-control-record/check.log",
+        "question_output": "audit-final-validation-deferred-and-polish-control-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "be1cad39e8fbb92219fbae88f2e9e5b78a5139149486549677133a294eb5c863",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "1b05a53c7d6a0ffadb0ca11e4d7f73f1215c6482efe144e72db912f8a116c11d"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-rejected-not-automatic-gate",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-rejected-not-automatic-gate-legacy/check.log",
+        "question_output": "audit-final-validation-rejected-not-automatic-gate-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-rejected-not-automatic-gate-record/check.log",
+        "question_output": "audit-final-validation-rejected-not-automatic-gate-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "7fbcfddc620dce3d1cf37debdedfeacb4a1c93d77a00ad82db07f8294958a7b9",
+          "rounds": 1,
+          "verdict": "REJECTED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-rounds-observed",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-rounds-observed-legacy/check.log",
+        "question_output": "audit-final-validation-rounds-observed-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-rounds-observed-record/check.log",
+        "question_output": "audit-final-validation-rounds-observed-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-2.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 2,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-external-round-field-removed",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-external-round-field-removed-legacy/check.log",
+        "question_output": "audit-final-external-round-field-removed-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-external-round-field-removed-record/check.log",
+        "question_output": "audit-final-external-round-field-removed-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-external-round-field-malformed",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-external-round-field-malformed-legacy/check.log",
+        "question_output": "audit-final-external-round-field-malformed-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-external-round-field-malformed-record/check.log",
+        "question_output": "audit-final-external-round-field-malformed-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-external-round-field-duplicate",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-external-round-field-duplicate-legacy/check.log",
+        "question_output": "audit-final-external-round-field-duplicate-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-external-round-field-duplicate-record/check.log",
+        "question_output": "audit-final-external-round-field-duplicate-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-sufficiency-necessity-labels-removed",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-sufficiency-necessity-labels-removed-legacy/check.log",
+        "question_output": "audit-final-sufficiency-necessity-labels-removed-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-sufficiency-necessity-labels-removed-record/check.log",
+        "question_output": "audit-final-sufficiency-necessity-labels-removed-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-captain-observation-empty",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-observation-empty-legacy/check.log",
+        "question_output": "audit-final-captain-observation-empty-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-observation-empty-record/check.log",
+        "question_output": "audit-final-captain-observation-empty-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-captain-step-candidate-differs",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-step-candidate-differs-legacy/check.log",
+        "question_output": "audit-final-captain-step-candidate-differs-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-step-candidate-differs-record/check.log",
+        "question_output": "audit-final-captain-step-candidate-differs-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-captain-step-missing",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 2,
+        "check_output": "audit-final-captain-step-missing-legacy/check.log",
+        "question_output": "audit-final-captain-step-missing-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-step-missing-record/check.log",
+        "question_output": "audit-final-captain-step-missing-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-captain-step-mutated-after-check",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-captain-step-mutated-after-check-legacy/check.log",
+        "question_output": "audit-final-captain-step-mutated-after-check-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-captain-step-mutated-after-check-record/check.log",
+        "question_output": "audit-final-captain-step-mutated-after-check-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-validation-report-mutated-after-check",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-validation-report-mutated-after-check-legacy/check.log",
+        "question_output": "audit-final-validation-report-mutated-after-check-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-validation-report-mutated-after-check-record/check.log",
+        "question_output": "audit-final-validation-report-mutated-after-check-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-question-mutated-after-check",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-question-mutated-after-check-legacy/check.log",
+        "question_output": "audit-final-question-mutated-after-check-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "43fbf188aaa20a08bba874858a69204a757c50ddc4947daea3e3320d658d6522"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-question-mutated-after-check-record/check.log",
+        "question_output": "audit-final-question-mutated-after-check-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "43fbf188aaa20a08bba874858a69204a757c50ddc4947daea3e3320d658d6522"
+      }
+    }
+  },
+  {
+    "case": "audit-final-reviewer-config-invalid-before-check",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 2,
+        "question_exit": 2,
+        "check_output": "audit-final-reviewer-config-invalid-before-check-legacy/check.log",
+        "question_output": "audit-final-reviewer-config-invalid-before-check-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 2,
+        "question_exit": 1,
+        "check_output": "audit-final-reviewer-config-invalid-before-check-record/check.log",
+        "question_output": "audit-final-reviewer-config-invalid-before-check-record/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-reviewer-config-invalid-after-check",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 2,
+        "check_output": "audit-final-reviewer-config-invalid-after-check-legacy/check.log",
+        "question_output": "audit-final-reviewer-config-invalid-after-check-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-reviewer-config-invalid-after-check-record/check.log",
+        "question_output": "audit-final-reviewer-config-invalid-after-check-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-unreadable-reviewer",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-unreadable-reviewer-legacy/check.log",
+        "question_output": "audit-final-unreadable-reviewer-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 2,
+        "question_exit": 1,
+        "check_output": "audit-final-unreadable-reviewer-record/check.log",
+        "question_output": "audit-final-unreadable-reviewer-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": null,
+            "exit": 2,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "error",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 2,
+          "problems": 0,
+          "unreadable": 1
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-pending-primary-reviewer",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-pending-primary-reviewer-legacy/check.log",
+        "question_output": "audit-final-pending-primary-reviewer-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-pending-primary-reviewer-record/check.log",
+        "question_output": "audit-final-pending-primary-reviewer-record/question.log",
+        "reviewers": [
+          {
+            "evidence": null,
+            "exit": 4,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "pending",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 1,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-no-result",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-no-result-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-no-result-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-no-result-record/check.log",
+        "question_output": "audit-final-moved-trunk-no-result-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-failed-result",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-failed-result-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-failed-result-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-failed-result-record/check.log",
+        "question_output": "audit-final-moved-trunk-failed-result-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-wrong-command",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-wrong-command-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-wrong-command-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-wrong-command-record/check.log",
+        "question_output": "audit-final-moved-trunk-wrong-command-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-result-control",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-moved-trunk-result-control-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-result-control-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": "result-1.json",
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-moved-trunk-result-control-record/check.log",
+        "question_output": "audit-final-moved-trunk-result-control-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": "result-1.json",
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-not-run-question-control",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-moved-trunk-not-run-question-control-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-not-run-question-control-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": "not run",
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "cd727d1e38fd3b5ae217355ed6093e1f7defb4e21f705cb79711d5a93529f1a7"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-moved-trunk-not-run-question-control-record/check.log",
+        "question_output": "audit-final-moved-trunk-not-run-question-control-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": "not run",
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "cd727d1e38fd3b5ae217355ed6093e1f7defb4e21f705cb79711d5a93529f1a7"
+      }
+    }
+  },
+  {
+    "case": "audit-final-moved-trunk-not-run-summary-only",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-not-run-summary-only-legacy/check.log",
+        "question_output": "audit-final-moved-trunk-not-run-summary-only-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": "not run",
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      },
+      "record": {
+        "check_exit": 1,
+        "question_exit": 1,
+        "check_output": "audit-final-moved-trunk-not-run-summary-only-record/check.log",
+        "question_output": "audit-final-moved-trunk-not-run-summary-only-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 1,
+          "problems": 1,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "9852bbabdc7cbc585e7399a44a3e375ce96cad2d73379e37eed923a99a5f42cb"
+      }
+    }
+  },
+  {
+    "case": "audit-final-count-warning-omitted",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-count-warning-omitted-legacy/check.log",
+        "question_output": "audit-final-count-warning-omitted-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 1",
+        "combined_unchecked_count": "Unchecked counts: 1",
+        "question_sha256": "997d69064948263be87738d5fd6f18b570897ff638157ff7f5cec71119e47ab2"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-count-warning-omitted-record/check.log",
+        "question_output": "audit-final-count-warning-omitted-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "997d69064948263be87738d5fd6f18b570897ff638157ff7f5cec71119e47ab2"
+      }
+    }
+  },
+  {
+    "case": "audit-final-scope-warning-omitted",
+    "kind": "clean",
+    "routes": {
+      "legacy": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-scope-warning-omitted-legacy/check.log",
+        "question_output": "audit-final-scope-warning-omitted-legacy/question.log",
+        "reviewers": [],
+        "result": null,
+        "summary_has_unchecked_count": true,
+        "combined_has_unchecked_count": true,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": true,
+        "record_top_level": [
+          "class",
+          "head",
+          "merge_result",
+          "model",
+          "necessity",
+          "next",
+          "points",
+          "pr",
+          "sufficiency",
+          "time",
+          "verdict"
+        ],
+        "summary_warning_mark": false,
+        "validation": null,
+        "external_rounds": null,
+        "merge_result": null,
+        "summary_unchecked_count": "Unchecked counts: 0",
+        "combined_unchecked_count": "Unchecked counts: 0",
+        "question_sha256": "6c8df16c2d155f439127c5270700580dbdcd2cbad44898d6c8f3e29f7adf6036"
+      },
+      "record": {
+        "check_exit": 0,
+        "question_exit": 0,
+        "check_output": "audit-final-scope-warning-omitted-record/check.log",
+        "question_output": "audit-final-scope-warning-omitted-record/question.log",
+        "reviewers": [
+          {
+            "evidence": "review:5",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "clean",
+            "reviewer": "codex",
+            "scope": "pr"
+          },
+          {
+            "evidence": "review:2",
+            "exit": 0,
+            "head": "40c714a600000000000000000000000000000000",
+            "outcome": "answered",
+            "reviewer": "copilot",
+            "scope": "pr"
+          }
+        ],
+        "result": {
+          "exit": 0,
+          "problems": 0,
+          "unreadable": 0
+        },
+        "summary_has_unchecked_count": false,
+        "combined_has_unchecked_count": false,
+        "question_has_unchecked_count": false,
+        "question_has_scope_mark": false,
+        "record_top_level": [
+          "candidate",
+          "captain_steps",
+          "ci",
+          "external_rounds",
+          "head",
+          "merge_result",
+          "pr",
+          "pr_state",
+          "public",
+          "question_sha256",
+          "required_checks",
+          "result",
+          "reviewers",
+          "role_calls",
+          "round_scope",
+          "schema",
+          "time",
+          "tool_version",
+          "trunk",
+          "validation",
+          "workflow_runs"
+        ],
+        "summary_warning_mark": false,
+        "validation": {
+          "dispatch": "validation-1.md",
+          "report_sha256": "fcb59b8d10680fe63ca96334170d62ad092d9474ac4bcc7e3550b88c265bac36",
+          "rounds": 1,
+          "verdict": "PASSED"
+        },
+        "external_rounds": 2,
+        "merge_result": null,
+        "summary_unchecked_count": null,
+        "combined_unchecked_count": null,
+        "question_sha256": "57bac2ad49de9348b3c7ac531d286808048e9ca347bc5ab39d0899ac8fee4240"
+      }
+    }
+  }
+]

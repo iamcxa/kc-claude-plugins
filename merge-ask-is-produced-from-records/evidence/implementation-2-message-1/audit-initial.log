@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<scratch>/audit_probe.py", line 56, in <module>
+    run('second-not-triggered-pilot',G,q_extra='Second reviewer: not triggered.\n',reviewer_rows=pending,setup=summary_edit(lambda s:s.replace(p.DECL,'Second reviewer: not triggered.\n')))
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/audit_probe.py", line 48, in run
+    assert actual==expected,(name,actual,expected)
+           ^^^^^^^^^^^^^^^^
+AssertionError: ('second-not-triggered-pilot', {'legacy': [1, 1], 'record': [0, 0]}, {'legacy': [0, 0], 'record': [0, 0]})

@@ -1,0 +1,4 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+gate text complete
+reference: <scratch>/audit-final-validation-deferred-and-polish-control-record/task/merge/ask-1.json
+summary: use the saved JSON bytes unchanged; FO writes no factual summary.
