@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:observer-check-learn-only-when-listed:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:observer-check-learn-only-when-listed-ideation-1
+              briefing:
+                id: briefing:observer-check-learn-only-when-listed:ideation:attempt-1:revision-1
+                digest: sha256:2a046d0b728f5ed25e73bbba5717bcec52538a23ef09df3726a447f2243be622
+                room-ref: ./observer-check-learn-only-when-listed/review/ideation/briefing-1
 started: 2026-11-12T17:02:57Z
 ---
 
