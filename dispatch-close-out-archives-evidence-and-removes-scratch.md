@@ -78,6 +78,7 @@ pr: iamcxa/kc-claude-plugins#854
 
 Alignment: not needed: the Captain's words under Source name the outcome; where the archive lives is compared in the design and ruled at the ideation gate.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-12: amendment 2 scopes AC-3 to the dispatch's own scratch root, which is what the independent validator proposed in finding F2 of validation-1 after showing that a whole-repository zero count conflicts with removing only one's own root; the Captain chose it in the gate dialog, and the second validation judges the replacement criterion.
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-13 — are the two Codex P2 findings repaired at c429ab181 and did the merge of main keep both sides; is RoboRev job 1815's High finding (archived evidence has no public check) a build defect, a design change for the Captain, or outside this PR; what else could fail a third validation? Answer: both repaired with tests that fail on d4fe39e54, merge keeps both sides; the finding is a design-control gap, not a defect against approved decision D3, and the change adds no automatic publication path; recommends validation 3 as is with the finding deferred to a named follow-up, which needs the Captain's ruling.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
