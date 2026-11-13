@@ -3,7 +3,7 @@ title: design_surfaces.py check <task> crashes when a same-named task directory 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #860（設計檢查指令在任務檔旁有同名資料夾時不再當掉，會改讀旁邊的任務檔）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；找不到任務檔時的結束代碼從 1 變成 2（用法錯誤），驗證者確認套件內讀這個代碼的呼叫端行為不變；只有 Codex 審過，第二審查者未觸發；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T17:02:31Z
 worktree: .worktrees/spacedock-ensign-design-surfaces-task-dir-crash
 pr: pr-merge:860
+verdict: PASSED
+completed: 2026-11-13T00:36:30Z
+archived: 2026-11-13T00:36:30Z
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer (found by its implementation worker on 2026-10-13); the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?").
