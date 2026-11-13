@@ -58,6 +58,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-13T13:42:46Z
+worktree: .worktrees/spacedock-ensign-merge-ask-is-produced-from-records
 ---
 
 ## Scope
