@@ -50,6 +50,7 @@ gates:
                 state: consumed
 started: 2026-11-12T17:02:57Z
 worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
+pr: iamcxa/kc-claude-plugins#861
 ---
 
 ## Scope
