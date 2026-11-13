@@ -136,13 +136,13 @@ def evidence(folder, record):
             if destination.exists():
                 raise ValueError(f'evidence compression would overwrite {destination}')
             compress.append(path)
+    target.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(''.join(sums))
     for path in compress:
         destination = path.with_name(path.name + '.gz')
         with destination.open('xb') as output:
             output.write(gzip.compress(path.read_bytes(), mtime=0))
         path.unlink()
-    target.mkdir(parents=True, exist_ok=True)
-    manifest.write_text(''.join(sums))
     size = sum(p.stat().st_size for p in target.rglob('*') if p.is_file())
     if size > 1024 * 1024:
         raise ValueError('evidence exceeds 1 MiB after compression; trim or record a reproduce command')

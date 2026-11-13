@@ -118,6 +118,27 @@ class ScratchTests(unittest.TestCase):
         self.assertEqual(gzip.decompress((self.evidence / 'a.txt.gz').read_bytes()), original)
         self.assertIn(hashlib.sha256(original).hexdigest() + '  a.txt\n', manifest.read_text())
 
+    def test_later_gzip_write_failure_keeps_original_digests_for_retry(self):
+        originals = {'a.txt': b'a' * (256 * 1024 + 1), 'z.txt': b'z' * (256 * 1024 + 1)}
+        for name, data in originals.items():
+            (self.evidence / name).write_bytes(data)
+        original_open = Path.open
+        def fail_later(path, mode='r', *args, **kwargs):
+            if path == self.evidence / 'z.txt.gz' and mode == 'xb':
+                raise OSError('fixture write failure')
+            return original_open(path, mode, *args, **kwargs)
+        with mock.patch.object(Path, 'open', fail_later):
+            with self.assertRaisesRegex(OSError, 'fixture write failure'):
+                self.close()
+        self.assertTrue(self.root.exists())
+        self.assertTrue((self.evidence / 'a.txt.gz').exists())
+        self.close()
+        sums = (self.evidence / 'SHA256SUMS').read_text()
+        for name, data in originals.items():
+            self.assertIn(hashlib.sha256(data).hexdigest() + '  ' + name + '\n', sums)
+            self.assertEqual(gzip.decompress((self.evidence / (name + '.gz')).read_bytes()), data)
+        self.assertNotIn('  a.txt.gz\n', sums)
+
     def test_dirty_registered_worktree_removed_and_external_worktree_survives(self):
         worktree, external = self.root / 'checkout with spaces', self.repo / 'external'
         self.git('worktree', 'add', '--detach', worktree)
