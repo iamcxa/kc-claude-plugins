@@ -3,7 +3,7 @@ title: A PR marked ready gets its Codex code review without FO noticing a securi
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -53,7 +53,7 @@ gates:
                 reason: 'The Captain answered 「「自動觸發 Codex 審查」改成一句規則：FO 標成可審查時同時留言請 Codex 審查一次；原本的自動化和「恰好一次」條件作廢」 (chat, 2026-11-13), answering 「「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。」; approves the design as amended by Captain amendment 1 (one sentence of extension text; automation withdrawn). He first sent 「「自動觸發 Codex 審查」這張關掉，我自己的腳本照做就好，不進套件」 and replaced it with this answer in the same sitting. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-13T13:42:51Z
 ---
 
