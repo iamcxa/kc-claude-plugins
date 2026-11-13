@@ -1,0 +1,21 @@
+..............FF
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/bare-id-reason/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1: provider offline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/bare-id-reason/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.057s
+
+FAILED (failures=2)

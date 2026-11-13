@@ -1,0 +1,32 @@
+{
+  "dev2": {
+    "pilot task files": 236,
+    "in ideation now": 14,
+    "refused: as-is (stage+profile)": 12,
+    "declared criteria, none refused: as-is (stage+profile)": 152,
+    "approved proof refusals": 0,
+    "archived proof refusals": 0,
+    "refused: forced ideation, no exemption": 156,
+    "declared criteria, none refused: forced ideation, no exemption": 8
+  },
+  "adopter-1": {
+    "pilot task files": 113,
+    "in ideation now": 12,
+    "refused: as-is (stage+profile)": 7,
+    "declared criteria, none refused: as-is (stage+profile)": 80,
+    "approved proof refusals": 0,
+    "archived proof refusals": 0,
+    "refused: forced ideation, no exemption": 92,
+    "declared criteria, none refused: forced ideation, no exemption": 0
+  },
+  "adopter-2": {
+    "pilot task files": 99,
+    "in ideation now": 1,
+    "refused: as-is (stage+profile)": 1,
+    "declared criteria, none refused: as-is (stage+profile)": 82,
+    "approved proof refusals": 0,
+    "archived proof refusals": 0,
+    "refused: forced ideation, no exemption": 83,
+    "declared criteria, none refused: forced ideation, no exemption": 0
+  }
+}

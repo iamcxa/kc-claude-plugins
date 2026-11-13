@@ -1,0 +1,237 @@
+.FFFFFFFFFFFFFFFF....FFFFFFFFFFFFF
+======================================================================
+FAIL: test_document_reading_has_no_special_exemption (test_design_surfaces.PilotProofTests.test_document_reading_has_no_special_exemption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 362, in test_document_reading_has_no_special_exemption
+    self.assertEqual(len(self.check("**AC-1** Evidence: read the documentation.")), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='prefix **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='| **AC-1** | missing |')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='### **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='• **AC-1** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='``` **AC-1**\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='```\n**AC-1** missing\n```')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='**AC-1** Result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`. **AC-2** missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_declared_id_gets_a_proof_check (test_design_surfaces.PilotProofTests.test_each_declared_id_gets_a_proof_check) (body='**AC-1** missing **AC-2** Result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 276, in test_each_declared_id_gets_a_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_record_field_is_required (test_design_surfaces.PilotProofTests.test_each_record_field_is_required) (field='command')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 289, in test_each_record_field_is_required
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_record_field_is_required (test_design_surfaces.PilotProofTests.test_each_record_field_is_required) (field='exit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 289, in test_each_record_field_is_required
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_each_record_field_is_required (test_design_surfaces.PilotProofTests.test_each_record_field_is_required) (field='output path')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 289, in test_each_record_field_is_required
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_falsifier_cannot_supply_a_record (test_design_surfaces.PilotProofTests.test_falsifier_cannot_supply_a_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_falsifier_cannot_supply_a_record
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_fenced_record_does_not_complete_a_criterion (test_design_surfaces.PilotProofTests.test_fenced_record_does_not_complete_a_criterion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 314, in test_fenced_record_does_not_complete_a_criterion
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_ideation_approval_exempts_a_design_still_in_ideation (test_design_surfaces.PilotProofTests.test_ideation_approval_exempts_a_design_still_in_ideation) (gates='gates:\n    version: 1\n    records:\n        - id: gate:t:ideation\n          stage: ideation\n          attempts:\n            - id: gate-attempt:t-ideation-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:t:ideation:1\n                by: person:captain\n                at: "2026-11-12T00:00:00Z"\n                decision: revise\n                reason: accepted design\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 329, in test_ideation_approval_exempts_a_design_still_in_ideation
+    self.assertEqual(len(self.check("**AC-1** Read the design.", gates=gates)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_ideation_approval_exempts_a_design_still_in_ideation (test_design_surfaces.PilotProofTests.test_ideation_approval_exempts_a_design_still_in_ideation) (gates='gates:\n    version: 1\n    records:\n        - id: gate:t:ideation\n          stage: backlog\n          attempts:\n            - id: gate-attempt:t-ideation-1\n              resolution:\n                type: Resolution\n                id: resolution:spacedock:t:ideation:1\n                by: person:captain\n                at: "2026-11-12T00:00:00Z"\n                decision: approve\n                reason: accepted design\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 329, in test_ideation_approval_exempts_a_design_still_in_ideation
+    self.assertEqual(len(self.check("**AC-1** Read the design.", gates=gates)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_trailing_profile_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_profile_comment_does_not_bypass_the_proof_check) (profile='pilot # bounded trial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 342, in test_trailing_profile_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trailing_profile_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_profile_comment_does_not_bypass_the_proof_check) (profile="'pilot' # trial")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 342, in test_trailing_profile_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trailing_profile_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_profile_comment_does_not_bypass_the_proof_check) (profile='"pilot" # trial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 342, in test_trailing_profile_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trailing_status_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_status_comment_does_not_bypass_the_proof_check) (stage='ideation # ready for review')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 335, in test_trailing_status_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trailing_status_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_status_comment_does_not_bypass_the_proof_check) (stage="'ideation' # review")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 335, in test_trailing_status_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trailing_status_comment_does_not_bypass_the_proof_check (test_design_surfaces.PilotProofTests.test_trailing_status_comment_does_not_bypass_the_proof_check) (stage='"ideation" # review')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 335, in test_trailing_status_comment_does_not_bypass_the_proof_check
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_trial_replays_refuse_only_the_missing_third_record (test_design_surfaces.PilotProofTests.test_trial_replays_refuse_only_the_missing_third_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 260, in test_trial_replays_refuse_only_the_missing_third_record
+    self.assertEqual(len(errors), 1, errors)
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1: provider offline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-2: provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='Not provable now: AC-1 provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n### Notes\n- AC-1: provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='```\n### Not provable now\n- AC-1: provider is unavailable offline.\n```')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-check-task-call/kc-dev-flow-2/scripts/test_design_surfaces.py", line 310, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.050s
+
+FAILED (failures=29)

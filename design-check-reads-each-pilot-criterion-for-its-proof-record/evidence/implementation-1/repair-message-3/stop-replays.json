@@ -1,0 +1,40 @@
+[
+  {
+    "variant": "base",
+    "fixture": "run1",
+    "command": "python3 -B <scratch>/base/kc-dev-flow-2/scripts/design_surfaces.py check <task>/evidence/ideation-1/fixtures/run1.md",
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "checks/stop-base-run1.log",
+    "proof_lines": []
+  },
+  {
+    "variant": "base",
+    "fixture": "run2",
+    "command": "python3 -B <scratch>/base/kc-dev-flow-2/scripts/design_surfaces.py check <task>/evidence/ideation-1/fixtures/run2.md",
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "checks/stop-base-run2.log",
+    "proof_lines": []
+  },
+  {
+    "variant": "candidate",
+    "fixture": "run1",
+    "command": "python3 -B <scratch>/final/kc-dev-flow-2/scripts/design_surfaces.py check <task>/evidence/ideation-1/fixtures/run1.md",
+    "exit": 1,
+    "expected_exit": 1,
+    "output": "checks/stop-candidate-run1.log",
+    "proof_lines": [
+      "run1.md: Pilot criterion AC-3 has no command, exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+    ]
+  },
+  {
+    "variant": "candidate",
+    "fixture": "run2",
+    "command": "python3 -B <scratch>/final/kc-dev-flow-2/scripts/design_surfaces.py check <task>/evidence/ideation-1/fixtures/run2.md",
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "checks/stop-candidate-run2.log",
+    "proof_lines": []
+  }
+]

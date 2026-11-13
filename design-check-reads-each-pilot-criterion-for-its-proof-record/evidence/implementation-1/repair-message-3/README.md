@@ -1,0 +1,11 @@
+# Declaration-coverage repair, implementation message 3
+
+The task is held by Captain amendment 1. The new product candidate is local only. This folder records checks that were already in progress when FO relayed the hold; it is not approval to publish or resume work.
+
+Commands and exact exits are in commands.json and acceptance.json. Replays use the retained evidence/ideation-1/fixtures. The 9dd03d805 regression uses its exported checker and the new candidate's test; eight failing subcases are expected. All mutation logs record failure at an assertion, rather than an import error. Code/test copies were cache-free and invoked with python3 -B.
+
+To reproduce, claim the original dispatch scratch using package scripts/scratch.py, export full trees at base, 9dd03d805 and the local candidate into base/, reference/ and final/ there, and recreate regression/ from reference/scripts with the candidate test. Resolve <worktree>, <task>, <package> and <scratch> in the commands before running them. run_checks.py and the evidence scripts are retained; suite-owned synthetic roots under /tmp/dev2 are permitted by FO and removed only by exact owned path (synthetic-cleanup.json). The unmodified stage suite uses SPACEDOCK_BIN=<home>/.local/bin/spacedock.
+
+Not archived (private): adopter inputs, their source paths/revisions and per-file results. Reproduce: obtain FO's source mapping, read the tracked flat and _archive/*.md files using git -C <authorized-source> archive HEAD into dispatch scratch, then run compare.py, compatibility.py and corpus.py on the copied sample. Retained source-N labels refer to the order in FO's five-checkout message; only counts are published. Use dev2 plus source-1 and source-3 for this sample; source-2 matches the same 155 total/113 Pilot counts and does not disambiguate the original source. No source matches the former 137-Pilot corpus. Source-3 now has 99 Pilot tasks versus the original 98; active ideation/proof refusal counts are now 1 versus the prior run's 2. No byte-identity claim is made for deleted earlier private samples.
+
+No repair for finding 1, new review, hosted CI, release or post-release observer run was started. PR text was not revised after the hold.

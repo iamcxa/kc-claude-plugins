@@ -331,3 +331,41 @@ This complete report supersedes the immediately preceding investigation report, 
 ## Held
 
 Reopen when: 五張內出現兩次以上再做結構化紀錄
+
+
+## Stage Report: implementation
+
+- DONE: Apply only the declaration-coverage repair authorized in implementation-1-message-3.
+  Candidate 4a07dc42fc5c613d1e2301e8350ec4e76bb2ba9d adds 38/removes 2 lines in the three approved files; proof_blocks visits every id the older collector recognises while fenced record payload remains excluded. Finding 1's recognition rule is unchanged (repair-message-3/scope-check.json).
+- DONE: Record all three candidates and their publication state under Captain amendment 1.
+  401fc60e5c69e6e9458f9c15f31b4527af417911: superseded initial local candidate; 9dd03d805d11c0c833699b1247fd11d99a74d52f: published head of PR #866, open Draft and held per FO; 4a07dc42fc5c613d1e2301e8350ec4e76bb2ba9d: completed declaration repair, local only and held. Base remains 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff.
+- DONE: AC-1 — rerun both Stop-condition designs and the unmodified baseline.
+  cases.py exits 0; direct replays give base 0/0, new candidate 1/0 naming only AC-3. Removing the exit requirement fails mutant-no-exit.log. Commands, exits and saved output paths: evidence/implementation-1/repair-message-3/acceptance.json, commands.json and stop-replays.json.
+- DONE: AC-2 — rerun the recorded edge cases and their falsifiers.
+  All ten cases pass; falsifier-counts, bare-id-reason, no-heading-boundary and inline-unprovable mutants exit 1 with assertion failures. These checks catch records borrowed from a falsifier and unreasoned exceptions (cases/cases.json; mutations.json).
+- DONE: AC-3 — complete the already-started 501-task comparison in both modes on the new candidate.
+  1,002 mode runs match 9dd03d805 in output and exit; zero recognised criterion ids remain unvisited. Against base, proof diagnostics affect 12/7/1 tasks, exits change 1/0/0, seed mode is unchanged and approved/archive proof refusals are zero (corpus-comparison.json; compatibility.json; corpus.json). This run finished before the hold arrived.
+- SKIPPED: AC-3 — reproduce unavailable original corpus coverage.
+  Available counts are 246/155/100 total and 236/113/99 Pilot; source-1 and source-2 both match 155/113, so the original 113 source remains ambiguous; source-3 was 98 and is now 99 Pilot, with active proof refusals now 1 versus the prior 2. No supplied source matches the former 137-Pilot corpus. Private paths, tasks, source revisions and per-file results are not archived; README.md gives the read-only reproduction.
+- DONE: AC-4 — pass both design-check suites and fail the new test on the preceding candidate.
+  Design suite: 249 tests, 4 skipped; real SD dispatch harness: exit 0. On 9dd03d805, the new test fails in eight declaration-placement/record-borrowing subcases; on the candidate it passes. Removing the proof call is caught by mutant-no-check-task-call.log (tests.json; checks/regression.log).
+- DONE: AC-5 — preserve workflow words and rerun the other named suites already in hand.
+  Lint reports 6099/6099; workflow bytes match base. Dispatch records 136 tests (1 skipped), laws 85 (1 skipped), unmodified dispatch stage 52 (none skipped), all pass. The 6100-word mutation exits 1. The older base failure omitted SPACEDOCK_BIN; this run uses /Users/kent/.local/bin/spacedock (commands.json; word-budget-mutation.json).
+- SKIPPED: AC-6 and its post-release falsifier.
+  Not provable now: a real historical-briefing observer report requires the first archive after release. The task is held; no release or observer run was attempted.
+- DONE: Rerun required tooling and executable falsifiers.
+  All 13 guard mutants are caught. Repository skill lint, installed ADR lint (77 files, 0 legacy), fresh-ref number guards, comment ratio (235 code/0 comments; 0%, maximum 5%) and installed/candidate task checks exit 0. The first sandboxed number check could not refresh refs; the authorized rerun refreshed them without that warning (checks/).
+- DONE: Disposition every doc_impact.py result without expanding the repair.
+  ADRs 0041/0057/0064/0076/0077 remain unaffected: seed admission, shared amendment reader, review wording, story binding and budget parsing are unchanged. Package README/adoption and learning.md remain unaffected: CLI coverage, synthetic handoff limits and parser/corpus guidance still hold. No version, workflow, ADR or observer text changed in this repair.
+- DONE: Preserve earlier bounded repairs and identify sibling overlap.
+  The new-guard profile/status repair remains; five older status consumers remain untouched and listed in the earlier evidence. The budget sibling meets the same test_sd_dispatch.py criteria-parity fixture, now its fenced-declaration string; no additional shared product-code file was introduced.
+- SKIPPED: Finding 1 repair, further repair, any push, PR-text revision, RoboRev, hosted CI, ready or merge.
+  Captain amendment 1 holds the task and PR #866 stays open Draft. No product or state push was performed in this follow-up; CI cost remains unmeasured and no CI configuration changed. Evidence is copied to shared task storage and committed locally for FO.
+- DONE: Retain public evidence/counts only and close the original dispatch scratch.
+  The stage suite left one owned synthetic root, dispatch-code-3a930128248e8b12 (4 files), removed by exact verified path; the SD suite left zero, and no unrelated root was touched (synthetic-cleanup.json).
+  Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/design-check-reads-each-pilot-criterion-for-its-proof-record/implementation-1 (186625393 bytes)
+  Evidence: evidence/implementation-1/ (304 files, 475.5 KiB)
+
+### Summary
+
+This complete report supersedes the earlier implementation reports: the declaration-coverage repair is complete and locally committed, while the task and published PR remain held by Captain amendment 1. It records all three candidates without promoting the local repair to the published head; finding 1, future Pilot-design measurements and any decision to replace recognition with structured records remain with the Captain and FO.

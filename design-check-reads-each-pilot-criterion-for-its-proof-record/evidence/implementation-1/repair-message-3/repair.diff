@@ -1,0 +1,77 @@
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index aa9d17f51..9086b6020 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -215,11 +215,31 @@ def unprovable_entries(lines):
+     return named
+ 
+ 
++def proof_blocks(lines):
++    kept, inside = [], False
++    for line in lines:
++        if FENCE.match(line):
++            inside = not inside
++            kept.append(" ".join(m.group(0) for m in AC_DECLARATION.finditer(line)))
++        elif inside:
++            kept.append(" ".join(m.group(0) for m in AC_DECLARATION.finditer(line)))
++        else:
++            kept.append(line)
++    text = "\n".join(kept)
++    found = list(AC_DECLARATION.finditer(text))
++    blocks = {}
++    for index, declaration in enumerate(found):
++        tail = text[declaration.end():found[index + 1].start() if index + 1 < len(found) else len(text)]
++        tail = re.split(r"\n[ \t]*#{1,6}(?:[ \t]+|$)", tail, maxsplit=1)[0]
++        blocks[declaration.group(1)] = declaration.group(0) + tail
++    return blocks
++
++
+ def proof_gaps(lines):
+     body = section(lines, AC_HEADING) or []
+     unprovable = unprovable_entries(lines)
+     gaps = []
+-    for key, block in criterion_blocks(unfenced(body)).items():
++    for key, block in proof_blocks(body).items():
+         claim = FALSIFIER_PART.sub(" ", block)
+         missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
+                    if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index b87ea801e..baf2439aa 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -261,6 +261,22 @@ class PilotProofTests(unittest.TestCase):
+         self.assertIn("Pilot criterion AC-3 has no command, exit", errors[0])
+         self.assertEqual(self.check(self.REPLAYS[1]), [])
+ 
++    def test_each_declared_id_gets_a_proof_check(self):
++        cases = [("prefix **AC-1** missing", "AC-1"),
++                 ("| **AC-1** | missing |", "AC-1"),
++                 ("### **AC-1** missing", "AC-1"),
++                 ("• **AC-1** missing", "AC-1"),
++                 ("``` **AC-1**\n", "AC-1"),
++                 ("```\n**AC-1** missing\n```", "AC-1"),
++                 (self.RECORD + " **AC-2** missing", "AC-2"),
++                 ("**AC-1** missing " + self.RECORD.replace("AC-1", "AC-2"), "AC-1")]
++        for body, key in cases:
++            with self.subTest(body=body):
++                errors = self.check(body)
++                self.assertEqual(len(errors), 1, errors)
++                self.assertIn("Pilot criterion " + key, errors[0])
++        self.assertEqual(self.check("prefix " + self.RECORD), [])
++
+     def test_each_record_field_is_required(self):
+         for old, new, field in (("Evidence command: `python3 check.py`", "Evidence: inspected", "command"),
+                                 ("exit 0", "completed", "exit"),
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index b359b0fe2..8484176f4 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -1016,7 +1016,7 @@ def exercise(base, binary, sd_root):
+                 ("two spaces inside", "\n## Acceptance  criteria\n**AC-1**: x\n", False),
+                 ("labelled", "\n## Acceptance criteria\n**AC-1 (VALUE)**: x\n", True),
+                 ("valid", "\n## Acceptance criteria\n**AC-1**: x\nVerified by: y\n", True),
+-                ("fenced declaration", "\n## Acceptance criteria\n```\n**AC-1**: x\n```\n", True)):
++                ("fenced declaration", "\n## Acceptance criteria\n```\n**AC-1**: x\n```\nEvidence command: `python3 check.py`; exit 0; `evidence/result.log`.\n", True)):
+             ids, checked = parity(body)
+             assert bool(ids) == has_criterion, (label, ids)
+             assert (checked.returncode == 0) == has_criterion, (label, checked.stdout)

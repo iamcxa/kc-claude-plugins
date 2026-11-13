@@ -1,0 +1,179 @@
+{
+  "candidate": "4a07dc42fc5c613d1e2301e8350ec4e76bb2ba9d",
+  "criteria": [
+    {
+      "id": "AC-1",
+      "status": "passed",
+      "extra": "stop-replays.json",
+      "falsifiers": [
+        "checks/mutant-no-exit.log"
+      ],
+      "runs": [
+        {
+          "name": "cases",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <scratch>/cases.py <worktree>/kc-dev-flow-2/scripts/design_surfaces.py <task>/evidence/ideation-1/fixtures/run1.md <task>/evidence/ideation-1/fixtures/run2.md <scratch>/cases",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/cases.log"
+        }
+      ]
+    },
+    {
+      "id": "AC-2",
+      "status": "passed",
+      "falsifiers": [
+        "checks/mutant-falsifier-counts.log",
+        "checks/mutant-bare-id-reason.log",
+        "checks/mutant-no-heading-boundary.log",
+        "checks/mutant-inline-unprovable.log"
+      ],
+      "runs": [
+        {
+          "name": "cases",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <scratch>/cases.py <worktree>/kc-dev-flow-2/scripts/design_surfaces.py <task>/evidence/ideation-1/fixtures/run1.md <task>/evidence/ideation-1/fixtures/run2.md <scratch>/cases",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/cases.log"
+        },
+        {
+          "name": "design-suite",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/design-suite.log"
+        },
+        {
+          "name": "mutations",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <scratch>/mutations.py <worktree> <scratch>",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/mutations.log"
+        }
+      ]
+    },
+    {
+      "id": "AC-3",
+      "status": "partial",
+      "falsifiers": [
+        "checks/mutant-all-stages.log",
+        "checks/mutant-all-profiles.log",
+        "checks/mutant-no-approval-exemption.log"
+      ],
+      "limit": "501 available tasks, both modes; original fourth 137-Pilot corpus not located, 113-Pilot source identity ambiguous, prior 98 now 99. Raw private inputs were deleted after prior runs, so byte identity is not claimed.",
+      "runs": [
+        {
+          "name": "comparison",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/compare.py",
+          "exit": 0,
+          "output": "checks/comparison.log"
+        },
+        {
+          "name": "compatibility",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/compatibility.py <worktree> <scratch>",
+          "exit": 0,
+          "output": "checks/compatibility.log"
+        },
+        {
+          "name": "corpus",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/corpus.py <scratch>/final/kc-dev-flow-2/scripts/design_surfaces.py <scratch>/corpus.json dev2=<scratch>/corpora/dev2 adopter-1=<scratch>/corpora/adopter-1 adopter-2=<scratch>/corpora/adopter-2",
+          "exit": 0,
+          "output": "checks/corpus.log"
+        },
+        {
+          "name": "cases",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <scratch>/cases.py <worktree>/kc-dev-flow-2/scripts/design_surfaces.py <task>/evidence/ideation-1/fixtures/run1.md <task>/evidence/ideation-1/fixtures/run2.md <scratch>/cases",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/cases.log"
+        }
+      ]
+    },
+    {
+      "id": "AC-4",
+      "status": "passed",
+      "falsifiers": [
+        "checks/mutant-no-check-task-call.log"
+      ],
+      "note": "regression expected exit 1 on unchanged 9dd03d805; 8 subcases fail",
+      "runs": [
+        {
+          "name": "design-suite",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/design-suite.log"
+        },
+        {
+          "name": "sd-dispatch",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <home>/.codex/plugins/cache/spacedock/spacedock/0.28.0",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/sd-dispatch.log"
+        },
+        {
+          "name": "regression",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s <scratch>/regression/kc-dev-flow-2/scripts -p test_design_surfaces.py -k test_each_declared_id_gets_a_proof_check",
+          "cwd": "<worktree>",
+          "exit": 1,
+          "expected_exit": 1,
+          "output": "checks/regression.log"
+        }
+      ]
+    },
+    {
+      "id": "AC-5",
+      "status": "passed locally",
+      "falsifiers": [
+        "checks/mutant-word-budget.log"
+      ],
+      "limit": "Hosted CI not rerun; old base failure omitted SPACEDOCK_BIN.",
+      "runs": [
+        {
+          "name": "lint-skills",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/lint-skills.log"
+        },
+        {
+          "name": "records-suite",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/records-suite.log"
+        },
+        {
+          "name": "laws-suite",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/laws-suite.log"
+        },
+        {
+          "name": "dispatch-stage",
+          "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_dispatch_stage.py",
+          "cwd": "<worktree>",
+          "exit": 0,
+          "expected_exit": 0,
+          "output": "checks/dispatch-stage.log"
+        }
+      ]
+    },
+    {
+      "id": "AC-6",
+      "status": "not provable now",
+      "reason": "The real historical-briefing observer report requires the first archive after release. Task is now held; post-release falsifier not run.",
+      "runs": []
+    }
+  ]
+}

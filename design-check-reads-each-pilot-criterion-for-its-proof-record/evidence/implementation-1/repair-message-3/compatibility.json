@@ -1,0 +1,56 @@
+{
+  "adopter-1 check": {
+    "tasks": 155,
+    "changed": 7,
+    "exit_changed": 0,
+    "proof_refusals": 7,
+    "approved": 106,
+    "archived": 88,
+    "unexpected": 0
+  },
+  "adopter-1 check --seed": {
+    "tasks": 155,
+    "changed": 0,
+    "exit_changed": 0,
+    "proof_refusals": 0,
+    "approved": 106,
+    "archived": 88,
+    "unexpected": 0
+  },
+  "adopter-2 check": {
+    "tasks": 100,
+    "changed": 1,
+    "exit_changed": 0,
+    "proof_refusals": 1,
+    "approved": 82,
+    "archived": 83,
+    "unexpected": 0
+  },
+  "adopter-2 check --seed": {
+    "tasks": 100,
+    "changed": 0,
+    "exit_changed": 0,
+    "proof_refusals": 0,
+    "approved": 82,
+    "archived": 83,
+    "unexpected": 0
+  },
+  "dev2 check": {
+    "tasks": 246,
+    "changed": 12,
+    "exit_changed": 1,
+    "proof_refusals": 12,
+    "approved": 152,
+    "archived": 167,
+    "unexpected": 0
+  },
+  "dev2 check --seed": {
+    "tasks": 246,
+    "changed": 0,
+    "exit_changed": 0,
+    "proof_refusals": 0,
+    "approved": 152,
+    "archived": 167,
+    "unexpected": 0
+  }
+}

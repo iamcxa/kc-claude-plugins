@@ -1,0 +1,23 @@
+[
+  {
+    "suite": "dispatch-stage",
+    "exit": 0,
+    "left_after_suite": 1,
+    "roots": [
+      {
+        "root": "dispatch-code-3a930128248e8b12",
+        "files": 4,
+        "ownership_verified": true,
+        "removed": true
+      }
+    ],
+    "remaining": []
+  },
+  {
+    "suite": "sd-dispatch",
+    "exit": 0,
+    "left_after_suite": 0,
+    "roots": [],
+    "remaining": []
+  }
+]

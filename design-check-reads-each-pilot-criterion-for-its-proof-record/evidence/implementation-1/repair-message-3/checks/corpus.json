@@ -1,0 +1,6 @@
+{
+  "name": "corpus",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/corpus.py <scratch>/final/kc-dev-flow-2/scripts/design_surfaces.py <scratch>/corpus.json dev2=<scratch>/corpora/dev2 adopter-1=<scratch>/corpora/adopter-1 adopter-2=<scratch>/corpora/adopter-2",
+  "exit": 0,
+  "output": "checks/corpus.log"
+}

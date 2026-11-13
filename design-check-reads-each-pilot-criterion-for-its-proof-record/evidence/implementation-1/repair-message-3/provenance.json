@@ -1,0 +1,15 @@
+{
+  "start": "2026-11-13 20:16:48 Asia/Taipei",
+  "time_source": "clock.curr_time UTC +08:00",
+  "base": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "initial_candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+  "published_candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
+  "candidate": "4a07dc42fc5c613d1e2301e8350ec4e76bb2ba9d",
+  "branch": "spacedock-ensign/design-check-reads-each-pilot-criterion-for-its-proof-record",
+  "python": "3.11.14",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "spacedock_plugin": "0.28.0",
+  "product_push": "not performed",
+  "state_push": "not performed; latest FO hold instruction",
+  "held": "Captain amendment 1; PR 866 remains open Draft by FO report"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "compatibility",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/compatibility.py <worktree> <scratch>",
+  "exit": 0,
+  "output": "checks/compatibility.log"
+}

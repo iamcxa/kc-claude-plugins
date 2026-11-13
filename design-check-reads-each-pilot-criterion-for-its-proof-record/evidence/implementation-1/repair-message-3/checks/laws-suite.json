@@ -1,0 +1,8 @@
+{
+  "name": "laws-suite",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py",
+  "cwd": "<worktree>",
+  "exit": 0,
+  "expected_exit": 0,
+  "output": "checks/laws-suite.log"
+}

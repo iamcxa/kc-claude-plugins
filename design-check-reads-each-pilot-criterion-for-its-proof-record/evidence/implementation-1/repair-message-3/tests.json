@@ -1,0 +1,32 @@
+[
+  {
+    "name": "design-suite",
+    "status": "passed",
+    "message": "249 tests; 4 skipped",
+    "file": "checks/design-suite.log"
+  },
+  {
+    "name": "records-suite",
+    "status": "passed",
+    "message": "136 tests; 1 skipped",
+    "file": "checks/records-suite.log"
+  },
+  {
+    "name": "laws-suite",
+    "status": "passed",
+    "message": "85 tests; 1 skipped",
+    "file": "checks/laws-suite.log"
+  },
+  {
+    "name": "dispatch-stage",
+    "status": "passed",
+    "message": "52 tests; 0 skipped",
+    "file": "checks/dispatch-stage.log"
+  },
+  {
+    "name": "real SD dispatch harness",
+    "status": "passed",
+    "message": "Unmodified harness; CLI 0.27.2/plugin 0.28.0",
+    "file": "checks/sd-dispatch.log"
+  }
+]

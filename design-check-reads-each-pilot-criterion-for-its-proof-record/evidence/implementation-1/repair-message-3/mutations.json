@@ -1,0 +1,80 @@
+[
+  {
+    "name": "no-exit",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-exit.log"
+  },
+  {
+    "name": "no-command",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-command.log"
+  },
+  {
+    "name": "no-path",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-path.log"
+  },
+  {
+    "name": "falsifier-counts",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-falsifier-counts.log"
+  },
+  {
+    "name": "bare-id-reason",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-bare-id-reason.log"
+  },
+  {
+    "name": "no-heading-boundary",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-heading-boundary.log"
+  },
+  {
+    "name": "inline-unprovable",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-inline-unprovable.log"
+  },
+  {
+    "name": "all-stages",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-all-stages.log"
+  },
+  {
+    "name": "all-profiles",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-all-profiles.log"
+  },
+  {
+    "name": "no-approval-exemption",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-approval-exemption.log"
+  },
+  {
+    "name": "no-check-task-call",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-check-task-call.log"
+  },
+  {
+    "name": "no-status-comments",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-status-comments.log"
+  },
+  {
+    "name": "no-profile-comments",
+    "exit": 1,
+    "killed": true,
+    "output": "checks/mutant-no-profile-comments.log"
+  }
+]

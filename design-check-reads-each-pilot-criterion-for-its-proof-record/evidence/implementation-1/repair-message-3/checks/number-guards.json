@@ -1,0 +1,8 @@
+{
+  "name": "number-guards",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <package>/scripts/number_guards.py check --workflow-dir <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task <task>.md",
+  "cwd": "<worktree>",
+  "exit": 0,
+  "expected_exit": 0,
+  "output": "checks/number-guards.log"
+}

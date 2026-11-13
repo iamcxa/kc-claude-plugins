@@ -1,0 +1,37 @@
+.......FFFF......
+======================================================================
+FAIL: test_literal_hash_values_are_not_the_pilot_ideation_scalars (test_design_surfaces.PilotProofTests.test_literal_hash_values_are_not_the_pilot_ideation_scalars) (profile='pilot#trial', stage='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-profiles/kc-dev-flow-2/scripts/test_design_surfaces.py", line 349, in test_literal_hash_values_are_not_the_pilot_ideation_scalars
+    self.assertFalse(any("Pilot criterion" in error for error in
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_literal_hash_values_are_not_the_pilot_ideation_scalars (test_design_surfaces.PilotProofTests.test_literal_hash_values_are_not_the_pilot_ideation_scalars) (profile="'pilot#trial'", stage='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-profiles/kc-dev-flow-2/scripts/test_design_surfaces.py", line 349, in test_literal_hash_values_are_not_the_pilot_ideation_scalars
+    self.assertFalse(any("Pilot criterion" in error for error in
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_only_pilot_ideation_owes_records (test_design_surfaces.PilotProofTests.test_only_pilot_ideation_owes_records) (profile='poc', stage='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-profiles/kc-dev-flow-2/scripts/test_design_surfaces.py", line 322, in test_only_pilot_ideation_owes_records
+    self.assertFalse(any("Pilot criterion" in e for e in self.check(incomplete, profile=profile, stage=stage)))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_only_pilot_ideation_owes_records (test_design_surfaces.PilotProofTests.test_only_pilot_ideation_owes_records) (profile='prod', stage='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-profiles/kc-dev-flow-2/scripts/test_design_surfaces.py", line 322, in test_only_pilot_ideation_owes_records
+    self.assertFalse(any("Pilot criterion" in e for e in self.check(incomplete, profile=profile, stage=stage)))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.062s
+
+FAILED (failures=4)

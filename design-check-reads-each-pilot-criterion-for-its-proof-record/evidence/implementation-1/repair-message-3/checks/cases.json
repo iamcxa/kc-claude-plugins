@@ -1,0 +1,8 @@
+{
+  "name": "cases",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <scratch>/cases.py <worktree>/kc-dev-flow-2/scripts/design_surfaces.py <task>/evidence/ideation-1/fixtures/run1.md <task>/evidence/ideation-1/fixtures/run2.md <scratch>/cases",
+  "cwd": "<worktree>",
+  "exit": 0,
+  "expected_exit": 0,
+  "output": "checks/cases.log"
+}

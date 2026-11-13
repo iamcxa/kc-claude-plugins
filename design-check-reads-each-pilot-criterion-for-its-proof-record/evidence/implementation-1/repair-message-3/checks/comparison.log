@@ -1,0 +1,86 @@
+{
+  "adopter-1 check": {
+    "tasks": 155,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  },
+  "adopter-1 check --seed": {
+    "tasks": 155,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  },
+  "adopter-2 check": {
+    "tasks": 100,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  },
+  "adopter-2 check --seed": {
+    "tasks": 100,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  },
+  "dev2 check": {
+    "tasks": 246,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  },
+  "dev2 check --seed": {
+    "tasks": 246,
+    "unvisited_by_candidate": 0,
+    "variants": {
+      "final": {
+        "changed": 0,
+        "exit_changed": 0,
+        "refused_from_pass": 0,
+        "new_proof_lines": 0,
+        "approved_changes": 0,
+        "archived_changes": 0
+      }
+    }
+  }
+}

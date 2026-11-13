@@ -1,0 +1,8 @@
+{
+  "name": "regression",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B -m unittest discover -s <scratch>/regression/kc-dev-flow-2/scripts -p test_design_surfaces.py -k test_each_declared_id_gets_a_proof_check",
+  "cwd": "<worktree>",
+  "exit": 1,
+  "expected_exit": 1,
+  "output": "checks/regression.log"
+}

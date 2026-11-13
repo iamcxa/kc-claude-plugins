@@ -1,0 +1,13 @@
+no-exit 1 True
+no-command 1 True
+no-path 1 True
+falsifier-counts 1 True
+bare-id-reason 1 True
+no-heading-boundary 1 True
+inline-unprovable 1 True
+all-stages 1 True
+all-profiles 1 True
+no-approval-exemption 1 True
+no-check-task-call 1 True
+no-status-comments 1 True
+no-profile-comments 1 True

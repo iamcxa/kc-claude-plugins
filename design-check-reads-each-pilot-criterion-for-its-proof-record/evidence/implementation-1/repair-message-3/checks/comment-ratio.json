@@ -1,0 +1,8 @@
+{
+  "name": "comment-ratio",
+  "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B <package>/scripts/comment_ratio.py 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff HEAD --workflow-dir <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+  "cwd": "<worktree>",
+  "exit": 0,
+  "expected_exit": 0,
+  "output": "checks/comment-ratio.log"
+}

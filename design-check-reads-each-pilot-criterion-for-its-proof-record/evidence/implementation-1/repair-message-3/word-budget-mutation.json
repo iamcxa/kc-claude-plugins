@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "<worktree>/kc-dev-flow-2/scripts/lint-skills.py",
+    "--root",
+    "<scratch>/word-mutant"
+  ],
+  "exit": 1,
+  "killed": true,
+  "output": "checks/mutant-word-budget.log"
+}
