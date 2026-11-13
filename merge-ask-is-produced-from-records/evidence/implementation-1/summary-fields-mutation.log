@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_question_only_records_observed_facts_and_no_manual_summary (delivery_tests.ObservedFactsTests.test_question_only_records_observed_facts_and_no_manual_summary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3471, in test_question_only_records_observed_facts_and_no_manual_summary
+    self.assertEqual(code, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 0.261s
+
+FAILED (failures=1)

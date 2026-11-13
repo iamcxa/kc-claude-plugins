@@ -1,0 +1,63 @@
+{
+  "base": "bfc53d82510006b52baf41569c1e25176e99d87a",
+  "candidate": "4675077b582a0875a9ceec0f5e5dcf374da3578e",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "probe": "cb480964b2ade3e122d2b60bd42717474171b794",
+  "probe_branch_deleted": true,
+  "product_pushed": false,
+  "product_pr_opened": false,
+  "files": [
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "before": {
+        "lines": 636,
+        "words": 6099,
+        "sha256": "912c8133df2a838104e49cf0f4599520d31a0e6542f3df9628862d7732d34c7a"
+      },
+      "after": {
+        "lines": 635,
+        "words": 6069,
+        "sha256": "b29ce21d57ff3aa3a8e81aacf4b456419d69f0e8786044ccd4b5b10d5ec09069"
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "before": {
+        "lines": 1239,
+        "words": 7298,
+        "sha256": "bc9f97f228dbd51c40d504f43526787ee2f7432040129bbbe2b64dc9d7dc845f"
+      },
+      "after": {
+        "lines": 1429,
+        "words": 8452,
+        "sha256": "b1ba69f26d249795bac97a37f1d2462fff93b17eee12549687943b2c6fa2bf57"
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/lint-skills.py",
+      "before": {
+        "lines": 371,
+        "words": 2569,
+        "sha256": "443a55da2e7d933796dfbe711a9eb99dbfbc38bf4f61306209914bb9b2dabf17"
+      },
+      "after": {
+        "lines": 372,
+        "words": 2579,
+        "sha256": "4f8a8ca2a9d7ab3089222c5b9924a366ff1ce8153b3fbd8fb56f41e5582ed7c9"
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "before": {
+        "lines": 3428,
+        "words": 16707,
+        "sha256": "3cc54be60027e538347e9e130aa1ac175b527ef6ab768e2b376f59d73f2f0065"
+      },
+      "after": {
+        "lines": 3520,
+        "words": 17072,
+        "sha256": "f3d3246e213b5b6f0a5b53cae3afe5f3b5581dfc7ab91bb9164f9d9cbc2a4147"
+      }
+    }
+  ]
+}

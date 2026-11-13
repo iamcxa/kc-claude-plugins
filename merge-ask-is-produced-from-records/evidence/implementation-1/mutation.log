@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_recorded_local_jobs_do_not_inflate_three_real_round_counts (delivery_tests.ObservedFactsTests.test_recorded_local_jobs_do_not_inflate_three_real_round_counts) (pr=854)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3515, in test_recorded_local_jobs_do_not_inflate_three_real_round_counts
+    self.assertEqual(gate.saved_rounds(task, rows), len(ids))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 3 != 2
+
+======================================================================
+FAIL: test_recorded_local_jobs_do_not_inflate_three_real_round_counts (delivery_tests.ObservedFactsTests.test_recorded_local_jobs_do_not_inflate_three_real_round_counts) (pr=856)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3515, in test_recorded_local_jobs_do_not_inflate_three_real_round_counts
+    self.assertEqual(gate.saved_rounds(task, rows), len(ids))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_recorded_local_jobs_do_not_inflate_three_real_round_counts (delivery_tests.ObservedFactsTests.test_recorded_local_jobs_do_not_inflate_three_real_round_counts) (pr=861)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3515, in test_recorded_local_jobs_do_not_inflate_three_real_round_counts
+    self.assertEqual(gate.saved_rounds(task, rows), len(ids))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=3)

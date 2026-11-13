@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_record_route_checks_steps_not_just_candidate_header (test_delivery_gate.ObservedFactsTests.test_record_route_checks_steps_not_just_candidate_header)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3443, in test_record_route_checks_steps_not_just_candidate_header
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct (test_delivery_gate.ObservedFactsTests.test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct) (outcome='pending')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3458, in test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct
+    self.assertEqual(code, expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct (test_delivery_gate.ObservedFactsTests.test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct) (outcome='error')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3458, in test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct
+    self.assertEqual(code, expected)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.728s
+
+FAILED (failures=3)

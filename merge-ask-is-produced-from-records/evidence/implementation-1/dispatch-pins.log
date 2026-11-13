@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/dispatch_pin_check.py", line 11, in <module>
+    assert rows["candidate"]=={}, rows["candidate"]
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'readme-keeps-delivery-rules': (['Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask', 'as does a head other than the latest `Candidate:`'], [])}

@@ -1,0 +1,12 @@
+{
+  "base": {},
+  "candidate": {
+    "readme-keeps-delivery-rules": [
+      [
+        "Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask",
+        "as does a head other than the latest `Candidate:`"
+      ],
+      []
+    ]
+  }
+}

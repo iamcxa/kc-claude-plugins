@@ -1,0 +1,37 @@
+{
+  "state_commit": "c1993d8dc30ec22aeac688a3d4a116a8402acabf",
+  "inputs": [
+    {
+      "path": "_archive/design-surfaces-task-dir-crash.md",
+      "sha256": "8c460451e9db4ec153ddebcb68ed5ed27ecd00336777fc8ee88f32edcfc6afb9"
+    },
+    {
+      "path": "_archive/design-surfaces-task-dir-crash/dispatch/validation-1.md",
+      "sha256": "a388f4d0674608db4f62bb80f266ced4b759c0bcb657775caf1cbc925cdaa436"
+    },
+    {
+      "path": "_archive/design-surfaces-task-dir-crash/captain-steps/1.md",
+      "sha256": "479203fc57c7708e8b0c27f75ce2655b7b5b3c598a133b2921fd02de09305d1b"
+    },
+    {
+      "path": "_archive/held-and-closed-tasks-leave-the-design-queue.md",
+      "sha256": "a6a6ba27410b81315125ee475b2c854412d6a9c8fc59ffc2080ba4e3118505ed"
+    },
+    {
+      "path": "_archive/held-and-closed-tasks-leave-the-design-queue/dispatch/validation-1.md",
+      "sha256": "674d63b7e694f1fdce3fa3fa392adf012989e027cec432b969185b3171069c6b"
+    },
+    {
+      "path": "_archive/held-and-closed-tasks-leave-the-design-queue/dispatch/validation-2.md",
+      "sha256": "6805d811554e5da0b0c9545bb754c3eadca95acda9e74340d6fdf5cbeb33464c"
+    },
+    {
+      "path": "_archive/held-and-closed-tasks-leave-the-design-queue/dispatch/validation-3.md",
+      "sha256": "760a10a23f645dae28159a5393a7be88d69b3167f085ebc2b0c68dcc69a60c57"
+    },
+    {
+      "path": "_archive/held-and-closed-tasks-leave-the-design-queue/captain-steps/1.md",
+      "sha256": "b19a52e4f9bd5ddd92175783b68fb57bef5753728b81a3ac7b3dadd799ec6147"
+    }
+  ]
+}

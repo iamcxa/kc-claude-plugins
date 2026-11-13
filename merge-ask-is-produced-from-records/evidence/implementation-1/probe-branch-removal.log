@@ -1,0 +1,1 @@
+error: could not delete reference refs/heads/poc/merge-ask-is-produced-from-records: cannot lock ref 'refs/heads/poc/merge-ask-is-produced-from-records': Unable to create '/Users/kent/Project/kc-claude-workspace/kc-claude-plugins/.git/refs/heads/poc/merge-ask-is-produced-from-records.lock': Operation not permitted

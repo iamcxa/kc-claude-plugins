@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "Workflow regression pins need fifth-file authorization",
+    "file": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "line": 241,
+    "detail": "The existing pin checker passes on base and fails on candidate because it requires the removed handwritten-summary command and Candidate clause. The native assertion at line 1302 uses the same function.",
+    "fix": "Authorize updating the recipe pins and reverse mutations, then rerun the native dispatch suite.",
+    "status": "open"
+  }
+]

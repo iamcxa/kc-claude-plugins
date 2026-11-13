@@ -304,3 +304,46 @@ Evidence: evidence/ideation-1-message-1/ (54 files, 108.4 KiB)
 ### Round 2
 
 Start: 2026-11-13 22:18:59 Asia/Taipei; probe/design end: 2026-11-13 22:54:43 Asia/Taipei. Time source: clock.curr_time UTC observations +08:00. Initial base: 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff; integrated main: bfc53d825; probe: cb480964b2ade3e122d2b60bd42717474171b794. Fired: stored observation data, already approved by amendment 1; existing-auth read-only public GitHub calls, expressly permitted by this dispatch; temporary-placement deviation in two auto-cleaned verifier runs, recorded and corrected for cited final tests. None: a newly overturned premise, a new Captain-only outcome/trade-off, an undefined component contract left in the proposed route, production-data/credential provisioning, broad exposure, migration, unattended operation, support/release/rollback duty, screen change, fifth product file or budget expansion. The live eligible route and broader validation remain Not provable now under AC-6, not silently passed. This is the second design round; a third requires returning to the Captain.
+
+
+## Stage Report: implementation
+
+- FAILED: Complete the approved integrated design and acceptance criteria within the four product files; stop if a fifth file, ADR or budget raise is needed.
+  Held at local candidate 4675077b582a0875a9ceec0f5e5dcf374da3578e: test_sd_dispatch.py:241-244 still pins the removed summary command and Candidate clause; its real fix_gaps/pinned_texts check passes on base and exits 1 on candidate (evidence/implementation-1/dispatch-pins.json). Updating its pins and reverse mutations needs fifth-file authorization; that file is untouched.
+- DONE: Build the round-2 removal under Captain amendment 1, retaining the legacy summary route and counting saved external verdicts by the design's rule.
+  The new check --record-facts and question --facts-record save/bind facts without a factual summary. Legacy check without --record-facts and question without --facts-record retain their combined-text checks and optional --summary-file checks. Distinct saved PR verdict identities exclude local jobs/non-verdicts; rounds.json reproduces 4→2, 3→1 and 3→1, with historical identities qualified as FO-recorded fixtures.
+- DONE: Start from the local probe, carry Pilot-worthy parts, rewrite deficiencies and delete its branch after committing the candidate.
+  Probe cb480964b was reused; observed empty-step, conditional-second-reviewer and reader-error failures were repaired in the permitted files (probe-defects.log). The candidate requires step coverage and matching candidate, preserves optional untriggered reviewers, and holds unreadable readers. Probe branch deletion is in probe-branch-removal-retry.log; its patch/identity are retained.
+- FAILED: Every acceptance criterion green with the evidence it names.
+  AC-6's question-only record path passes two public archive-input replays and a live observation saves its real hold; the integration remains held by the fifth-file regression. The full native dispatch suite and whole-package validation are not claimed passed. No fifth file, ADR or budget raise was added.
+- DONE: Rerun AC-6 evidence on the candidate with command, exit and output; show each falsifier failing with mutations, python3 -B and cleared caches.
+  criterion-commands.json and final-checks.json record the runs. Restoring manual summary requirements fails the question-only test; local-job eligibility fails all three inventories; a held ask filename fails the consumer-boundary regression; changing dispatch heads refuses both prior joins. cache-clear.json, candidate-mutations.json, mutation.json and goal-check.json retain the failures and base controls.
+- DONE: Exercise persistence, native binding and actual read-only external seams without overstating them.
+  Both archived task/report/dispatch replays pass check/question/isolated native prepare with unchanged question and JSON digests (replays.json); fresh report-reading Captain-step fixtures replace stale archived paths, without executing historical acceptance. Live check=1/question=1 saves observation-N.json; its separate direct prepare=0 proves transport only, not a valid preflight (live.json).
+- DONE: Run the repository lint and required installed ADR lint, number guards and comment-ratio checks, with exact base/candidate evidence.
+  Base bfc53d82510006b52baf41569c1e25176e99d87a; candidate 4675077b582a0875a9ceec0f5e5dcf374da3578e. final-checks.json records exits 0, including role triggers/design surfaces; comment-ratio-final.log: code lines 291, comment lines 0, 0.0%; maximum 5% met. Workflow is 6099→6069 words with the matching −30 budget step; 6071 in the dispatch/gate reason is the earlier probe figure, not the approved final design count.
+- DONE: Run relevant tests and retain evidence of what would falsify their claims.
+  Delivery suite: 235 tests, one optional committed gate-presentation replay skipped; 64 lint/merge-audit tests, 36 Codex-adapter tests and 15 Copilot-adapter tests pass. Missing step observations and erroneous reviewer outcomes fail the added regressions before repair. unittest imports test_sd_dispatch but executes no native main; the separately run pin helper fails as reported, so it is not hidden behind the green unit count (test-results.json).
+- DONE: Review affected documents and existing contracts, retaining ownership and boundaries.
+  doc-impact-dispositions.json records all 18 listed documents as unaffected with reasons; the package workflow template is updated. Prior chain/consumer audit is reused; ADRs 0004/0013/0044/0051/0054/0062/0071/0078 were read, and the record route implements amendment 1 without rewriting historical rulings. Observer/disclosure applicability remains an explicit validation limit, not a certified compatibility result.
+- DONE: Commit locally without pushing and prepare Conventional Commit PR text for FO; no version bump.
+  Clean branch spacedock-ensign/merge-ask-is-produced-from-records at 4675077b582a0875a9ceec0f5e5dcf374da3578e; exactly the four named product paths, no product push and no PR. implementation/pr.md contains the title/body and scope hold; pr-status.json is empty.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads hosted CI.
+  No PR opened: no push grant. RoboRev not run: FO runs RoboRev after this report because Codex cannot reach its local daemon. Publication waits on the scope hold. No CI definition changed; CI cost per PR was not measured.
+- DONE: Retain public/count-only evidence, close the owned scratch root and path-scope the task state commit.
+  evidence/implementation-1/ retains 88 files, manifest and source/candidate hashes; implementation/close.txt has the exact required scratch close output below. The assigned product worktree remains clean for FO; unrelated shared-state changes are untouched. State commit/push follows this report.
+
+### Summary
+
+Held, with a reviewable four-file local commit and prepared PR text. The approved record route works in the bounded probes and the legacy suite passes, but the current native dispatch regression still requires removed workflow prose; authorize its fifth-file pin/mutation update before continuing. The Captain amendment and YAML frontmatter remain unchanged.
+
+Start: 2026-11-13 22:59:43 Asia/Taipei; implementation/check/cleanup end: 2026-11-13 23:19:50 Asia/Taipei. Time source: clock.curr_time UTC observations plus 08:00. State publication is subsequent close-out, not a gate or stage transition.
+
+Not provable now: green live delivery, full native/whole-package validation, every conditional reviewer/waiver/disposition path, full moved-trunk lifecycle, downstream observer/adopter compatibility, private-repository use, installed adoption, general secret classification, Mermaid rendering, total lifecycle reading and elapsed-time gains. The reported validation word and step observations are not authenticated execution. Legacy automatic count/claim disclosures remain; the new route leaves question bytes unchanged, and its applicability to historical disclosure/observer rules needs FO/validation review.
+
+Exact scratch close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1 (1358438 bytes)
+Evidence: evidence/implementation-1/ (88 files, 171.2 KiB)
+```

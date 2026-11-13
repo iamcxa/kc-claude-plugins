@@ -1,0 +1,14 @@
+[
+  {
+    "case": "replay-complete-design-surfaces-task-dir-crash",
+    "problems": [
+      "Captain steps record fails: step 1 S1: Asked text is not in the message"
+    ]
+  },
+  {
+    "case": "replay-complete-held-and-closed-tasks-leave-the-design-queue",
+    "problems": [
+      "Captain steps record fails: step 1 S1: Asked text is not in the message"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "mutation": "summary fields",
+    "detected": true,
+    "failures": 1,
+    "errors": 0,
+    "output": "summary-fields-mutation.log"
+  },
+  {
+    "mutation": "held ask filename",
+    "detected": true,
+    "failures": 1,
+    "errors": 0,
+    "output": "held-ask-filename-mutation.log"
+  },
+  {
+    "mutation": "dispatched head",
+    "case": "design-surfaces-task-dir-crash",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nfacts record cannot be bound: missing, changed or held evidence\n"
+  },
+  {
+    "mutation": "dispatched head",
+    "case": "held-and-closed-tasks-leave-the-design-queue",
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nfacts record cannot be bound: missing, changed or held evidence\n"
+  }
+]

@@ -1,0 +1,95 @@
+{
+  "documents": [
+    {
+      "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/delivery_gate.py"
+    },
+    {
+      "path": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+      "disposition": "unaffected: The historical decision and its original route are retained; no decision record was rewritten within this four-file scope.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/dev2-poc/README.md",
+      "disposition": "unaffected: This adopted workflow is not the package template; adoption/release remains outside this task.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "docs/dev2/README.md",
+      "disposition": "unaffected: This adopted workflow is not the package template; adoption/release remains outside this task.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "kc-dev-flow-2/README.md",
+      "disposition": "unaffected: The package overview does not prescribe the delivery command or summary fields.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+      "disposition": "unaffected: The budget and retention methodology remain unchanged; the candidate lowers the budget by the measured text reduction.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    },
+    {
+      "path": "learning.md",
+      "disposition": "unaffected: Project learning remains in force; the replay and consumer checks apply it without editing it.",
+      "trigger": "kc-dev-flow-2/scripts/lint-skills.py"
+    }
+  ],
+  "note": "The template is updated. ADR 0044/0051/0071 describe retained legacy behavior; Captain amendment 1 authorizes the opt-in replacement. Applicability of other historical disclosure/observer rules to the new route needs validation; no new ADR was authorized or added. The fifth-file regression hold prevents delivery."
+}

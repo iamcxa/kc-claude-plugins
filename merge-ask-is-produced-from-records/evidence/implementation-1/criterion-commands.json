@@ -1,0 +1,154 @@
+{
+  "criterion": "AC-6",
+  "outcome": "held: the fifth-file regression pin needs authorization",
+  "commands": [
+    {
+      "name": "delivery suite",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_delivery_gate"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "delivery-tests.log"
+    },
+    {
+      "name": "lint and merge audit suites",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_lint_skills",
+        "test_sd_dispatch",
+        "test_merge_audit"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "seam-tests.log"
+    },
+    {
+      "name": "codex adapter",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "kc-dev-flow-2/extensions/codex",
+        "-p",
+        "test_codex_review.py"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "codex-tests.log"
+    },
+    {
+      "name": "copilot adapter",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "kc-dev-flow-2/extensions/copilot",
+        "-p",
+        "test_copilot_review.py"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "copilot-tests.log"
+    },
+    {
+      "name": "archived replays",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "replay"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": "candidate-"
+      },
+      "exit": 0,
+      "output": "candidate-replay.log"
+    },
+    {
+      "name": "saved round inventories",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "rounds"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "rounds.log"
+    },
+    {
+      "name": "live public observation",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "live"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "live-retry.log"
+    },
+    {
+      "name": "base and round mutation",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/goal_and_mutation.py"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "goal-and-mutation.log"
+    },
+    {
+      "name": "summary, held filename, head mutations",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate_mutations.py"
+      ],
+      "environment": {
+        "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+        "PROBE_RUN": ""
+      },
+      "exit": 0,
+      "output": "candidate-mutations.log"
+    }
+  ],
+  "detail": "Live harness exit 0 validates an expected delivery hold: check=1, question=1; direct isolated native prepare=0 is transport only. unittest imports test_sd_dispatch but does not execute its native main. final-checks.json records the actual pin helper exit 1."
+}

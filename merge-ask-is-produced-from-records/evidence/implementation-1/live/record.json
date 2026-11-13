@@ -1,0 +1,127 @@
+{
+  "candidate": [
+    "6c177946971a6a1d0adbd373616f9233cb609388"
+  ],
+  "captain_steps": null,
+  "ci": [
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    },
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    },
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    },
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    },
+    {
+      "conclusion": "SKIPPED",
+      "state": null,
+      "status": "COMPLETED"
+    },
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    }
+  ],
+  "external_rounds": 0,
+  "head": "6c177946971a6a1d0adbd373616f9233cb609388",
+  "merge_result": null,
+  "pr": "iamcxa/kc-claude-plugins#865",
+  "pr_state": {
+    "baseRefName": "main",
+    "isDraft": false,
+    "mergeable": "MERGEABLE"
+  },
+  "public": true,
+  "question_sha256": "c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1",
+  "required_checks": [
+    {
+      "bucket": "pass"
+    },
+    {
+      "bucket": "pass"
+    }
+  ],
+  "result": {
+    "exit": 1,
+    "problems": 2,
+    "unreadable": 0
+  },
+  "reviewers": [
+    {
+      "evidence": null,
+      "exit": 4,
+      "head": "6c177946971a6a1d0adbd373616f9233cb609388",
+      "outcome": "pending",
+      "reviewer": "codex",
+      "scope": "pr"
+    },
+    {
+      "evidence": null,
+      "exit": 4,
+      "head": "6c177946971a6a1d0adbd373616f9233cb609388",
+      "outcome": "pending",
+      "reviewer": "copilot",
+      "scope": "pr"
+    },
+    {
+      "evidence": null,
+      "head": "6c177946971a6a1d0adbd373616f9233cb609388",
+      "outcome": "not-observed",
+      "reviewer": "roborev",
+      "scope": "local"
+    }
+  ],
+  "role_calls": {
+    "exit": 0
+  },
+  "round_scope": "distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history",
+  "schema": "delivery-facts/v1",
+  "time": "2026-11-13T15:09:38Z",
+  "tool_version": "0.41.0",
+  "trunk": {
+    "head": "6c177946971a6a1d0adbd373616f9233cb609388",
+    "position": "ahead",
+    "trunk": "bfc53d82510006b52baf41569c1e25176e99d87a"
+  },
+  "validation": {
+    "dispatch": "validation-1.md",
+    "report_sha256": "b102613f332ae377168e551561f35ffc83b519d5b01549120fef5d1c6d455863",
+    "rounds": 1,
+    "verdict": "not-observed"
+  },
+  "workflow_runs": [
+    {
+      "conclusion": "success",
+      "id": 43442236572,
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 43442236128,
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 43442236654,
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "id": 43442236116,
+      "status": "completed"
+    }
+  ]
+}

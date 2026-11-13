@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Delivery gate (235 tests; 1 optional skip)",
+    "status": "passed",
+    "message": "Full unittest suite. No whole-package validation claim.",
+    "file": "delivery-tests.log"
+  },
+  {
+    "name": "Lint and merge audit (64 tests)",
+    "status": "passed",
+    "message": "test_sd_dispatch is an import-only script under unittest; its native main was not exercised.",
+    "file": "seam-tests.log"
+  },
+  {
+    "name": "Codex review adapter",
+    "status": "passed",
+    "message": "....................................\n----------------------------------------------------------------------\nRan 36 tests in 0.006s\n\nOK",
+    "file": "codex-tests.log"
+  },
+  {
+    "name": "Copilot review adapter",
+    "status": "passed",
+    "message": "...............\n----------------------------------------------------------------------\nRan 15 tests in 0.001s\n\nOK",
+    "file": "copilot-tests.log"
+  },
+  {
+    "name": "Dispatch recipe pins",
+    "status": "failed",
+    "message": "Base passes; candidate requires a fifth-file pin/mutation update. Direct call of existing fix_gaps/pinned_texts.",
+    "file": "dispatch-pins-final.log"
+  }
+]

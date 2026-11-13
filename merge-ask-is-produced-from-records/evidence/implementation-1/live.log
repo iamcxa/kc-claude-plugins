@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py", line 84, in <module>
+    {'replay':replay,'rounds':rounds,'live':live}[sys.argv[1]]()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py", line 69, in live
+    head=gate.run_gh('iamcxa/kc-claude-plugins','865')
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/delivery_gate.py", line 207, in run_gh
+    return json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid"))["headRefOid"]
+                      ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/delivery_gate.py", line 202, in gh
+    raise RuntimeError(f"gh {args[0]} {args[1]} exited {done.returncode}: {done.stderr.strip()}")
+RuntimeError: gh pr view exited 1: error connecting to api.github.com
+check your internet connection or https://githubstatus.com

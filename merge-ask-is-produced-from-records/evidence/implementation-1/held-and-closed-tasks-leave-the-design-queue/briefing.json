@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:task:validation:attempt-1:revision-1",
+  "question": "Review the saved validation report. Deliver the observed candidate? Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree, unless he says he merges or holds.\n",
+  "artifacts": [
+    {
+      "id": "artifact:task:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f121be37f7c8858e76511cba5b3f8c1d9df76db5/task.md",
+      "rev": "sha256:2744e6ce26a3416b330861855f91ddf345c5cb80bcf60779177f7440c13943eb",
+      "mediaType": "text/markdown",
+      "summary": "{\n  \"candidate\": [\n    \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/2.md\",\n    \"sha256\": \"ad924696f6ac36ddccb0fd6682a616727d639bdc5b1f0b6c36469f105c1f54aa\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#856\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"4d8d74f7d5783a51fc4cc7653f5b0fc25bfce201362d542df6e04091a0ee4a45\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6844239189@5859c3ccd\",\n      \"exit\": 0,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T15:07:18Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-3.md\",\n    \"report_sha256\": \"5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376\",\n    \"rounds\": 3,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:task:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/f121be37f7c8858e76511cba5b3f8c1d9df76db5/task/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:eb0cbfb025d8056d9f01f2c1a3114d0ca8477b133a68cab45eb4ccc61d223e3f"
+    }
+  ]
+}
