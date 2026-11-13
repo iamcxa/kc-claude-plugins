@@ -49,6 +49,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-12T17:02:57Z
+worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
 ---
 
 ## Scope
