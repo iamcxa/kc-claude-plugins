@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-question-outside-a-gate-is-an-open-record:validation:attempt-1:revision-1",
+  "question": "決定：合併 #870（FO 在關卡以外問你的每個問題都留一筆紀錄：誰在等、卡住什麼、選項和建議；你回答後記上你的原話；一個指令列出所有還在等你的事）嗎？建議合併。同意即接受：和主線上未發版的改動一起等下個版本，發版並同步之前這條規則不會生效；啟動時要讀的說明句從 25 個字變成 41 個字；Codex 對這一版有一個中等發現我婉拒在這張修：你的修正裡照抄的問題如果本身含有引號（例如「某某任務」），檢查只會比對第一段引號裡的字，會把合格的修正擋下來，我的問題幾乎都有引號所以發版後一定會遇到，我另開一張任務在發版前修掉；它經過一次退回和兩次驗證，預算已用完，要在這張修就得再加一次驗證；Copilot 因額度不足沒有審；還沒有任何真實問題用新格式記錄過，等待時間的計算只用模擬資料驗過。 Squash merge with --match-head-commit 0b620345b538b67f4c6522d8b97028038f1ec17d, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-question-outside-a-gate-is-an-open-record:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cabb09553a24df193e17bdd71fbcd51ddcb9793b/captain-question-outside-a-gate-is-an-open-record.md",
+      "rev": "sha256:3508d4aca733bf66a2ff2e4ac49d96f64981f96aa473a19489a8cc43b12bbabb",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 3\nDelivery of captain-question-outside-a-gate-is-an-open-record, PR #870, reform trial batch of 2026-11-14.\nSufficiency: an ask outside a gate is written as a record naming who waits, what it holds, options and recommendation; each later showing, answer or withdrawal is appended; the plain open list and its JSON form list what waits on the Captain together with unresolved gate attempts; legacy lines still read; an amendment whose question was never recorded is refused once the README sentence is adopted (validation-2 report, Astra, 2026-11-14, PASSED at 0b620345b; acceptance script run by FO 2026-11-14, exit 0).\nNecessity: the timeline helper, the design check, the question record contract, the workflow text, the lint budget, ADR 0086 and their tests change against the PR's base (gh pr view 870 file list, FO read 2026-11-14; judged in the validation reports, Astra, 2026-11-14).\nAcceptance, run by FO in a fresh shell 2026-11-14, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record/evidence/validation-2/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-14, exit 0: gh pr view 870 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: origin/main is 1c3e714ff, the commit this PR's branch was cut from, so no merge-result run is owed (git merge-base, FO run 2026-11-14).\nExternal rounds: 3.\nExternal round sources: RoboRev clean on 3d65ebd7a, evidence=roborev:1858 (FO run 2026-11-14); RoboRev clean on 0b620345b, evidence=roborev:1860 (FO run 2026-11-14); Codex review of 0b620345b left one P2 finding (codex_review.py, FO run 2026-11-14, evidence=review:5896362061).\nSecond reviewer: Copilot because the PR changes what FO must record when it asks the Captain, a consent record rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5896335615\nCopilot retry: available when the Captain confirms quota is back.\nCI: six checks on 0b620345b finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr checks, read by FO 2026-11-14).\nValidation rounds: 2. Round 1 REJECTED at 3d65ebd7a with F1, F2 and F3 Material, repaired by the implementation worker; round 2 PASSED at 0b620345b with no new finding.\nCaptain amendments: 1.\nFO declines Codex P2 Polish at 0b620345b: the omission check compares only the first quoted fragment of an amendment's Asked line when the question holds inner quotes (the rule is skipped until the adopted README carries the ask sentence, which needs a release and a sync; FO files a follow-up task to repair it before that release)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:captain-question-outside-a-gate-is-an-open-record:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/cabb09553a24df193e17bdd71fbcd51ddcb9793b/captain-question-outside-a-gate-is-an-open-record/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:21e68a25cc0780235aaa28fe6b08e3946d12305dbeb9c050b16ce2738cb111c0"
+    }
+  ]
+}

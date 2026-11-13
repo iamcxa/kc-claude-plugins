@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:captain-question-outside-a-gate-is-an-open-record:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:captain-question-outside-a-gate-is-an-open-record-validation-1
+              briefing:
+                id: briefing:captain-question-outside-a-gate-is-an-open-record:validation:attempt-1:revision-1
+                digest: sha256:dfd2947d34a060f97ce6be90e164b4b132d2dca3de9b42a258b39c3db6c33439
+                room-ref: ./captain-question-outside-a-gate-is-an-open-record/review/validation/briefing-1
 started: 2026-11-13T16:37:26Z
 worktree: .worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record
 pr: iamcxa/kc-claude-plugins#870
