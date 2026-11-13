@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-13T13:41:47.915088Z"
                 reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
+            - id: gate-attempt:merge-ask-is-produced-from-records-backlog-2
+              briefing:
+                id: briefing:merge-ask-is-produced-from-records:backlog:attempt-2:revision-1
+                digest: sha256:110960e6a9d63888a6308a54fccc52e8bc0bf08274303d8586e8c75044a8c7fe
+                room-ref: ./merge-ask-is-produced-from-records/review/backlog/briefing-2
 ---
 
 ## Scope
