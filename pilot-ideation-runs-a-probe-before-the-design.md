@@ -74,7 +74,8 @@ ideation and the POC route are unchanged, and the design gate is the same gate.
   points at one paragraph of POC implementation instead of restating it.
 - **What is a probe round?** One ideation dispatch. The worker's own hypothesis → check → widen loop
   inside a dispatch is not counted, as an implementation cycle does not count a worker's internal
-  retries. The released timeline helper already times and counts ideation dispatches (AC-7).
+  retries. The released timeline helper already counts ideation dispatches and times the ideation
+  stage (AC-7); it does not print each round's own start, end or result (D4).
 - **What does it not prove?** That tasks reach merge faster or ship fewer defects (FO's ten-task
   trial measured neither), or anything about ui, db or multi-component tasks.
 
@@ -93,7 +94,7 @@ flowchart TD
   I --> J[Probe: branch, base, last commit, hypotheses and results<br/>remove worktree, keep branch]
   J --> K[Stage report]
   P --> K
-  K --> L{third ideation dispatch before the design gate?}
+  K --> L{third ideation dispatch, gate revises included?}
   L -- yes --> M[FO holds for the Captain]
   L -- no --> N[Design gate, unchanged]
   N -- approved --> O[Implementation reads the poc branch<br/>deletes it once its candidate is committed]
@@ -116,12 +117,14 @@ flowchart TD
 
 ### Worth questions
 
-- **Probe permission and bounds.** Serves 「Pilot 的設計階段可以在本機分支做一個不推送的拋棄式試作」.
+- **Probe permission and bounds.** Serves 「Pilot 的設計階段可以在本機分支做一個不推送的拋棄式試作」 (FO's backlog
+  question, which he approved with 「進設計階段（建議）」).
   Without it FO hand-writes 184 words (142 checklist, 42 scope notes) into every Pilot ideation
   dispatch, measured in two of the ten trial records. Premise that would make it unneeded: workers
   already probe under the released text. Cheap test: the base control dispatch (AC-1) carries the ban
   and no permission.
-- **Proof run and `Not provable now`.** Serves 「每條驗收條件當場跑一次並記下指令和結果，跑不了的列在「現在無法證明」」.
+- **Proof run and `Not provable now`.** Serves 「每條驗收條件當場跑一次並記下指令和結果，跑不了的列在「現在無法證明」」
+  (the same approved backlog question).
   Without it, the design gate sees future proof plans, which principles.md already says are not
   passed results. Unneeded if the stage report already demands runs: it asks only for "actual current
   evidence or an honest not-yet-verified statement" (principles.md, base).
@@ -129,7 +132,8 @@ flowchart TD
   Without it a second set of proof rules is written into Pilot. Unneeded if POC has no proof rule:
   it does, the first paragraph of `skills/implementation/profiles/poc.md` (43 words).
 - **Round count and timing** (amendment 1). Serves 「要同時加入預算與計時機制」. Without it probe rounds
-  have no bound. Unneeded if rounds were already timed: they are, as dispatches (AC-7).
+  have no bound. Unneeded if rounds were already counted and timed: dispatches are counted and the stage
+  is timed (AC-7), but no per-round time is printed.
 
 ### What the probe showed
 
@@ -146,14 +150,19 @@ flowchart TD
 - H3 held: the ban's principles.md copy and its `KNOWN_DUPLICATES` entry go, with no repeat finding (AC-3).
 - H4 failed: the README rises 66 words (6033 to 6099); lint's exact budget refuses it (AC-4), so a
   raise needs the Captain's words.
-- H5 held: the released timeline helper reports ideation `dispatches 2, repeats 1` with start and
-  end for a task with two ideation dispatches (AC-7); for a one-dispatch trial task it shows one span
-  (`evidence/ideation-1/timeline-pr-watch.txt`), so rounds inside a dispatch are invisible to it.
+- H5 partly held: the released timeline helper reports ideation `dispatches 2, repeats 1` and the
+  stage's start and end for a task with two ideation dispatches (AC-7; its `--json` has no per-dispatch
+  times, and that task's second dispatch was a design-gate revise). For a one-dispatch trial task it
+  shows one span (`evidence/ideation-1/timeline-pr-watch.txt`): rounds inside a dispatch are invisible
+  to it, and each round's own end and result are not printed.
 - H6 narrowed: pointing at both POC files added 336 words to the worker's skill reading; pointing at
   the one POC implementation paragraph adds 135 (commit 70f70106).
 
 What it lacks for the Pilot bar: no live worker has run from the candidate text (only the built
-dispatch was checked); the third-dispatch hold and the branch deletion are prose with no script;
+dispatch was checked); `test_lint_skills.py` is red on the probe (47 tests, 8 failing results counting
+subtests), all from the word budget: with a temporary raise step in a throwaway export all 47 pass
+(`evidence/ideation-1/test_lint_skills.probe.log`, `test_lint_skills.with-temp-raise.log`), so no test
+file changes; the third-dispatch hold and the branch deletion are prose with no script;
 the README raise has no recorded ruling; no ADR file (implementation writes it after FO reserves the
 number).
 
@@ -195,17 +204,24 @@ Counter: whitespace split, as lint-skills.py's budget; base origin/main 88f86f27
   Evidence: 8 of 10 trial tasks made a probe branch, all 8 are still present, 0 worktrees remain, and
   all 7 built ones were named in their implementation dispatch. Alternatives: FO deletes at archive
   (more README words, touches Delivery authority); no rule (branches accumulate). Worse: a design
-  that never reaches implementation leaves its branch (1 of 8 today).
-- **D4. Probe rounds and budget.** Recommended: a round is one ideation dispatch, timed and counted
-  by the released `task_timeline.py`; FO holds a third ideation dispatch before the design gate for
-  the Captain, and the 0.39.0 default applies (keep results, report remaining work, stop adding).
+  that never reaches implementation leaves its branch (1 of 8 today), and an unpushed branch cannot
+  be read by an implementation worker on another machine or in a cloud workspace; a saved diff in the
+  task folder (as `evidence/ideation-1/probe.diff` here) is the portable copy, at a few more words.
+- **D4. Probe rounds and budget.** Recommended: a round is one ideation dispatch, counted by the
+  released `task_timeline.py` (`dispatches`, which ADR 0080 counts by highest plain record number,
+  gate revises included); FO holds a third ideation dispatch for the Captain, revises included, and
+  the 0.39.0 default applies (keep results, report remaining work, stop adding). Each round's result
+  is its stage report; its start is the commit adding its dispatch record, which the helper reads but
+  does not print per dispatch.
   The `N implementation and M validation cycles` form cannot carry it unchanged: `budget_bound`
   reads only those two stages and `DIAGNOSIS_RECORD` matches only implementation and validation.
   Alternatives: (b) extend the form to `N ideation, N implementation and M validation cycles` and
   count ideation in `role_triggers.py` (a new grammar, but a per-task bound the script FO runs at
-  each boundary enforces); (c) `at most N dispatches total` already counts ideation records but drops
+  each boundary enforces; ADR 0077 names this reopen condition: "countable fixed forms cannot express
+  an approved outcome's bound"); (c) `at most N dispatches total` already counts ideation records but drops
   the split he likes. Worse under the recommendation: a fixed cap of two in prose, not checked by a
-  script.
+  script, and a task the Captain sent back twice gets one more question; per-round times need a
+  `task_timeline.py` change in either option.
 - **D5. README raise of 66 words (6033 to 6099).** Recommended: raise, loaded at FO startup and
   resume and in each Pilot ideation dispatch's stage definition. Worse: FO reads 1.1% more at every
   startup. Alternative: move the round sentence (15 words) to the skill; then FO does not read the
@@ -252,7 +268,7 @@ implementation, CAND is the candidate head. Paths below are under `pilot-ideatio
 
 **AC-2** The POC workflow is unchanged: `poc_readme.derive` of the candidate README equals that of origin/main. Evidence: `accept.sh AC-2`; exit 0; `evidence/ideation-1/out/AC-2.log` (`poc derived equal`). Falsifier: an edit outside `### ideation` prints `poc derived DIFFER`.
 
-**AC-3** The ideation write ban has one home: `skills/ideation/principles.md` no longer states it, `KNOWN_DUPLICATES` no longer lists it, and lint reports no repeat. Evidence: `accept.sh AC-3`; exit 0; `evidence/ideation-1/out/AC-3.log`. Falsifier: `test_the_known_overlap_is_listed_and_a_new_one_is_not` (an ideation copy in another principles file is refused).
+**AC-3** The ideation write ban has one home: `skills/ideation/principles.md` no longer states it, `KNOWN_DUPLICATES` no longer lists it, and lint reports no repeat. Evidence: `accept.sh AC-3`; exit 0; `evidence/ideation-1/out/AC-3.log`. Falsifier: `test_the_known_overlap_is_listed_and_a_new_one_is_not` (an ideation copy in another principles file is refused); red on the probe only from the budget, green with a raise step (`evidence/ideation-1/test_lint_skills.with-temp-raise.log`).
 
 **AC-4** `lint-skills.py` passes, the README rising by the raise step that carries the Captain's quoted words and loaded moment. Evidence: `accept.sh AC-4`; exit 1 on the probe; `evidence/ideation-1/out/AC-4.log` (66 words over). Not provable now: see below.
 
@@ -260,7 +276,7 @@ implementation, CAND is the candidate head. Paths below are under `pilot-ideatio
 
 **AC-6** The dispatch contract suite passes on the candidate. Evidence: `accept.sh AC-6`; exit 0 (second run; the first exported only `kc-dev-flow-2/` and the suite stopped on a missing `docs/adr`, a harness defect fixed in `accept.sh`); `evidence/ideation-1/out/AC-6/test_sd_dispatch.log`.
 
-**AC-7** The released timeline helper times and counts each ideation dispatch as a round. Evidence: `accept.sh AC-7` on the archived task adr-reserved-when-design-names-one; exit 0; `evidence/ideation-1/out/AC-7/timeline.txt` (`ideation: … dispatches 2, repeats 1`).
+**AC-7** The released timeline helper counts each ideation dispatch as a round and times the ideation stage. Evidence: `accept.sh AC-7` on the archived task adr-reserved-when-design-names-one; exit 0; `evidence/ideation-1/out/AC-7/timeline.txt` (`ideation: … dispatches 2, repeats 1`).
 
 **AC-8** A live Pilot ideation worker dispatched from the candidate with no FO probe line builds a probe and writes command, exit and output path beside each criterion. Not provable now.
 
@@ -272,6 +288,7 @@ implementation, CAND is the candidate head. Paths below are under `pilot-ideatio
 - AC-8: needs a live worker run; validation can run one replay with a worker through `replay_dispatch.py`
   (one model run).
 - AC-9: needs an implementation run after release.
+- Each round's own start, end and result printed by the timeline helper: not printed today (D4).
 - FO holding a third ideation dispatch (D4): prose only; observable only when a third is due.
 - The claimed benefit (fewer design changes after approval): FO's ten-task trial counted 0 of 7 with a
   probe and 2 of 2 without; not measured on this change.
@@ -289,7 +306,7 @@ implementation, CAND is the candidate head. Paths below are under `pilot-ideatio
 - DONE: Captain amendment 1 (read it in the task file; his two messages are quoted there in full): design the wording so that Pilot ideation runs the POC route's own loop (hypothesis, check, widen the plan, hypothesis, check) by pointing at the POC profile's rules where they exist instead of writing a second set, and say which POC words are reused and which Pilot words that lets the design delete
   Pilot `## Probe` points at POC implementation's first paragraph (43 words reused); widen is Pilot's own (D7); deletes nothing in Pilot text, avoids a restated proof rule.
 - DONE: Captain amendment 1 also asks for budget and timing in the same design: say how probe rounds in ideation are bounded and counted (a round cap or a line in that same Budget form the existing budget reader already accepts; do not invent a second grammar unless you show the existing one cannot carry it), who checks the count before another round, and how each round's start, end and result are recorded so the released timeline helper can read them; reuse the 0.39.0 budget rule and the 0.40.0 timeline records before adding anything
-  Round = ideation dispatch; FO holds a third; times from task_timeline.py (AC-7); the cycles form cannot carry it (`budget_bound`, `DIAGNOSIS_RECORD`); options in D4.
+  Round = ideation dispatch; FO holds a third, revises included; count and stage span from task_timeline.py (AC-7), per-round times not printed; the cycles form cannot carry it (`budget_bound`, `DIAGNOSIS_RECORD`); options in D4.
 - DONE: Keep out of scope what the task's Non-goals name; changing the POC workflow's own text is still outside this task, so if reuse needs a POC text change, put it to the Captain as an unresolved decision with a recommendation
   POC derived README unchanged (AC-2); the widen step's home is D7.
 

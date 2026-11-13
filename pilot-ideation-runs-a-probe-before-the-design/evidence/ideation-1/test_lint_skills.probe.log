@@ -1,0 +1,145 @@
+F.F......F..............................F.FF.F.             [100%]
+=================================== FAILURES ===================================
+_ RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines _
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines>
+
+    def test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines(self):
+        self.change("references/sd/workflow.md", "FO answers a question", "FO answers\n  a question")
+>       self.assertEqual(lint.lint_tree(self.root), [])
+E       AssertionError: Lists differ: ["references/sd/workflow.md: 6099 words ex[140 chars]EPS"] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       "references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the added text out of the README, or add a raise step of 66 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+E       
+E       + []
+E       - ['references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the '
+E       -  "added text out of the README, or add a raise step of 66 with 'captain' and "
+E       -  "'loaded' to WORKFLOW_BUDGET_STEPS"]
+
+test_lint_skills.py:176: AssertionError
+_ RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused _
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused>
+
+    def test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused(self):
+        count = self.with_words(-3)
+        cut = dict(delta=count - lint.workflow_budget(SHIPPED), why="moved to a script message")
+        self.budget_with([*SHIPPED, cut])
+>       self.assertEqual(lint.lint_tree(self.root), [])
+E       AssertionError: Lists differ: ["references/sd/workflow.md: WORKFLOW_BUDG[178 chars]ent"] != []
+E       
+E       First list contains 2 additional elements.
+E       First extra element 0:
+E       "references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[21] raises the budget by 63 and its 'captain' has no quoted words"
+E       
+E       + []
+E       - ['references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[21] raises the budget by 63 '
+E       -  "and its 'captain' has no quoted words",
+E       -  'references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[21] raises the budget by 63 '
+E       -  "and has no 'loaded' moment"]
+
+test_lint_skills.py:292: AssertionError
+_ RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (<subtest>) _
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way>
+
+    def test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way(self):
+        for drift in (1, -1):
+            with self.subTest(drift):
+                self.budget_with([*SHIPPED, dict(delta=drift, why="x", captain="\u300cx\u300d", loaded="x")])
+>               self.refuses("under the budget" if drift > 0 else "exceeds the budget")
+
+test_lint_skills.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_lint_skills.py:37: in refuses
+    self.assertTrue(any(expected in error for error in errors), errors)
+E   AssertionError: False is not true : ["references/sd/workflow.md: 6099 words exceeds the budget of 6034; move the added text out of the README, or add a raise step of 65 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"]
+_ RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not _
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not>
+
+    def test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not(self):
+        self.copy_kc_adr_skill("read-adr")
+>       self.assertEqual(lint.lint_tree(self.root), [])
+E       AssertionError: Lists differ: ["references/sd/workflow.md: 6099 words ex[140 chars]EPS"] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       "references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the added text out of the README, or add a raise step of 66 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+E       
+E       + []
+E       - ['references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the '
+E       -  "added text out of the README, or add a raise step of 66 with 'captain' and "
+E       -  "'loaded' to WORKFLOW_BUDGET_STEPS"]
+
+test_lint_skills.py:153: AssertionError
+___ RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not ___
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_the_known_overlap_is_listed_and_a_new_one_is_not>
+
+    def test_the_known_overlap_is_listed_and_a_new_one_is_not(self):
+>       self.assertEqual(lint.lint_tree(self.root), [])
+E       AssertionError: Lists differ: ["references/sd/workflow.md: 6099 words ex[140 chars]EPS"] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       "references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the added text out of the README, or add a raise step of 66 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+E       
+E       + []
+E       - ['references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the '
+E       -  "added text out of the README, or add a raise step of 66 with 'captain' and "
+E       -  "'loaded' to WORKFLOW_BUDGET_STEPS"]
+
+test_lint_skills.py:310: AssertionError
+____________________ RouteMutationTests.test_valid_scaffold ____________________
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_valid_scaffold>
+
+    def test_valid_scaffold(self):
+>       self.assertEqual(lint.lint_tree(self.root), [])
+E       AssertionError: Lists differ: ["references/sd/workflow.md: 6099 words ex[140 chars]EPS"] != []
+E       
+E       First list contains 1 additional elements.
+E       First extra element 0:
+E       "references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the added text out of the README, or add a raise step of 66 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"
+E       
+E       + []
+E       - ['references/sd/workflow.md: 6099 words exceeds the budget of 6033; move the '
+E       -  "added text out of the README, or add a raise step of 66 with 'captain' and "
+E       -  "'loaded' to WORKFLOW_BUDGET_STEPS"]
+
+test_lint_skills.py:40: AssertionError
+_ RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count _
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_workflow_equal_to_its_word_budget_passes_and_prints_the_count>
+
+    def test_workflow_equal_to_its_word_budget_passes_and_prints_the_count(self):
+>       self.assertEqual(len(self.workflow_text().split()), lint.workflow_budget())
+E       AssertionError: 6099 != 6033
+
+test_lint_skills.py:262: AssertionError
+__ RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step ___
+
+self = <test_lint_skills.RouteMutationTests testMethod=test_workflow_under_its_word_budget_names_the_cut_step>
+
+    def test_workflow_under_its_word_budget_names_the_cut_step(self):
+        self.with_words(-1)
+>       self.refuses(f"is 1 under the budget of {lint.workflow_budget()}")
+
+test_lint_skills.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_lint_skills.py:37: in refuses
+    self.assertTrue(any(expected in error for error in errors), errors)
+E   AssertionError: False is not true : ["references/sd/workflow.md: 6098 words exceeds the budget of 6033; move the added text out of the README, or add a raise step of 65 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"]
+=========================== short test summary info ============================
+FAILED test_lint_skills.py::RouteMutationTests::test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines
+FAILED test_lint_skills.py::RouteMutationTests::test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused
+(<subtest>) SUBFAIL test_lint_skills.py::RouteMutationTests::test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way
+FAILED test_lint_skills.py::RouteMutationTests::test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not
+FAILED test_lint_skills.py::RouteMutationTests::test_the_known_overlap_is_listed_and_a_new_one_is_not
+FAILED test_lint_skills.py::RouteMutationTests::test_valid_scaffold - Asserti...
+FAILED test_lint_skills.py::RouteMutationTests::test_workflow_equal_to_its_word_budget_passes_and_prints_the_count
+FAILED test_lint_skills.py::RouteMutationTests::test_workflow_under_its_word_budget_names_the_cut_step
+8 failed, 40 passed in 11.16s
