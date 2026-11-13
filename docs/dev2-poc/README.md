@@ -8,6 +8,7 @@ extensions: [roborev, codex, copilot, learn, peers, paseo, fo-feedback]
 second-reviewer: copilot
 state: .spacedock-state
 trunk: main
+merge-test: bash -c 'python3 -B kc-dev-flow-2/scripts/lint-skills.py && for t in kc-dev-flow-2/scripts/test_*.py kc-dev-flow-2/extensions/*/test_*.py; do case "$t" in */test_dispatch_stage.py|*/test_sd_dispatch.py|*/test_observer_recovery.py) continue;; esac; python3 -B "$t" || exit; done'
 stages:
   defaults:
     worktree: false
