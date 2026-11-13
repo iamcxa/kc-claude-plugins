@@ -207,3 +207,44 @@ ADR: 0085
 ### Summary
 
 The probe extended the existing budget reader instead of adding a mechanism. The Captain's form `N ideation, N implementation and M validation cycles` now counts design dispatches. `dispatch_stage.py` checks the budget alone at design dispatch, and a Pilot budget naming no design count allows two, which turns ADR 0084's prose hold into a script hold. `task_timeline.py` prints one line per round. A real three-design-dispatch task replayed under a budget of two is held at the third. Across 247 tasks, no held/not-held result changes. Nothing is superseded: one new ADR extends 0077, 0080 and 0084. `design_surfaces.py check` is presentable on the installed 0.41.0 package and on the probe. The scratch close removed 210656107 bytes and kept 27 evidence files (60.0 KiB). Redone after the session closed mid-run: the killed suite and all-task comparison were rerun; nothing else was lost.
+
+## Stage Report: implementation
+
+- DONE: Build the approved design and acceptance criteria, decisions D1 to D5, within the named files and Budget.
+  Branch spacedock-ensign/budget-form-counts-ideation-rounds-and-times-each-round; fetched base bfc53d82510006b52baf41569c1e25176e99d87a; candidate 2661da44a77c2b2f93991a3968fb1515bb4e7132; 10 named files, no version bump. Exact hashes: evidence/implementation-1/provenance.json.
+- DONE: Start from the local probe and delete its branch after committing the candidate.
+  Probe de91166f055129f6a589594c25d70be68124551d was carried and strengthened; no probe worktree was registered. Local branch poc/budget-form-counts-ideation-rounds-and-times-each-round deleted after candidate commit; final-candidate-check.txt verifies absence and clean code tree.
+- DONE: ADR 0085 records the ruling, quoting the task and ideation gate, extending 0077, 0080 and 0084.
+  New docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md protects role_triggers.py, dispatch_stage.py and task_timeline.py; candidate-adr.txt exits 0; removing one pointer fails verified-mutation-ac10-no-pointer.txt.
+- DONE: AC-1 — new grammar and unchanged existing forms.
+  replay-1..6.txt exits 0/1/0/0/1/1; suite-role-final.txt passes 63 tests. Removing the new pattern fails the grammar test and permits the third replayed dispatch (replay-mutant-no-grammar.txt exit 0 instead of 1).
+- DONE: AC-2 — design dispatch holds above its bound, removes the unbuilt record and never builds it; below-bound dispatch prints and builds.
+  suite-dispatch.txt passes the real Spacedock path; verified-mutation-ac2-no-ideation-hook.txt fails when ideation is removed from the hook; mutation-harness-control.txt passes before mutations.
+- DONE: AC-3 — real three-design-dispatch replay and per-round times/results.
+  replay-2.txt exits 1 at bound two; replay-3.txt exits 0 at bound three. timeline-replay.txt prints 43.6/562.2/97.0 minutes and withdrawn/revise/approve; removing round printing fails verified-mutation-ac3-no-round-print.txt.
+- DONE: AC-4 — Pilot default two holds third but not second; Prod has no implicit hold.
+  replay-4/5.txt exits 0/1 and the real dispatch test passes for both profiles; removing the default fails verified-mutation-ac4-no-default.txt and wrongly permits the third replay (replay-mutant-no-default.txt).
+- DONE: AC-5 — design dispatch checks budget alone.
+  test_ideation_ignores_owed_special_roles passes in suite-dispatch.txt; omitting --budget-only fails with an owed engineering-reviewer call in verified-mutation-ac5-full-role-check.txt.
+- DONE: AC-6 — no existing task's held/not-held result changes.
+  Frozen state c1993d8dc30ec22aeac688a3d4a116a8402acabf: 249 tasks, 24 text changes, 0 exit changes (base-comparison.txt). A mutation that holds admitted budgets changes 15 exits and fails the comparator.
+- DONE: AC-7 — every archived design round has times/result and matches its dispatch count.
+  rounds-census-asserted.txt: 170 archived tasks, 192 ideation rounds, 0 count mismatches, 0 missing ends, 3 late-committed zero-minute rounds. Dropping rounds causes 144 mismatches and fails verified-mutation-ac7-no-rounds.txt.
+- DONE: AC-8 — workflow cut and repository CI lint.
+  candidate-lint.txt exits 0 at 6097/6097 words, a -2 step from 6099. Positive mutation-lint-control.txt passes; restoring the prose hold fails solely at 6101 vs 6097 (final-mutation-ac8-prose-hold.txt).
+- DONE: AC-9 — four stale test methods updated and all four required suites pass.
+  Role 63, dispatch 56, timeline 13, design 234 tests: 366 run, 4 existing optional historical-corpus skips; tests.json and suite-*.txt. FO replaced pytest convenience commands with CI's unittest form. Removing the default fails verified-mutation-ac9-no-default.txt.
+- DONE: AC-10 and every named falsifier run cold with python3 -B and copied caches removed.
+  acceptance.json records commands, exits and output paths per criterion; mutations.json records 10 accepted mutation failures. README.md preserves and explains invalid initial harness runs and their passing controls.
+- DONE: Required number guards, comment maximum, affected documents and existing-code audit.
+  number-guards-configured.txt exits 0 with workflow configuration and a permitted state fetch; comments.txt: 117 code/3 comment lines, 2.6% <= 5%. document-dispositions.json gives updated/unaffected reasons for all 18 doc_impact.py entries. Approved design's upstream audit reused; current base, sibling ownership and callers refreshed; existing mechanisms extended.
+- DONE: Reading moments, sibling overlap and PR text prepared.
+  word-counts-final.txt separates whitespace lint words (-2), normalized startup words (-2), design stage (-4), dispatch output (+23 design/+6 build/check) and on-demand timeline growth. Preserve the -2 step when merging sibling workflow edits; origin/main was still bfc53d825 on the final fetch. implementation/pr.md has the scoped Conventional Commit title and body.
+- DONE: Public evidence retained and dispatch scratch closed.
+  evidence/implementation-1/ contains reproducible scripts, exact candidate hashes, commands, controls and output; fixture-cleanup.json lists only owned synthetic leftovers removed. scratch close output is evidence/implementation-1/scratch-close.txt; scratch-removed.txt records removal.
+- SKIPPED: Product push, Draft PR creation, RoboRev and hosted CI.
+  FO owns these steps under the dispatch's explicit delivery override; no PR opened: no push grant. CI cost per PR not measured; CI files unchanged. Released live third-dispatch behavior remains Not provable now.
+
+### Summary
+
+Implemented the accepted five decisions on the current fetched main and committed only the ten approved product paths; the exact candidate is recorded in provenance.json and the PR text is ready for FO. All ten criteria have current command/exit/output evidence and falsifiers; publication, independent review, hosted CI and release behavior remain outside this worker's completed implementation. Profile: Pilot; no production obligation, version bump, product push or PR action.

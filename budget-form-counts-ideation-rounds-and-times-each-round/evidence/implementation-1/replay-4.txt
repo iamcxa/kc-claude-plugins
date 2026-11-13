@@ -1,0 +1,1 @@
+budget: Budget: 1 implementation and 2 validation cycles; spent ideation 2 of 2 by default, implementation 0, validation 0

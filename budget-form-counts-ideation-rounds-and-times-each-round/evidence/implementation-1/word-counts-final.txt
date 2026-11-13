@@ -1,0 +1,44 @@
+[
+  {
+    "moment": "Workflow lint budget (whitespace words)",
+    "base": 6099,
+    "candidate": 6097,
+    "delta": -2
+  },
+  {
+    "moment": "Startup and resume (normalized words)",
+    "base": 6155,
+    "candidate": 6153,
+    "delta": -2
+  },
+  {
+    "moment": "Design stage definition, normalized words",
+    "base": 401,
+    "candidate": 397,
+    "delta": -4
+  },
+  {
+    "moment": "Timeline on demand, three-design-round task",
+    "base": 202,
+    "candidate": 263,
+    "delta": 61
+  },
+  {
+    "moment": "Timeline on demand, thirteen-round task",
+    "base": 190,
+    "candidate": 313,
+    "delta": 123
+  },
+  {
+    "moment": "Pilot implementation/check budget line",
+    "base": 17,
+    "candidate": 23,
+    "delta": 6
+  },
+  {
+    "moment": "Pilot design dispatch budget line",
+    "base": 0,
+    "candidate": 23,
+    "delta": 23
+  }
+]

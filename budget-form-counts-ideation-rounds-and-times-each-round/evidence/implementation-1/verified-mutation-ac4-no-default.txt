@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_pilot_default_holds_the_third_ideation (__main__.DispatchStageTests.test_pilot_default_holds_the_third_ideation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 214, in test_pilot_default_holds_the_third_ideation
+    self.assertIn("spent ideation 1 of 2 by default, implementation 0", quiet.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'spent ideation 1 of 2 by default, implementation 0' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.418s
+
+FAILED (failures=1)

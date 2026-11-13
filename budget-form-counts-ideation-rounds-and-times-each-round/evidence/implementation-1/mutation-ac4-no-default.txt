@@ -1,0 +1,25 @@
+F
+======================================================================
+FAIL: test_pilot_default_holds_the_third_ideation (__main__.DispatchStageTests.test_pilot_default_holds_the_third_ideation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 213, in test_pilot_default_holds_the_third_ideation
+    quiet = self.build("ideation")
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env, stderr_path=stderr_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-wuv5c9v8/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-wuv5c9v8/code/docs/dev2/.spacedock-state/dispatch-fixture-d13156c2b0614662a88066bee8a2fc0d.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-wuv5c9v8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-wuv5c9v8/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-f6559361d62e5ba7/dispatch-fixture-d13156c2b0614662a88066bee8a2fc0d/ideation-1: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.940s
+
+FAILED (failures=1)

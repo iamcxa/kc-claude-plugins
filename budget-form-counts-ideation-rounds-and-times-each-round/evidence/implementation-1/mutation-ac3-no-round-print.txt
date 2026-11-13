@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_three_design_dispatches_have_separate_times_and_results (__main__.TimelineTests.test_three_design_dispatches_have_separate_times_and_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 135, in test_three_design_dispatches_have_separate_times_and_results
+    self.assertIn(f"round {r['round']}: {r['start']} -> {r['end']}  {r['minutes']} min; {r['result']}", output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'round 1: 2026-01-01T00:10:00Z -> 2026-01-01T00:30:00Z  20.0 min; withdrawn' not found in 'task: demo\n  ideation: 2026-01-01T00:10:00Z -> 2026-01-01T01:30:00Z  80.0 min (before gate 15.0, Captain wait 9.0, after gate 56.0); dispatches 3, repeats 2\n    asks outside a gate: not recorded\n    gate attempt 1: opened 2026-01-01T00:15:00Z, closed 2026-01-01T00:18:00Z, withdrawn\n    gate attempt 2: opened 2026-01-01T00:35:00Z, closed 2026-01-01T00:38:00Z, revise\n    gate attempt 3: opened 2026-01-01T01:05:00Z, closed 2026-01-01T01:08:00Z, approve\n  implementation: 2026-01-01T01:30:00Z -> 2026-01-01T01:40:00Z  10.0 min (before gate 10.0, Captain wait 0, after gate 0.0); dispatches 1, repeats 0\n    asks outside a gate: not recorded\n  done: 2026-01-01T01:40:00Z\n  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 1; amendments outside a gate: 0\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.038s
+
+FAILED (failures=1)

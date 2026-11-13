@@ -1,0 +1,3 @@
+candidate 2661da44a77c2b2f93991a3968fb1515bb4e7132
+base bfc53d82510006b52baf41569c1e25176e99d87a
+10 candidate file hashes match; working tree clean; probe branch absent; 10 accepted mutations failed as expected

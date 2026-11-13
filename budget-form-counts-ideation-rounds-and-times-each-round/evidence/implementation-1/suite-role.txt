@@ -1,0 +1,23 @@
+......FF.......................................................
+======================================================================
+FAIL: test_old_first_stage_record_never_opts_in_with_later_headers (__main__.BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2/scripts/test_role_triggers.py", line 918, in test_old_first_stage_record_never_opts_in_with_later_headers
+    self.assertIn("spent implementation 2", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'spent implementation 2' not found in 'budget: Budget: One cycle per stage.; spent ideation 1 of 2 by default, implementation 2, validation 0\n'
+
+======================================================================
+FAIL: test_pending_overrun_holds_and_an_amendment_clears_it (__main__.BudgetTest.test_pending_overrun_holds_and_an_amendment_clears_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2/scripts/test_role_triggers.py", line 896, in test_pending_overrun_holds_and_an_amendment_clears_it
+    self.assertIn("Budget: two cycles per stage; spent ideation 0 of 2 by default, implementation 2", run(self.state, SLUG)[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Budget: two cycles per stage; spent ideation 0 of 2 by default, implementation 2' not found in 'budget: Budget: two cycles per stage; spent ideation 1 of 2 by default, implementation 2, validation 0\n'
+
+----------------------------------------------------------------------
+Ran 63 tests in 87.661s
+
+FAILED (failures=2)

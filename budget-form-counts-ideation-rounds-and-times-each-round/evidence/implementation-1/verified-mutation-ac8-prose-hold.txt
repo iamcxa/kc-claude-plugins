@@ -1,0 +1,2 @@
+FAIL: repository frontmatter check missing: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/scripts/skill-frontmatter-lint.sh
+FAIL: references/sd/workflow.md: 6101 words exceeds the budget of 6097; move the added text out of the README, or add a raise step of 4 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS
