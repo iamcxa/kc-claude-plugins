@@ -1,0 +1,6 @@
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 6099 of 6099 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+lint exit 0
+principles.md ban lines: 0; KNOWN_DUPLICATES ban entries: 0
+repeat findings: 0

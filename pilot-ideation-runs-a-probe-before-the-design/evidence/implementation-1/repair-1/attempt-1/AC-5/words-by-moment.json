@@ -1,0 +1,22 @@
+{
+ "FO startup/resume (reads the whole adopted README)": {
+  "base": 6033,
+  "candidate": 6099,
+  "delta": 66
+ },
+ "Pilot ideation worker: dispatch stage definition (### ideation + Dispatch facts)": {
+  "base": 632,
+  "candidate": 698,
+  "delta": 66
+ },
+ "Pilot ideation worker: skill text (SKILL.md + principles.md + profiles/pilot.md + POC files it points to)": {
+  "base": 1169,
+  "candidate": 1304,
+  "delta": 135
+ },
+ "Pilot implementation worker: profiles/pilot.md": {
+  "base": 47,
+  "candidate": 62,
+  "delta": 15
+ }
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/design_surfaces.py",
+    "check",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design.md"
+  ],
+  "exit": 0,
+  "criterion": "AC-10 is amendment 2 replacement; evidence command remains accept.sh AC-3",
+  "output": "design-surfaces.log"
+}

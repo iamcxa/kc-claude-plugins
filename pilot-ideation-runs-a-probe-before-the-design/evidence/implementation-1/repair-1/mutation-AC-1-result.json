@@ -1,0 +1,12 @@
+{
+  "name": "AC-1-base-as-candidate",
+  "expected_exit": 1,
+  "exit": 1,
+  "command": [
+    "bash",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+    "AC-1",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/mutation-AC-1-control-as-candidate"
+  ],
+  "output": "mutation-AC-1-control-as-candidate.log"
+}

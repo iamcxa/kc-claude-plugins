@@ -1,0 +1,96 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-1",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-1"
+    ],
+    "exit": 0,
+    "evidence": "AC-1.log"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-2",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-2"
+    ],
+    "exit": 0,
+    "evidence": "AC-2.log"
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/implementation-1/bin/accept.sh",
+      "AC-3",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-3"
+    ],
+    "exit": 0,
+    "evidence": "AC-3.log"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-4",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-4"
+    ],
+    "exit": 0,
+    "evidence": "AC-4.log"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-5",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-5"
+    ],
+    "exit": 0,
+    "evidence": "AC-5.log"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-6",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-6"
+    ],
+    "exit": 0,
+    "evidence": "AC-6.log"
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-7",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/out/AC-7"
+    ],
+    "exit": 0,
+    "evidence": "AC-7.log"
+  },
+  {
+    "name": "AC-8",
+    "status": "untested",
+    "detail": "Fresh live worker validation owed for this new candidate; prior validation verdict is preserved."
+  },
+  {
+    "name": "AC-9",
+    "status": "untested",
+    "detail": "Accepted post-release obligation; no new released worker run."
+  }
+]

@@ -1,0 +1,90 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the equality/quote/loaded-moment rule is followed by the new +66 step; its existing ruling is unchanged."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the existing +144 step and worker collaboration rule are unchanged."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: lint model/effort checks and the model table are unchanged."
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: no permission procedure or extension changes."
+  },
+  {
+    "doc": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the existing +25 step and timeline behavior are unchanged; per-round timing belongs to the approved follow-up."
+  },
+  {
+    "doc": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "updated: new Pilot-only ruling and partial supersession of ADR 0005."
+  },
+  {
+    "doc": "docs/dev2-poc/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the approved change does not alter the POC route; AC-2 compares its derivation."
+  },
+  {
+    "doc": "docs/dev2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: this is an adopted workflow pinned to the previous release. Post-release README sync is separately directed by the Captain; the package template is the approved product surface here."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: entry, routing and lint/maintenance commands remain valid. Stage details live in the linked references."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the budget, duplicate, replay and adopter-maintenance rules are unchanged. Live behavior evidence remains explicitly owed by AC-8."
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "verdict": "unaffected: the historical learning remains valid; words are recounted per lifecycle moment without changing the learning itself."
+  }
+]

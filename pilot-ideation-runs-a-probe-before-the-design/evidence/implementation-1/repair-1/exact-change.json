@@ -1,0 +1,13 @@
+{
+  "parent": "8fd752939e85b07a095d950ba68fb27c0e004abe",
+  "file": "kc-dev-flow-2/references/sd/workflow.md",
+  "removed": "For every criterion, including provenance, run its proof once; record command, exit\nand output path beside it; if unrunnable: `Not provable now`.",
+  "added": "Every criterion's evidence command runs once on it, recording command, exit and output path\nper criterion, provenance included; unrunnable: `Not provable now`.",
+  "removed_words": 22,
+  "added_words": 22,
+  "workflow_words_before": 6099,
+  "workflow_words_after": 6099,
+  "approved_literal_present": true,
+  "skill_profile_changes": 0,
+  "scope": "message-3 replaces the wording part of message-2; original AC-1 checker unchanged"
+}

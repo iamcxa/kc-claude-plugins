@@ -1,0 +1,52 @@
+[
+  {
+    "name": "AC-2-outside-ideation",
+    "expected_exit": 1,
+    "exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; sys.path.insert(0,'kc-dev-flow-2/scripts'); from poc_readme import derive; a=derive(Path('base-workflow.md').read_text()); b=derive(Path('kc-dev-flow-2/references/sd/workflow.md').read_text()); print('poc derived equal' if a==b else 'poc derived DIFFER'); sys.exit(a!=b)"
+    ],
+    "output": "mutation-AC-2-outside-ideation.log"
+  },
+  {
+    "name": "AC-3-duplicate-ban",
+    "expected_exit": 1,
+    "exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "output": "mutation-AC-3-duplicate-ban.log"
+  },
+  {
+    "name": "AC-4-remove-raise",
+    "expected_exit": 1,
+    "exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "output": "mutation-AC-4-remove-raise.log"
+  },
+  {
+    "name": "AC-5-word-6100",
+    "expected_exit": 1,
+    "exit": 1,
+    "status": "passed",
+    "command": [
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; b=len(Path('base-workflow.md').read_text().split()); c=len(Path('kc-dev-flow-2/references/sd/workflow.md').read_text().split()); print(f'FO startup base {b}, candidate {c}, delta {c-b}; maximum delta 66'); sys.exit(c-b>66)"
+    ],
+    "output": "mutation-AC-5-word-6100.log"
+  }
+]

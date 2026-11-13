@@ -1,0 +1,15 @@
+task: adr-reserved-when-design-names-one
+  backlog: 2026-10-29T00:36:47Z -> 2026-10-29T00:39:44Z  3.0 min (before gate 0.0, Captain wait 3.0, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-29T00:36:47Z, closed 2026-10-29T00:39:44Z, approve
+  ideation: 2026-10-29T00:52:24Z -> 2026-10-29T07:05:20Z  372.9 min (before gate 152.0, Captain wait 22.9, after gate 198.0); dispatches 2, repeats 1
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-29T01:20:43Z, closed 2026-10-29T01:27:42Z, revise
+    gate attempt 2: opened 2026-10-29T03:31:48Z, closed 2026-10-29T03:47:43Z, approve
+  implementation: 2026-10-29T07:05:20Z -> 2026-10-29T08:43:49Z  98.5 min (before gate 98.5, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+  validation: 2026-10-29T08:43:49Z -> 2026-10-29T11:00:54Z  137.1 min (before gate 114.2, Captain wait 8.2, after gate 14.7); dispatches 2, repeats 1
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-29T10:38:01Z, closed 2026-10-29T10:46:10Z, approve
+  done: 2026-10-29T11:00:54Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 1; amendments outside a gate: 1

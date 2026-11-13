@@ -1,0 +1,9 @@
+{
+  "start": "2026-11-13T16:18:17+08:00",
+  "time_source": "clock.curr_time 2026-11-13 08:18:17 UTC",
+  "base": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "previous_candidate": "f0e00d30ce00542b2895f13173bd41075cc8bfd4",
+  "superseded_local_candidate": "8fd752939e85b07a095d950ba68fb27c0e004abe",
+  "candidate": "45d5ebb9d24665c0904aca5412123a7224d056cc",
+  "branch": "spacedock-ensign/pilot-ideation-runs-a-probe-before-the-design"
+}

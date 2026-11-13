@@ -1,0 +1,4 @@
+pr-watch-tasks-foreign-worktree candidate carries found=permission,bounds,proof-run,not-provable,round old-ban=False fo-line-in-inputs=False
+pr-watch-tasks-foreign-worktree control ban-only found=none old-ban=True fo-line-in-inputs=False
+new-work-checks-what-exists-first candidate carries found=permission,bounds,proof-run,not-provable,round old-ban=False fo-line-in-inputs=False
+new-work-checks-what-exists-first control ban-only found=none old-ban=True fo-line-in-inputs=False

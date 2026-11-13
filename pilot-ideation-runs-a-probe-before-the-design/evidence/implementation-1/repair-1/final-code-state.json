@@ -1,0 +1,12 @@
+{
+  "candidate": "45d5ebb9d24665c0904aca5412123a7224d056cc",
+  "branch": "spacedock-ensign/pilot-ideation-runs-a-probe-before-the-design",
+  "changed_files": 0,
+  "product_paths_since_validated_candidate": [
+    "kc-dev-flow-2/references/sd/workflow.md"
+  ],
+  "proof_phrase_raw_contiguous": true,
+  "workflow_words": 6099,
+  "product_pushed": false,
+  "live_worker_runs": 0
+}

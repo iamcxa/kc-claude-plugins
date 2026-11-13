@@ -1,0 +1,25 @@
+{
+  "verdict": "No second version of the command/exit/output-ledger instruction; complementary actual-evidence and Probe provenance duties remain consistent.",
+  "files": [
+    {
+      "file": "kc-dev-flow-2/skills/ideation/SKILL.md",
+      "unchanged": true,
+      "sha256": "46bd0772651a9de924ea928bab5bb977153f6f705adb0963af642e4e82487db8"
+    },
+    {
+      "file": "kc-dev-flow-2/skills/ideation/principles.md",
+      "unchanged": true,
+      "sha256": "fcdb78da22873401a162342d5f77f5b9833c02be09c0d113538a6ee8d0ce7726"
+    },
+    {
+      "file": "kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+      "unchanged": true,
+      "sha256": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3"
+    },
+    {
+      "file": "kc-dev-flow-2/references/profiles/pilot.md",
+      "unchanged": true,
+      "sha256": "5fd70bc98acfef5bc3ad08ee27e8d1f760b1e81b7ec19e9fbd55718f7f77e10a"
+    }
+  ]
+}
