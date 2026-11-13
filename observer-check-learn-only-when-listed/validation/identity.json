@@ -1,0 +1,8 @@
+{
+  "head": "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+  "base": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+  "export": "/tmp/observer-learn-validation-srvkjmik/candidate",
+  "scratch": "/tmp/observer-learn-validation-srvkjmik",
+  "method": "git archive; independent fixture git metadata contains read-only copied source history; no git worktree created",
+  "moved_from": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/observer-learn-validation-srvkjmik"
+}

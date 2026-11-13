@@ -1,0 +1,32 @@
+{
+  "changed_files": [
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/observer_check.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py",
+    "kc-dev-flow-2/scripts/test_observer_check.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "file_count": 6,
+  "new_runtime_dependency": false,
+  "CI_changed": false,
+  "CI_cost_per_PR": "not measured",
+  "readers": [
+    {
+      "file": "observer_check.py",
+      "function": "learn_enabled",
+      "shared": true
+    },
+    {
+      "file": "laws_check.py",
+      "function": "readme_extensions / l1_observer_before_sentinel",
+      "shared": true
+    },
+    {
+      "file": "pr_watch.py",
+      "function": "tasks listed set (all extension activation branches)",
+      "shared": true
+    }
+  ],
+  "test_files": "three changed test modules contain fixtures/assertions, no activation parser"
+}

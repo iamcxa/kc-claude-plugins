@@ -316,3 +316,37 @@ This report supersedes the preceding implementation report for candidate `17eccd
 ### Trial round 3
 
 Premise and goal: RoboRev's quoted-block-list mismatch is real—before the repair L1 skipped an enabled learn workflow (native laws exit 0, observer exit 1 with learn), while the repaired native fixture reports the missing-observer violation (laws exit 1 with L1, observer still enables learn). Start 2026-11-13 09:02:22, verification end 2026-11-13 09:20:50 Asia/Taipei (UTC+08:00), source `clock.curr_time` UTC readings converted by +8 hours. Integration base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`, repair parent `17eccdda05fde54e6dff66f4989787864219ef43`, candidate `97fe3d6ff9f9afe220b463c71ac428e380fc4dc5`. Goal command `PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/reproduce.py" --code "$WT" > "$E/after-reproducer.json"`, helper exit 0; the two focused regression commands in `repair-3/README.md` failed before and pass after repair; full merge-test command exit 0 is saved in `full-suite-exit.json`. Since round 2, FO published PR #861 and reported job 1809's High; this round confirms it, removes both inconsistent parsers and adds the two regressions. Blocked: no build blocker; FO-owned review/validation remain and no fresh clean review is claimed. Fired: none of scope/criterion change, overturned premise, new component boundary without contract, Production trigger or outside-file/Budget work. This is the last permitted build round (3 of 3); any further build repair returns to the Captain rather than starting another round. Task state remains implementation for FO handoff.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #861 head 97fe3d6f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion myself, and judging each limit the implementation report states.
+  PASSED at 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5, base c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694; validation/README.md maps all six criteria to rerun outputs and accepted limits; no new Material, Polish or Needs decision finding.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by me exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; verdict naming the head, with findings classified by the workflow's Review-finding disposition.
+  validation/acceptance.sh has four steps; validation/acceptance.log exit 0, 204.262 seconds (acceptance-summary.json), public fixed-SHA download with no product-worktree dependency; explicit dispatched adr_lint.py command in validation/README.md exited 0 (74 records).
+- DONE: AC-1 unlisted archived workflows omit learning steps and preserve observer results/recovery.
+  validation/fixtures.json passes 12 unselected cases; baseline-goal.json passes only 12/24 overall, exit 1; AC1-unconditional-learn.json detects the reversal.
+- DONE: AC-2 selected output remains byte-identical; live and historical committed-report behavior remains correct.
+  validation/fixtures.json passes all 12 selected cases; acceptance.log passes 23 observer tests; deletion, reordering, disk-read and live-learn mutations each fail their intended assertion.
+- DONE: AC-3 explicit/discovered README and detached commands work; unreadable/invalid selection holds without actions.
+  validation/acceptance.log covers the generated detached command; unreadable.json records actual permission denial, exit 2 and zero next actions; AC3-omit-printed-readme.log fails at real post-archive execution.
+- DONE: AC-4 real current and historical-configuration comparisons remain count-only.
+  validation/real-counts.json has 237/237 identical pairs; historical-counts.json has 82 intended deletions and zero unexpected changes; AC4-unexpected-verdict-output.json detects output drift.
+- DONE: AC-5 native recovery and package callers retain their boundaries; all in-scope extension readers agree.
+  validation/recovery.log passes with installed Spacedock 0.27.2; cross-reader-candidate.json passes 8/8 versus prior 1/8 (cross-reader-prior.json), including comment decoys and spaced block lists; legacy laws/watcher and parser-omission mutations fail.
+- DONE: AC-6 six-file scope, dependency/config/CI boundaries and reading-cost evidence are satisfied.
+  validation/scope.json confirms six files; words.json records -22 words after unselected archive, +2 for merged command and zero other changed-path moments; governing-document mutation fails. CI unchanged; cost per PR not measured.
+- DONE: Rerun the full local unit command and account for all scripts/tests without duplicates.
+  validation/full-suite-command.txt and full-suite.log exit 0; full-suite-summary.json records 25 scripts, 1377 total, 1366 passed, 11 skipped; mutations.json records 11/11 detected falsifiers.
+- DONE: Repository lint, required guards, dispatch records and affected-document disposition.
+  validation/guards.json records exits 0; lint in full-suite.log passes; comment-ratio.log is 0.0% against 5%; doc-impact.log names learning.md, unaffected because its parser/caller practices remain correct; no reserved or changed ADR/migration.
+- DONE: Preserve independent ownership, exact product bytes, privacy and delivery authority.
+  validation/identity.json and code-files.sha256 bind the archive; product worktree remains clean at the candidate; privacy-scan.json found zero private-task-name matches in added evidence; no product/config/worktree-metadata mutation or external message.
+- SKIPPED: Reconstruct the missing original incident, configure optional source replays, and claim delivery or clean FO-owned review.
+  Historical README/current tasks do not prove coexistence; 11 optional skips and three excluded pinned integrations are disclosed (native recovery separately passed); PR remains a draft in validation/pr.json, and FO owns review, gate and delivery.
+- DONE: Record owned temporary paths for cleanup after the evidence commit.
+  validation/identity.json and acceptance-summary.json name the owned paths; validation/cleanup.json will record exact-path removal and verification after this report/evidence is committed.
+
+### Summary
+
+Independent validation recommends PASSED for 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5: the accepted goal works and the without-change/mutation checks justify each retained production change. The reported parser mismatch is repaired in all three in-scope readers, and no new supported-workflow harm was reproduced; the original historical-incident limit and optional integration/replay gaps remain explicit. Start 2026-11-13 09:26:34, evidence end 2026-11-13 09:42:58 Asia/Taipei, from clock.curr_time UTC plus eight hours; gate approval, merge, release and adopter delivery remain FO/Captain-owned.

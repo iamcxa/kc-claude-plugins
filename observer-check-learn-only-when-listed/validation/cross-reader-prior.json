@@ -1,0 +1,110 @@
+{
+  "cases": [
+    {
+      "case": "absent",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "empty-comment",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": true,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "inline-decoy",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": true,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "block-decoy",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": true,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "inline-trailing",
+      "expected": true,
+      "observer": true,
+      "laws": false,
+      "watcher": true,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "quoted-block",
+      "expected": true,
+      "observer": true,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "block-blank-comment",
+      "expected": true,
+      "observer": true,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    },
+    {
+      "case": "inline-name-boundary",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": true,
+      "exits": [
+        1,
+        2,
+        0
+      ],
+      "passed": false
+    }
+  ],
+  "passed": 1,
+  "total": 8
+}

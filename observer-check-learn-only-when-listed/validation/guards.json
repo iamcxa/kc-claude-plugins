@@ -1,0 +1,94 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/observer-learn-validation-srvkjmik/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed.md",
+      "--base",
+      "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+      "--head",
+      "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py",
+      "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+      "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+      "--repo",
+      "/tmp/observer-learn-validation-srvkjmik/candidate",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py",
+      "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+      "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "design-check",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/tmp/observer-learn-validation-srvkjmik/candidate",
+      "diff",
+      "--check",
+      "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+      "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_exit_2_wins_over_a_violation_and_both_print (__main__.ExitContractTest.test_exit_2_wins_over_a_violation_and_both_print)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC5-omit-parser-fixture/kc-dev-flow-2/scripts/test_laws_check.py", line 213, in test_exit_2_wins_over_a_violation_and_both_print
+    self.assertIn("violation: L1", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'violation: L1' not found in 'L3 amendment-append-only: 0 events judged in 06f2ac713b6f..1c4b32fc8c37, 0 violated\nL4 amendment-moves-use-fresh-ids: 0 events judged in 06f2ac713b6f..1c4b32fc8c37, 0 violated\nL1 observer-before-sentinel: cannot judge: script missing: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxh6vgr0w/no-dr/pkg/scripts/workflow_extensions.py\nL2 dispatch-record-complete: cannot judge: script missing: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpxh6vgr0w/no-dr/pkg/scripts/dispatch_records.py\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.488s
+
+FAILED (failures=1)

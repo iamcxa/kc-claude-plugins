@@ -1,0 +1,42 @@
+{
+  "host_package": "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+  "dispatch_package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1",
+  "scripts": [
+    {
+      "path": "scripts/adr_lint.py",
+      "sha256": "7313e02238830471138d23508c1106bf4ff15ab8b166c060ec1d6e5a160e719f",
+      "dispatch_path_identical": true
+    },
+    {
+      "path": "scripts/number_guards.py",
+      "sha256": "bf395410b8f1e17edd08352d1013b6754ad90811a99e0880e0f24c1250d95d9b",
+      "dispatch_path_identical": true
+    },
+    {
+      "path": "scripts/comment_ratio.py",
+      "sha256": "b01e2f61e64b0a3666964e54dd4b14e308345359445d78d6ab68bbcce638a3a0",
+      "dispatch_path_identical": true
+    },
+    {
+      "path": "scripts/doc_impact.py",
+      "sha256": "2af123dbeeeb0912da30bd1f1c9241c7d3692615e920d5958a1cca33ca7026cd",
+      "dispatch_path_identical": true
+    },
+    {
+      "path": "scripts/design_surfaces.py",
+      "sha256": "c83645d817295277d2d67f8357a5e308d329822139d5bdaa4ed885193a5da4b6",
+      "dispatch_path_identical": false
+    },
+    {
+      "path": "scripts/dispatch_records.py",
+      "sha256": "322e6aa30a9a81041b5dbe8d2e4a6114cf1de899e0e26a6de1edd9804b59d244",
+      "dispatch_path_identical": true
+    },
+    {
+      "path": "scripts/role_triggers.py",
+      "sha256": "b323991c6c199d5b251f9232b0b7f27b5b425161841b3ac62a97f6dedbe06300",
+      "dispatch_path_identical": true
+    }
+  ],
+  "native_spacedock_version": "spacedock 0.27.2"
+}

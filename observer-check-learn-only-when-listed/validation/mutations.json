@@ -1,0 +1,157 @@
+{
+  "python_bytecode_disabled": true,
+  "existing_caches_cleared": true,
+  "mutations": [
+    {
+      "name": "AC1-unconditional-learn",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/validation/probe.py",
+        "fixtures",
+        "--code",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC1-unconditional-learn",
+        "--scratch",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC1-unconditional-learn.json"
+    },
+    {
+      "name": "AC2-delete-notice",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/validation/probe.py",
+        "fixtures",
+        "--code",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC2-delete-notice",
+        "--scratch",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC2-delete-notice.json"
+    },
+    {
+      "name": "AC2-reorder-steps",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/validation/probe.py",
+        "fixtures",
+        "--code",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC2-reorder-steps",
+        "--scratch",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC2-reorder-steps.json"
+    },
+    {
+      "name": "AC2-read-report-from-disk",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC2-read-report-from-disk/kc-dev-flow-2/scripts/test_observer_check.py",
+        "ObserverCheckTest.test_the_committed_tree_decides_not_the_disk"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC2-read-report-from-disk.log"
+    },
+    {
+      "name": "AC2-print-learn-live",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC2-print-learn-live/kc-dev-flow-2/scripts/test_observer_check.py",
+        "ObserverCheckTest.test_an_archived_report_prints_the_learn_steps_and_a_live_one_does_not"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC2-print-learn-live.log"
+    },
+    {
+      "name": "AC3-omit-printed-readme",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC3-omit-printed-readme/run.py"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC3-omit-printed-readme.log"
+    },
+    {
+      "name": "AC4-unexpected-verdict-output",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/validation/probe.py",
+        "real",
+        "--code",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC4-unexpected-verdict-output",
+        "--scratch",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch",
+        "--workflow",
+        "/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC4-unexpected-verdict-output.json"
+    },
+    {
+      "name": "AC5-omit-parser-fixture",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC5-omit-parser-fixture/kc-dev-flow-2/scripts/test_laws_check.py",
+        "ExitContractTest.test_exit_2_wins_over_a_violation_and_both_print"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC5-omit-parser-fixture.log"
+    },
+    {
+      "name": "round3-restore-laws-parser",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/round3-restore-laws-parser/kc-dev-flow-2/scripts/test_laws_check.py",
+        "L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "round3-restore-laws-parser.log"
+    },
+    {
+      "name": "round3-restore-watcher-parser",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/round3-restore-watcher-parser/kc-dev-flow-2/scripts/test_pr_watch.py",
+        "TasksTests.test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "round3-restore-watcher-parser.log"
+    },
+    {
+      "name": "AC6-governing-document-edit",
+      "command": [
+        "/opt/homebrew/opt/python@3.15/bin/python3.15",
+        "-B",
+        "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/validation/words.py",
+        "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/AC6-governing-document-edit"
+      ],
+      "exit": 1,
+      "detected": true,
+      "output": "AC6-governing-document-edit.log"
+    }
+  ],
+  "detected": 11,
+  "total": 11
+}

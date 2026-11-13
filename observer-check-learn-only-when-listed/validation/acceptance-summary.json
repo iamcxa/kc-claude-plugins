@@ -1,0 +1,15 @@
+{
+  "exit": 0,
+  "focused_total": 245,
+  "passed": 244,
+  "skipped": 1,
+  "parity_passed": 8,
+  "parity_total": 8,
+  "duration_seconds": 204.262,
+  "duration_source": "acceptance.log filesystem creation and final-write timestamps",
+  "within_five_minutes": true,
+  "scratch_removed": [
+    "/tmp/observer-learn-acceptance.U2sNa0",
+    "/tmp/observer-learn-acceptance.nMqBFF"
+  ]
+}

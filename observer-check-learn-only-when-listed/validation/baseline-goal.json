@@ -1,0 +1,198 @@
+{
+  "cases": [
+    {
+      "case": "absent/missing",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "absent/blank",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "absent/present",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "absent/waiver",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    },
+    {
+      "case": "empty/missing",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "empty/blank",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "empty/present",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "empty/waiver",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    },
+    {
+      "case": "other/missing",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "other/blank",
+      "passed": false,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "other/present",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "other/waiver",
+      "passed": false,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    },
+    {
+      "case": "inline/missing",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "inline/blank",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "inline/present",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "inline/waiver",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    },
+    {
+      "case": "quoted/missing",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "quoted/blank",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "quoted/present",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "quoted/waiver",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    },
+    {
+      "case": "block/missing",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 85,
+      "probe_words": 85
+    },
+    {
+      "case": "block/blank",
+      "passed": true,
+      "base_exit": 1,
+      "probe_exit": 1,
+      "base_words": 84,
+      "probe_words": 84
+    },
+    {
+      "case": "block/present",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 28,
+      "probe_words": 28
+    },
+    {
+      "case": "block/waiver",
+      "passed": true,
+      "base_exit": 0,
+      "probe_exit": 0,
+      "base_words": 32,
+      "probe_words": 32
+    }
+  ],
+  "passed": 12,
+  "total": 24
+}

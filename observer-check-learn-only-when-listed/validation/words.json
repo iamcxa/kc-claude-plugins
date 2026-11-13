@@ -1,0 +1,52 @@
+{
+  "unit": "whitespace-separated words; fixed one-word paths and example slug",
+  "scope": "per-moment changed output plus identical governing passages as a common term; no unrelated provider-output or total workload claim",
+  "moments": [
+    {
+      "moment": "after archive: no learn, report present",
+      "base": 28,
+      "probe": 6,
+      "delta": -22
+    },
+    {
+      "moment": "after archive: no learn, report missing",
+      "base": 85,
+      "probe": 63,
+      "delta": -22
+    },
+    {
+      "moment": "after archive: learn, report present",
+      "base": 28,
+      "probe": 28,
+      "delta": 0
+    },
+    {
+      "moment": "after archive: learn, report missing",
+      "base": 85,
+      "probe": 85,
+      "delta": 0
+    },
+    {
+      "moment": "startup",
+      "common_passages": "byte-identical",
+      "delta": 0
+    },
+    {
+      "moment": "idle on open PR",
+      "common_passages": "byte-identical",
+      "delta": 0
+    },
+    {
+      "moment": "merge ask",
+      "common_passages": "byte-identical",
+      "delta": 0
+    },
+    {
+      "moment": "idle on merged PR with report before archive",
+      "common_passages": "byte-identical",
+      "base_output": 20,
+      "probe_output": 22,
+      "delta": 2
+    }
+  ]
+}

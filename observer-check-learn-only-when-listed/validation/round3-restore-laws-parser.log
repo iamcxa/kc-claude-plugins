@@ -1,0 +1,44 @@
+FFF
+======================================================================
+FAIL: test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words (__main__.L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words) (field='extensions:\n  - "learn" # chosen')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/round3-restore-laws-parser/kc-dev-flow-2/scripts/test_laws_check.py", line 281, in test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words
+    self.assertEqual(code, 1 if enabled else 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : L1 observer-before-sentinel: 0 events judged (README lists no learn)
+L2 dispatch-record-complete: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L3 amendment-append-only: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+
+
+======================================================================
+FAIL: test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words (__main__.L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words) (field="extensions: ['learn'] # chosen")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/round3-restore-laws-parser/kc-dev-flow-2/scripts/test_laws_check.py", line 281, in test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words
+    self.assertEqual(code, 1 if enabled else 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : L2 dispatch-record-complete: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L3 amendment-append-only: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L1 observer-before-sentinel: cannot judge: README /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuvh0mben/readme-learn.md: extensions: is neither a [list] nor a block list
+
+
+======================================================================
+FAIL: test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words (__main__.L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words) (field='extensions: [peers] # learn is not selected')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/observer-learn-validation-srvkjmik/candidate/.proof-scratch/mutations/round3-restore-laws-parser/kc-dev-flow-2/scripts/test_laws_check.py", line 281, in test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words
+    self.assertEqual(code, 1 if enabled else 0, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : L2 dispatch-record-complete: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L3 amendment-append-only: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in 06f2ac713b6f..0c5c4f806ee7, 0 violated
+L1 observer-before-sentinel: cannot judge: README /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpuvh0mben/readme-learn.md: extensions: is neither a [list] nor a block list
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.225s
+
+FAILED (failures=3)

@@ -1,0 +1,23 @@
+{
+  "base_goal": {
+    "passed": 12,
+    "total": 24,
+    "exit": 1
+  },
+  "candidate_goal": {
+    "passed": 24,
+    "total": 24,
+    "exit": 0
+  },
+  "prior_reader_parity": {
+    "passed": 1,
+    "total": 8,
+    "exit": 1
+  },
+  "candidate_reader_parity": {
+    "passed": 8,
+    "total": 8,
+    "exit": 0
+  },
+  "mutations_detected": 11
+}

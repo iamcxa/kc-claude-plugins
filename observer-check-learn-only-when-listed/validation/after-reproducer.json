@@ -1,0 +1,7 @@
+{
+  "laws_exit": 1,
+  "laws_skips_L1": false,
+  "laws_reports_L1_violation": true,
+  "observer_exit": 1,
+  "observer_prints_learn": true
+}

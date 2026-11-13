@@ -1,0 +1,141 @@
+Step 1/4: download pinned candidate and verify seven file hashes
+kc-dev-flow-2/scripts/laws_check.py: OK
+kc-dev-flow-2/scripts/observer_check.py: OK
+kc-dev-flow-2/scripts/pr_watch.py: OK
+kc-dev-flow-2/scripts/test_laws_check.py: OK
+kc-dev-flow-2/scripts/test_observer_check.py: OK
+kc-dev-flow-2/scripts/test_pr_watch.py: OK
+kc-dev-flow-2/scripts/workflow_extensions.py: OK
+Step 2/4: three readers agree on eight independently selected configurations
+{
+  "cases": [
+    {
+      "case": "absent",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "empty-comment",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "inline-decoy",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "block-decoy",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "inline-trailing",
+      "expected": true,
+      "observer": true,
+      "laws": true,
+      "watcher": true,
+      "exits": [
+        1,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "quoted-block",
+      "expected": true,
+      "observer": true,
+      "laws": true,
+      "watcher": true,
+      "exits": [
+        1,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "block-blank-comment",
+      "expected": true,
+      "observer": true,
+      "laws": true,
+      "watcher": true,
+      "exits": [
+        1,
+        1,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "case": "inline-name-boundary",
+      "expected": false,
+      "observer": false,
+      "laws": false,
+      "watcher": false,
+      "exits": [
+        1,
+        0,
+        0
+      ],
+      "passed": true
+    }
+  ],
+  "passed": 8,
+  "total": 8
+}
+Step 3/4: observer reports, historical revisions and selection errors
+.......................
+----------------------------------------------------------------------
+Ran 23 tests in 9.150s
+
+OK
+Step 4/4: laws and watcher callers, including detached archive commands
+..................................................................................s..
+----------------------------------------------------------------------
+Ran 85 tests in 113.598s
+
+OK (skipped=1)
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.........................................................................................................
+----------------------------------------------------------------------
+Ran 137 tests in 70.643s
+
+OK
+PASS: candidate 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5; 8/8 parity cases; 245 focused tests, 244 passed and 1 optional replay skipped
+Removed scratch: /tmp/observer-learn-acceptance.nMqBFF

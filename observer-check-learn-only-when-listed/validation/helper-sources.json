@@ -1,0 +1,27 @@
+[
+  {
+    "source": "../repair-3/probe.py",
+    "sha256": "0433050ac45b9c3d3b038bf9beecc8b2abac26f934af47161816977b6a432a6c",
+    "execution_copy_removed_before_publication": true
+  },
+  {
+    "source": "../repair-3/mutations.py",
+    "sha256": "abb8621c5c1aaf5b5efba8a683fe9f67a61a10ef2640d3daf5464305d929318f",
+    "execution_copy_removed_before_publication": true
+  },
+  {
+    "source": "../repair-3/words.py",
+    "sha256": "bd3ba75dd3a9b525a8730c3a76f957870c6ef4d2e5cc47e29e9f5e3fb71487ba",
+    "execution_copy_removed_before_publication": true
+  },
+  {
+    "source": "../repair-3/unreadable.py",
+    "sha256": "930ea18fe5a514bfcb9f204e69abb438ba782aabf645f25de2b2edce9385b4ed",
+    "execution_copy_removed_before_publication": true
+  },
+  {
+    "source": "../repair-3/reproduce.py",
+    "sha256": "876c65bbcc150c53802717259ab5465c21ded13e20d934f1b9c848ef0661cf89",
+    "execution_copy_removed_before_publication": true
+  }
+]
