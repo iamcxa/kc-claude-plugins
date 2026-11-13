@@ -3,7 +3,7 @@ title: A Pilot task's ideation runs a working probe and its criteria's proofs be
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
