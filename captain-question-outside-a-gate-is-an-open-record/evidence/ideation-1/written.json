@@ -1,0 +1,145 @@
+[
+ {
+  "tasks": [
+   "dispatch-close-out-archives-evidence-and-removes-scratch",
+   "held-and-closed-tasks-leave-the-design-queue"
+  ],
+  "q": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+  "src": "amendment",
+  "recorded": "2026-11-13T10:40:43+08:00",
+  "channel": "chat",
+  "key": "dispatch-close-out-archives-evidence-and-removes-scratch#1"
+ },
+ {
+  "tasks": [
+   "new-work-checks-what-exists-first"
+  ],
+  "q": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明",
+  "src": "amendment",
+  "recorded": "2026-11-13T02:22:34+08:00",
+  "channel": "dialog",
+  "key": "new-work-checks-what-exists-first#1"
+ },
+ {
+  "tasks": [
+   "pilot-ideation-runs-a-probe-before-the-design"
+  ],
+  "q": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則",
+  "src": "amendment",
+  "recorded": "2026-11-13T14:49:47+08:00",
+  "channel": "chat",
+  "key": "pilot-ideation-runs-a-probe-before-the-design#1"
+ },
+ {
+  "tasks": [
+   "pilot-ideation-runs-a-probe-before-the-design"
+  ],
+  "q": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功",
+  "src": "amendment",
+  "recorded": "2026-11-13T16:01:58+08:00",
+  "channel": "dialog",
+  "key": "pilot-ideation-runs-a-probe-before-the-design#2"
+ },
+ {
+  "tasks": [
+   "pilot-ideation-runs-a-probe-before-the-design"
+  ],
+  "q": "要不要開「Pilot 流程改動",
+  "src": "scope-source",
+  "recorded": "2026-11-05T17:40:56+08:00",
+  "channel": "chat",
+  "key": "pilot-ideation-runs-a-probe-before-the-design#3"
+ },
+ {
+  "tasks": [
+   "ready-pr-gets-a-codex-code-review-without-fo-noticing"
+  ],
+  "q": "「自動觸發 Codex 審查",
+  "src": "amendment",
+  "recorded": "2026-11-13T21:57:48+08:00",
+  "channel": "chat",
+  "key": "ready-pr-gets-a-codex-code-review-without-fo-noticing#1"
+ },
+ {
+  "tasks": [
+   "ready-pr-gets-a-codex-code-review-without-fo-noticing",
+   "merge-ask-is-produced-from-records",
+   "validator-commands-fit-the-delivery-check"
+  ],
+  "q": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段",
+  "src": "scope-source",
+  "recorded": "2026-11-13T10:24:54+08:00",
+  "channel": "chat",
+  "key": "ready-pr-gets-a-codex-code-review-without-fo-noticing#2"
+ },
+ {
+  "tasks": [
+   "budget-form-counts-ideation-rounds-and-times-each-round"
+  ],
+  "q": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。",
+  "src": "scope-source",
+  "recorded": "2026-11-13T15:14:02+08:00",
+  "channel": "dialog",
+  "key": "budget-form-counts-ideation-rounds-and-times-each-round#1"
+ },
+ {
+  "tasks": [
+   "captain-question-outside-a-gate-is-an-open-record"
+  ],
+  "q": "要不要開「待決定事項紀錄",
+  "src": "scope-source",
+  "recorded": "2026-11-13T14:45:53+08:00",
+  "channel": "chat",
+  "key": "captain-question-outside-a-gate-is-an-open-record#1"
+ },
+ {
+  "tasks": [
+   "design-check-reads-each-pilot-criterion-for-its-proof-record"
+  ],
+  "q": "#866 這張要怎麼走？",
+  "src": "amendment",
+  "recorded": "2026-11-13T20:22:30+08:00",
+  "channel": "chat",
+  "key": "design-check-reads-each-pilot-criterion-for-its-proof-record#1"
+ },
+ {
+  "tasks": [
+   "design-check-reads-each-pilot-criterion-for-its-proof-record"
+  ],
+  "q": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦",
+  "src": "scope-source",
+  "recorded": "2026-11-13T17:51:53+08:00",
+  "channel": "chat",
+  "key": "design-check-reads-each-pilot-criterion-for-its-proof-record#2"
+ },
+ {
+  "tasks": [
+   "evidence-is-declared-public-before-state-publication"
+  ],
+  "q": "#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的",
+  "src": "scope-source",
+  "recorded": "2026-11-13T11:45:10+08:00",
+  "channel": "dialog",
+  "key": "evidence-is-declared-public-before-state-publication#1"
+ },
+ {
+  "tasks": [
+   "merge-ask-is-produced-from-records"
+  ],
+  "q": "這張要怎麼走？",
+  "src": "amendment",
+  "recorded": "2026-11-13T22:18:20+08:00",
+  "channel": "chat",
+  "key": "merge-ask-is-produced-from-records#1"
+ },
+ {
+  "tasks": [
+   "merge-ask-is-produced-from-records"
+  ],
+  "q": "合併檢查存紀錄這張，要不要做成邊界合約？",
+  "src": "amendment",
+  "recorded": "2026-11-13T23:51:21+08:00",
+  "channel": "chat",
+  "key": "merge-ask-is-produced-from-records#2"
+ }
+]

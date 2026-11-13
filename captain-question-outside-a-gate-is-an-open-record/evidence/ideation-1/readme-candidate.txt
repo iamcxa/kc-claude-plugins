@@ -1,0 +1,1 @@
+Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>" --holds <task|acceptance|nothing>` and records each later showing, answer or withdrawal with the command it prints; `python3 <package>/scripts/task_timeline.py <state> --open` lists what waits on him.
