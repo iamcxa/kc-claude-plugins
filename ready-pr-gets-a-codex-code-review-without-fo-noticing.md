@@ -49,7 +49,7 @@ started: 2026-11-13T13:42:51Z
 1 implementation and 2 validation cycles, in one package PR.
 
 ## Stop condition
-- Superseded by Captain amendment 1: the outcome is one sentence in the Codex extension's text; see the amendment.
+- In a replay of the four recorded PR states, the security-only ones get exactly one trigger and none gets two, with no FO step between ready and the trigger.
 
 ## FO alignment
 
@@ -64,10 +64,16 @@ Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-13: amendment 1 wit
 ### Amendment 1 — 2026-11-13, chat
 Captain: 「「自動觸發 Codex 審查」改成一句規則：FO 標成可審查時同時留言請 Codex 審查一次；原本的自動化和「恰好一次」條件作廢」 (chat, 2026-11-13)
 Asked: 「「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。」
-Supersedes: Stop condition (no replacement)
+Supersedes: AC-1, AC-2, AC-3, AC-4
 Superseded text:
 
-- In a replay of the four recorded PR states, the security-only ones get exactly one trigger and none gets two, with no FO step between ready and the trigger.
+**AC-1** In a replay of the actual four pre-request recorded states, the security-only PRs receive exactly one simulated trigger each, all others receive zero, without an FO step between ready and trigger. Verified by a test-double replay from preserved immutable per-case snapshots, with command, exit and output path. Falsifier: delete a trigger, duplicate one, or substitute a reconstructed state for a recorded one. Current: not provable; only three reconstructions and one synthetic control were run, exit 0, `evidence/ideation-1/probe-output.json`.
+
+**AC-2** A repeated poll, restart, concurrent watcher and lost response cannot silently duplicate a request; uncertain delivery is surfaced rather than treated as a completed review. Verified by double-backed interleavings and lost-response injection with observed request counts and persisted states. Falsifier: server accepts and response is lost, followed by retry producing two. Current: FAILED on the probe: two accepted fake requests; same output, command and exit as Probe.
+
+**AC-3** Only an open, ready PR at the current head with a security-only result and no existing request qualifies; existing findings remain findings and a request is not a review round. Verified by the package's reader/watch doubles with pre-existing request, draft, closed, moved-head, clean and findings controls. Falsifier: any ineligible control posts or a request yields `evidence=`. Current: not verified as a whole; the synthetic clean control posted zero.
+
+**AC-4** State and review changes add no unintended FO instructions, with before/after total words at startup, open and merged PR idle, archive and merge ask measured by the same complete method. Verify with reproducible per-moment recount including applicable outputs, independently checked. Falsifier: omitted passage/output or a claimed count without its artifact. Current: not measured.
 
 ## Design
 
@@ -153,14 +159,7 @@ Recommended order: first `merge-ask-is-produced-from-records`, then `validator-c
 
 ## Acceptance criteria
 
-**AC-1** In a replay of the actual four pre-request recorded states, the security-only PRs receive exactly one simulated trigger each, all others receive zero, without an FO step between ready and trigger. Verified by a test-double replay from preserved immutable per-case snapshots, with command, exit and output path. Falsifier: delete a trigger, duplicate one, or substitute a reconstructed state for a recorded one. Current: not provable; only three reconstructions and one synthetic control were run, exit 0, `evidence/ideation-1/probe-output.json`.
-
-**AC-2** A repeated poll, restart, concurrent watcher and lost response cannot silently duplicate a request; uncertain delivery is surfaced rather than treated as a completed review. Verified by double-backed interleavings and lost-response injection with observed request counts and persisted states. Falsifier: server accepts and response is lost, followed by retry producing two. Current: FAILED on the probe: two accepted fake requests; same output, command and exit as Probe.
-
-**AC-3** Only an open, ready PR at the current head with a security-only result and no existing request qualifies; existing findings remain findings and a request is not a review round. Verified by the package's reader/watch doubles with pre-existing request, draft, closed, moved-head, clean and findings controls. Falsifier: any ineligible control posts or a request yields `evidence=`. Current: not verified as a whole; the synthetic clean control posted zero.
-
-**AC-4** State and review changes add no unintended FO instructions, with before/after total words at startup, open and merged PR idle, archive and merge ask measured by the same complete method. Verify with reproducible per-moment recount including applicable outputs, independently checked. Falsifier: omitted passage/output or a claimed count without its artifact. Current: not measured.
-
+**AC-5** Amended by Captain, amendment 1. FO 標成可審查時同時留言請 Codex 審查一次。 The Codex extension's text carries that sentence at the step where FO marks a PR ready, and the package lint passes with it. Evidence: to be run on the candidate by the build worker (a search of `kc-dev-flow-2/extensions/codex/EXTENSION.md` for the sentence, and `lint-skills.py`), recording command, exit and output path. Falsifier: removing the sentence makes the search exit non-zero.
 
 ## Stage Report: ideation
 
