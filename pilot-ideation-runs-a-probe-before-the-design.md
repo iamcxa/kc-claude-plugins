@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:pilot-ideation-runs-a-probe-before-the-design:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:pilot-ideation-runs-a-probe-before-the-design-validation-1
+              briefing:
+                id: briefing:pilot-ideation-runs-a-probe-before-the-design:validation:attempt-1:revision-1
+                digest: sha256:b3c26d0050fade120bb46f2a095c4575a94a90a3dcbd6257c18d724c44f52ada
+                room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/validation/briefing-1
 started: 2026-11-13T06:44:05Z
 worktree: .worktrees/spacedock-ensign-pilot-ideation-runs-a-probe-before-the-design
 pr: iamcxa/kc-claude-plugins#864
