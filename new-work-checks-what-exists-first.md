@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:new-work-checks-what-exists-first:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:new-work-checks-what-exists-first-validation-1
+              briefing:
+                id: briefing:new-work-checks-what-exists-first:validation:attempt-1:revision-1
+                digest: sha256:5add88dc3f5d37d1013c59b2f4f443c637a36ce88a5313b6004abbebcd8da249
+                room-ref: ./new-work-checks-what-exists-first/review/validation/briefing-1
 started: 2026-11-12T17:03:29Z
 worktree: .worktrees/spacedock-ensign-new-work-checks-what-exists-first
 pr: iamcxa/kc-claude-plugins#859

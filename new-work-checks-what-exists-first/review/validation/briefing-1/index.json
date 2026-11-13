@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:new-work-checks-what-exists-first:validation:attempt-1:revision-1",
+  "question": "決定：合併 #859（階段原則加一段「做新東西前先查既有的」：worker 動手前先查既有程式、上游、相鄰專案和生效中的決策紀錄，寫出查了什麼、找到什麼，再決定新東西怎麼接上去）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；實作守則多 106 個字；沒有機械檢查，worker 仍可能跳過；獨立證明只有一次冷跑觀察，證明那一次有照做，不代表每次都會；第一次驗證因驗證者自己的測試設置出錯兩次而缺這項證明，第二次補上；只有 Codex 審過，第二審查者未觸發；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit 1fc2f05f88b18a62d4eda598158ffa385df9fae8, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:new-work-checks-what-exists-first:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ae2318dd54c31ff382f558b3eb6188aa2d845435/new-work-checks-what-exists-first.md",
+      "rev": "sha256:18130c8bc194584ca9102a9c9103c9a48d905962f9869d2998b0f9c69fa59711",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of new-work-checks-what-exists-first, PR #859, route trial of 2026-11-13.\nSufficiency: the stage principles carry one check home before new work; the base fails the routing check and the candidate passes, and one history-free test subject reading a native dispatch built from the candidate stated what it checked and found before its proposal (validation-2 report, Astra, 2026-11-13, PASSED at 1fc2f05f8; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: docs/adr/0083-workers-check-the-existing-chain-before-new-work.md, kc-dev-flow-2/skills/ideation/principles.md and kc-dev-flow-2/skills/implementation/principles.md change against the PR's base (gh pr view 859 file list, FO read 2026-11-13; judged in the validation reports, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/validation/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 859 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: main moved to c7d4464c5 when PRs #858 and #860 merged; git merge-tree of that main with this head gives tree 4845915f2 with no conflict, and FO ran the 28 commands of the kc-dev-flow-2 tests workflow on that tree, each exit 0 (/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/new-work-checks-what-exists-first/captain-steps/3-output.log, FO run 2026-11-13).\nExternal rounds: 1.\nExternal round sources: Codex code review of 1fc2f05f8 completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6832568583@1fc2f05f8).\nSecond reviewer: not triggered.\nRoboRev: clean on 1fc2f05f8, evidence=roborev:1807 (FO run 2026-11-13).\nCI: seven checks on 1fc2f05f8 finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 2. Round 1 REJECTED at 1fc2f05f8 with F1 Needs decision (independent cold proof not established, no candidate defect); round 2 PASSED at the same head with no new finding and F1 resolved by a new observation.\nCaptain amendments: 1."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:new-work-checks-what-exists-first:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/ae2318dd54c31ff382f558b3eb6188aa2d845435/new-work-checks-what-exists-first/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:4ba6d64b7eaeb2ef74c6e1826dbb0f3ad67256951c08912af2697c8c448dfb08"
+    }
+  ]
+}
