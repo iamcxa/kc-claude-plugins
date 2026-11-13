@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1",
+  "question": "決定：要不要讓「Pilot 設計階段先做試作」這張任務進設計階段？建議要。這張只做兩段裡的第一段：Pilot 的設計階段可以在本機分支做一個不推送的拋棄式試作，每條驗收條件當場跑一次並記下指令和結果，跑不了的列在「現在無法證明」給你在設計關卡看；設計關卡照舊由你決定。不做的部分：同一個 worker 接著實作、我代記設計關卡（這兩項維持你逐批授權），以及 Prod、POC 流程、跨元件的合約盲測。預算：1 implementation and 2 validation cycles，一個套件 PR。同意即接受：證據只有我挑的十張小任務；它沒有證明會變快，也沒有證明交付的缺陷變少；流程文字會增加，設計必須寫明刪掉或縮短什麼，寫不出來就回來找你。",
+  "artifacts": [
+    {
+      "id": "artifact:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f98d61ece214e9a0efc9a02b0eb5a7bd12bf1953/pilot-ideation-runs-a-probe-before-the-design.md",
+      "rev": "sha256:8a2939bb1a2ce66a92f998da54dc8a49e112a1590138b78eabd76d9d8987b558",
+      "mediaType": "text/markdown",
+      "summary": "profile pilot, variant kc-dev-flow-2; outcome: Pilot ideation may run a local, never-pushed probe and must run each criterion's proof once, listing what cannot be run; the design gate is unchanged. Budget: 1 implementation and 2 validation cycles, in one package PR. Non-goals: same-worker continuation, FO recording the design gate, Prod, the POC workflow, a contract probe. Surfaces none. Ideation owes the replacement words, the probe's bounds, what the change removes with word counts, and criteria whose proofs ran. Seed check exit 0 (FO run 2026-11-13)."
+    }
+  ]
+}

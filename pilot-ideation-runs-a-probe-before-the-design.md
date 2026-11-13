@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:pilot-ideation-runs-a-probe-before-the-design:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:pilot-ideation-runs-a-probe-before-the-design-backlog-1
+              briefing:
+                id: briefing:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1
+                digest: sha256:d9561606ddb4992d30285045b99b4f6fd356cdc8ccd87583aa2c3db454f5b417
+                room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/backlog/briefing-1
 ---
 
 ## Scope
