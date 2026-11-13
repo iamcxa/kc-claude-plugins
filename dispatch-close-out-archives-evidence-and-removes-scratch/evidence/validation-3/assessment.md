@@ -69,3 +69,7 @@ The exact full invocation arguments are retained in required-checks.json and mod
 ## Complete-suite result
 
 All 28 CI Python entries were run. Selected results: 1,438 unittest passes plus two passing native integration programs, ten explicit skips, zero failures (test-counts.json, tests.json, module-results.json). The raw full run exited 1 for the single alias assertion; all eight tests in that module then passed under the same directory alias, with no changed product/test bytes. The selected set replaces only those eight identical test IDs, with uniqueness and completeness checked. Twenty acceptance/repair mutations were rejected; the separately disclosed active-observer mutation survived and is not counted as rejected.
+
+## Committed restoration and cleanup
+
+Evidence commit 488e189386397f5cce78c5468a14515e012e889f was pushed before final deletion. All 113 manifest originals restored with matching SHA-256 (committed-restore.json). The exact 73 deletion paths are listed in cleanup-paths.txt and cleanup.json: 72 native dispatch files plus /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk. All 3,651 recorded fixture paths are now absent. Shared parents and product worktree metadata were untouched. Validation/cleanup ended 2026-11-13 12:02:11 Asia/Taipei using clock.curr_time UTC +08:00.
