@@ -228,6 +228,12 @@ def proof_gaps(lines):
     return gaps
 
 
+def pilot_ideation(front):
+    return all(re.search(rf"""^{key}:[ \t]*(?:{value}|'{value}'|"{value}")(?:[ \t]+#[^\n]*)?[ \t]*$""",
+                         front, re.M)
+               for key, value in (("profile", "pilot"), ("status", "ideation")))
+
+
 def design_approved(text):
     fm, _ = decision_ledger.split_task(text)
     return any(e["kind"] == "resolution" and e["stage"] == "ideation" and e.get("decision") == "approve"
@@ -1250,7 +1256,7 @@ def check_task(path, seed=False, notes=None):
                 errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
         if needed:
             errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
-    if profile and status and (profile.group(1), status.group(1)) == ("pilot", "ideation") and not design_approved(text):
+    if front and pilot_ideation(front.group(1)) and not design_approved(text):
         for key, missing in proof_gaps(lines):
             errors.append(f"{path.name}: Pilot criterion {key} has no {', '.join(missing)} in its proof record "
                           "(command, observed exit <n>, output path; Falsifier text does not count) and is not named "

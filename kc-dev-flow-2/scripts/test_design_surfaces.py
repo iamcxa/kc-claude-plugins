@@ -312,6 +312,33 @@ class PilotProofTests(unittest.TestCase):
             with self.subTest(gates=gates):
                 self.assertEqual(len(self.check("**AC-1** Read the design.", gates=gates)), 1)
 
+    def test_trailing_status_comment_does_not_bypass_the_proof_check(self):
+        for stage in ("ideation # ready for review", "'ideation' # review", '"ideation" # review'):
+            with self.subTest(stage=stage):
+                errors = self.check("**AC-1** Read the design.", stage=stage)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("Pilot criterion AC-1", errors[0])
+
+    def test_trailing_profile_comment_does_not_bypass_the_proof_check(self):
+        for profile in ("pilot # bounded trial", "'pilot' # trial", '"pilot" # trial'):
+            with self.subTest(profile=profile):
+                errors = self.check("**AC-1** Read the design.", profile=profile)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("Pilot criterion AC-1", errors[0])
+
+    def test_literal_hash_values_are_not_the_pilot_ideation_scalars(self):
+        for profile, stage in (("pilot#trial", "ideation"), ("pilot", "ideation#review"),
+                               ("'pilot#trial'", "ideation"), ("pilot", '"ideation#review"')):
+            with self.subTest(profile=profile, stage=stage):
+                self.assertFalse(any("Pilot criterion" in error for error in
+                                     self.check("**AC-1** Read the design.", profile=profile, stage=stage)))
+
+    def test_approval_reader_accepts_canonical_stage_and_quoted_decisions(self):
+        for decision in ("approve", "'approve'", '"approve"'):
+            with self.subTest(decision=decision):
+                gates = self.APPROVED.replace("decision: approve", "decision: " + decision)
+                self.assertEqual(self.check("**AC-1** Read the design.", gates=gates), [])
+
     def test_seed_admission_does_not_owe_a_proof_record(self):
         self.assertFalse(any("Pilot criterion" in e for e in self.check("**AC-1** Read the design.", seed=True)))
 
