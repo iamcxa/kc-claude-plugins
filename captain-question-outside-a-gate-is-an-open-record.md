@@ -183,13 +183,23 @@ Recommended order: budget-form first (it is in validation and owns the `task_tim
 
 **AC-5** (if D2 A) `--open --gates` lists each unresolved gate attempt once, with waiting since never later than its resolution or now. Evidence: test over the replay clone; base: the `index.json` add time gives 23 of 34 negative (`gate-since-addtime.out`), the first naming commit 0 of 34 (`gate-since-pickaxe.out`); falsifier: the add-time method fails the test.
 
-**AC-6** The README ask sentence is the approved candidate and `lint-skills.py` passes with one budget step carrying the Captain's quoted words and moment `startup`. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py`; falsifier: the sentence without the step fails the word-count check.
+**AC-9** (Amended by Captain, amendment 1.) The README ask sentence is the approved candidate with `--by "<session>"` added to its ask command, 41 words, and `lint-skills.py` passes with one budget step carrying the Captain's quoted words and moment `startup`. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py`; falsifier: the sentence without the step fails the word-count check.
 
 **AC-7** The new ADR passes the ADR linter with its reserved number and names `task_timeline.py` and `design_surfaces.py` under Protects. Evidence: `python3 -B kc-dev-flow-2/scripts/adr_lint.py <ADR>`.
 
 **AC-8** A second blind reader, given only the contract as shipped, lists AC-2's fixture with the right key, owner and waiting time, and every question it asks is disposed in the task folder. Evidence: the reader's saved report at validation; not provable now (validation, per FO).
 
 Not provable now: that FO records questions at the moment of asking on a real day after release (needs a live day; AC-4 enforces only that a record exists by the next gate); a reader in another repository reading the remote branch (needs the release).
+
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat
+Captain: 「待決定事項紀錄的說明句補上 --by "<session>"，啟動字數從 39 改成 41」 (chat, 2026-11-14)
+Asked: 「待決定事項紀錄：說明句要不要加「誰在等」這一欄」 「已用 40 分鐘／預算 150 分鐘。建議加：不加的話，文件上寫的指令第一次一定失敗，要靠錯誤訊息才知道怎麼改。加了的代價是每次啟動多讀 2 個字。」 with FO's recommended option 「加：說明句補上 --by，啟動字數 39 改成 41（建議）」
+Supersedes: AC-6
+Superseded text:
+
+**AC-6** The README ask sentence is the approved candidate and `lint-skills.py` passes with one budget step carrying the Captain's quoted words and moment `startup`. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py`; falsifier: the sentence without the step fails the word-count check.
 
 ## Number guards
 
