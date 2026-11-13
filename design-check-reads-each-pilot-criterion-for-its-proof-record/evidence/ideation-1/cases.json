@@ -71,12 +71,30 @@
   "ok": true
  },
  {
-  "case": "run1-replay-profile-prod",
-  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-prod/run1-replay-profile-prod.md",
+  "case": "run1-replay-profile-poc",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-poc/run1-replay-profile-poc.md",
   "exit": 0,
   "want_exit": 0,
   "proof_lines": [],
-  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-prod.stdout.txt",
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-poc.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run1-replay-design-approved-status-still-ideation",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-design-approved-status-still-ideation/run1-replay-design-approved-status-still-ideation.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-design-approved-status-still-ideation.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "known-limit-planned-clause-passes",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/known-limit-planned-clause-passes/known-limit-planned-clause-passes.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/known-limit-planned-clause-passes.stdout.txt",
   "ok": true
  }
 ]

@@ -1,0 +1,870 @@
+.........ssss.......................................F...................F....FF.FFFFFFFFF.F...FF.F.FF.FF.FFFFFFFFFFFFFF...................FF..FF....FF.............................F...............................................F.FFF........
+======================================================================
+FAIL: test_reminder_is_last_at_backlog_and_ideation_only (test_design_surfaces.AskFormTests.test_reminder_is_last_at_backlog_and_ideation_only) (stage='ideation', seed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1734, in test_reminder_is_last_at_backlog_and_ideation_only
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+AssertionError: 1 != 0 : task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: backlog briefing unreadable
+
+
+======================================================================
+FAIL: test_a_decision_ruling_needs_a_line_a_kind_and_an_owner (test_design_surfaces.DeclineCheckTests.test_a_decision_ruling_needs_a_line_a_kind_and_an_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2268, in test_a_decision_ruling_needs_a_line_a_kind_and_an_owner
+    self.assertEqual(self.run_check(review=two, report=MINORS, declines=good)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_host_component_decline_needs_its_name_and_declaration_path (test_design_surfaces.DeclineCheckTests.test_a_host_component_decline_needs_its_name_and_declaration_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2263, in test_a_host_component_decline_needs_its_name_and_declaration_path
+    self.assertEqual(self.run_check(review=named)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_host_look_decision_must_end_with_the_adr_title (test_design_surfaces.DeclineCheckTests.test_a_host_look_decision_must_end_with_the_adr_title)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2284, in test_a_host_look_decision_must_end_with_the_adr_title
+    self.assertEqual(self.run_check(review=plain, report=MINORS, declines=other)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ruling_missing_its_evidence_or_change_is_refused (test_design_surfaces.DeclineCheckTests.test_a_ruling_missing_its_evidence_or_change_is_refused) [evidence]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2220, in test_a_ruling_missing_its_evidence_or_change_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ruling_missing_its_evidence_or_change_is_refused (test_design_surfaces.DeclineCheckTests.test_a_ruling_missing_its_evidence_or_change_is_refused) [change]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2220, in test_a_ruling_missing_its_evidence_or_change_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (test_design_surfaces.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count) [another key]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2210, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (test_design_surfaces.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count) [after the root]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2210, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ruling_outside_the_rulings_list_does_not_count (test_design_surfaces.DeclineCheckTests.test_a_ruling_outside_the_rulings_list_does_not_count)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2212, in test_a_ruling_outside_the_rulings_list_does_not_count
+    self.assertEqual(self.run_check(declines=fenced)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_scalar_design_decline_check_root_is_refused (test_design_surfaces.DeclineCheckTests.test_a_scalar_design_decline_check_root_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2234, in test_a_scalar_design_decline_check_root_is_refused
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_an_empty_evidence_or_change_counts_as_missing (test_design_surfaces.DeclineCheckTests.test_an_empty_evidence_or_change_counts_as_missing) [evidence]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2228, in test_an_empty_evidence_or_change_counts_as_missing
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_an_empty_evidence_or_change_counts_as_missing (test_design_surfaces.DeclineCheckTests.test_an_empty_evidence_or_change_counts_as_missing) [change]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2228, in test_an_empty_evidence_or_change_counts_as_missing
+    self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_an_overruled_decline_redisposed_passes_and_counts (test_design_surfaces.DeclineCheckTests.test_an_overruled_decline_redisposed_passes_and_counts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2247, in test_an_overruled_decline_redisposed_passes_and_counts
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_decisions_of_one_kind_and_owner_print_once (test_design_surfaces.DeclineCheckTests.test_decisions_of_one_kind_and_owner_print_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2292, in test_decisions_of_one_kind_and_owner_print_once
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_fenced_preview_line_cannot_bind_a_report (test_design_surfaces.DesignReviewTests.test_a_fenced_preview_line_cannot_bind_a_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1558, in test_a_fenced_preview_line_cannot_bind_a_report
+    self.assertEqual(self.run_check(previews=previews)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_folder_task_passes_with_its_own_report (test_design_surfaces.DesignReviewTests.test_a_folder_task_passes_with_its_own_report)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1380, in test_a_folder_task_passes_with_its_own_report
+    self.assertEqual(self.run_check(folder_form=True)[0], [])
+AssertionError: Lists differ: ["index.md: Pilot criterion AC-1 has no co[407 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"index.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['index.md: Pilot criterion AC-1 has no command, exit, output path in its '
+-  'proof record (command, observed exit <n>, output path; Falsifier text does '
+-  "not count) and is not named with a reason under a 'Not provable now' heading",
+-  'index.md: Pilot criterion AC-2 has no command, exit, output path in its '
+-  'proof record (command, observed exit <n>, output path; Falsifier text does '
+-  "not count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_report_naming_any_of_several_preview_lines_passes (test_design_surfaces.DesignReviewTests.test_a_report_naming_any_of_several_preview_lines_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1444, in test_a_report_naming_any_of_several_preview_lines_passes
+    self.assertEqual(self.run_check(previews=previews, report=DESIGN_REPORT.replace("preview: preview.html", "preview: second.html"))[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_review_without_a_decline_prints_one_short_line_and_the_preview (test_design_surfaces.DesignReviewTests.test_a_review_without_a_decline_prints_one_short_line_and_the_preview)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1374, in test_a_review_without_a_decline_prints_one_short_line_and_the_preview
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline (test_design_surfaces.DesignReviewTests.test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1367, in test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_ui_task_past_ideation_or_without_ui_is_unchanged (test_design_surfaces.DesignReviewTests.test_a_ui_task_past_ideation_or_without_ui_is_unchanged) (surfaces='none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1411, in test_a_ui_task_past_ideation_or_without_ui_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+AssertionError: Tuples differ: (["task.md: Pilot criterion AC-1 has no com[410 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: Pilot criterion AC-1 has no com[405 chars]ing"]
+[]
+
++ ([], [])
+- (['task.md: Pilot criterion AC-1 has no command, exit, output path in its '
+-   'proof record (command, observed exit <n>, output path; Falsifier text does '
+-   "not count) and is not named with a reason under a 'Not provable now' "
+-   'heading',
+-   'task.md: Pilot criterion AC-2 has no command, exit, output path in its '
+-   'proof record (command, observed exit <n>, output path; Falsifier text does '
+-   "not count) and is not named with a reason under a 'Not provable now' "
+-   'heading'],
+-  [])
+
+======================================================================
+FAIL: test_an_empty_findings_list_passes_with_no_finding_lines (test_design_surfaces.DesignReviewTests.test_an_empty_findings_list_passes_with_no_finding_lines)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1420, in test_an_empty_findings_list_passes_with_no_finding_lines
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes (test_design_surfaces.DesignReviewTests.test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1451, in test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_design_call_lets_a_missing_review_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_design_call_lets_a_missing_review_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1487, in test_mutation_dropping_the_design_call_lets_a_missing_review_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_design_review_count_lets_two_lines_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_design_review_count_lets_two_lines_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1473, in test_mutation_dropping_the_design_review_count_lets_two_lines_pass
+    self.assertEqual(self.run_check(review=review, extra=later, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1522, in test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass
+    self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1515, in test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding
+    self.assertEqual(self.run_check()[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_minor_test_lets_a_declined_major_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_minor_test_lets_a_declined_major_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1494, in test_mutation_dropping_the_minor_test_lets_a_declined_major_pass
+    self.assertEqual(self.run_check(review=review, declines=both, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1532, in test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_preview_rule_lets_another_preview_pass (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_preview_rule_lets_another_preview_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1500, in test_mutation_dropping_the_preview_rule_lets_another_preview_pass
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui (test_design_surfaces.DesignReviewTests.test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1481, in test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui
+    self.assertEqual(mutant.check_task(path), [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui (test_design_surfaces.DesignReviewTests.test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1510, in test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui
+    self.assertEqual(self.run_check(review="", report=None, surfaces="none")[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_matching_only_the_first_preview_line_refuses_the_second (test_design_surfaces.DesignReviewTests.test_mutation_matching_only_the_first_preview_line_refuses_the_second)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1550, in test_mutation_matching_only_the_first_preview_line_refuses_the_second
+    self.assertEqual(self.run_check(previews=previews, report=report)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind (test_design_surfaces.DesignReviewTests.test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1565, in test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind
+    self.assertEqual(self.run_check(previews=previews, report=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one (test_design_surfaces.DesignReviewTests.test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1538, in test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping (test_design_surfaces.DesignReviewTests.test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1544, in test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping
+    self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[405 chars]ing"] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading",
+-  'task.md: Pilot criterion AC-2 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1888, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(code, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit (test_design_surfaces.ScopeCheckTests.test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit) (changed=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1888, in test_a_foreign_binding_without_scope_is_not_run_before_and_after_a_scope_edit
+    self.assertEqual(code, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it (test_design_surfaces.ScopeCheckTests.test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2069, in test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it
+    self.assertEqual(self.run_main(plain / "t.md")[0], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_a_task_the_check_cannot_judge_prints_why_and_exits_zero (test_design_surfaces.ScopeCheckTests.test_a_task_the_check_cannot_judge_prints_why_and_exits_zero)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2014, in test_a_task_the_check_cannot_judge_prints_why_and_exits_zero
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\nscope check not run: no closed backlog approval\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+AssertionError: Tuples differ: (1, "t.md: Pilot criterion AC-1 has no com[230 chars]l\n") != (0, 't.md: design surfaces presentable\nsc[425 chars].\n')
+
+First differing element 0:
+1
+0
+
+Diff is 878 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_an_unchanged_scope_is_clean_and_prints_the_presentable_line (test_design_surfaces.ScopeCheckTests.test_an_unchanged_scope_is_clean_and_prints_the_presentable_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1927, in test_an_unchanged_scope_is_clean_and_prints_the_presentable_line
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+AssertionError: Tuples differ: (1, "t.md: Pilot criterion AC-1 has no com[181 chars]g\n") != (0, 't.md: design surfaces presentable\nne[376 chars].\n')
+
+First differing element 0:
+1
+0
+
+Diff is 711 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_an_uncommitted_amendment_covers_an_uncommitted_scope_line (test_design_surfaces.ScopeCheckTests.test_an_uncommitted_amendment_covers_an_uncommitted_scope_line)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1998, in test_an_uncommitted_amendment_covers_an_uncommitted_scope_line
+    self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n" + __import__("delivery_gate").ASK_FORM + "\n"))
+AssertionError: Tuples differ: (1, "t.md: Pilot criterion AC-1 has no com[181 chars]g\n") != (0, 't.md: design surfaces presentable\nne[376 chars].\n')
+
+First differing element 0:
+1
+0
+
+Diff is 711 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_a_task_of_another_profile_or_past_ideation_is_unchanged (test_design_surfaces.SecurityReviewTests.test_a_task_of_another_profile_or_past_ideation_is_unchanged) (profile='pilot', status='ideation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 923, in test_a_task_of_another_profile_or_past_ideation_is_unchanged
+    self.assertEqual((errors, notes), ([], []))
+AssertionError: Tuples differ: (["task.md: Pilot criterion AC-1 has no com[410 chars], []) != ([], [])
+
+First differing element 0:
+["task.md: Pilot criterion AC-1 has no com[405 chars]ing"]
+[]
+
++ ([], [])
+- (['task.md: Pilot criterion AC-1 has no command, exit, output path in its '
+-   'proof record (command, observed exit <n>, output path; Falsifier text does '
+-   "not count) and is not named with a reason under a 'Not provable now' "
+-   'heading',
+-   'task.md: Pilot criterion AC-2 has no command, exit, output path in its '
+-   'proof record (command, observed exit <n>, output path; Falsifier text does '
+-   "not count) and is not named with a reason under a 'Not provable now' "
+-   'heading'],
+-  [])
+
+======================================================================
+FAIL: test_an_existing_file_wins_over_a_sibling_md_file (test_design_surfaces.TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1786, in test_an_existing_file_wins_over_a_sibling_md_file
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+AssertionError: 1 != 0 : task: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: backlog briefing unreadable
+
+
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (test_design_surfaces.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1768, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual(explicit.returncode, 0, explicit.stdout + explicit.stderr)
+AssertionError: 1 != 0 : task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: backlog briefing unreadable
+
+
+======================================================================
+FAIL: test_same_named_directory_checks_the_sibling_task_in_both_modes (test_design_surfaces.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes) (name='task.with.dots')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1768, in test_same_named_directory_checks_the_sibling_task_in_both_modes
+    self.assertEqual(explicit.returncode, 0, explicit.stdout + explicit.stderr)
+AssertionError: 1 != 0 : task.with.dots.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: backlog briefing unreadable
+
+
+======================================================================
+FAIL: test_suffixless_name_without_a_directory_checks_the_task (test_design_surfaces.TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_design_surfaces.py", line 1777, in test_suffixless_name_without_a_directory_checks_the_task
+    self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+AssertionError: 1 != 0 : task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: backlog briefing unreadable
+
+
+----------------------------------------------------------------------
+Ran 234 tests in 22.643s
+
+FAILED (failures=46, skipped=4)
+task.md: missing required body field: Non-goals
+task.md: missing required body field: Budget
+task.md: missing required body field: Stop condition
+task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: 'Surfaces:' has unknown value(s) api
+scope check not run: no frontmatter
+task.md: 'Surfaces:' combines 'none' with other values
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: no frontmatter
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+scope check not run: no frontmatter
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+scope check not run: no frontmatter
+task.md: surface 'ui' Preview 'missing.html' does not exist
+scope check not run: no frontmatter
+task.md: surface 'db' needs a 'Migration source:' line with a value
+scope check not run: no frontmatter
+task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+scope check not run: no frontmatter
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: seed fields and FO alignment recorded
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+task.md: surface 'ui' needs a 'Preview:' line
+scope check not run: no frontmatter
+task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Surfaces:' has unknown value(s) api
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'

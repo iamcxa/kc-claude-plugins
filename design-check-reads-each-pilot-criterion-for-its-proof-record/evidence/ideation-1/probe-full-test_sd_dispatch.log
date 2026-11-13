@@ -1,0 +1,13 @@
+PASS: shared extension-list callers handle inline/block forms, quotes, comments, exact names, empty/no-key controls and unchanged manifests
+PASS: roster subprocess replay, absolute/split-root/linked roots, read-only repeatability, full schema/error controls, committed changes/deletion and candidate-author family evidence; legacy record checks do not establish roster use
+FAIL: fixtures and raw CLI evidence retained at <tmp>
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 1406, in <module>
+    main()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 1395, in main
+    exercise(base, str(Path(binary).resolve()), args.sd_plugin_root.resolve())
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/probe-full/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 1020, in exercise
+    assert (checked.returncode == 0) == has_criterion, (label, checked.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('lowercase heading', "df2-8d1ec99811-criteria-parity.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading\nscope check not run: no closed backlog approval\n")
+exit=1

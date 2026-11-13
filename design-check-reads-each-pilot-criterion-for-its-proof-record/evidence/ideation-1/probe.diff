@@ -1,9 +1,9 @@
 diff --git a/.probe/cases.py b/.probe/cases.py
 new file mode 100644
-index 000000000..84d96cdb3
+index 000000000..72f2289d2
 --- /dev/null
 +++ b/.probe/cases.py
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,64 @@
 +"""Throwaway probe: replay the two trial designs and edge variants through the probe check.
 +usage: python3 -B cases.py <design_surfaces.py> <run1.md> <run2.md> <out-dir>"""
 +import json, re, subprocess, sys
@@ -18,6 +18,24 @@ index 000000000..84d96cdb3
 +falsifier_only = r2.replace(AC1, "**AC-1** — The probe refuses an empty record. Evidence: read the design. "
 +                                 "Falsifier: if the check exits 1 the run writes `evidence/AC-1.log` from command `python3 x.py`.")
 +heading = "\n### Not provable now\n\n"
++APPROVED = """gates:
++    version: 1
++    records:
++        - id: gate:x:ideation
++          stage: ideation
++          attempts:
++            - id: gate-attempt:x-ideation-1
++              resolution:
++                type: Resolution
++                id: resolution:spacedock:x:ideation:1
++                by: person:captain
++                at: "2026-11-12T00:00:00Z"
++                decision: approve
++                reason: 'r'
++              application:
++                target-stage: implementation
++                state: pending
++"""
 +cases = [
 +    ("run1-replay", r1, 1, "Pilot criterion AC-3 "),
 +    ("run2-replay", r2, 0, None),
@@ -28,7 +46,10 @@ index 000000000..84d96cdb3
 +        heading + "- AC-2\n\n## Acceptance criteria", 1), 1, "Pilot criterion AC-2 has no exit"),
 +    ("run2-AC1-record-only-in-falsifier", falsifier_only, 1, "Pilot criterion AC-1 has no command, exit, output path"),
 +    ("run1-replay-status-implementation", r1.replace("status: ideation", "status: implementation", 1), 0, None),
-+    ("run1-replay-profile-prod", r1.replace("profile: pilot", "profile: poc", 1), 0, None),
++    ("run1-replay-profile-poc", r1.replace("profile: pilot", "profile: poc", 1), 0, None),
++    ("run1-replay-design-approved-status-still-ideation", r1.replace("status: ideation\n", "status: ideation\n" + APPROVED, 1), 0, None),
++    ("known-limit-planned-clause-passes", r2.replace(AC1, "**AC-1** — X holds. Evidence: `python3 t.py` must exit 0 and write `out.log`. "
++                                                    "Falsifier: removing X."), 0, None),
 +]
 +results = []
 +for name, text, want_exit, want_reason in cases:
@@ -49,10 +70,10 @@ index 000000000..84d96cdb3
 +sys.exit(0 if all(r["ok"] for r in results) else 1)
 diff --git a/.probe/corpus.py b/.probe/corpus.py
 new file mode 100644
-index 000000000..b59da9fb0
+index 000000000..3679ccb81
 --- /dev/null
 +++ b/.probe/corpus.py
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,42 @@
 +"""Throwaway probe: count Pilot task files the probe proof-record rule refuses under each exemption option.
 +usage: python3 -B corpus.py <design_surfaces.py> <out.json> <label>=<state-root> ...   (task files: <root>/*.md, <root>/_archive/*.md)"""
 +import json, os, re, subprocess, sys, tempfile
@@ -76,26 +97,30 @@ index 000000000..b59da9fb0
 +              "in ideation now": sum(bool(re.search(r"^status:[ \t]*ideation\b", p.read_text(), re.M)) for p in files),
 +              "with Probe line": sum(bool(re.search(r"^(?:#{1,4}[ \t]*)?Probe\b", p.read_text(), re.M)) for p in files)}
 +    for mode, (env, force) in modes.items():
-+        refused = 0
++        refused = clean_with_criteria = 0
 +        with tempfile.TemporaryDirectory() as tmp:
 +            for p in files:
 +                text = p.read_text()
-+                if force:
++                if force:  # an ideation briefing copy: status ideation, no gate resolution yet
 +                    text = re.sub(r"^status:.*$", f"status: {force}", text, count=1, flags=re.M)
++                    text = re.sub(r"^gates:\n(?:[ \t]+.*\n|\n)*", "", text, count=1, flags=re.M)
 +                copy = Path(tmp) / p.name
 +                copy.write_text(text)
 +                done = subprocess.run([sys.executable, "-B", checker, "check", str(copy)], capture_output=True, text=True,
 +                                      env={**os.environ, "PROBE_EXEMPT": env})
-+                refused += any("Pilot criterion" in l for l in done.stdout.splitlines())
++                hit = any("Pilot criterion" in l for l in done.stdout.splitlines())
++                refused += hit
++                clean_with_criteria += (not hit) and bool(re.search(r"^[ \t]*(?:[-*+][ \t]+)?\*\*AC-", text, re.M))
 +        counts[f"refused: {mode}"] = refused
++        counts[f"declared criteria, none refused: {mode}"] = clean_with_criteria
 +    report[label] = counts
 +out.write_text(json.dumps(report, indent=1))
 +print(json.dumps(report, indent=1))
 diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
-index 6ad921da7..7224b1021 100644
+index 6ad921da7..31b4292f3 100644
 --- a/kc-dev-flow-2/scripts/design_surfaces.py
 +++ b/kc-dev-flow-2/scripts/design_surfaces.py
-@@ -190,6 +190,52 @@ def check_criteria(name, lines, errors):
+@@ -190,6 +190,60 @@ def check_criteria(name, lines, errors):
      return declared
  
  
@@ -135,7 +160,15 @@ index 6ad921da7..7224b1021 100644
 +    return gaps
 +
 +
++def design_approved(text):
++    fm, _ = decision_ledger.split_task(text)
++    return any(e["kind"] == "resolution" and e["stage"] == "ideation" and e.get("decision") == "approve"
++               for e in decision_ledger.gate_entries(fm or []))
++
++
 +def probe_scope(text):
++    if design_approved(text):
++        return False
 +    mode = os.environ.get("PROBE_EXEMPT", "stage")
 +    if mode == "probe-line":
 +        return bool(re.search(r"^(?:#{1,4}[ \t]*)?Probe\b", text, re.M))
@@ -148,7 +181,7 @@ index 6ad921da7..7224b1021 100644
  def declarations(lines):
      return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
  
-@@ -1206,6 +1252,11 @@ def check_task(path, seed=False, notes=None):
+@@ -1206,6 +1260,11 @@ def check_task(path, seed=False, notes=None):
                  errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
          if needed:
              errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")

@@ -1,0 +1,1323 @@
+FEFFFFFFFF.FFF.FEEFF...FFFFFFFFF..E.F.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.FFF.FFFEEEEEEEE
+======================================================================
+ERROR: test_advance_commits_record_and_withholds_envelope_on_commit_failure (test_dispatch_stage.DispatchStageTests.test_advance_commits_record_and_withholds_envelope_on_commit_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 1027, in test_advance_commits_record_and_withholds_envelope_on_commit_failure
+    self.call([BINARY, "dispatch", "build", "--stamp", "--workflow-dir", self.workflow,
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_lf_record_matches_legacy_input_reading (test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading) (role=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 375, in test_lf_record_matches_legacy_input_reading
+    before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py", line 103, in record_text
+    notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/scratch.py", line 101, in notes_for
+    raise ValueError(f'scope notes name a /tmp path outside {root}: {raw}')
+ValueError: scope notes name a /tmp path outside <scratch>/dispatch-fixture-6bcc851ad230474b84c9d06d2d4f2b96/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2
+
+======================================================================
+ERROR: test_lf_record_matches_legacy_input_reading (test_dispatch_stage.DispatchStageTests.test_lf_record_matches_legacy_input_reading) (role=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 375, in test_lf_record_matches_legacy_input_reading
+    before = subject.record_text(args, 1, dispatched, self.checklist.read_text(), self.notes.read_text())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py", line 103, in record_text
+    notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/scratch.py", line 101, in notes_for
+    raise ValueError(f'scope notes name a /tmp path outside {root}: {raw}')
+ValueError: scope notes name a /tmp path outside <scratch>/dispatch-fixture-6bcc851ad230474b84c9d06d2d4f2b96/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2
+
+======================================================================
+ERROR: test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed (test_dispatch_stage.DispatchStageTests.test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 276, in test_role_skips_build_and_pending_hold_while_a_chief_engineer_call_is_owed
+    calls = [json.loads(line) for line in argv_log.read_text().splitlines()]
+                                          ^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '<tmp>
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation', path='dispatch-fixture-3f8cc064aef44858b23c8319bfbfbdbf.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='dispatch-fixture-3f8cc064aef44858b23c8319bfbfbdbf.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='dispatch-fixture-3f8cc064aef44858b23c8319bfbfbdbf.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='dispatch-fixture-3f8cc064aef44858b23c8319bfbfbdbf.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='ideation # ready for review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status="'ideation' # review", path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+ERROR: test_worth_requirement_uses_native_stage_for_yaml_status_values (test_dispatch_stage.DispatchStageTests.test_worth_requirement_uses_native_stage_for_yaml_status_values) (status='"ideation" # review', path='index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 153, in test_worth_requirement_uses_native_stage_for_yaml_status_values
+    native = self.call([BINARY, "status", "--workflow-dir", self.workflow,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 80, in call
+    result = subprocess.run(list(map(str, args)), cwd=self.base, env=child_env or self.env,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "<home>/.pyenv/versions/3.11.14/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'None'
+
+======================================================================
+FAIL: test_a_missing_role_checker_refuses_before_build (test_dispatch_stage.DispatchStageTests.test_a_missing_role_checker_refuses_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 571, in test_a_missing_role_checker_refuses_before_build
+    self.assertIn("role_triggers.py", held.stderr)
+AssertionError: 'role_triggers.py' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-b8392ddc449f40d894a25146ba9154c1/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_an_unresolvable_committed_task_holds_on_exit_two (test_dispatch_stage.DispatchStageTests.test_an_unresolvable_committed_task_holds_on_exit_two)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 556, in test_an_unresolvable_committed_task_holds_on_exit_two
+    self.assertIn("no task file", held.stderr)
+AssertionError: 'no task file' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-eb7a003ea0c64794ba9e3cbcef77e29d/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_budget_hold_removes_record_and_skips_build_until_amended (test_dispatch_stage.DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 182, in test_budget_hold_removes_record_and_skips_build_until_amended
+    self.build("implementation", ("--symptom", "none"))
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-32275de0acb2492dbfc77fdf962d1d18/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_budget_line_and_spent_cycles_are_printed_before_build (test_dispatch_stage.DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build) (value='One cycle per stage.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 131, in test_budget_line_and_spent_cycles_are_printed_before_build
+    result = self.build("implementation", ("--symptom", "none"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-d69adcfb3db249278db17f13af626449/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_candidates_and_feedback_flags_reach_real_build (test_dispatch_stage.DispatchStageTests.test_candidates_and_feedback_flags_reach_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 579, in test_candidates_and_feedback_flags_reach_real_build
+    self.build("validation", ("--candidate", sha, "--candidate", "a" * 40))
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--candidate', '6ea0c90a4ad2bc87abf2674ce98d966140284135', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-59383ae3539949a49290e336204a6836/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_changed_checklist_creates_next_committed_record (test_dispatch_stage.DispatchStageTests.test_changed_checklist_creates_next_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 1019, in test_changed_checklist_creates_next_committed_record
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-59d7389be09d4b63a5bfcbdddaeadd74/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_committed_then_assembly_failure_keeps_record_for_retry (test_dispatch_stage.DispatchStageTests.test_committed_then_assembly_failure_keeps_record_for_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 945, in test_committed_then_assembly_failure_keeps_record_for_retry
+    held = self.build(extra=("--spacedock", failing), expected=8)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 8 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('<tmp> '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-d218078ed27c4847bb573ffd19e42135/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_failed_build_removes_its_staged_record (test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 613, in test_failed_build_removes_its_staged_record
+    held = self.build(extra=("--spacedock", failing), expected=7)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 7 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('<tmp> '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-2622804f46b1400a912d59d19691be07/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_failed_stamp_removes_uncommitted_record_and_passes_error (test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 591, in test_failed_stamp_removes_uncommitted_record_and_passes_error
+    self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
+AssertionError: False is not true : dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-6da1de04f9e34f67a0f0f33d9a14610e/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.
+
+
+======================================================================
+FAIL: test_ideation_builds_even_when_a_call_is_owed (test_dispatch_stage.DispatchStageTests.test_ideation_builds_even_when_a_call_is_owed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 532, in test_ideation_builds_even_when_a_call_is_owed
+    self.build(extra=("--spacedock", self.spy))
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--spacedock', PosixPath('<tmp> '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-8fed83d493294c2a8f695650965bfb45/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_identical_retry_reuses_only_at_adding_commit (test_dispatch_stage.DispatchStageTests.test_identical_retry_reuses_only_at_adding_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 596, in test_identical_retry_reuses_only_at_adding_commit
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-851f63fbc81d4f7ea5b3254d87503858/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 525, in test_implementation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 510, in assert_role_hold_then_release
+    self.assertIn("next:", held.stderr)
+AssertionError: 'next:' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-a99dfce955ea4f68af8a26f2ff0212fd/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_inline_scope_uses_the_real_commit_unit (test_dispatch_stage.DispatchStageTests.test_inline_scope_uses_the_real_commit_unit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 977, in test_inline_scope_uses_the_real_commit_unit
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-988fb86962d5472cb5b6ab4dc1eef89f/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 411, in test_next_role_accepts_its_own_scratch_path_and_retries
+    self.role()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-5cd0ad11c22e4bf4bf9c9bb0b60f95fb/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_next_validation_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_validation_accepts_its_own_scratch_path_and_retries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 396, in test_next_validation_accepts_its_own_scratch_path_and_retries
+    self.build('validation', candidate)
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-5f70a41e01ca475e8d02ad8687a62b51/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='flat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 894, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-02402bc5ff9849c889649cc1bae17754/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_real_builder_allowed_routes_preserve_other_tasks (test_dispatch_stage.DispatchStageTests.test_real_builder_allowed_routes_preserve_other_tasks) (layout='folder')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 894, in test_real_builder_allowed_routes_preserve_other_tasks
+    fixture.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-9f40bd0b53414117b3d9fb10429849e4/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_retry_preserves_staged_record_with_worktree_at_head (test_dispatch_stage.DispatchStageTests.test_retry_preserves_staged_record_with_worktree_at_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 830, in test_retry_preserves_staged_record_with_worktree_at_head
+    stage, extra = self.scope_seed(route="retry")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-6068b4b8d02d4deeb74148b2ed8d507c/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_role_checks_the_opus_model_floor (test_dispatch_stage.DispatchStageTests.test_role_checks_the_opus_model_floor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 284, in test_role_checks_the_opus_model_floor
+    self.assertIn("opus", held.stderr)
+AssertionError: 'opus' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-d435f9c0de2948d1b1944db0c5c7f8db/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 250, in test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record
+    self.assertIn("fixture state commit refused", held.stderr)
+AssertionError: 'fixture state commit refused' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-bb8fadb93cdb4139a08b9638d8d291b3/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 216, in test_role_commits_complete_record_before_printing_exact_inputs
+    result = self.role(extra=("--roster", "fixture roster", "--note", "role fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--roster', 'fixture roster', '--note', 'role fixture'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-fed1a3675eb141ea9372e47286ba7bad/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_role_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 354, in test_role_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\r\n")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-95b1d291ea4d4f318fbe10f045f50a4d/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 360, in test_role_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(True, "\n")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-9e188e367f514d8686ca31d7887a1fea/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_role_numbering_is_per_role_and_retries_reuse_the_latest_record (test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 306, in test_role_numbering_is_per_role_and_retries_reuse_the_latest_record
+    first = self.role()
+            ^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-86e6949274f548cea2cdad7dbf4d4cd3/engineering-reviewer-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_notes_inside_scratch_are_kept (test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 435, in test_scope_notes_inside_scratch_are_kept
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-49a8ffc763a849dea4ba9ac3a202f854/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-89b8eb58df8746beb307db7d88340c7d/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-7a56c18a11534a6dbbd274d027287d63/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-6eef4a0f45b247bc83366bb8c51ca38f/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-37b378a9345a445395578adc57bb6710/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-cbd3ecd26a7e4f63863f4c2fb1d173b9/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-0d7ceee9262848219cc753d5dd000732/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-d63339b12c2d4111815cf78071615bdb/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-1b5f3ea48984427b8136bea6ccb85b44/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-fed4b8b643214f679014aeb8a1c2a954/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-5d12dc7323754156a748eb3b47173581/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-1f316e50c05246c1a5118b3c3365d9c1/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-56c3a74ea92f429e8672f2d6c134c75b/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-10610fa0686f46bc9728d4cea169c87b/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-00ea409bca8140b8a2d85ffa1c87d32b/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-312620af9b6742a9b21e82049b670a32/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-55a4da70474e4b51b4352cbd87534802/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-092a198889a74c8c943b801d1fe85ffd/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-ad6ef62240ad4561a393405b6e2f54b5/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-51fa48bda3cf4c32b3a947cad9a48cc9/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-34b7eb9301964e68a04ca6967ec6e8a4/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 874, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 824, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'<tmp> not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-f3512209e3d64ebb9b838bc9b6ea2042/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-4240521fdb1a482a9d87df7832a5ea53/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-366a3329feb44a8db7cc78a27306633e/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-53bf4ced916f4c679a52fc2eb67dfc91/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:older:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-7264a04e15bd4dd5a0d90e447f78e6f0/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-1be9194c94bb4fa89e0cd02eaecb03d0/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-e6e46c875dbf4a1bb01f2034743d1539/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-3ce773ec755e47cb8c1d9c33222236d3/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:retry:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-18fe1820429f4e3f950b0ed585649bad/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:staged-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-2d71a0cbb2294b55afd05609d17d27b9/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:worktree-only')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-46c2c5976db24591a50d461eabc5acd1/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:equal-change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-4febe90236324879ba6af766c59336b1/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:reused:partial')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-3c32e0c788bc413fb2ba135f2e5cfe41/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-a94794f1293a40bab2f754e5eb64a4a6/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-9f6bfbb4c0aa47009e3d891a6970da03/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-072e7f24791e489eaccccf99984072fb/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:new-round:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 723, in scope_seed
+    self.build()
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-c34e49aed8ad48ca9b6a853ed0818323/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:untracked')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-400eea3475dd43c68dcbdeba5b5d0910/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-0ae94a49745f4ce99d038ddd09f0cb33/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:staged-add-missing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-2b825543c4ce4944bface250274f93f3/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:advance:new-record:intent-to-add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 857, in test_scope_preservation_matrix
+    stage, extra = fixture.scope_seed(layout, route)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 720, in scope_seed
+    self.build("implementation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-bbbd2da1cca447d395b24d48eca116f5/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 874, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 824, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'<tmp> not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-f79cfb0528be495298ddccab0231462a/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 381, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    result = self.build()
+             ^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-72b7e9b809a54950b5fba21c7da92aa2/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_stage_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 357, in test_stage_crlf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\r\n")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-262e7e8fdbb9417f8c00c2d8d9e432a4/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_stage_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_lf_inputs_keep_raw_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 363, in test_stage_lf_inputs_keep_raw_bytes
+    self.assert_input_bytes(False, "\n")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 330, in assert_input_bytes
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : b'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-0acba3f4e1204ab1ac59b9ced1b4c7ff/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 457, in test_stamp_commits_complete_record_and_exact_inputs
+    result = self.build(extra=("--roster", "fixture roster", "--note", "README fixture"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--roster', 'fixture roster', '--note', 'README fixture'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-3e609ddc2c4c47eab4650bbab095e1f4/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_successful_checks_keep_distinct_other_stage_warnings (test_dispatch_stage.DispatchStageTests.test_successful_checks_keep_distinct_other_stage_warnings)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 648, in test_successful_checks_keep_distinct_other_stage_warnings
+    self.build("validation", validation)
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'previous failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-58d977125c11420993b5daab1a7ab92c/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_successful_same_symptom_forwards_one_reminder_before_real_build (test_dispatch_stage.DispatchStageTests.test_successful_same_symptom_forwards_one_reminder_before_real_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 620, in test_successful_same_symptom_forwards_one_reminder_before_real_build
+    first = self.build("implementation", ("--symptom", "same failure"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--symptom', 'same failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-84ba6a27c94a463a8c8bf3efeabb05c0/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_the_third_dispatch_counts_before_it_is_committed (test_dispatch_stage.DispatchStageTests.test_the_third_dispatch_counts_before_it_is_committed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 537, in test_the_third_dispatch_counts_before_it_is_committed
+    self.build("implementation", ("--symptom", "same failure"))
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--symptom', 'same failure'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-9e29283e01da46898ccf556a2c006d4f/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_total_cap_holds_before_build_and_keeps_existing_results (test_dispatch_stage.DispatchStageTests.test_total_cap_holds_before_build_and_keeps_existing_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 202, in test_total_cap_holds_before_build_and_keeps_existing_results
+    first = self.build("implementation", ("--symptom", "none"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'implementation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-99b1a945a54d430a8cfae5b86f0786eb/implementation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_uncountable_budget_stdout_is_forwarded (test_dispatch_stage.DispatchStageTests.test_uncountable_budget_stdout_is_forwarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 139, in test_uncountable_budget_stdout_is_forwarded
+    result = self.build("validation", ("--candidate", "a" * 40, "--symptom", "none"))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['<home>/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('<tmp> '--entity-path', PosixPath('<tmp> '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('<tmp> '--scope-notes-file', PosixPath('<tmp> '--spacedock', None, '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-61aeeef062e84d60b4a6621da4d5cb92/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+======================================================================
+FAIL: test_unsupported_companion_and_dangling_target_are_preserved (test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved) (kind='dangling')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 1014, in test_unsupported_companion_and_dangling_target_are_preserved
+    fixture.assert_scope_refusal("unsupported-" + kind, path, "ideation", ())
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 824, in assert_scope_refusal
+    self.assertIn(repr(str(path)), result.stderr)
+AssertionError: "'<tmp> not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-8ad30624401d4f61832642853d495b42/ideation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_validation_candidate_is_required_before_build (test_dispatch_stage.DispatchStageTests.test_validation_candidate_is_required_before_build)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 489, in test_validation_candidate_is_required_before_build
+    self.assertIn("no 'Candidate: <40-hex head>' line", held.stderr)
+AssertionError: "no 'Candidate: <40-hex head>' line" not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-f50cfaf3b4ae4f9b9b861ec2fa11ddc5/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+======================================================================
+FAIL: test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it (test_dispatch_stage.DispatchStageTests.test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 528, in test_validation_refuses_an_owed_call_before_build_and_a_call_releases_it
+    self.assert_role_hold_then_release("validation")
+  File "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 510, in assert_role_hold_then_release
+    self.assertIn("next:", held.stderr)
+AssertionError: 'next:' not found in 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside <scratch>/dispatch-fixture-de964d1c647b47fea90c42c293d66165/validation-1: <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/basetree/kc-dev-flow-2. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n'
+
+----------------------------------------------------------------------
+Ran 52 tests in 142.123s
+
+FAILED (failures=79, errors=12)
+exit=1
