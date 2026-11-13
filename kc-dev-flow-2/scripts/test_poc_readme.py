@@ -29,7 +29,7 @@ class DeriveTests(unittest.TestCase):
             task, question = root / "task.md", root / "question"
             task.write_text(TASK)
             question.write_text("Review this candidate. Accept these observations?\n")
-            readme(root)
+            readme(root, "extensions: [learn, peers]\n")
             captain_record(task)
             values = {"task": str(task), "question": str(question), "owner/repo": "o/r", "N": "9"}
             with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()) as out:

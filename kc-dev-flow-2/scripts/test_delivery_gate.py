@@ -3491,7 +3491,7 @@ class ObservedFactsTests(unittest.TestCase):
             task, question = root / "task.md", root / "question.txt"
             task.write_text(TASK)
             question.write_text("Review this candidate.\n")
-            readme(root)
+            readme(root, "extensions: []\n")
             captain_record(task)
             step = gate.task_folder(task) / "captain-steps/1.md"
             step.write_text(step.read_text().replace("Observed: checks passed", "Observed:"))
@@ -3520,7 +3520,7 @@ class ObservedFactsTests(unittest.TestCase):
             task, question = root / "task.md", root / "question.txt"
             task.write_text(TASK + f"\n## Stage Report: validation\n- DONE: actual candidate {HEAD40}\n### Summary\nPASSED at {HEAD40}.\n")
             question.write_text("Review this candidate. Accept the recorded observations?\n")
-            readme(root)
+            readme(root, "extensions: []\n")
             captain_record(task)
             original = question.read_bytes()
             with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
@@ -3551,7 +3551,7 @@ class ObservedFactsTests(unittest.TestCase):
             task, question = root / "task.md", root / "question.txt"
             task.write_text(TASK)
             question.write_text("Inspect pending observations?\n")
-            readme(root)
+            readme(root, "extensions: []\n")
             captain_record(task)
             pr = pr_json(statusCheckRollup=[dict(status="IN_PROGRESS", conclusion="")])
             with stubbed(root, pr=pr), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
