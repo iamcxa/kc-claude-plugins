@@ -1,0 +1,34 @@
+[
+  {
+    "path": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+    "disposition": "unaffected: seed admission returns before the new Pilot proof check; bounds and id rules stay intact"
+  },
+  {
+    "path": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+    "disposition": "unaffected: added_words and its Current evidence boundary are unchanged; the shared criterion reader is reused"
+  },
+  {
+    "path": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "disposition": "unaffected: external-review rules and wording pins are unchanged; parity fixture records alone change"
+  },
+  {
+    "path": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+    "disposition": "unaffected: check_story_record and its seed/design call are unchanged"
+  },
+  {
+    "path": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+    "disposition": "unaffected: budget parsing, Worth questions and hold authority are unchanged"
+  },
+  {
+    "path": "kc-dev-flow-2/README.md",
+    "disposition": "unaffected: described default design-check coverage is not exhaustive; existing CLI test command and limitations still match the run"
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/adoption.md",
+    "disposition": "unaffected: both graphs, synthetic gate authority and remote-delivery limits remain unchanged"
+  },
+  {
+    "path": "learning.md",
+    "disposition": "unaffected: entries are retained whole; parser-consumer and both-mode corpus practices were applied"
+  }
+]

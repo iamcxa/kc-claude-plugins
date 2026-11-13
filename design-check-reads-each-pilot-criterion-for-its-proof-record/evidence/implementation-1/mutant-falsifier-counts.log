@@ -1,0 +1,14 @@
+..F.......
+======================================================================
+FAIL: test_falsifier_cannot_supply_a_record (test_design_surfaces.PilotProofTests.test_falsifier_cannot_supply_a_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/falsifier-counts/kc-dev-flow-2/scripts/test_design_surfaces.py", line 278, in test_falsifier_cannot_supply_a_record
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.034s
+
+FAILED (failures=1)

@@ -1,0 +1,111 @@
+{
+  "cwd": "<worktree>",
+  "candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+  "commands": [
+    {
+      "name": "cases",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/cases.py kc-dev-flow-2/scripts/design_surfaces.py <task>/evidence/ideation-1/fixtures/run1.md <task>/evidence/ideation-1/fixtures/run2.md <scratch>/cases",
+      "exit": 0,
+      "output": "cases.json"
+    },
+    {
+      "name": "baseline replays",
+      "command": "python3 -B <scratch>/base/kc-dev-flow-2/scripts/design_surfaces.py check <task>/evidence/ideation-1/fixtures/runN.md",
+      "exit": [
+        0,
+        0
+      ],
+      "output": [
+        "base-run1.log",
+        "base-run2.log"
+      ]
+    },
+    {
+      "name": "design suite",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py",
+      "exit": 0,
+      "output": "test_design_surfaces.log",
+      "tests": 244,
+      "skipped": 4
+    },
+    {
+      "name": "SD dispatch",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <active-spacedock>",
+      "exit": 0,
+      "output": "test_sd_dispatch.log"
+    },
+    {
+      "name": "dispatch stage",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN=<home>/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "exit": 0,
+      "output": "test_dispatch_stage.log",
+      "tests": 52,
+      "skipped": 0
+    },
+    {
+      "name": "dispatch records",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_dispatch_records.py",
+      "exit": 0,
+      "output": "test_dispatch_records.log",
+      "tests": 136,
+      "skipped": 1
+    },
+    {
+      "name": "laws",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_laws_check.py",
+      "exit": 0,
+      "output": "test_laws_check.log",
+      "tests": 85,
+      "skipped": 1
+    },
+    {
+      "name": "mutations",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/mutations.py <worktree> <scratch>",
+      "exit": 0,
+      "output": "mutations.json",
+      "killed": 11
+    },
+    {
+      "name": "corpus",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/corpus.py <worktree>/kc-dev-flow-2/scripts/design_surfaces.py <scratch>/corpus.json dev2=<scratch>/corpora/dev2 adopter-1=<scratch>/corpora/adopter-1 adopter-2=<scratch>/corpora/adopter-2",
+      "exit": 0,
+      "output": "corpus.json"
+    },
+    {
+      "name": "lint-skills",
+      "command": "python3 -B kc-dev-flow-2/scripts/lint-skills.py ",
+      "exit": 0,
+      "output": "lint-skills.log"
+    },
+    {
+      "name": "adr-lint",
+      "command": "python3 -B <package>/scripts/adr_lint.py docs/adr --since 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+      "exit": 0,
+      "output": "adr-lint.log"
+    },
+    {
+      "name": "number-guards",
+      "command": "python3 -B <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task>.md",
+      "exit": 0,
+      "output": "number-guards.log"
+    },
+    {
+      "name": "comment-ratio",
+      "command": "python3 -B <package>/scripts/comment_ratio.py 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff HEAD --workflow-dir <workflow-dir>",
+      "exit": 0,
+      "output": "comment-ratio.log"
+    },
+    {
+      "name": "doc-impact",
+      "command": "python3 -B <package>/scripts/doc_impact.py 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff HEAD",
+      "exit": 0,
+      "output": "doc-impact.log"
+    },
+    {
+      "name": "design-check",
+      "command": "python3 -B <package>/scripts/design_surfaces.py check <task>.md",
+      "exit": 0,
+      "output": "design-check.log"
+    }
+  ]
+}

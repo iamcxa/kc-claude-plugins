@@ -1,0 +1,2 @@
+run1-replay-status-implementation.md: design surfaces presentable
+scope check not run: stage is implementation, not ideation

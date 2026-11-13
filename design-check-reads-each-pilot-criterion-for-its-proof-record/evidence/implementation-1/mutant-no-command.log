@@ -1,0 +1,41 @@
+.FFF....F.
+======================================================================
+FAIL: test_each_record_field_is_required (test_design_surfaces.PilotProofTests.test_each_record_field_is_required) (field='command')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-command/kc-dev-flow-2/scripts/test_design_surfaces.py", line 273, in test_each_record_field_is_required
+    self.assertEqual(len(errors), 1, errors)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : []
+
+======================================================================
+FAIL: test_falsifier_cannot_supply_a_record (test_design_surfaces.PilotProofTests.test_falsifier_cannot_supply_a_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-command/kc-dev-flow-2/scripts/test_design_surfaces.py", line 279, in test_falsifier_cannot_supply_a_record
+    self.assertIn("has no command, exit, output path", errors[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'has no command, exit, output path' not found in "task.md: Pilot criterion AC-1 has no exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
+======================================================================
+FAIL: test_fenced_record_does_not_complete_a_criterion (test_design_surfaces.PilotProofTests.test_fenced_record_does_not_complete_a_criterion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-command/kc-dev-flow-2/scripts/test_design_surfaces.py", line 299, in test_fenced_record_does_not_complete_a_criterion
+    self.assertIn("has no command, exit, output path", errors[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'has no command, exit, output path' not found in "task.md: Pilot criterion AC-1 has no exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
+======================================================================
+FAIL: test_trial_replays_refuse_only_the_missing_third_record (test_design_surfaces.PilotProofTests.test_trial_replays_refuse_only_the_missing_third_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-command/kc-dev-flow-2/scripts/test_design_surfaces.py", line 261, in test_trial_replays_refuse_only_the_missing_third_record
+    self.assertIn("Pilot criterion AC-3 has no command, exit", errors[0])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Pilot criterion AC-3 has no command, exit' not found in "task.md: Pilot criterion AC-3 has no exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.076s
+
+FAILED (failures=4)

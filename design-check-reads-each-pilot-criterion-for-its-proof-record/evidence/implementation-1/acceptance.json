@@ -1,0 +1,76 @@
+{
+  "candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+  "criteria": [
+    {
+      "id": "AC-1",
+      "status": "passed",
+      "command": "cases + baseline replays",
+      "exit": 0,
+      "output": [
+        "cases.json",
+        "base-run1.log",
+        "base-run2.log"
+      ],
+      "falsifier": "mutant-no-exit.log exits 1"
+    },
+    {
+      "id": "AC-2",
+      "status": "passed",
+      "command": "cases + design suite + mutations",
+      "exit": 0,
+      "output": [
+        "cases.json",
+        "test_design_surfaces.log",
+        "mutations.json"
+      ],
+      "falsifier": "mutant-falsifier-counts.log and mutant-bare-id-reason.log exit 1"
+    },
+    {
+      "id": "AC-3",
+      "status": "partial",
+      "command": "cases + corpus + compatibility",
+      "exit": 0,
+      "output": [
+        "cases.json",
+        "corpus.json",
+        "compatibility.json"
+      ],
+      "limit": "original 137-file adopter corpus not located; 113-file identity ambiguous, 99-file source drifted from 98",
+      "falsifier": "mutant-all-stages.log and mutant-no-approval-exemption.log exit 1"
+    },
+    {
+      "id": "AC-4",
+      "status": "passed",
+      "command": "design suite + SD dispatch",
+      "exit": 0,
+      "output": [
+        "test_design_surfaces.log",
+        "test_sd_dispatch.log"
+      ],
+      "falsifier": "mutant-no-check-task-call.log exits 1"
+    },
+    {
+      "id": "AC-5",
+      "status": "passed locally",
+      "command": "lint-skills + dispatch records + laws + dispatch stage",
+      "exit": 0,
+      "output": [
+        "lint-skills.log",
+        "test_dispatch_records.log",
+        "test_laws_check.log",
+        "test_dispatch_stage.log"
+      ],
+      "falsifier": "mutant-word-budget.log exits 1 on 6100 words",
+      "limit": "hosted CI not run; missing SPACEDOCK_BIN caused the older base failure"
+    },
+    {
+      "id": "AC-6",
+      "status": "not provable now",
+      "command": null,
+      "exit": null,
+      "output": null,
+      "reason": "requires the observer to review a real historical ideation briefing at the first archive after release",
+      "falsifier": "not run: the post-release observer report does not exist yet"
+    }
+  ]
+}

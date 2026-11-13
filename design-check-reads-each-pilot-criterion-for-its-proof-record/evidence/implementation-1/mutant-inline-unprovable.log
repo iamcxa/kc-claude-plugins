@@ -1,0 +1,59 @@
+.........FFFFFF
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-1: provider offline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n- AC-2: provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='Not provable now: AC-1 provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n### Notes\n- AC-1: provider is unavailable offline.')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='```\n### Not provable now\n- AC-1: provider is unavailable offline.\n```')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/inline-unprovable/kc-dev-flow-2/scripts/test_design_surfaces.py", line 294, in test_unprovable_heading_requires_a_named_reason
+    self.assertEqual(len(self.check(incomplete, extra)), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.035s
+
+FAILED (failures=6)
