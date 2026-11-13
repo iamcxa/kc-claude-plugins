@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-13T09:54:58Z
 worktree: .worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round
-pr: iamcxa/kc-claude-plugins#868
+pr: pr-merge:868
 ---
 
 ## Scope
