@@ -326,3 +326,7 @@ Recommended order: FO decides this task's coverage and migration choices first; 
 ### Summary
 
 This second ideation report supersedes the earlier alignment hold as the current stage result; the original report remains intact. The design extends the existing seed/full check with a single Captain-rulings provenance section, demonstrates the released gap and bounded refusal model for both qnow bites, and leaves mandatory recording coverage and on-touch active-task migration to the Captain. Source pin is main e57feb6e (package 0.32.1); GitHub API access and private original-message verification remain unavailable, while design checks and rendered flow pass; implementation has not begun.
+
+## Held
+
+Reopen when: the peers rule of 2026-10-27 fails in an adopter that has it.
