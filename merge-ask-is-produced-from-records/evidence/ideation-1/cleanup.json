@@ -1,0 +1,9 @@
+{
+  "probe_worktree_exists": false,
+  "probe_branch": "poc/merge-ask-is-produced-from-records",
+  "branch_head": "9cf3499dd0af60bb16861428860cad3f4cf3b05e",
+  "retained_patch_sha256": "b05568e4c2867069e3f43674bc0f058b36955df6d1a212a9200c6055bc43fac3",
+  "product_pr": "none opened",
+  "product_branch_push": "none",
+  "state_frontmatter": "unchanged"
+}

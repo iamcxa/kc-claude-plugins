@@ -1,0 +1,48 @@
+{
+  "method": "len(text.split()); same input bytes in both arms; proposal is unimplemented",
+  "workflow": {
+    "before": 6099,
+    "after_proposed": 6071
+  },
+  "recipe": {
+    "before": 80,
+    "after_proposed": 52
+  },
+  "mod": {
+    "before": 48,
+    "after_proposed": 48
+  },
+  "moments": [
+    {
+      "moment": "startup/resume",
+      "known_static_before": 6147,
+      "known_static_after_proposed": 6119,
+      "dynamic": "not measured; idle-hook output still owed in both arms"
+    },
+    {
+      "moment": "idle/open PR",
+      "known_static_before": 48,
+      "known_static_after_proposed": 48,
+      "dynamic": "not measured; pr_watch depends on live provider state; unchanged"
+    },
+    {
+      "moment": "idle/merged PR",
+      "known_static_before": 48,
+      "known_static_after_proposed": 48,
+      "dynamic": "not measured; unchanged pr_watch/pr-merge/learn output"
+    },
+    {
+      "moment": "after archive",
+      "known_static_before": 48,
+      "known_static_after_proposed": 48,
+      "dynamic": "not measured; unchanged learning and observer output"
+    },
+    {
+      "moment": "merge ask",
+      "known_static_before": 80,
+      "known_static_after_proposed": 52,
+      "dynamic": "readback checks are measured separately; a first-ask success output does not exist"
+    }
+  ],
+  "claim": "No complete per-moment reading reduction or delivery-speed improvement is established."
+}

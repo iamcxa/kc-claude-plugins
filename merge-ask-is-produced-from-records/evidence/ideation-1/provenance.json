@@ -1,0 +1,21 @@
+{
+  "start": "2026-11-13 21:43:38 Asia/Taipei",
+  "time_source": "clock.curr_time 2026-11-13 13:43:38 UTC +08:00",
+  "base": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "state_at_probe": "dd4ce1cd8ec139076cc14dd0c08bc81e5c919c80",
+  "source": "origin/main after successful git fetch; PR 864",
+  "package_version": "0.41.0",
+  "spacedock_skill": "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0/skills/ensign",
+  "corpus_count": 9,
+  "exclusion": "The tenth contemporary task is PR 864, the probe-permission delivery itself; excluded from the nine source-case batch.",
+  "native_read_first_attempt": {
+    "exit": 1,
+    "cause": "omitted explicit workflow directory from isolated probe worktree",
+    "correction": "exact read rerun with --workflow-dir; exit 0; native-read.json retained"
+  },
+  "scope": "Local offline probe, no model calls, no authenticated provider reads, no product branch push, PR, deploy or peer message.",
+  "probe": "9cf3499dd0af60bb16861428860cad3f4cf3b05e",
+  "probe_branch": "poc/merge-ask-is-produced-from-records",
+  "spacedock_runtime": "0.27.2; Codex runtime; skill package 0.28.0",
+  "retained_control_limit": "Original scan and corrected scan retained; watcher evidence for one current head exists, six tasks have matching-head partial CI snapshots; no complete common producer contract was found."
+}

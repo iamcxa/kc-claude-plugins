@@ -1,0 +1,12 @@
+{
+  "base": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "probe": "9cf3499dd0af60bb16861428860cad3f4cf3b05e",
+  "branch": "poc/merge-ask-is-produced-from-records",
+  "frontmatter_unchanged": true,
+  "production_delta": [
+    "poc/merge_summary_probe.py"
+  ],
+  "public_evidence": "Only own public corpus copied; private adapter observations aggregated to counts.",
+  "scope": "No product PR, push, deploy, credential use or session message; no new worker spawned.",
+  "remaining": "Captain evidence/scope decision and any later implementation/validation; no stage transition requested."
+}

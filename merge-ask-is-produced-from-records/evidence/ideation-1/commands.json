@@ -1,0 +1,59 @@
+[
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "audit",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit"
+    ],
+    "exit": 0,
+    "output": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit.log",
+    "time": "2026-11-13T13:49:44.402226+00:00"
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "replay",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/replay"
+    ],
+    "exit": 0,
+    "output": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/replay.log",
+    "time": "2026-11-13T13:49:44.873863+00:00"
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "audit",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit"
+    ],
+    "exit": 0,
+    "output": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit-revised.log",
+    "reason": "Recognize existing pr_watch fact tokens and do not exclude non-Briefing review files.",
+    "time": "2026-11-13T13:53:51.220726+00:00"
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "words",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/reading"
+    ],
+    "exit": 0,
+    "output": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/words.log",
+    "time": "2026-11-13T13:55:28.361527+00:00"
+  }
+]

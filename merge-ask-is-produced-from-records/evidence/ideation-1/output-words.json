@@ -1,0 +1,56 @@
+[
+  {
+    "task": "design-surfaces-task-dir-crash",
+    "before_readback_check_words": 123,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+    "before_readback_check_words": 158,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "each-task-records-stage-time-revises-and-interruptions",
+    "before_readback_check_words": 156,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+    "before_readback_check_words": 165,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "held-and-closed-tasks-leave-the-design-queue",
+    "before_readback_check_words": 165,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "merge-ask-tests-the-merge-result",
+    "before_readback_check_words": 132,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "new-work-checks-what-exists-first",
+    "before_readback_check_words": 129,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "observer-check-learn-only-when-listed",
+    "before_readback_check_words": 133,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  },
+  {
+    "task": "pr-watch-tasks-foreign-worktree",
+    "before_readback_check_words": 134,
+    "after_first_ask_words": null,
+    "reason": "Strict source audit holds before a success output exists"
+  }
+]

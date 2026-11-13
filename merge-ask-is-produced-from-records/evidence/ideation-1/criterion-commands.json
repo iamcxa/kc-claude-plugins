@@ -1,0 +1,82 @@
+[
+  {
+    "criterion": "AC-1",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "audit",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit"
+    ],
+    "exit": 0,
+    "output": "audit/audit.json",
+    "result": "blocked: 0/9 complete record-contract inputs; audit command itself succeeds",
+    "source_commit": "47b0c7d55"
+  },
+  {
+    "criterion": "AC-2",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "replay",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/replay"
+    ],
+    "exit": 0,
+    "output": "replay/readback.json",
+    "result": "question-byte preservation and existing exact-head join falsifier pass on the readback control",
+    "source_commit": "9573cc1da"
+  },
+  {
+    "criterion": "AC-3",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "audit",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/audit"
+    ],
+    "exit": 0,
+    "output": "audit/audit.json",
+    "result": "three concrete round-count discrepancies reproduced; authentic replay inventory not established",
+    "source_commit": "47b0c7d55"
+  },
+  {
+    "criterion": "AC-4",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "replay",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/replay"
+    ],
+    "exit": 0,
+    "output": "replay/readback.json",
+    "result": "existing check function exercised with synthetic provider; nine absent-count and stale-head controls refuse, full lifecycle unverified",
+    "source_commit": "9573cc1da"
+  },
+  {
+    "criterion": "AC-5",
+    "command": [
+      "python3",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/poc/merge_summary_probe.py",
+      "words",
+      "--state",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "--out",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/reading"
+    ],
+    "exit": 0,
+    "output": "reading/words.json",
+    "result": "static count reproduced; integration and complete dynamic reading not proven",
+    "source_commit": "9cf3499dd"
+  }
+]

@@ -1,0 +1,184 @@
+#!/usr/bin/env python3
+"""Disposable, offline replay; archived FO prose is a control, not fresh facts."""
+import argparse
+import contextlib
+import hashlib
+import io
+import json
+from pathlib import Path
+import re
+import shutil
+import subprocess
+import sys
+from types import SimpleNamespace
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'kc-dev-flow-2/scripts'))
+import delivery_gate as gate
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
+
+
+def corpus(state):
+    found = {}
+    for path in (state / '_archive').glob('*/merge/ask-*.json'):
+        record = json.loads(path.read_text())
+        if record.get('time', '').startswith(('2026-11-12', '2026-11-13')) and record['pr'] != 'iamcxa/kc-claude-plugins#864':
+            name = path.parents[1].name
+            if name not in found or record['time'] > found[name][1]['time']:
+                found[name] = (path, record)
+    if len(found) != 9:
+        raise ValueError(f'expected nine pre-864 deliveries, got {len(found)}')
+    return sorted(found.items())
+
+
+def audit(state, out):
+    rows = []
+    for name, (ask, record) in corpus(state):
+        folder = ask.parents[1]
+        briefing = max((folder / 'review/validation').glob('briefing-*/index.json'), key=lambda p: int(p.parent.name.split('-')[-1]))
+        packet = json.loads(briefing.read_text())
+        summary = packet['artifacts'][0]['summary']
+        body = (state / '_archive' / (name + '.md')).read_text()
+        source_line = next(line for line in summary.splitlines() if line.startswith('External round sources:'))
+        remote = set(re.findall(r'evidence=((?:summary|review|comment):\d+(?:@[0-9a-f]+)?)', source_line))
+        remote.update('review:' + n for n in re.findall(r'Codex review (\d+)', source_line))
+        stated = int(re.search(r'^External rounds: (\d+)', summary, re.M)[1])
+        local_roborev = len([x for x in source_line.split(';') if 'RoboRev' in x])
+        # The packet is a hand-authored readback control, never a strict input.
+        independent_ids = set()
+        raw_reader_paths = []
+        for path in folder.rglob('*'):
+            rel = path.relative_to(folder)
+            if not path.is_file() or path.stat().st_size > 1024 * 1024 or 'briefing-' in str(rel) or path.name == 'observer.md' or path.suffix == '.gz':
+                continue
+            try:
+                text = path.read_text()
+            except (UnicodeError, OSError):
+                continue
+            tokens = re.findall(r'(?<![A-Za-z])((?:summary|review|comment):\d+(?:@[0-9a-f]+)?)', text)
+            if tokens:
+                independent_ids.update(tokens)
+                raw_reader_paths.append(str(rel))
+        gaps = []
+        if not remote <= independent_ids:
+            gaps.append('remote review identities incomplete outside the FO briefing/control')
+        if not all(key in record for key in ('statusCheckRollup', 'workflow_runs', 'required_checks')):
+            gaps.append('ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation')
+        if len(record.get('sufficiency', '')) == 200 or len(record.get('necessity', '')) == 200:
+            gaps.append('ask confirmation clause is truncated; reuse the FO question for new asks')
+        # Existing public corpus supports a review-count counterexample, not a fresh API assertion.
+        row = dict(task=name, pr=record['pr'], head=record['head'], declared_rounds=stated,
+                   remote_ids_from_fo_control=sorted(remote), remote_rounds_from_control=len(remote),
+                   local_roborev_mentions=local_roborev, independent_reader_paths=raw_reader_paths,
+                   strict_exit=2 if gaps else 0, gaps=gaps,
+                   source={str(p.relative_to(state)): digest(p.read_bytes()) for p in (ask, briefing, state / '_archive' / (name + '.md'))})
+        rows.append(row)
+    write(out / 'audit.json', dict(cases=rows, count=len(rows), strict_pass=sum(r['strict_exit'] == 0 for r in rows),
+                                 count_mismatches=sum(r['declared_rounds'] != r['remote_rounds_from_control'] for r in rows),
+                                 limit='All remote identity controls originate in the already hand-written Briefing, not raw reader snapshots.'))
+    return 0
+
+
+def replay(state, out):
+    rows = []
+    for name, (ask, record) in corpus(state):
+        source_folder = ask.parents[1]
+        briefing = max((source_folder / 'review/validation').glob('briefing-*/index.json'), key=lambda p: int(p.parent.name.split('-')[-1]))
+        packet = json.loads(briefing.read_text())
+        base = out / 'cases' / name
+        base.mkdir(parents=True, exist_ok=True)
+        task = base / 'task.md'
+        task.write_text((state / '_archive' / (name + '.md')).read_text())
+        folder = base / 'task'
+        for sub in ['dispatch', 'captain-steps']:
+            shutil.copytree(source_folder / sub, folder / sub, dirs_exist_ok=True)
+        (folder / 'review').mkdir(parents=True, exist_ok=True)
+        refusal = source_folder / 'review/copilot-not-run.txt'
+        if refusal.exists():
+            shutil.copy2(refusal, folder / 'review/copilot-not-run.txt')
+        summary = packet['artifacts'][0]['summary']
+        # Mechanical archive relocation is applied to the control before the hash.
+        old = str(state / name)
+        summary = summary.replace(old, str(folder))
+        question = packet['question']
+        qfile = base / 'question.txt'
+        qfile.write_text(question)
+        before = digest(qfile.read_bytes())
+        output = base / 'summary.txt'
+        output.write_text(summary)
+        combined = base / 'combined.txt'
+        combined.write_text(question + '\n' + summary)
+        workflow = base / 'workflow'
+        workflow.mkdir(exist_ok=True)
+        (workflow / 'README.md').write_text('---\ntrunk: main\nextensions: [codex, copilot, roborev]\nsecond-reviewer: copilot\n---\n')
+        files = [dict(filename=re.search(r"'([^']+)'", line)[1]) for line in record['points'] if line.startswith('point: path:')]
+        # Deliberately synthetic green provider: these are text-compatibility checks only.
+        facts = dict(headRefOid=record['head'], statusCheckRollup=[dict(status='COMPLETED', conclusion='SUCCESS')],
+                     isDraft=False, mergeable='MERGEABLE', baseRefName='main', changedFiles=len(files),
+                     headRefName='offline-control', body='', title='fix(kc-dev-flow-2): offline historical control')
+        stream = io.StringIO()
+        names = [p.name for p in (ROOT / 'docs/adr').glob('*.md')]
+        with patch.multiple(gate, run_gh=lambda *a: record['head'], pr_facts=lambda *a: facts,
+                            pr_files=lambda *a: files, pr_runs=lambda *a: [dict(status='completed', conclusion='success')],
+                            required_checks=lambda *a: [], trunk_position=lambda *a: ('ahead', record['head']),
+                            adr_names=lambda *a: names, owed_role_calls=lambda *a: (0, [])), contextlib.redirect_stdout(stream):
+            code = gate.main(['check', str(task), '--pr', record['pr'], '--text-file', str(combined), '--workflow-dir', str(workflow)])
+        (base / 'check.log').write_text(stream.getvalue())
+        newest = max((folder / 'merge').glob('ask-*.json')) if (folder / 'merge').exists() else None
+        match = gate.matching_delivery_record(task, question + '\n' + summary)
+        stale = gate.matching_delivery_record(task, question.replace(record['head'], '0' * 40) + '\n' + summary)
+        raw = combined.read_text()
+        probs = gate.summary_round_problems('\n'.join(gate.outside_fences(raw)))
+        missing_count = gate.summary_round_problems(re.sub(r'^External rounds:.*\n?', '', raw, flags=re.M))
+        rows.append(dict(task=name, exit=code, output=str((base / 'check.log').relative_to(out)),
+                         question_unchanged=digest(qfile.read_bytes()) == before,
+                         record_join=match is not None, stale_head_refused=stale is None,
+                         round_line_passes=not probs, missing_round_refused=bool(missing_count),
+                         record=str(newest.relative_to(out)) if newest else None))
+    write(out / 'readback.json', dict(cases=rows, passes=sum(r['exit'] == 0 for r in rows), count=len(rows),
+                                    provider='synthetic green PR, paths, ancestor trunk and role-call result; actual check() function',
+                                    generator='existing archived FO summary, mechanically relocated; this is the circular control',
+                                    not_proven='first-ask generation, live CI/review truth, full question() or complete path inventory'))
+    return 0 if all(r['exit'] == 0 and r['question_unchanged'] and r['stale_head_refused'] and r['missing_round_refused'] for r in rows) else 1
+
+
+def words(state, out):
+    source = (ROOT / 'kc-dev-flow-2/references/sd/workflow.md').read_text()
+    start = source.index('Before merging or asking, FO runs')
+    end = source.index('\n`merge guard --rework`', start)
+    proposal = '''Before merging or asking, FO writes the question, including Sufficiency and Necessity, then runs
+`python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question> --summary-file <summary>`;
+nonzero holds the ask. Follow its printed steps; bind the generated summary unchanged and its check record
+with `gate prepare --reference`. Callers without `--summary-file` retain the existing commands.
+'''
+    proposed = source[:start] + proposal + source[end:]
+    (out / 'workflow-proposal.md').write_text(proposed)
+    mod = (ROOT / 'kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md').read_text()
+    write(out / 'words.json', dict(method='len(text.split())',
+          workflow=dict(before=len(source.split()), after_proposed=len(proposed.split())),
+          recipe=dict(before=len(source[start:end].split()), after_proposed=len(proposal.split())),
+          mod=dict(before=len(mod.split()), after_proposed=len(mod.split())),
+          limit='Static proposal only. Full lifecycle outputs and any first-ask success output are not measured.'))
+    return 0
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('mode', choices=['audit', 'replay', 'words'])
+    p.add_argument('--state', required=True, type=Path)
+    p.add_argument('--out', required=True, type=Path)
+    a = p.parse_args()
+    a.out.mkdir(parents=True, exist_ok=True)
+    return dict(audit=audit, replay=replay, words=words)[a.mode](a.state, a.out)
+
+if __name__ == '__main__':
+    raise SystemExit(main())

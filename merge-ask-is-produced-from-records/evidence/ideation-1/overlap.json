@@ -1,0 +1,119 @@
+[
+  {
+    "task": "ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": [
+      "kc-dev-flow-2/extensions/codex/EXTENSION.md",
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/probe_ready_review.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ]
+  },
+  {
+    "task": "validator-commands-fit-the-delivery-check",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": []
+  },
+  {
+    "task": "adoption-asks-which-extensions",
+    "read": true,
+    "delivery_check": false,
+    "workflow": true,
+    "validation_principles": false,
+    "related_paths": [
+      "kc-dev-flow-2/references/sd/laws.md",
+      "kc-dev-flow-2/references/sd/workflow.md",
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/number_guards.py",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ]
+  },
+  {
+    "task": "adr-required-statement",
+    "read": true,
+    "delivery_check": false,
+    "workflow": true,
+    "validation_principles": false,
+    "related_paths": [
+      "docs/adr/0009-captain-rulings-ledger.md",
+      "kc-dev-flow-2/references/sd/adoption.md",
+      "kc-dev-flow-2/references/sd/workflow.md",
+      "kc-dev-flow-2/scripts",
+      "kc-dev-flow-2/scripts/adr_lint.py",
+      "kc-dev-flow-2/scripts/poc_readme.py",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ]
+  },
+  {
+    "task": "adr-silent-undo-probe",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": []
+  },
+  {
+    "task": "comment-check-reaches-delivery-gate",
+    "read": true,
+    "delivery_check": true,
+    "workflow": false,
+    "validation_principles": true,
+    "related_paths": [
+      "kc-dev-flow-2/scripts",
+      "kc-dev-flow-2/scripts/comment_ratio.py",
+      "kc-dev-flow-2/scripts/delivery_gate.py",
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "kc-dev-flow-2/skills/validation/principles.md"
+    ]
+  },
+  {
+    "task": "journey-canvas-hosted-poc",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": []
+  },
+  {
+    "task": "journey-server-host-pilot",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": [
+      "kc-dev-flow-2/0.21.0/scripts/design_surfaces.py"
+    ]
+  },
+  {
+    "task": "ops-inbox-r1-setup-and-isolation",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": [
+      "docs/adr/0031",
+      "docs/adr/0031-every-ops-event-becomes-a-prepared-decision.md",
+      "docs/adr/0040*",
+      "docs/adr/0040-every-ops-event-becomes-a-prepared-decision.md",
+      "docs/adr/0099-every-ops-event-becomes-a-prepared-decision.md"
+    ]
+  },
+  {
+    "task": "pr-review-lite-value-pilot",
+    "read": true,
+    "delivery_check": false,
+    "workflow": false,
+    "validation_principles": false,
+    "related_paths": []
+  }
+]

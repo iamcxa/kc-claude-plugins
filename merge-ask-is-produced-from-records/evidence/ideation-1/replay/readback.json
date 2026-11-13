@@ -1,0 +1,108 @@
+{
+  "cases": [
+    {
+      "task": "design-surfaces-task-dir-crash",
+      "exit": 0,
+      "output": "cases/design-surfaces-task-dir-crash/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/design-surfaces-task-dir-crash/task/merge/ask-1.json"
+    },
+    {
+      "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+      "exit": 0,
+      "output": "cases/dispatch-close-out-archives-evidence-and-removes-scratch/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/dispatch-close-out-archives-evidence-and-removes-scratch/task/merge/ask-1.json"
+    },
+    {
+      "task": "each-task-records-stage-time-revises-and-interruptions",
+      "exit": 0,
+      "output": "cases/each-task-records-stage-time-revises-and-interruptions/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/each-task-records-stage-time-revises-and-interruptions/task/merge/ask-1.json"
+    },
+    {
+      "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+      "exit": 0,
+      "output": "cases/gate-question-facts-are-checked-before-the-captain-reads-them/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/gate-question-facts-are-checked-before-the-captain-reads-them/task/merge/ask-1.json"
+    },
+    {
+      "task": "held-and-closed-tasks-leave-the-design-queue",
+      "exit": 0,
+      "output": "cases/held-and-closed-tasks-leave-the-design-queue/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/held-and-closed-tasks-leave-the-design-queue/task/merge/ask-1.json"
+    },
+    {
+      "task": "merge-ask-tests-the-merge-result",
+      "exit": 0,
+      "output": "cases/merge-ask-tests-the-merge-result/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/merge-ask-tests-the-merge-result/task/merge/ask-1.json"
+    },
+    {
+      "task": "new-work-checks-what-exists-first",
+      "exit": 0,
+      "output": "cases/new-work-checks-what-exists-first/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/new-work-checks-what-exists-first/task/merge/ask-1.json"
+    },
+    {
+      "task": "observer-check-learn-only-when-listed",
+      "exit": 0,
+      "output": "cases/observer-check-learn-only-when-listed/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/observer-check-learn-only-when-listed/task/merge/ask-1.json"
+    },
+    {
+      "task": "pr-watch-tasks-foreign-worktree",
+      "exit": 0,
+      "output": "cases/pr-watch-tasks-foreign-worktree/check.log",
+      "question_unchanged": true,
+      "record_join": true,
+      "stale_head_refused": true,
+      "round_line_passes": true,
+      "missing_round_refused": true,
+      "record": "cases/pr-watch-tasks-foreign-worktree/task/merge/ask-1.json"
+    }
+  ],
+  "passes": 9,
+  "count": 9,
+  "provider": "synthetic green PR, paths, ancestor trunk and role-call result; actual check() function",
+  "generator": "existing archived FO summary, mechanically relocated; this is the circular control",
+  "not_proven": "first-ask generation, live CI/review truth, full question() or complete path inventory"
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "task": "design-surfaces-task-dir-crash",
+    "identity_hits": []
+  },
+  {
+    "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+    "identity_hits": [
+      {
+        "path": "dispatch/implementation-1-message-4.md",
+        "ids": [
+          "5873421269"
+        ]
+      },
+      {
+        "path": "dispatch/validation-3.md",
+        "ids": [
+          "5873421269"
+        ]
+      },
+      {
+        "path": "evidence/implementation-1/repair-3/assessment.md",
+        "ids": [
+          "5873421269"
+        ]
+      }
+    ]
+  },
+  {
+    "task": "each-task-records-stage-time-revises-and-interruptions",
+    "identity_hits": []
+  },
+  {
+    "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+    "identity_hits": []
+  },
+  {
+    "task": "held-and-closed-tasks-leave-the-design-queue",
+    "identity_hits": [
+      {
+        "path": "validation-3/candidate-live-network.log",
+        "ids": [
+          "6844239189"
+        ]
+      }
+    ]
+  },
+  {
+    "task": "merge-ask-tests-the-merge-result",
+    "identity_hits": []
+  },
+  {
+    "task": "new-work-checks-what-exists-first",
+    "identity_hits": []
+  },
+  {
+    "task": "observer-check-learn-only-when-listed",
+    "identity_hits": []
+  },
+  {
+    "task": "pr-watch-tasks-foreign-worktree",
+    "identity_hits": []
+  }
+]

@@ -1,0 +1,20 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 1 checked, 3 unchecked
+unchecked count: 它只認這一類句子，這兩天的資料上 11 個標記有 7 個標在其實沒錯的句子上；
+unchecked count: 合併後的結果我跑過 28 項測試指令、零失敗。
+unchecked count: Sufficiency: on the three questions the task's Bite names the candidate marks
+PR head 8d083d3b9b2c48c10e32cee3e5ef693b374c6183 equals dispatched candidate 8d083d3b9b2c48c10e32cee3e5ef693b374c6183; no second reviewer outcome is missing
+point: not-run: 'copilot not run: "Copilot was unable'
+point: acceptance-not-run: 'Four-step `validation-1/acceptance.sh`, fresh `/bin/bash --noprofile --norc`,'
+point: amendment: 'Amendment 1 dated 2026-11-12'
+point: amendment: 'Amendment 2 dated 2026-11-12'
+point: path: 'docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-resul'
+point: path: 'docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md'
+point: path: 'docs/dev2/README.md'
+point: path: 'kc-dev-flow-2/scripts/count_tokens.py'
+point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'
+point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'
+point: second-reviewer: 'copilot'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.

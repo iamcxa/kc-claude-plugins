@@ -1,0 +1,19 @@
+Usage: spacedock gate prepare <entity> --question TEXT --artifact REVIEW.md --summary TEXT [--reference FILE ...] [--workflow-dir DIR]
+       spacedock gate withdraw <entity> --reason TEXT [--workflow-dir DIR]
+       spacedock gate record <entity> --decision approve|revise|hold --actor ID [--reason TEXT] [--conn-quote TEXT --conn-source TEXT] [--consume] [--workflow-dir DIR]
+       spacedock gate record <entity> --round STAGE/CYCLE --briefing PATH/briefing.json --log PATH/briefing.review.jsonl [--workflow-dir DIR]
+       spacedock gate consume <entity> [--workflow-dir DIR]
+
+On an approval whose target stage is terminal, consume spends nothing: it leaves the
+application pending and reports route=approved-awaiting-merge. The terminal merge
+ceremony (`spacedock merge guard <slug> --verdict passed|rejected`) is the sole terminal
+consumer; `merge guard --rework` sends a failed delivery back through the declared
+feedback-to (pending -> superseded, delivery state cleared).
+
+`gate record --consume` is the captain-approve fast path: close, sync, consume, sync
+in one call. `--consume` requires --decision approve and is rejected as a usage error
+with --decision revise|hold. A delegated `--actor agent:first-officer` decision requires
+`--conn-quote` (the grant verbatim) and `--conn-source` (where it was given); those flags
+are refused with `--actor person:captain` or with `--round`. In a split-root workflow, a
+successful close or consume ends with a machine-parseable `sync=.../phase=...` line;
+branch on that final line plus the exit code, never on which prose lines printed.

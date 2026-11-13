@@ -1,0 +1,11 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 1 checked, 2 unchecked
+unchecked count: 合併後的結果我跑過 28 項測試指令、零失敗。
+unchecked count: Necessity: kc-dev-flow-2/scripts/design_surfaces.py and kc-dev-flow-2/scripts/test_design_surfaces.py change against the PR's base (gh pr view
+PR head ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8 equals dispatched candidate ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8; no second reviewer outcome is missing
+point: deferred: '`validation/cycle-1/acceptance.md` gives the exact fresh-Bash command;'
+point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'
+point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.

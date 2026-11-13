@@ -1,0 +1,14 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 1 checked, 2 unchecked
+unchecked count: 合併後的結果我跑過 28 項測試指令、零失敗。
+unchecked count: Necessity: docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md, docs/dev2/README.md, kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/test_delivery_gate.py change against the PR's base (gh
+PR head d79053d0836c558a9269f9cf1ba222933935b820 equals dispatched candidate d79053d0836c558a9269f9cf1ba222933935b820; no second reviewer outcome is missing
+point: not-run: 'copilot not run: "Copilot was unable'
+point: path: 'docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-resul'
+point: path: 'docs/dev2/README.md'
+point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'
+point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'
+point: second-reviewer: 'copilot'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.

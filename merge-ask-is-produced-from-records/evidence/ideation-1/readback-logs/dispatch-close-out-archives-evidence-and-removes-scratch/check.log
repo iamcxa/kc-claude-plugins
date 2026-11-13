@@ -1,0 +1,19 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 1 unchecked
+unchecked count: Necessity: the close-out helper, the dispatch builder, the watcher, ADR 0079 and
+PR head c429ab1815a5fc5507056ee54f8005be024e1e69 equals dispatched candidate c429ab1815a5fc5507056ee54f8005be024e1e69; no second reviewer outcome is missing
+point: deferred: 'acceptance.md supplies one independent-of-product-worktree command and'
+point: deferred: 'Validation rounds: 3. Round 1 REJECTED'
+point: not-run: 'copilot not run: "Copilot was unable'
+point: amendment: 'Amendment 3 dated 2026-11-13'
+point: path: 'docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md'
+point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'
+point: path: 'kc-dev-flow-2/scripts/pr_watch.py'
+point: path: 'kc-dev-flow-2/scripts/scratch.py'
+point: path: 'kc-dev-flow-2/scripts/test_dispatch_stage.py'
+point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'
+point: path: 'kc-dev-flow-2/scripts/test_scratch.py'
+point: second-reviewer: 'copilot'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.

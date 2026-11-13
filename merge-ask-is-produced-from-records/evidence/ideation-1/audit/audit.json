@@ -1,0 +1,246 @@
+{
+  "cases": [
+    {
+      "task": "design-surfaces-task-dir-crash",
+      "pr": "iamcxa/kc-claude-plugins#860",
+      "head": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6832190961@ef9aaffcb"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/design-surfaces-task-dir-crash/merge/ask-1.json": "96eb638ad4a8416aefb924bec7abb26bde2d1a586b16276c1858c1fedb29ac2c",
+        "_archive/design-surfaces-task-dir-crash/review/validation/briefing-1/index.json": "21f3c71efb26de08053282c1f06872baae433dcc380ff3554ff55f738c537f90",
+        "_archive/design-surfaces-task-dir-crash.md": "8c460451e9db4ec153ddebcb68ed5ed27ecd00336777fc8ee88f32edcfc6afb9"
+      }
+    },
+    {
+      "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+      "pr": "iamcxa/kc-claude-plugins#854",
+      "head": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+      "declared_rounds": 4,
+      "remote_ids_from_fo_control": [
+        "review:5873421269",
+        "summary:6821181686@c429ab181"
+      ],
+      "remote_rounds_from_control": 2,
+      "local_roborev_mentions": 2,
+      "independent_reader_paths": [
+        "review/copilot-not-run.txt"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/dispatch-close-out-archives-evidence-and-removes-scratch/merge/ask-1.json": "7b9e4567e3856788e3d0c30c6c862bdf198eaef94d7dc4fa93b879f0e035ad1f",
+        "_archive/dispatch-close-out-archives-evidence-and-removes-scratch/review/validation/briefing-1/index.json": "add10314a61e9387e4fd969e2f87b9ee29733623fd3ab828dabbebee1b089c46",
+        "_archive/dispatch-close-out-archives-evidence-and-removes-scratch.md": "0c98c3c87ab41b6c8b958c7ec60eecef392c8cb1ee297c190c0fb1d0e1ee0df9"
+      }
+    },
+    {
+      "task": "each-task-records-stage-time-revises-and-interruptions",
+      "pr": "iamcxa/kc-claude-plugins#852",
+      "head": "188ba44f427a15bfff69d9d4e24b2446af0b69dc",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6821353239@188ba44f4"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [
+        "review/copilot-not-run.txt"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/each-task-records-stage-time-revises-and-interruptions/merge/ask-1.json": "0d3dce95ed4d98e83e2599d5f591aa33891fe80e5f5b03f237a67a9bb24ece1e",
+        "_archive/each-task-records-stage-time-revises-and-interruptions/review/validation/briefing-1/index.json": "90da64c9696987f302791b3f7e10846b2f9cb655b7d26e2ca12558146807db3f",
+        "_archive/each-task-records-stage-time-revises-and-interruptions.md": "c181fc3dc203de955ea20cc39e42b1f9c90124d6fb58ee041a2d62ba27a83cb9"
+      }
+    },
+    {
+      "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+      "pr": "iamcxa/kc-claude-plugins#855",
+      "head": "8d083d3b9b2c48c10e32cee3e5ef693b374c6183",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6826076765@8d083d3b9"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [
+        "review/copilot-not-run.txt"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/gate-question-facts-are-checked-before-the-captain-reads-them/merge/ask-2.json": "bbfb00a43df4f6076c8d5aa4e8ed36ddd04992ef8ac4478e3d2e27769cd48e36",
+        "_archive/gate-question-facts-are-checked-before-the-captain-reads-them/review/validation/briefing-1/index.json": "052915df1d407050ed991d65733e6421e52b899d2da42a33bfba5f1f150d9497",
+        "_archive/gate-question-facts-are-checked-before-the-captain-reads-them.md": "c772fabfbf66dc797320a1250b215ff57f4fcbdc038bb0996dec61de64ed12c2"
+      }
+    },
+    {
+      "task": "held-and-closed-tasks-leave-the-design-queue",
+      "pr": "iamcxa/kc-claude-plugins#856",
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "declared_rounds": 3,
+      "remote_ids_from_fo_control": [
+        "summary:6844239189@5859c3ccd"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 2,
+      "independent_reader_paths": [
+        "validation-2/candidate-live-network.log",
+        "validation-2/legacy-native-network.log",
+        "validation-2/legacy-full-state.log",
+        "validation-3/base-originless.log",
+        "validation-3/legacy-tasks-network.log",
+        "validation-3/candidate-live-network.log",
+        "validation-3/candidate-originless.log",
+        "ideation/base-pr-watch-tasks.txt",
+        "review/copilot-not-run.txt",
+        "implementation/real-workflow-tasks.log",
+        "validation/copy-base.log",
+        "validation/copy-originless.log",
+        "validation/legacy-native.log",
+        "validation/candidate-live.log",
+        "validation/copy-projection.log",
+        "implementation/merge-main-resolved/legacy-tasks-network.log",
+        "implementation/merge-main-resolved/candidate-live-network.log",
+        "implementation/merge-main-resolved/candidate-originless.log",
+        "implementation/continuation-2/real-workflow-tasks.log",
+        "implementation/continuation-2/ac3-legacy-tasks.log"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/held-and-closed-tasks-leave-the-design-queue/merge/ask-1.json": "64b3f431b4484f497c33b3b1fb65337ad16f4b5bf177d4956db76400729138be",
+        "_archive/held-and-closed-tasks-leave-the-design-queue/review/validation/briefing-1/index.json": "dbbcdecd1f33b877d3615a9726d7d8255e8412bbc2693dd914c57eeddc92407d",
+        "_archive/held-and-closed-tasks-leave-the-design-queue.md": "a6a6ba27410b81315125ee475b2c854412d6a9c8fc59ffc2080ba4e3118505ed"
+      }
+    },
+    {
+      "task": "merge-ask-tests-the-merge-result",
+      "pr": "iamcxa/kc-claude-plugins#853",
+      "head": "d79053d0836c558a9269f9cf1ba222933935b820",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6822521308@d79053d08"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [
+        "review/copilot-not-run.txt"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/merge-ask-tests-the-merge-result/merge/ask-2.json": "440deb20360fda313eaf1d116bea04d5a3e2399ea7b6998a7c985170806f57e0",
+        "_archive/merge-ask-tests-the-merge-result/review/validation/briefing-1/index.json": "ccc03d0be871df64a7c2c67e5780b4cbbbdc30aeac6e88eea655d1d173921f17",
+        "_archive/merge-ask-tests-the-merge-result.md": "d49a776993c54636d837e58248f2139ce0ccb4c167c89549727332e2a41d71f0"
+      }
+    },
+    {
+      "task": "new-work-checks-what-exists-first",
+      "pr": "iamcxa/kc-claude-plugins#859",
+      "head": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6832568583@1fc2f05f8"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/new-work-checks-what-exists-first/merge/ask-1.json": "4ba6d64b7eaeb2ef74c6e1826dbb0f3ad67256951c08912af2697c8c448dfb08",
+        "_archive/new-work-checks-what-exists-first/review/validation/briefing-1/index.json": "11ead5c8efb63d54e589dd2209c2ea8bb90a8f86efcf5f7f23693563d6135769",
+        "_archive/new-work-checks-what-exists-first.md": "87cb58e18235be7f308e85134dd836a33eb9d0209f8dcb1c623a66f6b6f8b017"
+      }
+    },
+    {
+      "task": "observer-check-learn-only-when-listed",
+      "pr": "iamcxa/kc-claude-plugins#861",
+      "head": "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+      "declared_rounds": 3,
+      "remote_ids_from_fo_control": [
+        "summary:6841024641@97fe3d6ff"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 2,
+      "independent_reader_paths": [
+        "review/copilot-not-run.txt"
+      ],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/observer-check-learn-only-when-listed/merge/ask-2.json": "53ba52e51ef4a143f3e64410c7398f064ae0bf952e21f8f55c3808ca826e1919",
+        "_archive/observer-check-learn-only-when-listed/review/validation/briefing-2/index.json": "b2792651876e7012643cf3cec89c121d41b63ee5b2d2c788bbfb619ba890b5a0",
+        "_archive/observer-check-learn-only-when-listed.md": "f6ea472778fc72f26fc37782b7b8ef840528447ded6775e96ad38db87f431193"
+      }
+    },
+    {
+      "task": "pr-watch-tasks-foreign-worktree",
+      "pr": "iamcxa/kc-claude-plugins#858",
+      "head": "e1fbb6ee5abbd7cefd67f57493ab1481a04ed073",
+      "declared_rounds": 1,
+      "remote_ids_from_fo_control": [
+        "summary:6831718330@e1fbb6ee5"
+      ],
+      "remote_rounds_from_control": 1,
+      "local_roborev_mentions": 0,
+      "independent_reader_paths": [],
+      "strict_exit": 2,
+      "gaps": [
+        "remote review identities incomplete outside the FO briefing/control",
+        "ask record omits the complete CI/run/required-check snapshot contract; scattered sources need reconciliation",
+        "ask confirmation clause is truncated; reuse the FO question for new asks"
+      ],
+      "source": {
+        "_archive/pr-watch-tasks-foreign-worktree/merge/ask-1.json": "d3fd6c0e43538939c03bc0fa00c4ae28595c4b5c5de2d650745b23bbed887db4",
+        "_archive/pr-watch-tasks-foreign-worktree/review/validation/briefing-1/index.json": "6ce7d18cf1cf75231082a4bbb863978560c2b5a8b10f615213115e56aa6b65f1",
+        "_archive/pr-watch-tasks-foreign-worktree.md": "f7b769fd32fa38838d9509156e2703ee060896816074fcbe31ad5b4e8a2b718a"
+      }
+    }
+  ],
+  "count": 9,
+  "strict_pass": 0,
+  "count_mismatches": 3,
+  "limit": "All remote identity controls originate in the already hand-written Briefing, not raw reader snapshots."
+}

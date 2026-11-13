@@ -1,0 +1,16 @@
+{
+  "method": "len(text.split())",
+  "workflow": {
+    "before": 6099,
+    "after_proposed": 6071
+  },
+  "recipe": {
+    "before": 80,
+    "after_proposed": 52
+  },
+  "mod": {
+    "before": 48,
+    "after_proposed": 48
+  },
+  "limit": "Static proposal only. Full lifecycle outputs and any first-ask success output are not measured."
+}

@@ -1,0 +1,15 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 1 unchecked
+unchecked count: Necessity: kc-dev-flow-2/scripts/laws_check.py, kc-dev-flow-2/scripts/observer_check.py, kc-dev-flow-2/scripts/pr_watch.py and their three test files change against the
+PR head 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5 equals dispatched candidate 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5; no second reviewer outcome is missing
+point: not-run: 'copilot not run: "Copilot was unable'
+point: path: 'kc-dev-flow-2/scripts/laws_check.py'
+point: path: 'kc-dev-flow-2/scripts/observer_check.py'
+point: path: 'kc-dev-flow-2/scripts/pr_watch.py'
+point: path: 'kc-dev-flow-2/scripts/test_laws_check.py'
+point: path: 'kc-dev-flow-2/scripts/test_observer_check.py'
+point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'
+point: second-reviewer: 'copilot'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.

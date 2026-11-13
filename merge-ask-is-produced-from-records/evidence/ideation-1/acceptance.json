@@ -1,0 +1,27 @@
+[
+  {
+    "name": "AC-1: independent record-only first-ask generation",
+    "status": "blocked",
+    "detail": "0/9 complete independent inputs; 9/9 text readback controls pass with synthetic provider truth, not generation."
+  },
+  {
+    "name": "AC-2: original question and identity binding",
+    "status": "passed",
+    "detail": "9/9 question hashes unchanged, identity joins match, stale head rejected in existing helper."
+  },
+  {
+    "name": "AC-3: external-review inventory",
+    "status": "blocked",
+    "detail": "3/9 declared counts include local RoboRev; replay identities from hand-authored controls support correction but raw remote observations missing."
+  },
+  {
+    "name": "AC-4: lifecycle and existing guards",
+    "status": "passed",
+    "detail": "9/9 missing-round counterexamples refused; check() exercised. Full question(), role calls, live CI and moved-trunk runs remain unproven."
+  },
+  {
+    "name": "AC-5: bounded integration and reading",
+    "status": "untested",
+    "detail": "No production integration yet. Static proposed recipe 80 -> 52 words; full dynamic totals unmeasured; actual source unchanged."
+  }
+]

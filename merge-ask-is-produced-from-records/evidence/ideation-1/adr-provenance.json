@@ -1,0 +1,62 @@
+[
+  {
+    "path": "docs/adr/0004-review-rounds-stop-by-rule-and-comments-are-counted.md",
+    "sha256": "bcd880d81657e19e130833f6f41362b4107e1d767c335b7438a3c3ea1754f805",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md",
+    "sha256": "c7cd530eb2f4b07856857da8a682a09ee5be69122d48e21a56c4d41df48ec3a9",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0023-a-delivery-gate-question-may-carry-the-merge-of-the-validated-head.md",
+    "sha256": "d2a2d715e2fe1be91050210dc4751c0ab83175caf3376f7c3fe5b99830e20bc2",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "sha256": "9ca2c99453255fc4e90452f47baf2fdaf44a766b3888f50985445f86353ba132",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "sha256": "43899808ea25e44156e3d645e985d9f4a967db2206702f0a2180fb9c36c3dab2",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0054-fo-runs-a-step-before-asking-the-captain-and-records-it.md",
+    "sha256": "23cee65f32c5b92f8ae06c39a8501c24002aec045b8ebca58e22ddc7ed4d0eb4",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "sha256": "c897fee1fb109d3e67eecbaee9f363f663e49e5bd4230b48a8cb3e884d35c8d9",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "sha256": "2f030ea33803ac78b9d5863848d73ab1cb4c5466aceb81d4c2e2097eaece0506",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "sha256": "d89bbda0d60ff5ba8649104b7025f5ec90a40a31ce0aa2fedba417bcacdc134c",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "sha256": "52da5d06257fb3f10db9fcad797697cdb77462ed4e23b2515f0327d399b22310",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+    "sha256": "a01aca770e3feefe567c042d41b4d8c615b9361e9b83c7831900a5f864b337c4",
+    "status": "Accepted"
+  }
+]

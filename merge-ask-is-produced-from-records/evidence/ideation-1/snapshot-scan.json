@@ -1,0 +1,257 @@
+[
+  {
+    "task": "design-surfaces-task-dir-crash",
+    "raw_pr_candidates": []
+  },
+  {
+    "task": "dispatch-close-out-archives-evidence-and-removes-scratch",
+    "raw_pr_candidates": [
+      {
+        "path": "evidence/validation-1/pr-live.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": false,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "each-task-records-stage-time-revises-and-interruptions",
+    "raw_pr_candidates": [
+      {
+        "path": "validation-2/pr-final.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation-2/pr.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation/pr.json",
+        "keys": [
+          "baseRefOid",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "title",
+          "url"
+        ],
+        "head_match": false,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "gate-question-facts-are-checked-before-the-captain-reads-them",
+    "raw_pr_candidates": [
+      {
+        "path": "validation-2/pr-status.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation-1/pr-status.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "held-and-closed-tasks-leave-the-design-queue",
+    "raw_pr_candidates": [
+      {
+        "path": "validation-3/pr-856.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation/pr-final.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": false,
+        "checks": true
+      },
+      {
+        "path": "validation/pr.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": false,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "merge-ask-tests-the-merge-result",
+    "raw_pr_candidates": [
+      {
+        "path": "validation/pr-853.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "poc/pr841-facts/pr.json",
+        "keys": [
+          "baseRefName",
+          "body",
+          "changedFiles",
+          "headRefName",
+          "headRefOid",
+          "isDraft",
+          "mergeable",
+          "state",
+          "statusCheckRollup",
+          "title"
+        ],
+        "head_match": false,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "new-work-checks-what-exists-first",
+    "raw_pr_candidates": [
+      {
+        "path": "validation-2/pr-snapshot.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation/pr-snapshot.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup"
+        ],
+        "head_match": true,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "observer-check-learn-only-when-listed",
+    "raw_pr_candidates": [
+      {
+        "path": "validation/pr-final.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      },
+      {
+        "path": "validation/pr.json",
+        "keys": [
+          "baseRefName",
+          "headRefOid",
+          "isDraft",
+          "number",
+          "state",
+          "statusCheckRollup",
+          "url"
+        ],
+        "head_match": true,
+        "checks": true
+      }
+    ]
+  },
+  {
+    "task": "pr-watch-tasks-foreign-worktree",
+    "raw_pr_candidates": []
+  }
+]

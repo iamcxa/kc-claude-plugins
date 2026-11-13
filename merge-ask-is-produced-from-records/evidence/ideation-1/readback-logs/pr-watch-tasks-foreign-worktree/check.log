@@ -1,0 +1,12 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 1 unchecked
+unchecked count: Necessity: kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py change against the PR's base (gh pr view
+PR head e1fbb6ee5abbd7cefd67f57493ab1481a04ed073 equals dispatched candidate e1fbb6ee5abbd7cefd67f57493ab1481a04ed073; no second reviewer outcome is missing
+point: deferred: '- F1 Deferred risk: PR #854'
+point: deferred: 'Validation rounds: 1. PASSED at e1fbb6ee5'
+point: deferred: 'FO declines F1 Deferred risk at'
+point: path: 'kc-dev-flow-2/scripts/pr_watch.py'
+point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'
+class: never (verdict ask)
+record: task/merge/ask-1.json
+next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.
