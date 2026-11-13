@@ -239,3 +239,7 @@ Past rulings read: ADR 0026 (all amendments; the 2026-11-02 one names the missin
 ### Summary
 
 The answer is one `Step back:` line per event family under `## FO alignment`; `role_triggers.py` stops that family's count-two reminder once the line holds three non-empty answers, and the observer needs no change because an answered task no longer prints the `next:` line it reports as a violation. Replays of the three batch 12 and 13 tasks on a scratch prototype show the reminder without the line and silence with it; count three and the other family are unaffected. Two decisions for the Captain: accept the form (D1) and leave the pre-dispatch reminder in `dispatch_records.py` as it is (D2).
+
+## Held
+
+Reopen when: after that batch, a direction change keeps the task, none deletes it.
