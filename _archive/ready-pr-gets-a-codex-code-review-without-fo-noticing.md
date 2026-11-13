@@ -3,7 +3,7 @@ title: A PR marked ready gets its Codex code review without FO noticing a securi
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain answered 「合併 #867」 (chat, 2026-11-13), answering 「決定：合併 #867（Codex 擴充的說明加一句：FO 把 PR 標成可審查時，同時留言請 Codex 審查一次）嗎？建議合併。同意即接受：這是你今天把「自動觸發」改成一句規則的那張，整個 PR 只加一行文字，沒有程式；仍然靠 FO 記得做；偶爾會讓 Codex 對同一版多審一次，成本沒量過；和主線上未發版的 #864 一起等下個版本；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 1c8a29faf402ef6d7018c298f59bad58d38cfb1d, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-13T13:42:51Z
 worktree: .worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing
 pr: pr-merge:867
+verdict: PASSED
+completed: 2026-11-13T14:23:28Z
+archived: 2026-11-13T14:23:29Z
 ---
 
 ## Scope
