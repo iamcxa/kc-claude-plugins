@@ -1,0 +1,29 @@
+[
+  {
+    "severity": "high",
+    "title": "POC recipe test still requires removed summary command",
+    "file": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "line": 21,
+    "detail": "Direct CI entrypoint exits 1: six subcase failures in the delivery recipe test, because the new workflow has no old FO runs question command. Outside the authorized five files; unchanged.",
+    "fix": "FO decides scope for the recipe consumer; migrate its behavioral test to the new record recipe rather than adding a wording pin.",
+    "status": "open"
+  },
+  {
+    "severity": "medium",
+    "title": "Observer contract still expects removed clause fields",
+    "file": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "line": 69,
+    "detail": "The observer compares sufficiency/necessity fields absent from delivery-facts/v1. This repeated old contract remains outside the five files; no real observer run was claimed.",
+    "fix": "FO routes observer contract alignment; no edit in this worker scope.",
+    "status": "open"
+  },
+  {
+    "severity": "medium",
+    "title": "Copilot extension repeats manual summary obligations",
+    "file": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+    "line": 38,
+    "detail": "Its manual quote/round-in-summary duties overlap facts the new public record route replaces. Outside five files; unchanged and not certified compatible.",
+    "fix": "FO decides how to distinguish legacy duties from the new record route.",
+    "status": "open"
+  }
+]

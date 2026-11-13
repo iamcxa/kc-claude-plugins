@@ -1,0 +1,40 @@
+{
+  "prior": "4675077b582a0875a9ceec0f5e5dcf374da3578e",
+  "candidate": "c9cf0cc3b05b0f32bc980f1682629b33308b8fc6",
+  "removed": [
+    {
+      "line": 196,
+      "text": "        swaps=((r\"When that summary is already consumed, FO writes the decline.*?lists each entry there\\. \", \"\"),)),"
+    },
+    {
+      "line": 240,
+      "text": "              \"FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`\","
+    },
+    {
+      "line": 241,
+      "text": "              \"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask\","
+    },
+    {
+      "line": 242,
+      "text": "              \"as does a head other than the latest `Candidate:`\"),"
+    },
+    {
+      "line": 246,
+      "text": "               (r\" FO's startup and idle steps are in `_mods/kc-dev-flow-2\\.md`, copied from `<package>/references/sd/mods/`\\.\", \"\"),"
+    },
+    {
+      "line": 247,
+      "text": "               (r\"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate\\.py check.*?shows the Captain what it printed\\.\", \"Before the merge ask, FO confirms the head.\"))),"
+    }
+  ],
+  "physical_diff": {
+    "deleted": 6,
+    "added": 3
+  },
+  "semantic_deletions": [
+    "two obsolete delivery-recipe need entries",
+    "the matching old-command reverse mutation"
+  ],
+  "retained_behavior_anchor": "late-decline reverse mutation changes summary to gate; existing need entries remain unchanged",
+  "no_new_text_pin": true
+}

@@ -1,0 +1,4 @@
+{
+  "cleared": [],
+  "subsequent_mutations": "python3 -B with PYTHONDONTWRITEBYTECODE=1"
+}

@@ -1,0 +1,269 @@
+{
+  "source": "4675077b582a0875a9ceec0f5e5dcf374da3578e",
+  "searches": {
+    "old recipe": "question and summary|Before merging or asking|as does a head other than|summary-file|summary declares|configured second-reviewer outcome",
+    "summary obligations": "FO counts rounds|records the count|records the round in the committed gate summary|summary.*Captain steps|Captain steps.*summary|When that summary is already consumed",
+    "clause and outcome contract": "Sufficiency|Necessity|External rounds:|Second reviewer:"
+  },
+  "all_matches": [
+    {
+      "path": "kc-dev-flow-2/CHANGELOG.md",
+      "matches": {
+        "clause and outcome contract": [
+          323
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/VALIDATION.md",
+      "matches": {
+        "old recipe": [
+          6
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+      "matches": {
+        "summary obligations": [
+          38
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md",
+      "matches": {
+        "clause and outcome contract": [
+          49
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "matches": {
+        "clause and outcome contract": [
+          242,
+          243
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/count_tokens.py",
+      "matches": {
+        "clause and outcome contract": [
+          38
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "matches": {
+        "old recipe": [
+          29,
+          66,
+          72,
+          1282,
+          1409
+        ],
+        "summary obligations": [
+          75,
+          1198
+        ],
+        "clause and outcome contract": [
+          29,
+          30,
+          32,
+          73,
+          124,
+          150,
+          151,
+          383,
+          809,
+          938,
+          939,
+          945,
+          947
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "matches": {
+        "old recipe": [
+          2089,
+          2436,
+          2443,
+          2558,
+          2962
+        ],
+        "clause and outcome contract": [
+          131,
+          132,
+          136,
+          265,
+          266,
+          267,
+          276,
+          277,
+          497,
+          501,
+          502,
+          503,
+          515,
+          942,
+          943,
+          1205,
+          1217,
+          1223,
+          1229,
+          1235,
+          1241,
+          1248,
+          1254,
+          1266,
+          1347,
+          1348,
+          1354,
+          1355,
+          1356,
+          1357,
+          1358,
+          1363,
+          1375,
+          1376,
+          1379,
+          1382,
+          1383,
+          1396,
+          1401,
+          1402,
+          1403,
+          1404,
+          1405,
+          1408,
+          1409,
+          1410,
+          1411,
+          1412,
+          1429,
+          1443,
+          1506,
+          2088,
+          2426,
+          2427,
+          2478,
+          2489,
+          2490,
+          2497,
+          2498,
+          2499,
+          2502,
+          2565,
+          2566,
+          2675,
+          2698,
+          2909,
+          3006,
+          3007,
+          3009,
+          3012,
+          3019,
+          3024,
+          3111,
+          3153,
+          3166,
+          3167,
+          3168,
+          3173,
+          3174,
+          3175,
+          3178,
+          3180,
+          3183,
+          3186,
+          3194,
+          3196,
+          3198,
+          3199,
+          3200,
+          3205,
+          3224,
+          3228,
+          3293,
+          3452
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "matches": {
+        "clause and outcome contract": [
+          2867
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "matches": {
+        "old recipe": [
+          24,
+          48,
+          74
+        ],
+        "clause and outcome contract": [
+          20,
+          39,
+          64,
+          65,
+          66,
+          67
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "matches": {
+        "old recipe": [
+          241,
+          242,
+          247
+        ],
+        "summary obligations": [
+          196
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+      "matches": {
+        "clause and outcome contract": [
+          69,
+          70,
+          75,
+          76
+        ]
+      }
+    },
+    {
+      "path": "kc-dev-flow-2/skills/validation/principles.md",
+      "matches": {
+        "clause and outcome contract": [
+          7
+        ]
+      }
+    }
+  ],
+  "no_matching_mods": true,
+  "disposition": {
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "Delete only removed delivery recipe wording pins and their reverse mutation; retain behavioural pins. Preserve late-decline guard with matching reverse-mutation anchor.",
+    "kc-dev-flow-2/scripts/test_poc_readme.py": "Outside five files: extracted recipe test requires the removed FO runs/--summary-file command; execute and report, no edit.",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "Outside five files: observer requires old sufficiency/necessity fields; record-route applicability remains a finding, no edit.",
+    "kc-dev-flow-2/extensions/copilot/EXTENSION.md": "Outside five files: repeats manual quote/round/summary duties removed for the public record route; report, no edit.",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "Explicitly documented legacy branch and its checks are retained compatibility, not removed new-route obligations.",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "Legacy fixtures/assertions intentionally retain old callers; new record-route regressions do not require manual summary fields.",
+    "kc-dev-flow-2/references/sd/workflow.md": "New recipe and decline/round locations already changed; remaining summary mentions govern legacy precedents/declines or generic source/disposition duties, not a new manual factual-summary requirement.",
+    "kc-dev-flow-2/VALIDATION.md": "Dated historical validation evidence, not the current recipe; retain unchanged.",
+    "kc-dev-flow-2/CHANGELOG.md": "Release history, retain unchanged.",
+    "other matches": "count_tokens.py protects legacy round/disclosure lines; validation principles and release-acceptance use sufficiency as a judgment, not a manual label; test_dispatch_records.py has a generic minimal-necessity instruction. No exact removed-sentence match in mods or lint lists."
+  }
+}

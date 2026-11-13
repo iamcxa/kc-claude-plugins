@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit (delivery_tests.ObservedFactsTests.test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3498, in test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit
+    self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [PosixPath('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/tmp307llnk2/task/merge/ask-1.json')] is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.248s
+
+FAILED (failures=1)

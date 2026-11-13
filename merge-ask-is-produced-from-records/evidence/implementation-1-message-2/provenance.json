@@ -1,0 +1,41 @@
+{
+  "start_taipei": "2026-11-13 23:23:12",
+  "prior_halt_taipei": "2026-11-13 23:21:55",
+  "resume_taipei": "2026-11-13 23:23:12",
+  "deletion_instruction_read_taipei": "2026-11-13 23:24:50",
+  "time_source": "clock.curr_time UTC +08:00",
+  "base": "bfc53d82510006b52baf41569c1e25176e99d87a",
+  "prior_candidate": "4675077b582a0875a9ceec0f5e5dcf374da3578e",
+  "candidate": "c9cf0cc3b05b0f32bc980f1682629b33308b8fc6",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "files": [
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "sha256": "b29ce21d57ff3aa3a8e81aacf4b456419d69f0e8786044ccd4b5b10d5ec09069"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "sha256": "b1ba69f26d249795bac97a37f1d2462fff93b17eee12549687943b2c6fa2bf57"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/lint-skills.py",
+      "sha256": "4f8a8ca2a9d7ab3089222c5b9924a366ff1ce8153b3fbd8fb56f41e5582ed7c9"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "sha256": "f3d3246e213b5b6f0a5b53cae3afe5f3b5581dfc7ab91bb9164f9d9cbc2a4147"
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "sha256": "7281fbe1f063a931ee7f874bd176184f35db94437ad61f06120d81495626681e"
+    }
+  ],
+  "incremental_paths": [
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+  ],
+  "native_binary_version": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "ci_plugin_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "pr_merge_mod_sha256": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a",
+  "workflow_words": 6069,
+  "product_pushed": false
+}

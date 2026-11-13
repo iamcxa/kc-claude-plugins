@@ -1,0 +1,76 @@
+[
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "candidate-replay-complete-design-surfaces-task-dir-crash/report-read.log"
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Review the saved validation report. Deliver the observed candidate? Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree, unless he says he merges or holds.\n",
+      "--artifact",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/2.md\",\n    \"sha256\": \"c6d8ea25a1a571d55a5a7be580debb6a7e9d4fb32cba33083849fb0245b43214\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#860\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"b549f8ab22c9d1a377b7d9df3492018081f62bf7a34e5c06fb12bcf66d5e5aea\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6832190961@ef9aaffcb\",\n      \"exit\": 0,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T15:29:44Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-1.md\",\n    \"report_sha256\": \"2279a17f061ea76e58a9343c1c5fd1d251189810e242319e050a958063bba151\",\n    \"rounds\": 1,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-design-surfaces-task-dir-crash/workflow"
+    ],
+    "exit": 0,
+    "output": "candidate-replay-complete-design-surfaces-task-dir-crash/prepare.log"
+  },
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/report-read.log"
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Review the saved validation report. Deliver the observed candidate? Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree, unless he says he merges or holds.\n",
+      "--artifact",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/2.md\",\n    \"sha256\": \"70cdac826f8e7c58304666e37eba8fde38060620d8a9ba9cd43c011d8fcf8231\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#856\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"4d8d74f7d5783a51fc4cc7653f5b0fc25bfce201362d542df6e04091a0ee4a45\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6844239189@5859c3ccd\",\n      \"exit\": 0,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T15:29:45Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-3.md\",\n    \"report_sha256\": \"5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376\",\n    \"rounds\": 3,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow"
+    ],
+    "exit": 0,
+    "output": "candidate-replay-complete-held-and-closed-tasks-leave-the-design-queue/prepare.log"
+  }
+]

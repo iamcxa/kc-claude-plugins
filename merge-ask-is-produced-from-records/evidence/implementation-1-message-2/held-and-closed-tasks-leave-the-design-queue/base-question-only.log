@@ -1,0 +1,7 @@
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the gate text has no 'Sufficiency:' clause: add 'Sufficiency: <the acceptance criteria this candidate met, from its validation report>'
+the gate text has no 'Necessity:' clause: add 'Necessity: <who uses this change and what breaks without it>'
+summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold the ask; add the missing clause to the question or summary.
+next: hold the ask; record the external round count in the summary.

@@ -1,0 +1,30 @@
+diff --git a/kc-dev-flow-2/scripts/test_sd_dispatch.py b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+index 33bc97e4e..f2a6d881e 100644
+--- a/kc-dev-flow-2/scripts/test_sd_dispatch.py
++++ b/kc-dev-flow-2/scripts/test_sd_dispatch.py
+@@ -193,7 +193,7 @@ FIXES = {
+         need=("committed with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate",
+               "FO writes the decline under `### FO declines`",),
+         old=(),
+-        swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
++        swaps=((r"When that gate is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
+     "repair-push-grant": dict(
+         need=("approval also covers later external-review rounds on the same PR",
+               "a Needs decision and a scope change go to him"),
+@@ -237,14 +237,11 @@ FIXES = {
+     "readme-keeps-delivery-rules": dict(
+         need=("the sentinel waits for a committed observer report",
+               "that grant stands in for a presented body",
+-              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`",
+-              "Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask",
+-              "as does a head other than the latest `Candidate:`"),
++              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`"),
+         old=(),
+         swaps=((r"Where `learn` is listed, the sentinel waits for a committed observer report\. ", ""),
+                (r" that grant stands in for a presented body", ""),
+-               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
+-               (r"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
++               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""))),
+     "delivery-question-carries-merge": dict(
+         need=("merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds",
+               "removing its clean, pushed worktree."),

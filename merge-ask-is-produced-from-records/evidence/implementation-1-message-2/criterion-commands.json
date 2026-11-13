@@ -1,0 +1,119 @@
+{
+  "criterion": "AC-6",
+  "candidate": "c9cf0cc3b05b0f32bc980f1682629b33308b8fc6",
+  "commands": [
+    {
+      "name": "native dispatch",
+      "command": [
+        "python3",
+        "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+        "--sd-plugin-root",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/sd-plugin"
+      ],
+      "exit": 0,
+      "output": "native-dispatch.log"
+    },
+    {
+      "name": "delivery suite",
+      "command": [
+        "python3",
+        "kc-dev-flow-2/scripts/test_delivery_gate.py"
+      ],
+      "exit": 0,
+      "output": "delivery-direct.log"
+    },
+    {
+      "name": "lint suite",
+      "command": [
+        "python3",
+        "kc-dev-flow-2/scripts/test_lint_skills.py"
+      ],
+      "exit": 0,
+      "output": "lint-tests-direct.log"
+    },
+    {
+      "name": "outside POC consumer",
+      "command": [
+        "python3",
+        "kc-dev-flow-2/scripts/test_poc_readme.py"
+      ],
+      "exit": 1,
+      "output": "poc-recipe.log"
+    },
+    {
+      "name": "archived replays",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "replay"
+      ],
+      "exit": 0,
+      "output": "replay.log"
+    },
+    {
+      "name": "round inventories",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "rounds"
+      ],
+      "exit": 0,
+      "output": "rounds.log"
+    },
+    {
+      "name": "live observation",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/round2_probe.py",
+        "live"
+      ],
+      "exit": 0,
+      "output": "live.log"
+    },
+    {
+      "name": "base and rounds mutation",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/goal_and_mutation.py"
+      ],
+      "exit": 0,
+      "output": "goal-and-mutation.log"
+    },
+    {
+      "name": "summary, held filename and head mutations",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/candidate_mutations.py"
+      ],
+      "exit": 0,
+      "output": "candidate-mutations.log"
+    },
+    {
+      "name": "unguarded command typo",
+      "command": [
+        "python3",
+        "-B",
+        "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/unguarded_probe.py"
+      ],
+      "exit": 0,
+      "output": "unguarded.log"
+    }
+  ],
+  "environment": {
+    "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "SPACEDOCK_BIN": "/Users/kent/.local/bin/spacedock",
+    "PROBE_RUN": "candidate- for replay"
+  },
+  "notes": [
+    "Final installed checks are in final-checks.json.",
+    "Live harness exit 0 checks the expected check/question hold; direct local native prepare is JSON transport only.",
+    "Native and delivery suites use direct file entrypoints as CI does; local macOS execution is not hosted CI.",
+    "The initial typo probe incorrectly flattened the copied template and hit lint frontmatter; the retained successful rerun preserves newlines, and the failed log is retained."
+  ]
+}

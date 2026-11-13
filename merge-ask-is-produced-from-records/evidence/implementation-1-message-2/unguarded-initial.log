@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1/unguarded_probe.py", line 22, in <module>
+    assert gaps=={} and errors==[] and p.returncode==2 and "unrecognized arguments" in p.stderr,(gaps,errors,p.returncode,p.stderr)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ({}, ['references/sd/workflow.md: no one-line `extensions: [...]` in the frontmatter'], 2, 'usage: delivery_gate.py [-h] {check,question,merge-run,steps} ...\ndelivery_gate.py: error: unrecognized arguments: --record-factz\n')

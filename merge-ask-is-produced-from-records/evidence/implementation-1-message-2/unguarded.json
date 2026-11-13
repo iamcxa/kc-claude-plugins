@@ -1,0 +1,21 @@
+{
+  "mutation": "--record-facts changed to --record-factz in workflow text",
+  "word_count_unchanged": true,
+  "pin_gaps": {},
+  "lint_errors": [],
+  "cli_exit": 2,
+  "command": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/delivery_gate.py",
+    "check",
+    "/nonexistent/task.md",
+    "--pr",
+    "o/r#9",
+    "--text-file",
+    "/nonexistent/question",
+    "--record-factz"
+  ],
+  "output": "typo-cli.log",
+  "scope": "The retained static pin and lint checks miss this broken workflow command; direct delivery unit tests call the correct flag and do not extract it. This is not a claim that every package test would miss it; the POC recipe suite currently fails for its old consumer."
+}

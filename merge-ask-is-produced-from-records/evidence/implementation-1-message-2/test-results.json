@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Native dispatch CI entrypoint",
+    "status": "passed",
+    "file": "native-dispatch.log",
+    "message": "Real Spacedock 0.27.2; CI-pinned pr-merge mod; no model spawned."
+  },
+  {
+    "name": "Delivery CI entrypoint",
+    "status": "passed",
+    "file": "delivery-direct.log",
+    "message": "235 tests: 234 passed, 1 optional committed-record replay skipped."
+  },
+  {
+    "name": "Lint test CI entrypoint",
+    "status": "passed",
+    "file": "lint-tests-direct.log",
+    "message": "47 tests passed."
+  },
+  {
+    "name": "POC README CI entrypoint",
+    "status": "failed",
+    "file": "poc-recipe.log",
+    "message": "Six subcase failures in the old recipe consumer outside scope."
+  }
+]

@@ -347,3 +347,43 @@ Exact scratch close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1 (1358438 bytes)
 Evidence: evidence/implementation-1/ (88 files, 171.2 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Apply implementation-1-message-2's deletion experiment instead of rewriting the removed-sentence wording pins; add no new text pin.
+  New candidate c9cf0cc3b05b0f32bc980f1682629b33308b8fc6 is on 4675077b582a0875a9ceec0f5e5dcf374da3578e and changes only test_sd_dispatch.py incrementally. Two obsolete need entries and their old-command reverse mutation are deleted; there was no intervening rewrite commit. pin-deletion.patch and removed-lines.json retain the physical 6 removed/3 added lines, including prior lines 241–242 and 247; formatting accounts for two other replaced lines and the retained late-decline anchor for one.
+- DONE: Keep pins guarding behavior rather than the removed wording, and say which ones remain.
+  Kept delivery-question-carries-merge (head-bound merge grant/clean-worktree removal), second-reviewer (conditional reviewer), late-decline (committed decisions after gate consumption), decline-settled (reopening only for changed evidence) and the three remaining readme-keeps-delivery-rules entries (observer sentinel, presented-body grant, startup/idle mod entry). Their reverse mutations remain. The late-decline anchor changes only summary→gate to match the retained behavior; no new need entry was added.
+- DONE: Before editing, list every other package location asserting or repeating the removed sentences; fix within the five files and report outside them without editing them.
+  sentence-inventory-before-edit.json records the bounded package-wide searches and all 13 matching files at 4675077b, with line lists and legacy/history dispositions; no matching mod or lint-list sentence was found. Active outside-scope findings are test_poc_readme.py, observer/SKILL.md and copilot/EXTENSION.md (findings.json/source-excerpts.json); none was changed. The fifth-file late-decline mutation anchor was the other in-scope stale occurrence.
+- DONE: Record concrete behavior now unguarded, removed lines, and halt/resume times.
+  unguarded.json proves a workflow --record-facts→--record-factz typo passes retained text-pin and lint checks while the CLI rejects it with exit 2; those checks no longer protect that executable recipe wording. This is not an all-package false-negative claim. Initial flattened-fixture setup failure and corrected newline-preserving rerun are retained. Previous halt: 2026-11-13 23:21:55 Asia/Taipei; resumed 23:23:12; deletion instruction read 23:24:50, from clock.curr_time UTC+08:00.
+- DONE: Rerun native dispatch as CI does, with the Spacedock binary set; rerun direct delivery tests, lint and word count.
+  Native direct-file entrypoint exits 0 with Spacedock 0.27.2 and CI-pinned mod commit 4d158a484ec73e184861067f8ed1e20087fdc26a, without spawning a model. Direct delivery entrypoint: 234 passed/1 optional skip; direct lint suite: 47 passed. final-checks.json has repository lint, installed ADR lint/number guards/design surfaces/comment ratio exits 0; workflow remains 6069 words, comments 0/294 code lines (0.0%, maximum 5%). Commands/environment/output paths are in criterion-commands.json; these are local macOS runs, not hosted CI.
+- DONE: Rerun AC-6 evidence on the new candidate, with command, exit and output path and named falsifiers.
+  Two archive-input replays pass check/question/native JSON binding with unchanged question/record digests; real fresh-shell report reads supply the local step fixtures, not historical acceptance execution. Live public observation saves its actual check=1/question=1 hold, with direct local prepare=0 claimed only as transport. Base question-only refusals and summary/round/local-job/held-filename/dispatch-head mutations rerun cache-free with python3 -B; replays.json, live.json, goal-check.json, mutation.json, candidate-mutations.json and cache-clear.json retain results.
+- FAILED: Every acceptance criterion green for an integrated delivery.
+  The prior native pin hold is resolved, but the directly run POC README suite exits 1: its old FO-runs/--summary-file extractor yields zero commands and six failing subcases in one recipe test (poc-recipe.log). test_poc_readme.py is outside the authorized five files; it was left unchanged for FO. The observer still expects the absent sufficiency/necessity keys, and the Copilot extension repeats manual quote/round/summary duties; these repeated contracts are reported, not certified compatible.
+- DONE: Put the pin deletion in its own PR-text paragraph for the Captain to rule on at the merge ask; name both candidates and commit locally without pushing.
+  implementation/pr.md has that separate paragraph and explicitly claims no Captain approval for the experiment. Clean local candidate c9cf0cc3b05b0f32bc980f1682629b33308b8fc6 follows 4675077b; exactly five product paths differ from base bfc53d825, with no version bump, product push or PR. Captain amendment 1 and the one-implementation/two-validation Budget are unchanged.
+- DONE: Review document impact, retain evidence and close the owned scratch root.
+  doc-impact-dispositions.json gives updated/unaffected dispositions and reasons for all 20 listed documents. evidence/implementation-1-message-2/ retains 78 public/count-only files with a verified manifest; the installed helper separately verifies that message folder because close aliases the original implementation-1 root. Exact close output is below; unrelated state paths and the previous task bytes are untouched. State commit/push follows this report.
+- SKIPPED: Repair outside five files, claim whole-package/hosted CI green, run delegated RoboRev, push the product branch or open its Draft PR.
+  Outside-scope findings return to FO. RoboRev/publication/hosted CI remain FO-owned. No CI definition changed; cost per PR was not measured. No merge/review request/comment or real gate was changed.
+
+### Summary
+
+This report supersedes the earlier implementation report at 4675077b. The authorized pin deletion and retained behavior mutations are complete at c9cf0cc3, and the native dispatch suite now passes; integrated delivery remains held by the separately demonstrated POC recipe consumer outside five files, with observer/Copilot contract findings also returned to FO. The Captain has not yet ruled on the deletion experiment.
+
+Start/resume: 2026-11-13 23:23:12 Asia/Taipei; work/check/cleanup end: 23:35:17. Time source: clock.curr_time UTC observations plus 08:00. Halt before this follow-up was 23:21:55; no extra implementation cycle is inferred from the two follow-up messages.
+
+Not provable now: whole-package green or hosted CI, green live delivery, downstream observer/adopter/private-repository compatibility, every conditional reviewer/waiver/disposition path, full moved-trunk lifecycle, installed adoption, general secret classification, Mermaid rendering, full dynamic reading or elapsed-time gains. Stored reported verdicts and step observations do not authenticate execution. The observed flag-typo gap concerns retained static/native recipe checks, not an assertion that every package test would miss it.
+
+Scratch retention/close output (all exit 0):
+
+```text
+Evidence: evidence/implementation-1-message-2/ (78 files, 145.1 KiB)
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1 (3210273 bytes)
+Evidence: evidence/implementation-1/ (88 files, 171.2 KiB)
+```

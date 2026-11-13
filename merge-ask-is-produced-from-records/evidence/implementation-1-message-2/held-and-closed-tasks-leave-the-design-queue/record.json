@@ -1,0 +1,78 @@
+{
+  "candidate": [
+    "5859c3ccd25a86c79df3b36cafdda9762bd8142e"
+  ],
+  "captain_steps": {
+    "candidate_matches": true,
+    "path": "captain-steps/2.md",
+    "sha256": "70cdac826f8e7c58304666e37eba8fde38060620d8a9ba9cd43c011d8fcf8231"
+  },
+  "ci": [
+    {
+      "conclusion": "SUCCESS",
+      "state": null,
+      "status": "COMPLETED"
+    }
+  ],
+  "external_rounds": 1,
+  "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "merge_result": null,
+  "pr": "iamcxa/kc-claude-plugins#856",
+  "pr_state": {
+    "baseRefName": "main",
+    "isDraft": false,
+    "mergeable": "MERGEABLE"
+  },
+  "public": true,
+  "question_sha256": "4d8d74f7d5783a51fc4cc7653f5b0fc25bfce201362d542df6e04091a0ee4a45",
+  "required_checks": [],
+  "result": {
+    "exit": 0,
+    "problems": 0,
+    "unreadable": 0
+  },
+  "reviewers": [
+    {
+      "evidence": "summary:6844239189@5859c3ccd",
+      "exit": 0,
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "outcome": "clean",
+      "reviewer": "codex",
+      "scope": "pr"
+    },
+    {
+      "evidence": null,
+      "exit": 5,
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "outcome": "not-run",
+      "reviewer": "copilot",
+      "scope": "pr"
+    },
+    {
+      "evidence": null,
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "outcome": "not-observed",
+      "reviewer": "roborev",
+      "scope": "local"
+    }
+  ],
+  "role_calls": {
+    "exit": 0
+  },
+  "round_scope": "distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history",
+  "schema": "delivery-facts/v1",
+  "time": "2026-11-13T15:29:45Z",
+  "tool_version": "0.41.0",
+  "trunk": {
+    "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+    "position": "ahead",
+    "trunk": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "validation": {
+    "dispatch": "validation-3.md",
+    "report_sha256": "5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376",
+    "rounds": 3,
+    "verdict": "PASSED"
+  },
+  "workflow_runs": []
+}

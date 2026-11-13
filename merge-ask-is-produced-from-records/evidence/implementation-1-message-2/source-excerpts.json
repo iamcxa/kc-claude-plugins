@@ -1,0 +1,52 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "from_line": 18,
+    "lines": [
+      "",
+      "class DeriveTests(unittest.TestCase):",
+      "    def recipe(self, source, summary=\"External rounds: 0\\n\", *, mode=\"valid\", omit=False, ignore=False, swap=False):",
+      "        commands = re.findall(r\"FO runs `(python3 <package>/scripts/delivery_gate.py question [^`]+)`\", source)",
+      "        self.assertEqual(len(commands), 1)",
+      "        command = commands[0]",
+      "        self.assertIn(\"--summary-file <summary file>\", command)",
+      "        with tempfile.TemporaryDirectory() as d:"
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "from_line": 65,
+    "lines": [
+      "",
+      "For each validation briefing whose question names `--match-head-commit <sha>`, find a `context` Reference",
+      "whose `uri` ends `/merge/ask-<N>.json`. Read its `git-root://state/<commit>/<path>` with",
+      "`git -C STATE show <commit>:<path>`: report \"FO runs `python3 <package>/scripts/delivery_gate.py check` before the merge ask\"",
+      "as `ok` when its `shasum -a 256` equals `rev` (after `sha256:`), `head` starts with `<sha>`, and `sufficiency` and",
+      "`necessity` equal the first 200 cleaned characters of the briefing question-plus-summary clauses (as `delivery_gate.clean` and `clause` read them).",
+      "Quote the Reference id, `time` and `head`; a failed comparison is `violation`. With no Reference, report `violation`",
+      "when RULES at the briefing commit say `gate prepare` takes `--reference <check record>`.",
+      "Otherwise keep the older time comparison: read the highest-numbered ask file at that head whose `time` is not after",
+      "the commit that added the briefing; report `ok`, quoting `time` and `head`. When all files are later, report `can't tell`,",
+      "quoting the earliest `time` and briefing commit time; with no file, report `can't tell`. Report \"FO confirms both goal sufficiency and minimal necessity\"",
+      "from the same file: `ok` quoting `sufficiency` and `necessity`; `can't tell` when it holds neither key, which predates that check."
+    ]
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+    "from_line": 30,
+    "lines": [
+      "  as not read, as **When** says. Exit 2 is a configuration error, reported as `copilot not",
+      "  run: configuration error: <reason>`. Exit 5 (an answer with no review heading and no line comment of its own,",
+      "  such as a quota refusal) is reported as `copilot not run: <the printed quote>`: it is no",
+      "  round, not clean, not waited for, and FO does not request Copilot again in this task until",
+      "  the Captain says its quota is back. The merge ask names Copilot as not read with the",
+      "  printed quote, and offers a retry.",
+      "  On exit 5, save stdout to `<task>/review/copilot-not-run.txt`; copy its quote and `answer=review:<id>` into `copilot not run: \"<quote>\"; answer=review:<id>`. Add `Copilot retry: available when the Captain confirms quota is back.` The delivery check compares the saved output.",
+      "  On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`",
+      "  and its line comments, and records the round in the committed gate summary with the",
+      "  heading line quoted. The round is clean only when Copilot recommends approval and lists",
+      "  no open or previously missed finding and no line comment; otherwise each finding goes",
+      "  through FO steps: review findings, and Copilot's High severity, or any level above it,"
+    ]
+  }
+]
