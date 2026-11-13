@@ -3,7 +3,7 @@ title: When a dispatch closes, its necessary evidence is archived compressed and
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #854（每次派工結束時，把必要證據壓縮封存進任務資料夾、刪掉這次派工自己的暫存；派工文字會指定暫存只能放在它自己的資料夾）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；封存時沒有機械檢查證據是否公開，你已放行這一項並另開任務；它經過四輪修正和三次驗證才通過；「發版後拿一張真實任務跑一次收尾」這項停止條件還沒驗，要發版後才能做；Codex 審過，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit c429ab1815a5fc5507056ee54f8005be024e1e69, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T05:17:00Z
 worktree: .worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch
 pr: pr-merge:854
+verdict: PASSED
+completed: 2026-11-13T04:14:35Z
+archived: 2026-11-13T04:14:35Z
 ---
 
 ## Scope
