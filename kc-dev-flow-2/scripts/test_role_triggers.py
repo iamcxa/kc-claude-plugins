@@ -775,7 +775,10 @@ class BudgetTest(Fixture):
         for value, expected in (("ONE cycle per stage.", (1, 1)),
                 ("10 cycles per stage; bounded work", (10, 10)),
                 ("two implementation and three validation cycles", (2, 3)),
-                ("one implementation and 1 validation cycle.", (1, 1))):
+                ("one implementation and 1 validation cycle.", (1, 1)),
+                ("2 ideation, 1 implementation and 2 validation cycles", (2, 1, 2)),
+                ("two ideation, one implementation and two validation cycles, in one package PR.", (2, 1, 2)),
+                ("One ideation, one implementation and one validation cycle", (1, 1, 1))):
             self.assertEqual(tuple(budget_bound(value).values()), expected)
         for value in ("one round per stage", "one package PR", "at most 3 days", "eleven cycles per stage",
                       "one cycle per stagecoach", "one implementation and two validation cyclesextra"):
@@ -874,7 +877,7 @@ class BudgetTest(Fixture):
         self.record("implementation", 1)
         code, out = run(self.state, SLUG)
         self.assertEqual(code, 0, out)
-        self.assertIn("Budget: One cycle per stage.; spent implementation 1, validation 0", out)
+        self.assertIn("Budget: One cycle per stage.; spent ideation 1 of 2 by default, implementation 1, validation 0", out)
         pending = self.record("implementation", 2, commit=False)
         code, out = run(self.state, SLUG, "--pending", pending)
         self.assertEqual(code, 1, out)
@@ -890,7 +893,7 @@ class BudgetTest(Fixture):
                       "Budget: two cycles per stage\nSupersedes: none\n")
         self.put(self.body)
         self.assertEqual(run(self.state, SLUG)[0], 0)
-        self.assertIn("Budget: two cycles per stage; spent implementation 2", run(self.state, SLUG)[1])
+        self.assertIn("Budget: two cycles per stage; spent ideation 1 of 2 by default, implementation 2", run(self.state, SLUG)[1])
 
     def test_amendment_needs_the_same_entry_verbatim_words(self):
         self.seed()
@@ -912,7 +915,7 @@ class BudgetTest(Fixture):
         self.record("implementation", 2)
         code, out = run(self.state, SLUG)
         self.assertEqual(code, 0, out)
-        self.assertIn("spent implementation 2", out)
+        self.assertIn("spent ideation 1 of 2 by default, implementation 2", out)
         self.assertNotIn("budget exceeded", out)
 
     def test_stage_bounds_and_followups_are_independent(self):

@@ -70,7 +70,7 @@ Before admission and dispatch, FO holds unknown/mismatched profiles;
 SD does not enforce this rule. Preserve approved outcome and scope.
 New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
 under `## Scope` or matching level-two sections. Replay counts do not enforce
-these on existing tasks. Budgets start with `N cycles per stage`, `N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
+these on existing tasks. Budgets start with `N cycles per stage`, `[N ideation, ]N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Batch gates
 
@@ -187,7 +187,7 @@ Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the 
 says why not; it is never pushed or deployed and uses no credential or shared
 environment. Every criterion's evidence command runs once on it, recording command, exit and output path
 per criterion, provenance included; unrunnable: `Not provable now`. A probe round is one
-ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
+ideation dispatch, two by default. Otherwise ideation writes no
 repository file, branch or commit. The design, the criteria and any ADR draft live in
 the task file, and a draft carries no ADR number.
 

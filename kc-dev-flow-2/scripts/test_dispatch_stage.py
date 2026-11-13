@@ -129,7 +129,7 @@ class DispatchStageTests(unittest.TestCase):
                 self.entity.write_text(self.entity.read_text() + f"\n## Budget\n- {value}\n")
                 self.set_stage("implementation")
                 result = self.build("implementation", ("--symptom", "none"))
-                self.assertIn(f"budget: Budget: {value}; spent implementation 1, validation 0{suffix}", result.stderr)
+                self.assertIn(f"budget: Budget: {value}; spent ideation 0 of 2 by default, implementation 1, validation 0{suffix}", result.stderr)
                 self.assertIn(f"Budget: {value}\n", self.record("implementation").read_text())
                 self.assertTrue(Path(json.loads(result.stdout)["dispatch_file_path"]).is_file())
 
@@ -193,8 +193,46 @@ class DispatchStageTests(unittest.TestCase):
         self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
         resumed = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy))
         self.assertTrue(self.marker.exists())
-        self.assertIn("spent implementation 2, validation 0", resumed.stderr)
+        self.assertIn("spent ideation 0 of 2 by default, implementation 2, validation 0", resumed.stderr)
         self.assertIn("Budget: two cycles per stage\n", self.record("implementation", 2).read_text())
+
+    def test_ideation_bound_holds_the_dispatch_past_it(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 1 ideation, 1 implementation and 2 validation cycles\n")
+        self.commit_task()
+        first = self.build("ideation")
+        self.assertIn("budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,", first.stderr)
+        self.checklist.write_text(self.checklist.read_text() + "Revise the design after the gate\n")
+        held = self.build("ideation", ("--spacedock", self.spy), expected=1)
+        self.assertIn("budget exceeded; hold for the Captain", held.stderr)
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("ideation", 2).exists())
+
+    def test_pilot_default_holds_the_third_ideation(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 1 implementation and 2 validation cycles\n")
+        self.commit_task()
+        quiet = self.build("ideation")
+        self.assertIn("spent ideation 1 of 2 by default, implementation 0", quiet.stderr)
+        for number in (2, 3):
+            self.checklist.write_text(self.checklist.read_text() + f"Round {number}\n")
+            result = self.build("ideation", expected=0 if number == 2 else 1)
+        self.assertIn("budget exceeded; hold for the Captain", result.stderr)
+        self.assertFalse(self.record("ideation", 3).exists())
+        prod = self.entity.read_text().replace("profile: pilot", "profile: prod")
+        self.entity.write_text(prod)
+        self.commit_task()
+        self.build("ideation")
+        self.assertTrue(self.record("ideation", 3).exists())
+
+    def test_no_budget_prints_nothing_at_ideation(self):
+        self.assertNotIn("budget:", self.build("ideation").stderr)
+
+    def test_ideation_ignores_owed_special_roles(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 2 ideation, 1 implementation and 2 validation cycles\n"
+                               "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「change it」\n"
+                               "Asked: change it\nSupersedes: AC-1\n")
+        self.commit_task()
+        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
+        self.build("ideation")
 
     def test_total_cap_holds_before_build_and_keeps_existing_results(self):
         self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 240 累計代理分鐘、最多 1 次派工，含一輪修正\n")
