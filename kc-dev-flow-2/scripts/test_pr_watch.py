@@ -1317,6 +1317,24 @@ class TasksTests(unittest.TestCase):
         self.task("some-task", pr="o/r#7")
         self.assertEqual(self.tasks({"pr view 7": view("MERGED")}), (0, []))
 
+    def test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words(self):
+        self.readme("")
+        path = self.workflow / "README.md"
+        template = path.read_text()
+        self.task("some-task", pr="o/r#7")
+        fields = (
+            ('extensions:\n  - "learn" # chosen', True),
+            ("extensions: ['learn'] # chosen", True),
+            ("extensions: [peers] # learn is not selected", False),
+            ("extensions:\n  - 'peers' # learn is not selected", False),
+        )
+        for field, enabled in fields:
+            with self.subTest(field=field):
+                path.write_text(template.replace("extensions: []", field))
+                code, lines = self.tasks({"pr view 7": view("MERGED")})
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(any("observer report not committed:" in line for line in lines), enabled, lines)
+
     def test_peers_and_the_journey_extensions_add_no_line_while_a_pr_is_open(self):
         self.task("some-task", pr="o/r#7")
         outputs = []

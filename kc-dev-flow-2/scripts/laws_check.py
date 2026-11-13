@@ -82,26 +82,13 @@ def frontmatter_pr(text):
 
 
 def readme_extensions(path):
+    ledger()
+    script("workflow_extensions.py")
+    from workflow_extensions import readme_extensions as read_extensions
     try:
-        lines, _ = ledger().split_task(Path(path).read_text())
-    except OSError as err:
+        return set(read_extensions(path))
+    except (OSError, ValueError) as err:
         raise Cannot(f"README unreadable: {err}")
-    if lines is None:
-        raise Cannot(f"README {path} has no frontmatter, so extensions: cannot be read")
-    for i, line in enumerate(lines):
-        if line.startswith("extensions:"):
-            value = line[len("extensions:"):].strip()
-            if value.startswith("[") and value.endswith("]"):
-                return set(re.findall(r"[\w-]+", value))
-            if not value:
-                block = []
-                for nxt in lines[i + 1:]:
-                    if not nxt.lstrip().startswith("- "):
-                        break
-                    block.append(nxt.lstrip()[2:].strip())
-                return set(block)
-            raise Cannot(f"README {path}: extensions: is neither a [list] nor a block list")
-    return set()
 
 
 def walk(state, before, after):

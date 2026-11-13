@@ -266,6 +266,22 @@ class L1Test(Base):
         self.assertEqual(code, 0, out)
         self.assertIn("0 events judged (README lists no learn)", out)
 
+    def test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words(self):
+        repo, before = self.violating("extension-forms")
+        fields = (
+            ('extensions:\n  - "learn" # chosen', True),
+            ("extensions: ['learn'] # chosen", True),
+            ("extensions: [peers] # learn is not selected", False),
+            ("extensions:\n  - 'peers' # learn is not selected", False),
+        )
+        for field, enabled in fields:
+            with self.subTest(field=field):
+                self.learn.write_text(f"---\n{field}\n---\n")
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, 1 if enabled else 0, out)
+                self.assertEqual("violation: L1" in out, enabled, out)
+                self.assertEqual("README lists no learn" in out, not enabled, out)
+
     def test_an_archive_move_that_leaves_the_sentinel_unchanged_is_no_event(self):
         repo, _ = self.violating("arch")
         sentinel = git(repo.path, "rev-parse", "HEAD")
