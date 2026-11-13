@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "1fc2f05f88b18a62d4eda598158ffa385df9fae8",
+  "model": "not run",
+  "necessity": "docs/adr/0083-workers-check-the-existing-chain-before-new-work.md, kc-dev-flow-2/skills/ideation/principles.md and kc-dev-flow-2/skills/implementation/principles.md change against the PR's base (gh pr",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: amendment: 'Amendment 1 dated 2026-11-13'",
+    "point: path: 'docs/adr/0083-workers-check-the-existing-chain-before-new-work.md'",
+    "point: path: 'kc-dev-flow-2/skills/ideation/principles.md'",
+    "point: path: 'kc-dev-flow-2/skills/implementation/principles.md'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#859",
+  "sufficiency": "the stage principles carry one check home before new work; the base fails the routing check and the candidate passes, and one history-free test subject reading a native dispatch built from the candida",
+  "time": "2026-11-13T00:30:53Z",
+  "verdict": "ask"
+}
