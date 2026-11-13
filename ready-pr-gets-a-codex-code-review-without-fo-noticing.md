@@ -57,3 +57,132 @@ Alignment: not needed before ideation: an observed friction with counts; the mec
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+
+## Design
+
+**Status: HOLD — stop condition not established; do not present as a finished design.**
+
+### PRFAQ
+
+**Proposition.** While FO's existing watcher is running for a ready PR, a completed security-only review causes one code-review request without FO intervening; it remains no review round. This is desired, not proved.
+
+**Why?** The Captain approved investigating the delay. Without an automatic trigger, the three public timelines show the code review requests occurring after the security completion. Without the need to avoid duplicate requests this would be an ordinary watcher change; the cheap failed-response replay below disproves that simpler premise.
+
+**How?** Candidate direction only: extend `kc-dev-flow-2/scripts/pr_watch.py` and its existing tests, not the delivery check. Eligibility needs an open, ready PR, an exact current head and a fresh security-only reader result, no existing code-review request for that head, and safe handling of races, session restart, ambiguous remote results and concurrent watchers. Preserve the reader's evidence and review-round behavior. Real GitHub comment creation is an external write; no live write was attempted. Fail closed and report uncertainty where the write outcome is unknowable; that sacrifices automatic recovery until someone resolves it. Existing `gh` authentication would be needed in real use, not in this probe. Do not merge, mark ready, modify existing comments, change review policy, or build a new hosted daemon.
+
+```mermaid
+flowchart TD
+  A[FO starts existing watch] --> B[Read ready PR and current head]
+  B --> C{Security only?}
+  C -->|No or uncertain| W[Keep watching or report error]
+  C -->|Yes| D{Request already exists or state uncertain?}
+  D -->|Yes| W
+  D -->|No and eligibility still current| E[Request once]
+  E --> F{Response certain?}
+  F -->|Yes| G[Record result and wait for code review]
+  F -->|No| H[Hold and report uncertainty]
+  G --> I[Reader reports review evidence or findings]
+```
+
+The diagram is a proposal, not a proven cross-session exactly-once protocol. A lock local to one machine cannot coordinate another machine or an unrelated human; a remote create followed by a lost response cannot be atomically committed with local state. Reading comments later may help recovery but its freshness, author identity, same-head attribution, and race limits require a tested contract. GitHub's documented create-comment endpoint exposes a body and a creation response, not a documented idempotency key: https://docs.github.com/en/rest/issues/comments#create-an-issue-comment . OpenAI documents `@codex review` as a comment trigger: https://learn.chatgpt.com/docs/third-party/github . No provider guarantee of exactly-once was found in those pages.
+
+### Worth questions
+
+- Trigger: serves the Captain's request to remove the ready-to-review delay; without it FO continues to intervene. If ready reliably starts a code review, the task is unnecessary; compare the historical code/security completion times and requests in `evidence/ideation-1/timeline-summary.json`.
+- Duplicate avoidance and uncertainty: serves the explicit stop condition; without it repeated or concurrent watchers may trigger twice. A provider idempotency guarantee would simplify this; the published comment API did not document one and the local lost-response falsifier produced two accepted calls.
+
+### Existing chain and limits
+
+Spacedock's FO contract orchestrates and delegates, not Codex triggering. The package at origin/main `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`, version 0.41.0, already has `codex_review.py` returning exit 4 with `security-only=` and no `evidence=`, and `pr_watch.py wait` prints an FO request once per head **per session**, recording the marker before FO acts. The delivery check runs at merge ask, too late for the ready-to-trigger gap; validation principles concern validation records, not PR watching. The Codex extension documents the existing request. Reuse the reader and watcher, not replace them. Relay and QNow have four and two tracked README references respectively (read-only searches; counts only); their behavior was not exercised. Web adopter state was not checked. No claim of absence outside these bounded searches.
+
+ADR 0015 (Draft PR and watch ownership), ADR 0039 (findings on the same head remain held), and ADR 0084 (local Pilot probe) are accepted at the pinned base. None proves remote duplicate safety. Review outcomes and merge authority remain unchanged.
+
+### Probe
+
+Probe: `poc/ready-pr-gets-a-codex-code-review-without-fo-noticing`; base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; last commit `fc0f411302cd7a474de975532b67ff72813cb226`; portable diff `evidence/ideation-1/probe.patch`.
+
+- Hypothesis: an existing active wait can request without another FO step. Three independently named **reconstructions** of security-only state each produced one fake request across two waits; a synthetic already-reviewed control produced zero. These are not the original four captured states, and the doubles call the watch loop but replace the remote writer, not GitHub.
+- Hypothesis: the trivial post-then-record extension provides exactly once after an uncertain result. **False:** a fake server accepted the request and lost the response on each of two attempts; the probe produced two accepted calls and exits 2, 2. The probe is unsafe for real use and omits multi-session locking, comment reconciliation and head race checks.
+- The latest public summary for each of PRs 858–860 now reports both reviews completed, but its table dates security completion before the manual code request. PR 861 had its request before ready; PR 864 likewise; PR 866 was still draft with no ready event in the read timeline. The three old security-only JSON marker bodies and the identity/state of the fourth case are not recoverable from those mutable summaries alone. No original snapshot was supplied. Do not describe these reconstructions as recorded states.
+- Evidence command, run once on the probe: `TMPDIR=<scratch> PYTHONDONTWRITEBYTECODE=1 python3 -B kc-dev-flow-2/scripts/probe_ready_review.py <scratch>/run`; exit 0; output `evidence/ideation-1/probe-output.json`, stderr `probe-error.txt`. A zero exit means the script reproduced the duplicate, not that the product criterion passed.
+
+### Not provable now
+
+- AC-1: replay of four actual recorded pre-request states, including identification of the fourth, lacks immutable snapshots; no claim that the stop condition passed.
+- AC-2: exactly one delivered request through ambiguous network completion, multiple sessions, another machine and human race; provider and coordination contract unresolved. No live credentials or shared environment were used.
+- AC-3: all readiness transitions, head changes and existing-request races; only the stated synthetic control was exercised.
+- AC-4: total FO words at each moment, before and after, have not been measured; the probe did not implement final documentation or outputs.
+
+### Words FO reads at each moment
+
+| Moment | Before | After | Evidence |
+| --- | --- | --- | --- |
+| Startup | not measured | not measured | full applicable instructions and outputs need a common recount |
+| Idle, open PR | not measured | not measured | synthetic wait output exists; it is not a total lifecycle count |
+| Idle, merged PR | not measured | not measured | full applicable instructions and outputs need recount |
+| After archive | not measured | not measured | full applicable instructions and outputs need recount |
+| Merge ask | not measured | not measured | full applicable instructions and outputs need recount |
+
+### Unresolved decision for the Captain
+
+Recommend a bounded at-most-once attempt with a visible hold after an uncertain write, then reconcile before any retry. This avoids automatic duplicate retries but can leave a PR without a trigger until a person or a separately proven recovery resolves the uncertainty; it does not satisfy the current unconditional exactly-one stop condition. Does the Captain accept that trade-off and adjust the stop condition, or require an independently specified coordination/provider mechanism that establishes the original condition? An unattended recurring external write also needs the profile and operational ownership decision; do not start implementation before FO routes the decision.
+
+### Batch overlap
+
+Proposed files: `kc-dev-flow-2/scripts/pr_watch.py`, `kc-dev-flow-2/scripts/test_pr_watch.py`, `kc-dev-flow-2/extensions/codex/EXTENSION.md` (and any other documentation only if measurement requires it). No final file set is approved.
+
+- `merge-ask-is-produced-from-records` and `validator-commands-fit-the-delivery-check`: their scopes both name the delivery check, not the proposed watcher files; no overlap observed so far. They are ordered first then third by the dispatch.
+- `ready-pr-gets-a-codex-code-review-without-fo-noticing`: this task owns the watcher files above.
+- `adoption-asks-which-extensions`: its design mentions `pr_watch.py` as an unchanged output; no shared changed file identified at the state read.
+- `adr-required-statement`: changes workflow/ADR checking, no shared changed file identified; `adr-silent-undo-probe`: fictional ADR harness, none identified.
+- `comment-check-reaches-delivery-gate`: its proposed delivery check, test and validation principles do not overlap the watcher files.
+- `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `ops-inbox-r1-setup-and-isolation`, `pr-review-lite-value-pilot`: no overlapping changed file established from the available task records; the server task has a folder but no top-level task file at this state. Recheck before implementation as live work can change.
+
+Recommended order: first `merge-ask-is-produced-from-records`, then `validator-commands-fit-the-delivery-check`; this held task can be ordered independently after its decision, with a fresh overlap check.
+
+## Acceptance criteria
+
+**AC-1** In a replay of the actual four pre-request recorded states, the security-only PRs receive exactly one simulated trigger each, all others receive zero, without an FO step between ready and trigger. Verified by a test-double replay from preserved immutable per-case snapshots, with command, exit and output path. Falsifier: delete a trigger, duplicate one, or substitute a reconstructed state for a recorded one. Current: not provable; only three reconstructions and one synthetic control were run, exit 0, `evidence/ideation-1/probe-output.json`.
+
+**AC-2** A repeated poll, restart, concurrent watcher and lost response cannot silently duplicate a request; uncertain delivery is surfaced rather than treated as a completed review. Verified by double-backed interleavings and lost-response injection with observed request counts and persisted states. Falsifier: server accepts and response is lost, followed by retry producing two. Current: FAILED on the probe: two accepted fake requests; same output, command and exit as Probe.
+
+**AC-3** Only an open, ready PR at the current head with a security-only result and no existing request qualifies; existing findings remain findings and a request is not a review round. Verified by the package's reader/watch doubles with pre-existing request, draft, closed, moved-head, clean and findings controls. Falsifier: any ineligible control posts or a request yields `evidence=`. Current: not verified as a whole; the synthetic clean control posted zero.
+
+**AC-4** State and review changes add no unintended FO instructions, with before/after total words at startup, open and merged PR idle, archive and merge ask measured by the same complete method. Verify with reproducible per-moment recount including applicable outputs, independently checked. Falsifier: omitted passage/output or a claimed count without its artifact. Current: not measured.
+
+
+## Stage Report: ideation
+
+- DONE: Check the chain first (Spacedock, then kc-dev-flow-2, then sibling adopters) and say what you found; for a third-party mechanism read its own docs or source, not an adopter's workaround.
+  Chain and bounded searches in Design; Web adopter not checked; provider links and accepted ADRs are named there.
+- FAILED: Run this ideation probe-first, as the text merged on origin/main by PR 864 (ADR 0084, not yet released) asks: before writing the design, build a throwaway probe of this task's outcome on the local branch from origin/main, run it on the real cases the task's Scope and Stop condition name, and save what it showed in the task folder.
+  Probe committed and preserved as a local branch and patch; immutable original four states unavailable, so three reconstructed inputs plus one synthetic control do not meet this item; uncertain response reproduced two accepted fake calls.
+- DONE: Under a Probe: line in the design record the branch, base and last commit and each hypothesis with its result; remove the probe worktree before reporting and keep the branch.
+  Branch and patch are pinned under Probe; worktree removed, branch retained.
+- FAILED: Every criterion's evidence command runs once on it, recording command, exit and output path per criterion, provenance included; what cannot run goes under Not provable now with the criterion named.
+  The stated command was run once; actual historical replay, race-safe delivery, complete controls and word recount remain unprovable or unrun as listed by AC; no invented passes.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check, so FO can order implementation.
+  See Batch overlap; order needs a fresh check before building.
+- FAILED: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size".
+  All five moments are explicitly not measured; the probe output alone cannot establish complete totals.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it.
+  AC-1 through AC-4 have falsifiers; the one material decision and trade-off are recorded. All are current failures or unverified, as individually stated.
+- DONE: Before reporting, run the design surfaces check and the scratch close command.
+  `design_surfaces.py check` exit 0, evidence/ideation-1/design-check.txt; this syntax check does not override the hold. Scratch output: `Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/ideation-1 (26037 bytes)` and `Evidence: evidence/ideation-1/ (5 files, 9.6 KiB)`.
+- FAILED: AC-1.
+  Actual four historical snapshots unavailable; synthetic inputs do not prove the replay stop condition.
+- FAILED: AC-2.
+  Lost-response falsifier yielded 2 accepted fake requests; `evidence/ideation-1/probe-output.json`.
+- FAILED: AC-3.
+  Synthetic clean control was zero; draft, prior-request, moved-head and findings controls not run.
+- FAILED: AC-4.
+  Per-moment word totals not measured.
+
+### Summary
+
+Do not advance this design: the naive watcher probe duplicates a trigger after an ambiguous response and does not establish the requested real-case replay. FO should route the one bounded-delivery trade-off and obtain immutable original snapshots or an explicit acceptance change before another probe; no implementation, live review comment, or product PR was made.
+
+### Round 1
+
+Start 2026-11-13 21:43:22; end 2026-11-13 21:48:49 Asia/Taipei (system `date`, CST); base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; probe `fc0f411302cd7a474de975532b67ff72813cb226`. Fired: premise overturned (naive exactly-once); Captain decision on criterion/trade-off; boundary without an atomic provider/local-state contract; unattended external write and ownership/profile decision. No screen or stored product data touched; no unapproved scope or budget change.

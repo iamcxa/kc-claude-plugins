@@ -1,0 +1,49 @@
+{
+  "858": {
+    "posts": 1,
+    "add": 0,
+    "waits": [
+      0,
+      0
+    ],
+    "first": "o/r#1 requested code review for aaaaaaaaa; security-only is no round.",
+    "second": "o/r#1 synthetic: state OPEN -> MERGED; codex security-only(summary:9) -> -\nnext: run the idle hooks now."
+  },
+  "859": {
+    "posts": 1,
+    "add": 0,
+    "waits": [
+      0,
+      0
+    ],
+    "first": "o/r#1 requested code review for aaaaaaaaa; security-only is no round.",
+    "second": "o/r#1 synthetic: state OPEN -> MERGED; codex security-only(summary:9) -> -\nnext: run the idle hooks now."
+  },
+  "860": {
+    "posts": 1,
+    "add": 0,
+    "waits": [
+      0,
+      0
+    ],
+    "first": "o/r#1 requested code review for aaaaaaaaa; security-only is no round.",
+    "second": "o/r#1 synthetic: state OPEN -> MERGED; codex security-only(summary:9) -> -\nnext: run the idle hooks now."
+  },
+  "control": {
+    "posts": 0,
+    "add": 0,
+    "waits": [
+      0,
+      0
+    ],
+    "first": "o/r#1 synthetic: codex - -> clean; codex-evidence - -> summary:1\nnext: read the codex round summary:1 as FO steps: review findings say.",
+    "second": "o/r#1 synthetic: state OPEN -> MERGED; codex clean -> -\nnext: run the idle hooks now."
+  },
+  "ambiguous_response": {
+    "server_accepts": 2,
+    "exit_codes": [
+      2,
+      2
+    ]
+  }
+}

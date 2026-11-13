@@ -1,0 +1,87 @@
+diff --git a/kc-dev-flow-2/scripts/pr_watch.py b/kc-dev-flow-2/scripts/pr_watch.py
+index 8b5af5d41..cdb1d928e 100755
+--- a/kc-dev-flow-2/scripts/pr_watch.py
++++ b/kc-dev-flow-2/scripts/pr_watch.py
+@@ -251,15 +251,22 @@ def stall_lines(state, read):
+     return lines
+ 
+ 
++def request_codex_review(ref):
++    repo, number = ref.split("#")
++    done = subprocess.run(["gh", "pr", "comment", number, "--repo", repo, "--body", "@codex review"], capture_output=True, text=True)
++    if done.returncode:
++        raise RuntimeError(done.stderr.strip() or "request failed")
++
++
+ def security_only_lines(state, read):
+     lines = []
+     for ref, snap in load(state).items():
+         word, head = snap.get("codex", ""), snap.get("head")
+-        if ref not in read or not word.startswith("security-only(") or snap.get("codex-asked") == head:
++        if ref not in read or snap.get("draft") or not word.startswith("security-only(") or snap.get("codex-asked") == head:
+             continue
+-        lines += [f"{ref} codex={word}: security review only.",
+-                  f"next: comment `@codex review` on {ref} once; a security review is no round and never clean."]
++        request_codex_review(ref)
+         update(state, put={ref: {"codex-asked": head}}, keep_flags=True)
++        lines.append(f"{ref} requested code review for {head}; security-only is no round.")
+     return lines
+ 
+ 
+diff --git a/kc-dev-flow-2/scripts/probe_ready_review.py b/kc-dev-flow-2/scripts/probe_ready_review.py
+new file mode 100644
+index 000000000..03b6af1b5
+--- /dev/null
++++ b/kc-dev-flow-2/scripts/probe_ready_review.py
+@@ -0,0 +1,51 @@
++#!/usr/bin/env python3
++"""Offline, reconstructed review states; does not contact GitHub."""
++import contextlib
++import io
++import json
++import sys
++import tempfile
++from pathlib import Path
++from unittest.mock import patch
++import pr_watch as w
++
++ROOT = Path(sys.argv[1])
++ROOT.mkdir(parents=True, exist_ok=True)
++BASE = {'state':'OPEN','draft':False,'mergeable':'MERGEABLE','checks':'green','head':'a'*9,'title':'synthetic','codex-evidence':'-','copilot':'-','copilot-evidence':'-','watch-codex':True}
++
++def run(state, args, looks):
++    it = iter(looks)
++    with contextlib.redirect_stdout(io.StringIO()) as out:
++        rc=w.main(['--state',str(state),*args], look=lambda *a,**k: next(it), sleep=lambda _:None)
++    return rc,out.getvalue()
++
++def case(name, snap):
++    state=ROOT/(name+'.json')
++    if state.exists(): state.unlink()
++    posts=[]
++    with patch.object(w,'request_codex_review',side_effect=lambda ref: posts.append(ref)):
++        add=run(state,['add','--codex','o/r#1'],[snap])
++        end={**snap,'state':'MERGED','codex':'-'}
++        first=run(state,['wait','1'],[snap,end])
++        again=run(state,['wait','1'],[snap,end])
++    return {'posts':len(posts),'add':add[0],'waits':[first[0],again[0]],'first':first[1].strip(),'second':again[1].strip()}
++
++security={**BASE,'codex':'security-only(summary:9)'}
++clean={**BASE,'codex':'clean','codex-evidence':'summary:1'}
++results={str(n):case(str(n),security) for n in (858,859,860)}
++results['control']=case('control',clean)
++# Simulate server accepting a comment, but client receiving a timeout.
++state=ROOT/'ambiguous.json'
++if state.exists(): state.unlink()
++run(state,['add','--codex','o/r#1'],[security])
++posts=[]
++def accepted_then_timeout(ref):
++    posts.append(ref)
++    raise RuntimeError('response lost after acceptance')
++with patch.object(w,'request_codex_review',side_effect=accepted_then_timeout):
++    attempts=[run(state,['wait','1'],[security])[0] for _ in range(2)]
++results['ambiguous_response']={'server_accepts':len(posts),'exit_codes':attempts}
++print(json.dumps(results,indent=2))
++assert all(results[str(n)]['posts']==1 for n in (858,859,860))
++assert results['control']['posts']==0
++assert len(posts)==2 and attempts==[2,2]
