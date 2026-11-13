@@ -79,6 +79,7 @@ Alignment: not needed before ideation: an observed friction with counts; the mec
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Correction (FO, 2026-11-13): the ideation gate record of this task quotes the Captain's grant for the five-task route trial (「五張都准，授權代記設計關卡（建議）」) and that trial's admission question. FO's helper script carried the old text; that grant does not cover this task. The authority FO acted under is the standing grant: 「給常設授權：符合條件的小任務，第一輪沒踩停止條件時由你代記設計關卡、同一個 worker 接著實作；准入和合併照舊問我」 (chat, 2026-11-13). The gate record itself is left as written; the Captain is told and may reopen the gate.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-13: amendment 1 replaces the task's outcome before any design was approved or anything built (the worker held its first ideation round); the replacement is designed in the next round and judged at the design gate.
 
 ## Captain amendments
