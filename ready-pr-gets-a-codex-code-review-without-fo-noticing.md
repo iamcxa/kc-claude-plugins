@@ -215,3 +215,23 @@ Do not advance this design: the naive watcher probe duplicates a trigger after a
 ### Round 1
 
 Start 2026-11-13 21:43:22; end 2026-11-13 21:48:49 Asia/Taipei (system `date`, CST); base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; probe `fc0f411302cd7a474de975532b67ff72813cb226`. Fired: premise overturned (naive exactly-once); Captain decision on criterion/trade-off; boundary without an atomic provider/local-state contract; unattended external write and ownership/profile decision. No screen or stored product data touched; no unapproved scope or budget change.
+
+
+## Stage Report: implementation
+
+- DONE: Build Captain amendment 1 and nothing else: add to kc-dev-flow-2/extensions/codex/EXTENSION.md, at the step where FO marks a PR ready, one sentence saying FO comments a Codex review request on the PR once, keeping the existing after-a-repair sentence consistent with it.
+  Base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; candidate `1c8a29faf402ef6d7018c298f59bad58d38cfb1d`; branch `spacedock-ensign/ready-pr-gets-a-codex-code-review-without-fo-noticing`; one insertion in one named file, no product script or test changes. Probe branch deleted after commit; saved probe patch remains in the ideation evidence.
+- DONE: Run AC-5's evidence on the candidate and record command, exit and output path.
+  The sentence search exit 0 in `evidence/implementation-1/ac5-candidate.log`; package lint exit 0 in `lint.log`; full commands and provenance in `commands.md`. Extension count 325 to 343 whitespace words; the lint budget applies to unchanged workflow.md, 6099/6099, so no raise.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared).
+  AC-5 alone remains active. Removing its added line in a scratch copy made the same sentence search exit 1, as required, `evidence/implementation-1/falsifier-candidate.log`; the mutation used `python3 -B` and a fresh cache prefix. AC-1 through AC-4 were superseded by amendment 1, with their original text retained there.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; FO pushes, opens the Draft PR, runs RoboRev and reads CI; CI cost measured or stated as not measured.
+  All four commands exit 0 with logs in `evidence/implementation-1/`; the first number-guard run could not refresh remote state, and a second passed with the remote read. Comment ratio is 0 added code and 0 comments; its 5% threshold is not enforced below 20 code lines. PR text: `implementation/pr.md`. CI cost not measured. No product branch push or PR; RoboRev and hosted CI not run (FO-owned).
+- DONE: Run design and affected-document checks, retain evidence and close scratch.
+  `design_surfaces.py check` exit 0, `doc_impact.py <base> <candidate>` exit 0 and lists zero documents; `EXTENSION.md` itself updated. Logs and commands in `evidence/implementation-1/`. Scratch output: `Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/implementation-1 (9361 bytes)` and `Evidence: evidence/implementation-1/ (10 files, 3.8 KiB)`.
+- SKIPPED: One Draft PR from a branch off origin/main.
+  The explicit dispatch delegates pushing and opening the PR to FO; the local candidate and PR text are ready. `roborev not run: FO runs RoboRev after you report`.
+
+### Summary
+
+One approved sentence was committed locally; AC-5 and the required local checks passed. No implementation of the withdrawn automation was carried forward. Start 2026-11-13 21:59:08; end 2026-11-13 22:02:45 Asia/Taipei, system `date` (CST). Validation, RoboRev, hosted CI, Draft PR and merge remain FO-owned and unverified.
