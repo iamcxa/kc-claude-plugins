@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:architecture-documents-have-a-layout-and-each-fact-one-home:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:architecture-documents-have-a-layout-and-each-fact-one-home-backlog-1
+              briefing:
+                id: briefing:architecture-documents-have-a-layout-and-each-fact-one-home:backlog:attempt-1:revision-1
+                digest: sha256:04b72232f387b6df61aef19a9dc011b65c5ea1de8768c11f341bef439989c85d
+                room-ref: ./architecture-documents-have-a-layout-and-each-fact-one-home/review/backlog/briefing-1
 ---
 
 ## Scope
