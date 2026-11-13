@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-13T13:42:51Z
+worktree: .worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing
 ---
 
 ## Scope
