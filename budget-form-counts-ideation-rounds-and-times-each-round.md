@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:budget-form-counts-ideation-rounds-and-times-each-round:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:budget-form-counts-ideation-rounds-and-times-each-round-backlog-1
+              briefing:
+                id: briefing:budget-form-counts-ideation-rounds-and-times-each-round:backlog:attempt-1:revision-1
+                digest: sha256:893c9d8282f18ba657f64cc67475bfeb01734f139a62768ce677a31ec40ce2d2
+                room-ref: ./budget-form-counts-ideation-rounds-and-times-each-round/review/backlog/briefing-1
 ---
 
 ## Scope
