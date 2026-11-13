@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "45d5ebb9d24665c0904aca5412123a7224d056cc",
+  "merge_result": null,
+  "model": "not run",
+  "necessity": "the workflow text, the ideation principles and Pilot profile texts, the lint budget step and ADR 0084 change against the PR's base (gh pr view 864 file list, FO read 2026-11-13; judged in the validati",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-13'",
+    "point: amendment: 'Amendment 2 dated 2026-11-13'",
+    "point: path: 'docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/skills/ideation/principles.md'",
+    "point: path: 'kc-dev-flow-2/skills/ideation/profiles/pilot.md'",
+    "point: path: 'kc-dev-flow-2/skills/implementation/profiles/pilot.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#864",
+  "sufficiency": "an ideation dispatch built from the candidate carries the probe permission, its bounds and the proof-run requirement with no FO-written line while the origin/main control carries the old ban, and one ",
+  "time": "2026-11-13T09:04:12Z",
+  "verdict": "ask"
+}
