@@ -1,0 +1,8 @@
+{
+  "questions": 14,
+  "clocks": 56,
+  "rows": 28,
+  "errors": [],
+  "reader": "saved validation-1 contract-only reader, rerun; not a new blind review",
+  "comparison_tolerance_minutes": 0.051
+}

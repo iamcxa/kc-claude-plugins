@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_contract_writer_refuses_unknown_event (__main__.TimelineTests.test_contract_writer_refuses_unknown_event)
+----------------------------------------------------------------------
+ValueError: no question None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 272, in test_contract_writer_refuses_unknown_event
+    with self.assertRaisesRegex(ValueError, "unknown event"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "unknown event" does not match "no question None"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.026s
+
+FAILED (failures=1)

@@ -1,0 +1,1060 @@
+[
+  {
+    "clock": "2026-11-12T17:52:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-12T18:17:34Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-2#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-12T18:11:34Z",
+        "recorded_at": "2026-11-12T18:11:34Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "grounds": null,
+        "tasks": null,
+        "asked": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。",
+        "holds": "acceptance",
+        "options": null,
+        "refs": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-12T18:11:34Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-2",
+        "archived": false,
+        "question": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。",
+        "waiting_min": 6.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-12T18:22:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-12T18:27:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T01:54:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:10:43Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-7#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "recorded_at": "2026-11-13T02:08:54Z",
+        "interruptions": 1,
+        "state": "open",
+        "approve_means": null,
+        "tasks": null,
+        "holds": "task",
+        "asked": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。",
+        "recommend": null,
+        "grounds": null,
+        "options": null,
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T02:08:54Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-7",
+        "archived": false,
+        "question": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。",
+        "waiting_min": 1.8,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:19:54Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-7#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "recorded_at": "2026-11-13T02:08:54Z",
+        "interruptions": 1,
+        "state": "open",
+        "grounds": null,
+        "asked": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。",
+        "approve_means": null,
+        "tasks": null,
+        "options": null,
+        "recommend": null,
+        "holds": "task",
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T02:08:54Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-7",
+        "archived": false,
+        "question": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。",
+        "waiting_min": 11.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:24:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:29:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:35:43Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-1#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:30:43Z",
+        "recorded_at": "2026-11-13T02:30:43Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "holds": "task",
+        "refs": null,
+        "options": null,
+        "recommend": null,
+        "grounds": null,
+        "approve_means": null,
+        "asked": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+        "last_shown": {
+          "at": "2026-11-13T02:30:43Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-1",
+        "archived": false,
+        "question": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+        "waiting_min": 5.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:40:43Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:45:43Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:15:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:40:10Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-12#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T03:24:10Z",
+        "recorded_at": "2026-11-13T03:24:10Z",
+        "interruptions": 1,
+        "state": "open",
+        "holds": "nothing",
+        "asked": "#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。",
+        "recommend": null,
+        "refs": null,
+        "grounds": null,
+        "approve_means": null,
+        "options": null,
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T03:24:10Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-12",
+        "archived": false,
+        "question": "#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。",
+        "waiting_min": 16.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T03:45:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:50:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:12:40Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:15:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:19:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:37:40Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-5#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:28:40Z",
+        "recorded_at": "2026-11-13T06:28:40Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "options": null,
+        "holds": "acceptance",
+        "asked": "要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。",
+        "tasks": null,
+        "grounds": null,
+        "refs": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T06:28:40Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-5",
+        "archived": false,
+        "question": "要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。",
+        "waiting_min": 9.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "options": null,
+        "holds": "nothing",
+        "asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "tasks": null,
+        "grounds": null,
+        "refs": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "waiting_min": 9.8,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:40:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "approve_means": null,
+        "holds": "nothing",
+        "grounds": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "tasks": null,
+        "recommend": null,
+        "refs": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 3.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-5#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:28:40Z",
+        "recorded_at": "2026-11-13T06:28:40Z",
+        "interruptions": 1,
+        "state": "open",
+        "approve_means": null,
+        "holds": "acceptance",
+        "grounds": null,
+        "asked": "要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。",
+        "tasks": null,
+        "recommend": null,
+        "refs": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T06:28:40Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-5",
+        "archived": false,
+        "question": "要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。",
+        "waiting_min": 12.2,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "approve_means": null,
+        "holds": "nothing",
+        "grounds": null,
+        "asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "tasks": null,
+        "recommend": null,
+        "refs": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "waiting_min": 13.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:42:40Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "tasks": null,
+        "options": null,
+        "holds": "nothing",
+        "grounds": null,
+        "approve_means": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 4.9,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "tasks": null,
+        "options": null,
+        "holds": "nothing",
+        "grounds": null,
+        "approve_means": null,
+        "asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "waiting_min": 14.8,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:44:02Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "holds": "nothing",
+        "recommend": null,
+        "approve_means": null,
+        "tasks": null,
+        "grounds": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 6.2,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "holds": "nothing",
+        "recommend": null,
+        "approve_means": null,
+        "tasks": null,
+        "grounds": null,
+        "asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "waiting_min": 16.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:44:47Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "grounds": null,
+        "approve_means": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "recommend": null,
+        "holds": "nothing",
+        "refs": null,
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 7.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "grounds": null,
+        "approve_means": null,
+        "asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "recommend": null,
+        "holds": "nothing",
+        "refs": null,
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+        "waiting_min": 16.9,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:45:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "approve_means": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "holds": "nothing",
+        "recommend": null,
+        "options": null,
+        "tasks": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 8.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:47:40Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "approve_means": null,
+        "grounds": null,
+        "recommend": null,
+        "options": null,
+        "tasks": null,
+        "holds": "nothing",
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+        "waiting_min": 9.9,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:49:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:50:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:54:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:09:02Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-8#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:57:02Z",
+        "recorded_at": "2026-11-13T06:57:02Z",
+        "interruptions": 1,
+        "state": "open",
+        "holds": "acceptance",
+        "tasks": null,
+        "recommend": null,
+        "asked": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。\nChosen option: 這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M validation cycles」由程式檢查，並讓時間工具列出每一輪。",
+        "grounds": null,
+        "refs": null,
+        "options": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T06:57:02Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-8",
+        "archived": false,
+        "question": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。\nChosen option: 這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M validation cycles」由程式檢查，並讓時間工具列出每一輪。",
+        "waiting_min": 12.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T07:14:02Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:19:02Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:31:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:56:58Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-4#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T07:48:58Z",
+        "recorded_at": "2026-11-13T07:48:58Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "holds": "task",
+        "grounds": null,
+        "tasks": null,
+        "options": null,
+        "approve_means": null,
+        "recommend": null,
+        "asked": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 worker 跑一次，再不過我就停下來回到你這裡。",
+        "last_shown": {
+          "at": "2026-11-13T07:48:58Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-4",
+        "archived": false,
+        "question": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 worker 跑一次，再不過我就停下來回到你這裡。",
+        "waiting_min": 8.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T08:01:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T08:06:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:21:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:46:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-11#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T09:31:53Z",
+        "recorded_at": "2026-11-13T09:31:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "holds": "acceptance",
+        "options": null,
+        "asked": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦",
+        "grounds": null,
+        "tasks": null,
+        "approve_means": null,
+        "recommend": null,
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T09:31:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-11",
+        "archived": false,
+        "question": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦",
+        "waiting_min": 15.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T09:51:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:56:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T11:52:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T12:17:30Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-10#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T12:03:30Z",
+        "recorded_at": "2026-11-13T12:03:30Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "approve_means": null,
+        "grounds": null,
+        "holds": "task",
+        "refs": null,
+        "asked": "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」",
+        "options": null,
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T12:03:30Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-10",
+        "archived": false,
+        "question": "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」",
+        "waiting_min": 14.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T12:22:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T12:27:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T13:27:48Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T13:48:20Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-6#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "recorded_at": "2026-11-13T13:42:48Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "recommend": null,
+        "tasks": null,
+        "asked": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+        "grounds": null,
+        "holds": "nothing",
+        "approve_means": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T13:42:48Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-6",
+        "archived": false,
+        "question": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+        "waiting_min": 5.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T13:52:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-6#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "recorded_at": "2026-11-13T13:42:48Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "approve_means": null,
+        "holds": "nothing",
+        "refs": null,
+        "options": null,
+        "recommend": null,
+        "asked": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T13:42:48Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-6",
+        "archived": false,
+        "question": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+        "waiting_min": 10.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T13:57:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "holds": "task",
+        "refs": null,
+        "recommend": null,
+        "tasks": null,
+        "asked": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "approve_means": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "question": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "waiting_min": 1.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:02:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "grounds": null,
+        "holds": "task",
+        "approve_means": null,
+        "asked": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "tasks": null,
+        "refs": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "question": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "waiting_min": 6.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:13:20Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "asked": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "options": null,
+        "refs": null,
+        "recommend": null,
+        "grounds": null,
+        "tasks": null,
+        "approve_means": null,
+        "holds": "task",
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "question": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+        "waiting_min": 17.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:18:20Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T14:23:20Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:21:21Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:46:21Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-14#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T15:28:21Z",
+        "recorded_at": "2026-11-13T15:28:21Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "asked": "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」",
+        "grounds": null,
+        "options": null,
+        "recommend": null,
+        "approve_means": null,
+        "refs": null,
+        "holds": "acceptance",
+        "last_shown": {
+          "at": "2026-11-13T15:28:21Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-14",
+        "archived": false,
+        "question": "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」",
+        "waiting_min": 18.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T15:51:21Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:56:21Z",
+    "open": []
+  }
+]

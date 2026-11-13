@@ -1,0 +1,2 @@
+{"asked": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦", "asked_at": "2026-11-13T09:31:53Z", "by": "replay FO", "channel": "chat", "holds": "acceptance", "v": 1, "event": "ask", "key": "replay-11#1", "at": "2026-11-13T09:31:53Z"}
+{"channel": "chat", "words": "先做一：把 Pilot 試作補完整，再做二：邊界合約先行", "option": null, "resolution": null, "revision": 1, "v": 1, "event": "answer", "key": "replay-11#1", "at": "2026-11-13T09:51:53Z"}

@@ -1,0 +1,35 @@
+[
+  {
+    "name": "F1-question-field",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/repair-mutants/scripts/test_task_timeline.py",
+      "TimelineTests.test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text"
+    ],
+    "status": "caught"
+  },
+  {
+    "name": "F2-fixture-worth",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/repair-mutants/scripts/test_design_surfaces.py",
+      "QuestionRecordTests"
+    ],
+    "status": "caught"
+  },
+  {
+    "name": "F3-wrong-day",
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/repair-mutants/scripts/test_task_timeline.py",
+      "TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times"
+    ],
+    "status": "caught"
+  }
+]

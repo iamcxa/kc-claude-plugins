@@ -1,0 +1,65 @@
+[
+  {
+    "file": "repair-f1-red.log",
+    "status_lines": [
+      "Ran 1 test in 1.712s",
+      "FAILED (failures=1)"
+    ]
+  },
+  {
+    "file": "repair-f1-green.log",
+    "status_lines": [
+      "Ran 1 test in 0.322s",
+      "OK"
+    ]
+  },
+  {
+    "file": "repair-f2-red.log",
+    "status_lines": [
+      "Ran 5 tests in 3.016s",
+      "FAILED (failures=4)"
+    ]
+  },
+  {
+    "file": "repair-f2-green.log",
+    "status_lines": [
+      "Ran 5 tests in 2.579s",
+      "OK"
+    ]
+  },
+  {
+    "file": "repair-f3-red.log",
+    "status_lines": [
+      "Ran 1 test in 0.035s",
+      "FAILED (failures=1)"
+    ]
+  },
+  {
+    "file": "repair-f3-green.log",
+    "status_lines": [
+      "Ran 1 test in 3.134s",
+      "OK"
+    ]
+  },
+  {
+    "file": "repair-timeline-final.log",
+    "status_lines": [
+      "Ran 28 tests in 7.833s",
+      "OK"
+    ]
+  },
+  {
+    "file": "release-preinstall-base-control.log",
+    "status_lines": [
+      "Ran 122 tests in 3.373s",
+      "FAILED (failures=27, skipped=4)"
+    ]
+  },
+  {
+    "file": "release-hosted-env.log",
+    "status_lines": [
+      "Ran 122 tests in 5.677s",
+      "OK (skipped=4)"
+    ]
+  }
+]

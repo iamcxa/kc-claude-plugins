@@ -1,0 +1,268 @@
+...............................................FFFFFFFsss..FFFFFFFFF..FFFFFFF.FFFF............................s............................
+======================================================================
+FAIL: test_claim_with_yaml_comment_silences_the_claimed_release (__main__.DueTests.test_claim_with_yaml_comment_silences_the_claimed_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1264, in test_claim_with_yaml_comment_silences_the_claimed_release
+    self.assertIn("release book-pickup/r2 ", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r2 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpk91cdx2t/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_done_status_with_yaml_comment_does_not_hide_due_release (__main__.DueTests.test_done_status_with_yaml_comment_does_not_hide_due_release)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1256, in test_done_status_with_yaml_comment_does_not_hide_due_release
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp72fatnwr/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+======================================================================
+FAIL: test_every_due_frontmatter_value_uses_the_parsed_listing (__main__.DueTests.test_every_due_frontmatter_value_uses_the_parsed_listing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1279, in test_every_due_frontmatter_value_uses_the_parsed_listing
+    self.assertIn("release book-pickup/r2 ", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r2 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpoalg1m8q/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_live_archived_flat_and_folder_claims_and_empty_value (__main__.DueTests.test_live_archived_flat_and_folder_claims_and_empty_value) (name='claim.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1338, in test_live_archived_flat_and_folder_claims_and_empty_value
+    self.assertIn("release book-pickup/r1 ", self.due()[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r1 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvuq95yam/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_live_archived_flat_and_folder_claims_and_empty_value (__main__.DueTests.test_live_archived_flat_and_folder_claims_and_empty_value) (name='claim/index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1338, in test_live_archived_flat_and_folder_claims_and_empty_value
+    self.assertIn("release book-pickup/r1 ", self.due()[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r1 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvuq95yam/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_live_archived_flat_and_folder_claims_and_empty_value (__main__.DueTests.test_live_archived_flat_and_folder_claims_and_empty_value) (name='_archive/claim.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1338, in test_live_archived_flat_and_folder_claims_and_empty_value
+    self.assertIn("release book-pickup/r1 ", self.due()[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r1 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvuq95yam/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_live_archived_flat_and_folder_claims_and_empty_value (__main__.DueTests.test_live_archived_flat_and_folder_claims_and_empty_value) (name='_archive/claim/index.md')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1338, in test_live_archived_flat_and_folder_claims_and_empty_value
+    self.assertIn("release book-pickup/r1 ", self.due()[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release book-pickup/r1 ' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvuq95yam/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_no_done_task_skips_producer_and_all_claimed_skips_producer (__main__.DueTests.test_no_done_task_skips_producer_and_all_claimed_skips_producer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1343, in test_no_done_task_skips_producer_and_all_claimed_skips_producer
+    self.assertEqual(self.due(), (0, ""))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, 'release-acceptance not run: /tmp/dev2/kc-[183 chars]k\n') != (0, '')
+
+First differing element 1:
+'release-acceptance not run: /tmp/dev2/kc-[182 chars]ck\n'
+''
+
++ (0, '')
+- (0,
+-  'release-acceptance not run: '
+-  '/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmplnczjl94/journey.yaml: '
+-  'SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n')
+
+======================================================================
+FAIL: test_nonmap_yaml_is_silent_and_done_folder_tasks_are_candidates (__main__.DueTests.test_nonmap_yaml_is_silent_and_done_folder_tasks_are_candidates)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1364, in test_nonmap_yaml_is_silent_and_done_folder_tasks_are_candidates
+    self.assertEqual(self.due()[1].count("next:"), 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'code': 2, 'stderr': 'cannot load\nextra'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: cannot load' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'stdout': 'not json'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: Expecting value' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'document': {'schema': 'journey-progress/v2', 'journey': 'book-pickup', 'source': '<workflow>', 'observedAt': '2000-01-01T00:00:00.000Z', 'diagnostic': None, 'orphans': [], 'stories': [{'journey': 'book-pickup', 'release': 'r1', 'story': 'reserve-copy', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-reserve-copy'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'choose-pickup-day', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-choose-pickup-day'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'check-ready', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-check-ready'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'receive-reminder', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-receive-reminder'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'collect-book', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-collect-book'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}], 'releases': [{'release': 'r1', 'totalStories': 3, 'doneStories': 3, 'requiredTasks': 3, 'doneTasks': 3, 'status': 'exists', 'acceptance': 'pending delivery acceptance', 'members': {'storiesDone': 3, 'storiesOpen': 0, 'storiesEmpty': 0}}, {'release': 'r2', 'totalStories': 2, 'doneStories': 2, 'requiredTasks': 2, 'doneTasks': 2, 'status': 'exists', 'acceptance': 'pending delivery acceptance', 'members': {'storiesDone': 2, 'storiesOpen': 0, 'storiesEmpty': 0}}]}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: expected journey-progress/v1' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'document': {'schema': 'journey-progress/v1', 'journey': 'book-pickup', 'source': '<workflow>', 'observedAt': '2000-01-01T00:00:00.000Z', 'diagnostic': 'task observation failed', 'orphans': [], 'stories': [{'journey': 'book-pickup', 'release': 'r1', 'story': 'reserve-copy', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-reserve-copy'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'choose-pickup-day', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-choose-pickup-day'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'check-ready', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-check-ready'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'receive-reminder', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-receive-reminder'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'collect-book', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-collect-book'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}], 'releases': [{'release': 'r1', 'totalStories': 3, 'doneStories': 3, 'requiredTasks': 3, 'doneTasks': 3, 'status': 'exists', 'acceptance': 'pending delivery acceptance', 'members': {'storiesDone': 3, 'storiesOpen': 0, 'storiesEmpty': 0}}, {'release': 'r2', 'totalStories': 2, 'doneStories': 2, 'requiredTasks': 2, 'doneTasks': 2, 'status': 'exists', 'acceptance': 'pending delivery acceptance', 'members': {'storiesDone': 2, 'storiesOpen': 0, 'storiesEmpty': 0}}]}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: task observation failed' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due) (options={'document': {'schema': 'journey-progress/v1', 'journey': 'book-pickup', 'source': '<workflow>', 'observedAt': '2000-01-01T00:00:00.000Z', 'diagnostic': None, 'orphans': [], 'stories': [{'journey': 'book-pickup', 'release': 'r1', 'story': 'reserve-copy', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-reserve-copy'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'choose-pickup-day', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-choose-pickup-day'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'check-ready', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-check-ready'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r2', 'story': 'receive-reminder', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-receive-reminder'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}, {'journey': 'book-pickup', 'release': 'r1', 'story': 'collect-book', 'status': 'exists', 'requiredTasks': 1, 'doneTasks': 1, 'taskIds': ['build-collect-book'], 'members': {'tasks': 1, 'done': 1, 'prs': []}}], 'releases': None}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1378, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: invalid progress' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_producer_failures_are_diagnostic_and_never_due (__main__.DueTests.test_producer_failures_are_diagnostic_and_never_due)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1381, in test_producer_failures_are_diagnostic_and_never_due
+    self.assertIn("timed out", self.due()[1])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'timed out' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmpvcdh64s0/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_recorded_real_progress_exit_one_and_claim_removal (__main__.DueTests.test_recorded_real_progress_exit_one_and_claim_removal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1243, in test_recorded_real_progress_exit_one_and_claim_removal
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7hwf1l3e/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: cannot observe tasks' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='not JSON')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: Expecting value' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='[]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: incomplete or malformed task listing' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='{}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: incomplete or malformed task listing' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='{"entities": [{"title": "build-check-ready", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "check-ready", "journey-required-tasks": "[\\"build-check-ready\\"]", "journey-mapping-complete": "true", "slug": "build-check-ready", "id": "build-check-ready"}, {"title": "build-choose-pickup-day", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "choose-pickup-day", "journey-required-tasks": "[\\"build-choose-pickup-day\\"]", "journey-mapping-complete": "true", "slug": "build-choose-pickup-day", "id": "build-choose-pickup-day"}, {"title": "build-collect-book", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "collect-book", "journey-required-tasks": "[\\"build-collect-book\\"]", "journey-mapping-complete": "true", "slug": "build-collect-book", "id": "build-collect-book"}, {"title": "build-receive-reminder", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "receive-reminder", "journey-required-tasks": "[\\"build-receive-reminder\\"]", "journey-mapping-complete": "true", "slug": "build-receive-reminder", "id": "build-receive-reminder"}, {"title": "build-reserve-copy", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "reserve-copy", "journey-required-tasks": "[\\"build-reserve-copy\\"]", "journey-mapping-complete": "true", "slug": "build-reserve-copy", "id": "build-reserve-copy"}], "pagination": {"has_next": "true", "total": "5", "page": "1", "limit": "0"}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: incomplete or malformed task listing' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='{"entities": [{"title": "build-check-ready", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "check-ready", "journey-required-tasks": "[\\"build-check-ready\\"]", "journey-mapping-complete": "true", "slug": "build-check-ready", "id": "build-check-ready"}, {"title": "build-choose-pickup-day", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "choose-pickup-day", "journey-required-tasks": "[\\"build-choose-pickup-day\\"]", "journey-mapping-complete": "true", "slug": "build-choose-pickup-day", "id": "build-choose-pickup-day"}, {"title": "build-collect-book", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "collect-book", "journey-required-tasks": "[\\"build-collect-book\\"]", "journey-mapping-complete": "true", "slug": "build-collect-book", "id": "build-collect-book"}, {"title": "build-receive-reminder", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "receive-reminder", "journey-required-tasks": "[\\"build-receive-reminder\\"]", "journey-mapping-complete": "true", "slug": "build-receive-reminder", "id": "build-receive-reminder"}, {"title": "build-reserve-copy", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "reserve-copy", "journey-required-tasks": "[\\"build-reserve-copy\\"]", "journey-mapping-complete": "true", "slug": "build-reserve-copy", "id": "build-reserve-copy"}], "pagination": {"has_next": "false", "total": "0", "page": "1", "limit": "0"}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: incomplete or malformed task listing' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_task_listing_is_complete_and_errors_are_diagnostic (__main__.DueTests.test_task_listing_is_complete_and_errors_are_diagnostic) (stdout='{"entities": [{"title": "build-check-ready", "status": ["done"], "journey": "book-pickup", "journey-release": "r1", "journey-story": "check-ready", "journey-required-tasks": "[\\"build-check-ready\\"]", "journey-mapping-complete": "true", "slug": "build-check-ready", "id": "build-check-ready"}, {"title": "build-choose-pickup-day", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "choose-pickup-day", "journey-required-tasks": "[\\"build-choose-pickup-day\\"]", "journey-mapping-complete": "true", "slug": "build-choose-pickup-day", "id": "build-choose-pickup-day"}, {"title": "build-collect-book", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "collect-book", "journey-required-tasks": "[\\"build-collect-book\\"]", "journey-mapping-complete": "true", "slug": "build-collect-book", "id": "build-collect-book"}, {"title": "build-receive-reminder", "status": "done", "journey": "book-pickup", "journey-release": "r2", "journey-story": "receive-reminder", "journey-required-tasks": "[\\"build-receive-reminder\\"]", "journey-mapping-complete": "true", "slug": "build-receive-reminder", "id": "build-receive-reminder"}, {"title": "build-reserve-copy", "status": "done", "journey": "book-pickup", "journey-release": "r1", "journey-story": "reserve-copy", "journey-required-tasks": "[\\"build-reserve-copy\\"]", "journey-mapping-complete": "true", "slug": "build-reserve-copy", "id": "build-reserve-copy"}], "pagination": {"has_next": "false", "total": "5", "page": "1", "limit": "0"}}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1296, in test_task_listing_is_complete_and_errors_are_diagnostic
+    self.assertIn(f"release-acceptance not run: {self.map}: {reason}", out)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: incomplete or malformed task listing' not found in 'release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmp7l7iqklw/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock\n'
+
+======================================================================
+FAIL: test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids (__main__.DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids) (value='book-pickup # comment')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1409, in test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmptzikny9s/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+======================================================================
+FAIL: test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids (__main__.DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids) (value="'book-pickup' # comment")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1409, in test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmptzikny9s/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+======================================================================
+FAIL: test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids (__main__.DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids) (value='"book\\x2dpickup" # comment')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1409, in test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmptzikny9s/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+======================================================================
+FAIL: test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids (__main__.DueTests.test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids) (value='>-\n  book-pickup')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/base-control/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py", line 1409, in test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids
+    self.assertEqual(out.count("next:"), 2, out)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : release-acceptance not run: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/tmp/tmptzikny9s/journey.yaml: SPACEDOCK_BIN is not executable: /nonexistent/spacedock
+
+
+----------------------------------------------------------------------
+Ran 122 tests in 3.373s
+
+FAILED (failures=27, skipped=4)
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node, kc-journey-map dependencies or spacedock missing
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed

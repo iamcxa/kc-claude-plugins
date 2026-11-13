@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text (__main__.TimelineTests.test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/test_task_timeline.py", line 390, in test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text
+    self.assertEqual(plain.returncode, 0, plain.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py", line 587, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py", line 536, in main
+    print(f"{r['key']} | {r['by'] or 'gate'} | {wait} | {r['holds']} | {r['question']}"
+                                                                        ~^^^^^^^^^^^^
+KeyError: 'question'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.712s
+
+FAILED (failures=1)

@@ -1,0 +1,2 @@
+{"asked": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。", "asked_at": "2026-11-13T06:27:53Z", "by": "replay FO", "channel": "chat", "holds": "nothing", "v": 1, "event": "ask", "key": "replay-9#1", "at": "2026-11-13T06:27:53Z"}
+{"channel": "chat", "words": "開「待決定事項紀錄」任務，照這個範圍", "option": null, "resolution": null, "revision": 1, "v": 1, "event": "answer", "key": "replay-9#1", "at": "2026-11-13T06:45:53Z"}

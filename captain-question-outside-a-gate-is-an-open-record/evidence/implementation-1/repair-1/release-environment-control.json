@@ -1,0 +1,19 @@
+{
+  "candidate_control_failures": 27,
+  "rejected_head_control_failures": 27,
+  "same_failed_methods": true,
+  "methods": {
+    "test_claim_with_yaml_comment_silences_the_claimed_release": 1,
+    "test_done_status_with_yaml_comment_does_not_hide_due_release": 1,
+    "test_every_due_frontmatter_value_uses_the_parsed_listing": 1,
+    "test_live_archived_flat_and_folder_claims_and_empty_value": 4,
+    "test_no_done_task_skips_producer_and_all_claimed_skips_producer": 1,
+    "test_nonmap_yaml_is_silent_and_done_folder_tasks_are_candidates": 1,
+    "test_producer_failures_are_diagnostic_and_never_due": 6,
+    "test_recorded_real_progress_exit_one_and_claim_removal": 1,
+    "test_task_listing_is_complete_and_errors_are_diagnostic": 7,
+    "test_yaml_journey_scalars_reach_the_producer_without_becoming_literal_ids": 4
+  },
+  "normal_hosted_environment": "SPACEDOCK_BIN unset: 122 cases, 4 skipped, exit 0",
+  "fo_disposition": "record imposed-environment baseline failure; do not edit this ninth path"
+}

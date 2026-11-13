@@ -1,0 +1,25 @@
+{
+  "start_asia_taipei": "2026-11-14 02:03:02",
+  "time_source": "clock tool UTC +08:00",
+  "base": "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+  "rejected": "3d65ebd7a456bcb05fd94ce754a79735bdcbcf39",
+  "candidate": "0b620345b538b67f4c6522d8b97028038f1ec17d",
+  "repair_paths": [
+    "kc-dev-flow-2/scripts/task_timeline.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_task_timeline.py"
+  ],
+  "product_tree": "clean",
+  "new_product_paths": 0,
+  "contract_revision_changed": false,
+  "ci_definition_changed": false,
+  "imposed_ci_commands": 29,
+  "imposed_successes": 28,
+  "baseline_control_failure": "release-acceptance: 27 failures on rejected and repaired code with missing SPACEDOCK_BIN; same failed methods",
+  "additional_normal_host_env": "release-acceptance: SPACEDOCK_BIN unset, exit 0, 122 cases, 4 skipped",
+  "reconciled_questions": 14,
+  "comparison_clocks": 56,
+  "comparison_errors": 0,
+  "mutations_caught": 16,
+  "ci_cost_per_pr": "not measured"
+}

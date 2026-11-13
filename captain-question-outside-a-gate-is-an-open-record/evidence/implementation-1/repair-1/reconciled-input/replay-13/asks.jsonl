@@ -1,0 +1,2 @@
+{"asked": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」", "asked_at": "2026-11-13T13:56:20Z", "by": "replay FO", "channel": "chat", "holds": "task", "v": 1, "event": "ask", "key": "replay-13#1", "at": "2026-11-13T13:56:20Z"}
+{"channel": "chat", "words": "合併提問那張改成：合併檢查把查到的事實存成紀錄，拿掉 FO 手寫摘要的要求；我只寫問題和工具查不到的事", "option": null, "resolution": null, "revision": 1, "v": 1, "event": "answer", "key": "replay-13#1", "at": "2026-11-13T14:18:20Z"}

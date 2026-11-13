@@ -1,0 +1,243 @@
+[
+  {
+    "replay": "replay-1",
+    "tasks": [
+      "dispatch-close-out-archives-evidence-and-removes-scratch",
+      "held-and-closed-tasks-leave-the-design-queue"
+    ],
+    "source_kind": "amendment",
+    "amendment": 3,
+    "source_record": "「#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。」",
+    "question": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+    "captain_answer": "加預算，修完：#854、#856 各改成 1 implementation and 3 validation cycles",
+    "recorded_answer_commit": "02b9d580fb8fb30c5a7c3eb072d182556024f1b5",
+    "recorded_answer_at": "2026-11-13T10:40:43+08:00",
+    "source_path": "dispatch-close-out-archives-evidence-and-removes-scratch.md",
+    "old_answer_at": "2026-11-13T10:40:43+08:00",
+    "question_sha256": "5c61f4aca42bed78bc578ea624d29a9106219098d7b577f7a527b18e05765e1d",
+    "source_record_sha256": "d2d908a612ea938ce81906ee221c62e670a84368fbb83f32ec8c464100b44f2a"
+  },
+  {
+    "replay": "replay-2",
+    "tasks": [
+      "new-work-checks-what-exists-first"
+    ],
+    "source_kind": "amendment",
+    "amendment": 1,
+    "source_record": "「#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。」",
+    "question": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。",
+    "captain_answer": "派第二次驗證補證（建議）",
+    "recorded_answer_commit": "d33ee20290deaad1183d67acb2f789f313e66c35",
+    "recorded_answer_at": "2026-11-13T02:22:34+08:00",
+    "source_path": "new-work-checks-what-exists-first.md",
+    "old_answer_at": "2026-11-13T02:22:34+08:00",
+    "question_sha256": "ba5d3d20a1fd11f002cdfcbd5ac91c9fd3c9ee961a1df4aca1b00d7fef1e7090",
+    "source_record_sha256": "a9590866f30ddc8d3df03da366511e2618c1b6d7d456a29c805f6614044d0c06"
+  },
+  {
+    "replay": "replay-3",
+    "tasks": [
+      "pilot-ideation-runs-a-probe-before-the-design"
+    ],
+    "source_kind": "amendment",
+    "amendment": 1,
+    "source_record": "「有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。」",
+    "question": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。",
+    "captain_answer": "可以，要同時加入預算與計時機制，我看目前你 X implementiation + Y valdiation cycle 方式還不錯",
+    "recorded_answer_commit": "26a64312ed4fab5209ce616ba4ecaa474a07b221",
+    "recorded_answer_at": "2026-11-13T14:49:47+08:00",
+    "source_path": "pilot-ideation-runs-a-probe-before-the-design.md",
+    "old_answer_at": "2026-11-13T14:49:47+08:00",
+    "question_sha256": "3af172db735fcc4e5f5ac39a643c819435f6e4c720f5e5a929cf03b6bfffea83",
+    "source_record_sha256": "5e8f5eeb7620bf7e3e595c14c99c38dd3df12e72510bffb3836741952ae29047"
+  },
+  {
+    "replay": "replay-4",
+    "tasks": [
+      "pilot-ideation-runs-a-probe-before-the-design"
+    ],
+    "source_kind": "amendment",
+    "amendment": 2,
+    "source_record": "「#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 worker 跑一次，再不過我就停下來回到你這裡。」",
+    "question": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 worker 跑一次，再不過我就停下來回到你這裡。",
+    "captain_answer": "改指令、查原因、修文字、再驗（建議）",
+    "recorded_answer_commit": "1cc34555675ec3523ee8dc9dc8e920d42f1d4cea",
+    "recorded_answer_at": "2026-11-13T16:01:58+08:00",
+    "source_path": "pilot-ideation-runs-a-probe-before-the-design.md",
+    "old_answer_at": "2026-11-13T16:01:58+08:00",
+    "question_sha256": "69b9e3b759343c9ab26e6559df64fcf9f2d7c35d6797fa1224c1d8d84d4910a0",
+    "source_record_sha256": "cd1d69a8da3d86649e1a6b56862508d3c460eded58eb5b1285e4d8b9de87e9fb"
+  },
+  {
+    "replay": "replay-5",
+    "tasks": [
+      "pilot-ideation-runs-a-probe-before-the-design"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「開」 (chat, 2026-11-13), answering FO's item 「要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。」, after his 「那接下來要怎樣才能改？目前的證據顯示進步了多少？可以說品質也有進步，因為更早開始迭代嗎？」 (chat, 2026-11-13). His standing priority (chat, 2026-11-12): Pilot is too heavy; POC stays; Pilot may share POC's stages with its own bars; Prod stays rigorous.",
+    "question": "要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。",
+    "captain_answer": "開",
+    "recorded_answer_commit": "3bf964c4746c0b2022d8ffb36da051722bac61e9",
+    "recorded_answer_at": "2026-11-13T14:42:40+08:00",
+    "source_path": "pilot-ideation-runs-a-probe-before-the-design.md",
+    "old_answer_at": "2026-11-05T17:40:56+08:00",
+    "question_sha256": "3197f1be7ac14172117753c158524a4610f2bad9480920910e12e825f09369be",
+    "source_record_sha256": "9f183e95e527535b1d0d5d49e4d94d351d6554fe789b83e9c05a0ad75be7cf84"
+  },
+  {
+    "replay": "replay-6",
+    "tasks": [
+      "ready-pr-gets-a-codex-code-review-without-fo-noticing"
+    ],
+    "source_kind": "amendment",
+    "amendment": 1,
+    "source_record": "「「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。」",
+    "question": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+    "captain_answer": "「自動觸發 Codex 審查」改成一句規則：FO 標成可審查時同時留言請 Codex 審查一次；原本的自動化和「恰好一次」條件作廢",
+    "recorded_answer_commit": "76c4f9cbb8b4b690dc48550959656ab09f0b902a",
+    "recorded_answer_at": "2026-11-13T21:57:48+08:00",
+    "source_path": "ready-pr-gets-a-codex-code-review-without-fo-noticing.md",
+    "old_answer_at": "2026-11-13T21:57:48+08:00",
+    "question_sha256": "133ccfa5b80560e83766078287f88601f945cb3cd2fad74f5a8d3c3474be1afd",
+    "source_record_sha256": "a26c37c02be3795f5909902782f02dbea4ba003407044b7386bc5c7a69c40a31"
+  },
+  {
+    "replay": "replay-7",
+    "tasks": [
+      "ready-pr-gets-a-codex-code-review-without-fo-noticing",
+      "merge-ask-is-produced-from-records",
+      "validator-commands-fit-the-delivery-check"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「3. 要」 (chat, 2026-11-13), answering FO's item 3: 「下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。」 Evidence: the route trial of 2026-11-13, FO's hand-kept log and result (worker stages took 15 to 30 minutes; validated to merge ask took 85 to 120 minutes on three tasks).",
+    "question": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。",
+    "captain_answer": "3. 要",
+    "recorded_answer_commit": "20d2f3198eda1876b3b39a28da27bde01c3abd6b",
+    "recorded_answer_at": "2026-11-13T10:24:54+08:00",
+    "source_path": "validator-commands-fit-the-delivery-check.md",
+    "old_answer_at": "2026-11-13T10:24:54+08:00",
+    "question_sha256": "da775a46e615073a34c00c9d115ac0afec4706d9f2c356981f9eeadf42956fb6",
+    "source_record_sha256": "6e4539b170159ebf7b415e7d6532322e9dac6ad2549ded98c4731fe3c8f11df4"
+  },
+  {
+    "replay": "replay-8",
+    "tasks": [
+      "budget-form-counts-ideation-rounds-and-times-each-round"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「分兩步（建議）」 (host question dialog, 2026-11-13), answering 「Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。」; the chosen option read 「這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M validation cycles」由程式檢查，並讓時間工具列出每一輪。」 His earlier words (chat, 2026-11-13): 「可以，要同時加入預算與計時機制，我看目前你 X implementiation + Y valdiation cycle 方式還不錯」.",
+    "question": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。\nChosen option: 這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M validation cycles」由程式檢查，並讓時間工具列出每一輪。",
+    "captain_answer": "分兩步（建議）",
+    "recorded_answer_commit": "355ee7e03e6c8cdcaa7af5202da52e86a7ec881b",
+    "recorded_answer_at": "2026-11-13T15:14:02+08:00",
+    "source_path": "budget-form-counts-ideation-rounds-and-times-each-round.md",
+    "old_answer_at": "2026-11-13T15:14:02+08:00",
+    "question_sha256": "daf96c149258aa149dff443e5c77fd454b43750188bad24cb199f1474e7f29ee",
+    "source_record_sha256": "533234660e53863f28f2da71f0dc3b7f2b718ca52a185d9fa4595cb7081ca9e7"
+  },
+  {
+    "replay": "replay-9",
+    "tasks": [
+      "captain-question-outside-a-gate-is-an-open-record"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「開「待決定事項紀錄」任務，照這個範圍」 (chat, 2026-11-13), answering FO's question 「要不要開「待決定事項紀錄」這張任務？」 whose stated scope was 「兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。」",
+    "question": "要不要開「待決定事項紀錄」這張任務？\nStated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。",
+    "captain_answer": "開「待決定事項紀錄」任務，照這個範圍",
+    "recorded_answer_commit": "44c795094abb1def1a5a1ba03f688f70fab2f6da",
+    "recorded_answer_at": "2026-11-13T14:45:53+08:00",
+    "source_path": "captain-question-outside-a-gate-is-an-open-record.md",
+    "old_answer_at": "2026-11-13T14:45:53+08:00",
+    "question_sha256": "936938d4c611098a8135184565643ad517b33ea7bee2d047b556f627140e704e",
+    "source_record_sha256": "d8958a1698ecb11bf7f5b0ca172d8b177f26d8ba8ab742c870644a55bbd8d763"
+  },
+  {
+    "replay": "replay-10",
+    "tasks": [
+      "design-check-reads-each-pilot-criterion-for-its-proof-record"
+    ],
+    "source_kind": "amendment",
+    "amendment": 1,
+    "source_record": "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」",
+    "question": "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」",
+    "captain_answer": "#866 擱著不合併；接下來的 Pilot 設計逐張量測有沒有漏記，五張內出現兩次以上再做結構化紀錄",
+    "recorded_answer_commit": "2618342c097d7308613eeb5bf1743c85df9b5ef5",
+    "recorded_answer_at": "2026-11-13T20:22:30+08:00",
+    "source_path": "design-check-reads-each-pilot-criterion-for-its-proof-record.md",
+    "old_answer_at": "2026-11-13T20:22:30+08:00",
+    "question_sha256": "f8859867bea67ab629a863c887a11afcba1bbf7d7701ae629a252d899c465294",
+    "source_record_sha256": "f8859867bea67ab629a863c887a11afcba1bbf7d7701ae629a252d899c465294"
+  },
+  {
+    "replay": "replay-11",
+    "tasks": [
+      "design-check-reads-each-pilot-criterion-for-its-proof-record"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「先做一：把 Pilot 試作補完整，再做二：邊界合約先行」 (chat, 2026-11-13), answering FO's list of four directions, whose first read 「一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦」.",
+    "question": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦",
+    "captain_answer": "先做一：把 Pilot 試作補完整，再做二：邊界合約先行",
+    "recorded_answer_commit": "70bd01c2c2b3cb6a28489c8758e5b7d1fd6a9149",
+    "recorded_answer_at": "2026-11-13T17:51:53+08:00",
+    "source_path": "design-check-reads-each-pilot-criterion-for-its-proof-record.md",
+    "old_answer_at": "2026-11-13T17:51:53+08:00",
+    "question_sha256": "61eac4fb68482a8c5b33f88d6cc21ac8e5ae3bec207fc390f25f893742af3f95",
+    "source_record_sha256": "a2083708711b1cde3b4a4382364f35506a7eb991904a9dbd8a8c4b6c69536c3c"
+  },
+  {
+    "replay": "replay-12",
+    "tasks": [
+      "evidence-is-declared-public-before-state-publication"
+    ],
+    "source_kind": "scope-source",
+    "amendment": null,
+    "source_record": "the Captain 「放行，另開任務（建議）」 (host question dialog, 2026-11-13), answering 「#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。」",
+    "question": "#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。",
+    "captain_answer": "放行，另開任務（建議）",
+    "recorded_answer_commit": "10a7d7af80d11f4de68dee54dfeee38e231329a8",
+    "recorded_answer_at": "2026-11-13T11:45:10+08:00",
+    "source_path": "evidence-is-declared-public-before-state-publication.md",
+    "old_answer_at": "2026-11-13T11:45:10+08:00",
+    "question_sha256": "d17c234538a3120f28e40c168c96cbc1603628034dfaa9cdfb59f6120c757fa0",
+    "source_record_sha256": "8bd4a3ffe388f9c4b29656743af21af951c45298dbf0e0cda5f0642904146b06"
+  },
+  {
+    "replay": "replay-13",
+    "tasks": [
+      "merge-ask-is-produced-from-records"
+    ],
+    "source_kind": "amendment",
+    "amendment": 1,
+    "source_record": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+    "question": "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost 「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」",
+    "captain_answer": "合併提問那張改成：合併檢查把查到的事實存成紀錄，拿掉 FO 手寫摘要的要求；我只寫問題和工具查不到的事",
+    "recorded_answer_commit": "1cdd3383f290d5495259e975e5133acdd520aff5",
+    "recorded_answer_at": "2026-11-13T22:18:20+08:00",
+    "source_path": "merge-ask-is-produced-from-records.md",
+    "old_answer_at": "2026-11-13T22:18:20+08:00",
+    "question_sha256": "de29f230ed21c6c126ba00377c32d24a5e6eca929c09c8f4759b28a8eaf72afa",
+    "source_record_sha256": "de29f230ed21c6c126ba00377c32d24a5e6eca929c09c8f4759b28a8eaf72afa"
+  },
+  {
+    "replay": "replay-14",
+    "tasks": [
+      "merge-ask-is-produced-from-records"
+    ],
+    "source_kind": "amendment",
+    "amendment": 2,
+    "source_record": "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」",
+    "question": "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」",
+    "captain_answer": "合併檢查存紀錄那張做成邊界合約：交付紀錄定義一份，流程文件、觀察者、Copilot 擴充改成引用並刪掉抄本，測試改成檢查紀錄符合合約",
+    "recorded_answer_commit": "ad4e823357024786523b13964f7194b77f0a055f",
+    "recorded_answer_at": "2026-11-13T23:51:21+08:00",
+    "source_path": "merge-ask-is-produced-from-records.md",
+    "old_answer_at": "2026-11-13T23:51:21+08:00",
+    "question_sha256": "8a3236f3b64fba37e8aad720907d82ebd890ec6725268887cff7a54c40cd4d20",
+    "source_record_sha256": "8a3236f3b64fba37e8aad720907d82ebd890ec6725268887cff7a54c40cd4d20"
+  }
+]

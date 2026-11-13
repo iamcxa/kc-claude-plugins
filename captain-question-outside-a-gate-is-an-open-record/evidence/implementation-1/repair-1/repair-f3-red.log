@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_replayed_fourteen_questions_at_declared_synthetic_times (__main__.TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/test_task_timeline.py", line 365, in test_replayed_fourteen_questions_at_declared_synthetic_times
+    self.assertEqual(datetime.fromisoformat(answered).date().isoformat(), "2026-11-13", slug)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '2026-11-05' != '2026-11-13'
+- 2026-11-05
+?         ^^
++ 2026-11-13
+?         ^^
+ : replay-5
+
+----------------------------------------------------------------------
+Ran 1 test in 0.035s
+
+FAILED (failures=1)
