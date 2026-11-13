@@ -1,0 +1,13 @@
+{
+  "previous_candidate": "2661da44a77c2b2f93991a3968fb1515bb4e7132",
+  "base": "bfc53d82510006b52baf41569c1e25176e99d87a",
+  "state": "0c2175f6e9695a3e479a2316cf8df39e0c381b8b",
+  "sd_plugin_sha": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "start_asia_taipei": "2026-11-14 00:12:41",
+  "time_source": "clock__curr_time UTC +08:00",
+  "scope": "FO stage-placement probe; product code, derivation and tests unchanged",
+  "candidate": "a4f2fc41413866f0148e1f176f447e81216ca6cf",
+  "candidate_file_sha256": {
+    "kc-dev-flow-2/references/sd/workflow.md": "be70d7eab6076d144c8060186c73a36f7e703dafb42cf32c7713c6d91c4dc373"
+  }
+}

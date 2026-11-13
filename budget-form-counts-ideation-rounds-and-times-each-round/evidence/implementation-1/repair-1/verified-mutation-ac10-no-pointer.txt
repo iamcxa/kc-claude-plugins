@@ -1,0 +1,1 @@
+0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md: kc-dev-flow-2/scripts/role_triggers.py has no pointer; add a comment line 'see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md'

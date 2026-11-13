@@ -1,0 +1,176 @@
+[
+  {
+    "name": "scripts__test_dispatch_stage",
+    "status": "passed",
+    "message": "exit 0; 56 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_dispatch_stage.log"
+  },
+  {
+    "name": "scripts__test_role_triggers",
+    "status": "passed",
+    "message": "exit 0; 63 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_role_triggers.log"
+  },
+  {
+    "name": "scripts__lint-skills",
+    "status": "passed",
+    "message": "exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__lint-skills.log"
+  },
+  {
+    "name": "scripts__test_lint_skills",
+    "status": "passed",
+    "message": "exit 0; 47 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_lint_skills.log"
+  },
+  {
+    "name": "scripts__test_design_surfaces",
+    "status": "passed",
+    "message": "exit 0; 234 tests, 4 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_design_surfaces.log"
+  },
+  {
+    "name": "scripts__test_adr_doc_checks",
+    "status": "passed",
+    "message": "exit 0; 9 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_adr_doc_checks.log"
+  },
+  {
+    "name": "scripts__test_poc_readme",
+    "status": "passed",
+    "message": "exit 0; 9 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_poc_readme.log"
+  },
+  {
+    "name": "scripts__test_comment_ratio",
+    "status": "passed",
+    "message": "exit 0; 14 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_comment_ratio.log"
+  },
+  {
+    "name": "scripts__test_number_guards",
+    "status": "passed",
+    "message": "exit 0; 38 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_number_guards.log"
+  },
+  {
+    "name": "extensions__codex__test_codex_review",
+    "status": "passed",
+    "message": "exit 0; 36 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-extensions__codex__test_codex_review.log"
+  },
+  {
+    "name": "extensions__roborev__test_roborev_gate",
+    "status": "passed",
+    "message": "exit 0; 5 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-extensions__roborev__test_roborev_gate.log"
+  },
+  {
+    "name": "extensions__copilot__test_copilot_review",
+    "status": "passed",
+    "message": "exit 0; 15 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-extensions__copilot__test_copilot_review.log"
+  },
+  {
+    "name": "extensions__journey-map__test_map_footprint",
+    "status": "passed",
+    "message": "exit 0; 23 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-extensions__journey-map__test_map_footprint.log"
+  },
+  {
+    "name": "extensions__release-acceptance__test_release_acceptance",
+    "status": "passed",
+    "message": "exit 0; 122 tests, 4 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-extensions__release-acceptance__test_release_acceptance.log"
+  },
+  {
+    "name": "scripts__test_dispatch_records",
+    "status": "passed",
+    "message": "exit 0; 136 tests, 1 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_dispatch_records.log"
+  },
+  {
+    "name": "scripts__test_delivery_gate",
+    "status": "passed",
+    "message": "exit 0; 230 tests, 1 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_delivery_gate.log"
+  },
+  {
+    "name": "scripts__test_validation_security",
+    "status": "passed",
+    "message": "exit 0; 5 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_validation_security.log"
+  },
+  {
+    "name": "scripts__test_pr_watch",
+    "status": "passed",
+    "message": "exit 0; 163 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_pr_watch.log"
+  },
+  {
+    "name": "scripts__test_replay_dispatch",
+    "status": "passed",
+    "message": "exit 0; 8 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_replay_dispatch.log"
+  },
+  {
+    "name": "scripts__test_task_timeline",
+    "status": "passed",
+    "message": "exit 0; 13 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_task_timeline.log"
+  },
+  {
+    "name": "scripts__test_decision_ledger",
+    "status": "passed",
+    "message": "exit 0; 23 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_decision_ledger.log"
+  },
+  {
+    "name": "scripts__test_package_version",
+    "status": "passed",
+    "message": "exit 0; 23 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_package_version.log"
+  },
+  {
+    "name": "scripts__test_workflow_checkout",
+    "status": "passed",
+    "message": "exit 0; 13 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_workflow_checkout.log"
+  },
+  {
+    "name": "scripts__test_observer_check",
+    "status": "passed",
+    "message": "exit 0; 23 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_observer_check.log"
+  },
+  {
+    "name": "scripts__test_merge_audit",
+    "status": "passed",
+    "message": "exit 0; 17 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_merge_audit.log"
+  },
+  {
+    "name": "scripts__test_laws_check",
+    "status": "passed",
+    "message": "exit 0; 85 tests, 1 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_laws_check.log"
+  },
+  {
+    "name": "scripts__test_learning",
+    "status": "passed",
+    "message": "exit 0; 50 tests, 0 skipped",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_learning.log"
+  },
+  {
+    "name": "scripts__test_sd_dispatch",
+    "status": "passed",
+    "message": "exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_sd_dispatch.log"
+  },
+  {
+    "name": "scripts__test_observer_recovery",
+    "status": "passed",
+    "message": "exit 0",
+    "file": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/ci-scripts__test_observer_recovery.log"
+  }
+]

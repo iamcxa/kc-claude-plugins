@@ -1,0 +1,32 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/poc_readme.py",
+    "unchanged": true,
+    "sha256": "189f5ab49286bd606bcbd22ec17ba773a97bbd7d9552ffaa1baab2130dc25959"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "unchanged": true,
+    "sha256": "d341a970b5d5c1c8fb982d8faecef7bc5911211beedd52baf8ef94176db64caa"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/role_triggers.py",
+    "unchanged": true,
+    "sha256": "8a2c9a8a0598d2928b5bc49b85e6a4c6b8c232e38e3098ec1305c6cf2bd7d7a5"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "unchanged": true,
+    "sha256": "4f2bd0ee3194422d7cd47273ee2d875dfd69419dbfcbee182bc1a5f8d9a7a640"
+  },
+  {
+    "path": "docs/dev2/README.md",
+    "unchanged": true,
+    "sha256": "284e9c88cb38a0a5b183fa7c66784d1a41b1ea78a2cbfe252d4965aa243a9f8c"
+  },
+  {
+    "path": "docs/dev2-poc/README.md",
+    "unchanged": true,
+    "sha256": "52a1c2b95430296796301b999a8e6b96e78d3d0ae19baa15718bd15618f63a99"
+  }
+]

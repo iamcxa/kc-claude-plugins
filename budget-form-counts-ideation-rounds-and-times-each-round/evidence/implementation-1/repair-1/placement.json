@@ -1,0 +1,12 @@
+{
+  "only_changed_product_path": [
+    "kc-dev-flow-2/references/sd/workflow.md"
+  ],
+  "previous_words": 6097,
+  "probe_words": 6097,
+  "budget": 6097,
+  "shared_added_words": "See stage prefixes;",
+  "offsets": "remove [N ideation, ] from the shared form (-2 words) and the article the before first overrun (-1); add the three-word pointer (+3). Replace the ten-word probe-round sentence with the ten-word Prefix sentence (net zero).",
+  "stage_prefix": "N ideation,",
+  "round_rule": "one dispatch per round, two by default"
+}

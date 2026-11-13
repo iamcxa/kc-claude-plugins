@@ -1,0 +1,39 @@
+.......F.
+======================================================================
+FAIL: test_the_source_derives_to_four_stages_that_never_route_through_ideation (__main__.DeriveTests.test_the_source_derives_to_four_stages_that_never_route_through_ideation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2/scripts/test_poc_readme.py", line 88, in test_the_source_derives_to_four_stages_that_never_route_through_ideation
+    self.assertEqual(stray, [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: Lists differ: ['these on existing tasks. Budgets start w[395 chars]es.'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'these on existing tasks. Budgets start with `N cycles per stage`, `[N ideation, ]N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.'
+
++ []
+- ['these on existing tasks. Budgets start with `N cycles per stage`, `[N '
+-  'ideation, ]N implementation and M validation cycles`, or `at most N '
+-  'dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. '
+-  'Only messages with a named `Symptom:` count. Minutes are not counted. '
+-  'Default: keep results, report remaining work and stop adding, unless he '
+-  'decides otherwise. Use bold **AC-N** declarations with individual evidence '
+-  'clauses.']
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.104s
+
+FAILED (failures=1)
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/tmp2xa7oz1q/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

@@ -285,3 +285,38 @@ Implemented the accepted five decisions on the current fetched main and committe
 ### Summary
 
 The accepted counting and per-round behavior is supported at exact head 2661da44 by independent replay, four suites and targeted falsifiers; five design decisions are implemented with a -2 workflow-word delta. Overall recommendation is REJECTED pending F1: a separately reproduced candidate-only CI failure needs a test/compatibility disposition outside the named files, while the POC four-stage route itself remains intact. Started 2026-11-13 23:27:19 and completed checks/cleanup by 23:40:46 Asia/Taipei; source clock.curr_time UTC +08:00. No product bytes changed; the durable report and evidence are the only task-owned writes.
+
+## Stage Report: implementation
+
+- DONE: Captain amendment 1 and validation-1 F1 repaired by the FO-authorized stage-placement alternative, after reporting all five passing probe checks to FO before commit.
+  Previous candidate 2661da44a77c2b2f93991a3968fb1515bb4e7132; new candidate a4f2fc41413866f0148e1f176f447e81216ca6cf, committed directly on it. Only kc-dev-flow-2/references/sd/workflow.md changes (3 lines replaced); poc_readme.py and test_poc_readme.py remain byte-identical (repair-1/unchanged.json).
+- DONE: The unchanged POC tests pass and the POC document omits the ideation budget form without a derivation-script edit.
+  ci-scripts__test_poc_readme.log: all 9 tests pass, exit 0. The initial derivation-only probe made the exact-derivation assertion fail; FO's later placement instruction resolves both unchanged assertions. Original/probe failures are retained, not treated as acceptance.
+- DONE: Budget reader and dispatch-time budget output behave as on 2661da44a.
+  Role suite 63 tests and real dispatch suite 56 tests, both exit 0; both scripts and their tests are unchanged. The stage adds the N ideation, prefix to the unchanged universal form; code never reads its prose location. See ci-results.json and unchanged.json.
+- DONE: Shared five-stage discovery, workflow word count and lint budget checked.
+  Shared text adds exactly "See stage prefixes;" (3 words), offset by two optional-prefix words and one article; the ten-word round sentence becomes the ten-word prefix/round sentence. Workflow/lint stay 6097/6097, no budget edit; original -2 whitespace-word delta preserved. Normalized startup count is now 6154 vs base 6155 (-1), named separately in authoritative-words.txt.
+- DONE: Repository POC README remains the clean derivation of its five-stage README; neither adopted README needs a PR change.
+  placement-adopted-confirmed.txt exits 0; docs/dev2/README.md and docs/dev2-poc/README.md hashes are unchanged in unchanged.json.
+- DONE: Other consumers of shared POC workflow budget prose inventoried.
+  consumers.json: test_sd_dispatch.py imports derive() for real POC transport; it exits 0 against CI's exact SD source pin 4d158a484ec73e184861067f8ed1e20087fdc26a. Adoption invokes the same CLI; lint counts the source. Two bounded searches found no other live in-package POC budget-sentence reader; external dynamic adopters remain outside this claim.
+- DONE: Whole package test list run through all CI Python entry points, with commands and exits retained.
+  ci-results.json: 29/29 entries exit 0; 26 unittest suites run 1460 tests (1449 pass, 11 existing skips), two real-runtime scripts pass, plus lint. ci-tests.json lists every suite and exit. Same direct entry points and CI runtime/source version; four independent entries run concurrently from the assigned worktree with owned TMPDIR.
+- DONE: Every acceptance criterion's evidence command rerun on the repaired bytes (AC-1 through AC-5).
+  acceptance.json maps all actual commands/exits/outputs: six real replays 0/1/0/0/1/1; three design rounds 43.6/562.2/97.0 minutes with withdrawn/revise/approve; budget hook/default/Prod/special-role behavior passes in real dispatch tests. Removing grammar/default still wrongly permits the third replay.
+- DONE: Compatibility and archived timing evidence rerun (AC-6 and AC-7).
+  Frozen state 0c2175f6e9695a3e479a2316cf8df39e0c381b8b: authoritative-base-comparison.txt compares 249 tasks with 24 text differences and zero exit changes; authoritative-rounds-census.txt has 192 design rounds over 170 archived tasks, zero mismatches or missing ends and 3 late-committed zero-minute rounds.
+- DONE: Word/lint, complete four required suites and ADR protections rerun (AC-8 through AC-10); all ten named falsifiers run cold.
+  candidate-lint.txt and candidate-adr.txt exit 0; mutations.json has 10 detected mutations (python3 -B, copied caches cleared). Restoring the prose hold fails at 6101/6097; removing round output fails the census; removing an ADR pointer fails ADR lint. Full CI includes all four original suites, not just them.
+- DONE: Number guards, comment maximum and each affected document checked.
+  number-guards.txt exits 0 with the current configured state fetch; comments.txt remains 3/117, 2.6% <= 5%; document-dispositions.json refreshes all 18 listed documents. ADR 0085 is unchanged by this repair and continues to extend 0077/0080/0084.
+- DONE: Local candidate, reviewable PR text and public evidence prepared; owned scratch closed.
+  No product push or PR write. implementation/pr.md now describes the repaired candidate and complete check list; evidence/implementation-1/repair-1/provenance.json binds the SHA, parent, frozen state and runtime pin. fixture-cleanup.json lists only attributable synthetic leftovers removed after all commands finished; repair-1/scratch-close.txt records original implementation-1 root closure.
+- SKIPPED: Derivation-script, POC-test and adopted README edits.
+  FO explicitly directed the smaller placement repair if all five checks held; they do. The Captain's required POC outcome and unchanged tests are satisfied without these extra file changes.
+- SKIPPED: Product push, PR update, independent validation-2, actual RoboRev review, hosted CI for the new head and released-live behavior.
+  FO owns these next steps; one validation cycle remains. Adapter unit tests are not actual code review. Existing skips need historical corpora, Node/journey dependencies or optional real-builder source configuration; no new tests skip. CI cost per PR not measured; CI configuration unchanged.
+
+### Summary
+
+This complete report supersedes the earlier implementation report for candidate 2661da44a; the current candidate is a4f2fc41413866f0148e1f176f447e81216ca6cf. The single-file placement repair satisfies Captain amendment 1's outcome with unchanged derivation/tests and all 29 local CI entries green; all ten criteria and falsifiers were rerun, and the remaining publication/review/validation steps stay with FO. Profile: Pilot; no version bump, production obligation or delivery claim. Started 2026-11-14 00:12:41 Asia/Taipei (clock__curr_time UTC +08:00); end time is in the completion message.

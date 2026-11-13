@@ -1,0 +1,7 @@
+archived tasks 170; rounds 0; ideation rounds 0; ideation rows whose round count differs from dispatches 144; rounds without end 0; zero-minute rounds 0
+results: 
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/implementation-1/repair-1/rounds_census.py", line 24, in <module>
+    assert mismatch == 0 and no_end == 0, (mismatch, no_end)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (144, 0)

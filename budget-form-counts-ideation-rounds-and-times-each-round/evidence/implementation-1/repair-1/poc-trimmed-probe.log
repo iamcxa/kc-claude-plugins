@@ -1,0 +1,36 @@
+test_batch_presentation_survives_poc_derivation_outside_worker_context (test_poc_readme.DeriveTests.test_batch_presentation_survives_poc_derivation_outside_worker_context) ... ok
+test_check_reports_drift_and_accepts_a_fresh_derivation (test_poc_readme.DeriveTests.test_check_reports_drift_and_accepts_a_fresh_derivation) ... ok
+test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (test_poc_readme.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) ... ok
+test_only_the_ideation_entry_and_section_are_removed (test_poc_readme.DeriveTests.test_only_the_ideation_entry_and_section_are_removed) ... FAIL
+test_team_survives_derivation_with_context_in_both_worker_stages (test_poc_readme.DeriveTests.test_team_survives_derivation_with_context_in_both_worker_stages) ... ok
+test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages (test_poc_readme.DeriveTests.test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages) ... ok
+test_the_number_guards_section_names_the_adr_path_default_the_script_cannot_tell_its_reader (test_poc_readme.DeriveTests.test_the_number_guards_section_names_the_adr_path_default_the_script_cannot_tell_its_reader) ... ok
+test_the_source_derives_to_four_stages_that_never_route_through_ideation (test_poc_readme.DeriveTests.test_the_source_derives_to_four_stages_that_never_route_through_ideation) ... ok
+test_the_source_has_no_link_that_breaks_once_copied_into_an_adopter (test_poc_readme.DeriveTests.test_the_source_has_no_link_that_breaks_once_copied_into_an_adopter) ... ok
+
+======================================================================
+FAIL: test_only_the_ideation_entry_and_section_are_removed (test_poc_readme.DeriveTests.test_only_the_ideation_entry_and_section_are_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2/scripts/test_poc_readme.py", line 99, in test_only_the_ideation_entry_and_section_are_removed
+    self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '---\[2154 chars]e`, `N implementation and M validation cycles`[36666 chars]e.\n' != '---\[2154 chars]e`, `[N ideation, ]N implementation and M vali[36680 chars]e.\n'
+Diff is 40024 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.107s
+
+FAILED (failures=1)
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/tmpqfat92lt/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

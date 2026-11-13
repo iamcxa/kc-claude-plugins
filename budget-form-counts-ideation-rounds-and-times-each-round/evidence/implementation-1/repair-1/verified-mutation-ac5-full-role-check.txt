@@ -1,0 +1,26 @@
+F
+======================================================================
+FAIL: test_ideation_ignores_owed_special_roles (__main__.DispatchStageTests.test_ideation_ignores_owed_special_roles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 235, in test_ideation_ignores_owed_special_roles
+    self.build("ideation")
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 112, in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--stage", stage, "--model", "fixture-model",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, "--host", "codex", *extra], expected, child_env, stderr_path=stderr_path)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-9dbd552t/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-9dbd552t/code/docs/dev2/.spacedock-state/dispatch-fixture-1e78f1f3f17f41c6b718d02ebde6f32e.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-9dbd552t/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/tmp/dispatch-stage-9dbd552t/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; dispatch-fixture-1e78f1f3f17f41c6b718d02ebde6f32e budget or special-role check held:\nnext: dispatch-fixture-1e78f1f3f17f41c6b718d02ebde6f32e has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nbudget: Budget: 2 ideation, 1 implementation and 2 validation cycles; spent ideation 1, implementation 0, validation 0\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.061s
+
+FAILED (failures=1)

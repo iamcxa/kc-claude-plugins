@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_fixed_forms_are_narrow_and_case_insensitive (__main__.BudgetTest.test_fixed_forms_are_narrow_and_case_insensitive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/implementation-1/mutant/kc-dev-flow-2/scripts/test_role_triggers.py", line 782, in test_fixed_forms_are_narrow_and_case_insensitive
+    self.assertEqual(tuple(budget_bound(value).values()), expected)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'values'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.039s
+
+FAILED (errors=1)

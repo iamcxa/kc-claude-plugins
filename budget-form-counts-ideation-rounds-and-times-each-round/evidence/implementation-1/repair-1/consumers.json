@@ -1,0 +1,22 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "use": "Loads shared SOURCE; derive() output is checked for no stray ideation and exact preservation outside the removed stage. All nine unchanged tests pass on the placement."
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "use": "Imports derive(); route_definition(poc) derives TEMPLATE before real Spacedock worker/gate transport checks. Included in the full CI list with pinned SD source."
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/adoption.md",
+    "use": "Authoritative user route invokes poc_readme.py derive/check on the five-stage README. Existing adopted source and derived copies remain unchanged and check passes."
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/lint-skills.py",
+    "use": "Reads the shared template for word count and overlap checks; not a POC-specific budget parser. Passes at unchanged 6097/6097."
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "use": "Historical prose fixtures mention derivation; no additional live POC budget-sentence reader was found in the two bounded searches."
+  }
+]
