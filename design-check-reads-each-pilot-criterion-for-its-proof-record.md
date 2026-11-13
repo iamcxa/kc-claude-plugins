@@ -3,7 +3,7 @@ title: The design check holds a Pilot design whose criterion lacks its proof rec
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain chose 「核准，兩項都照建議（建議）」 (host question dialog, 2026-11-13), answering 「決定：要不要核准「檢查程式逐條檢查 Pilot 驗收紀錄」的設計並開始實作？建議核准，兩個設計決定都照建議：一、現在停在設計階段、還沒核准的 Pilot 設計（四個專案共 23 張，本 repo 11 張、其他專案 12 張）下次檢查時也要補上紀錄或寫明跑不了的原因；已在設計關卡核准過的設計一律不受影響。二、純粹「讀文件確認」的驗收條件不另開特例，要嘛記下印出那段文字的指令，要嘛列在「現在無法證明」。同意即接受：那 23 張各自可能要多派一次設計；檢查主要靠「exit N」這類字樣認出紀錄，所以把計畫寫成「必須 exit 0 並寫出 out.log」而沒真的跑的句子也會通過，拿舊設計試算是 408 份裡有 12 份；它只檢查紀錄有沒有寫齊，不檢查指令是不是真的跑過；觀察者技能要加一句話，不然會把各專案 67 到 155 份舊設計報成違規；流程文件字數不變；有兩項驗收條件要等實作的 CI 和發版後才能驗。」; accepts the design with decisions D1 and D2 as recommended. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-13T09:54:53Z
 ---
 
