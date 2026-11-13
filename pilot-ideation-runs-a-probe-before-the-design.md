@@ -72,6 +72,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-13: amendment 2 replaces only the evidence command of AC-3 with the pattern the independent validator ran and recorded in validation-1 (finding F1); the criterion's statement and falsifier are unchanged and no approved behaviour is withdrawn.
+Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-11-13 — what single mechanism produces these findings, and what one change closes that class? Answer: the evidence-record requirement is prose only, the design check does not read each criterion for command, exit and output path, so completeness rests on the worker; the class closes with a Pilot-only extension of that check, in a separately approved follow-up, not in this PR; the prose clarification is right-sized for this slice; AC-8 stays as written with all criteria required; proceed to validation 2 at 45d5ebb9d, keep the subject's inputs before cleanup, return to the Captain if it fails again.
 
 ## Captain amendments
 
