@@ -188,6 +188,10 @@ Files this design would change: `kc-dev-flow-2/scripts/role_triggers.py`, `dispa
 
 Recommended order: land this task after design-check-reads-each-pilot-criterion-for-its-proof-record. Both add a `WORKFLOW_BUDGET_STEPS` entry and edit the Pilot ideation paragraph, so the second rebases one lint step and one sentence. Merge them serially, not in parallel, as the Captain's backlog approval stated. Rebase after adr-required-statement if it merges first.
 
+## Number guards
+
+ADR: 0085
+
 ## Stage Report: ideation
 
 - DONE: Run this ideation probe-first, as the text merged on origin/main by PR 864 (ADR 0084, not yet released) asks: before writing the design, build a throwaway probe of this task's outcome on the local branch poc/budget-form-counts-ideation-rounds-and-times-each-round from origin/main, run it on the real cases the task's Scope and Stop condition name, and save what it showed in the task folder; then write the design as what the probe showed and what it lacks. Under a Probe: line in the design record the branch, base and last commit and each hypothesis with its result; remove the probe worktree before reporting and keep the branch. Every criterion's evidence command runs once on it, recording command, exit and output path per criterion, provenance included; what cannot run goes under Not provable now with the criterion named. Design against origin/main, which already carries PR 864. State what the change deletes or shortens with word counts; if the workflow text must grow past its lint budget, name the raise for the Captain as an unresolved decision instead of assuming it
