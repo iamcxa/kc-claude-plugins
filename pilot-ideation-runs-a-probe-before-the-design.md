@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:pilot-ideation-runs-a-probe-before-the-design:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:pilot-ideation-runs-a-probe-before-the-design-ideation-1
+              briefing:
+                id: briefing:pilot-ideation-runs-a-probe-before-the-design:ideation:attempt-1:revision-1
+                digest: sha256:4c644ca4bfe2a84a12e2bf42e80aa237bd470cd53cd9d4ec22cc1ffd562ebaef
+                room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/ideation/briefing-1
 started: 2026-11-13T06:44:05Z
 ---
 
