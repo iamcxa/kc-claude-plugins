@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1",
+  "question": "決定：要不要核准「預算把設計輪數算進去」的設計並開始實作？建議核准，五個決定都照建議：一、寫法用你的原話「N ideation, N implementation and M validation cycles」，既有的兩種寫法意思不變；二、Pilot 的預算沒寫設計輪數時預設兩輪、由程式把關，流程文件裡那句靠我記得的規則刪掉（少 2 個字）；三、設計派工時只檢查預算，不檢查欠不欠顧問諮詢；四、新增一份決策紀錄，是擴充既有三份，不取代；五、每一輪的結果取自那一輪關掉的關卡紀錄，不看階段報告。 同意即接受：有一張待辦任務的預算剛好寫了「一輪設計」，上線後它第二次設計派工會被擋下來問你；預設兩輪不會顯示在預算那一行，只顯示在派工時的提示（每次多 6 個字）；Prod 和沒寫可計數預算的任務不受設計輪數限制；到目前為止沒有任何任務的設計派到第三次，所以這道把關還沒有被真實需要過。",
+  "artifacts": [
+    {
+      "id": "artifact:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2130eefcb3f4057da9bf1980958000358d2df296/budget-form-counts-ideation-rounds-and-times-each-round.md",
+      "rev": "sha256:7069208df616804283e68c8773fe5ca642253c0a1d653b2187ab54251ca7c7e6",
+      "mediaType": "text/markdown",
+      "summary": "Ideation report by Claude Opus, 2026-11-13, probe-first, resumed once after the host closed its session; committed 18:42, seen by FO at 22:55. design_surfaces.py check exit 0 (FO run 2026-11-13). Probe on local branch poc/budget-form-counts-ideation-rounds-and-times-each-round (never pushed): the existing budget reader extended, a real task with three design dispatches replayed under a budget of two is held at the third, and no held or not-held result changes across 247 tasks (worker's runs, not rerun by FO). Proof records: 9 of 10 criteria with command, exit and output path, 1 under Not provable now (FO count). Decisions D1 to D5 as recommended. Workflow text 6099 to 6097 words; one new ADR extending 0077, 0080 and 0084."
+    }
+  ]
+}

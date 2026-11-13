@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:budget-form-counts-ideation-rounds-and-times-each-round:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:budget-form-counts-ideation-rounds-and-times-each-round-ideation-1
+              briefing:
+                id: briefing:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1
+                digest: sha256:e69ca9f332bff2f0d592e9da3d3f095975def68e05d9e30d3866b3318321a7c0
+                room-ref: ./budget-form-counts-ideation-rounds-and-times-each-round/review/ideation/briefing-1
 started: 2026-11-13T09:54:58Z
 ---
 
