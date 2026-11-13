@@ -15,6 +15,17 @@ gates:
                 id: briefing:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1
                 digest: sha256:d9561606ddb4992d30285045b99b4f6fd356cdc8ccd87583aa2c3db454f5b417
                 room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pilot-ideation-runs-a-probe-before-the-design:backlog:1
+                briefing: briefing:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-13T06:43:56.513937Z"
+                decision: approve
+                reason: 'The Captain chose 「進設計階段（建議）」 (host question dialog, 2026-11-13), answering 「決定：要不要讓「Pilot 設計階段先做試作」這張任務進設計階段？建議要。這張只做兩段裡的第一段：Pilot 的設計階段可以在本機分支做一個不推送的拋棄式試作，每條驗收條件當場跑一次並記下指令和結果，跑不了的列在「現在無法證明」給你在設計關卡看；設計關卡照舊由你決定。不做的部分：同一個 worker 接著實作、我代記設計關卡（這兩項維持你逐批授權），以及 Prod、POC 流程、跨元件的合約盲測。預算：1 implementation and 2 validation cycles，一個套件 PR。同意即接受：證據只有我挑的十張小任務；它沒有證明會變快，也沒有證明交付的缺陷變少；流程文字會增加，設計必須寫明刪掉或縮短什麼，寫不出來就回來找你。」; accepts outcome, scope, non-goals and Budget as seeded. Recommendation: followed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
