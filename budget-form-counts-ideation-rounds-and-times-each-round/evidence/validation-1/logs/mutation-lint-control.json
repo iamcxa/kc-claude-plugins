@@ -1,0 +1,11 @@
+{
+  "name": "mutation-lint-control",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/lint-skills.py"
+  ],
+  "exit": 0,
+  "seconds": 0.18,
+  "log": "logs/mutation-lint-control.log"
+}

@@ -1,0 +1,12 @@
+{
+  "docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md": "19d3993c3426498ac5e06137139759403abb7f3abeeaf11edc7433c37ff2ca94",
+  "kc-dev-flow-2/references/sd/workflow.md": "0131c79df98fdc6e1621fda1c9fb0e4acef2af01e28b435e5b1e7693209eca0a",
+  "kc-dev-flow-2/scripts/design_surfaces.py": "39131aaf9533be5f3ca4dce9fe05a974a6b1bac077238aff76c5cc7e8d01be54",
+  "kc-dev-flow-2/scripts/dispatch_stage.py": "4f2bd0ee3194422d7cd47273ee2d875dfd69419dbfcbee182bc1a5f8d9a7a640",
+  "kc-dev-flow-2/scripts/lint-skills.py": "3749a2750d0322ab14f137f5a38e7f71cfb67a97457206f18aeb559c740c6a31",
+  "kc-dev-flow-2/scripts/role_triggers.py": "8a2c9a8a0598d2928b5bc49b85e6a4c6b8c232e38e3098ec1305c6cf2bd7d7a5",
+  "kc-dev-flow-2/scripts/task_timeline.py": "ec46ec3bbbf474deef04c23e6fbb3d10708c040e8d321e528df853d40054561d",
+  "kc-dev-flow-2/scripts/test_dispatch_stage.py": "285f195605f09965fc3e16fca73317a6fe788cd45d7e769c7d7c7d7fde177468",
+  "kc-dev-flow-2/scripts/test_role_triggers.py": "b7cb165de851015703ac02049f3c25fb663e5392989661ed58d3dfec49b1cba3",
+  "kc-dev-flow-2/scripts/test_task_timeline.py": "4a996bd567b7ec8ff476e5001cb54eb8df6a983ada7c97937c2b7114d156952a"
+}

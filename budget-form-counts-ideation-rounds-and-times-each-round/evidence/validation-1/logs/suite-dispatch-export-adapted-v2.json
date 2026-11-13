@@ -1,0 +1,13 @@
+{
+  "name": "suite-dispatch-export-adapted-v2",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/dispatch_export_suite.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2"
+  ],
+  "exit": 1,
+  "seconds": 235.61,
+  "log": "logs/suite-dispatch-export-adapted-v2.log"
+}

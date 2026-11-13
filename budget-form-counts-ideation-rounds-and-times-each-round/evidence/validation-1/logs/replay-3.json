@@ -1,0 +1,15 @@
+{
+  "name": "replay-3",
+  "command": [
+    "bash",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+    "merge-ask-holds-missing-clauses",
+    "3 ideation, 1 implementation and 2 validation cycles",
+    "3"
+  ],
+  "exit": 0,
+  "seconds": 0.85,
+  "log": "logs/replay-3.log"
+}

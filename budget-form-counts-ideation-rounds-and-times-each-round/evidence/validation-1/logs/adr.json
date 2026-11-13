@@ -1,0 +1,14 @@
+{
+  "name": "adr",
+  "command": [
+    "python3",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+    "docs/adr",
+    "--since",
+    "bfc53d82510006b52baf41569c1e25176e99d87a",
+    "--require",
+    "0085"
+  ],
+  "exit": 0,
+  "log": "logs/adr.log"
+}

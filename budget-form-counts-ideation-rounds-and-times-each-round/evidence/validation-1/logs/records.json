@@ -1,0 +1,10 @@
+{
+  "name": "records",
+  "command": [
+    "python3",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round"
+  ],
+  "exit": 0,
+  "log": "logs/records.log"
+}

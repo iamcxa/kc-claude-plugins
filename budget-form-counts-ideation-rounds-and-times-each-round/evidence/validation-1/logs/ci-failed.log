@@ -1,0 +1,47 @@
+unit tests (python3)	test_poc_readme.py	﻿2026-11-13T15:26:18.6421405Z ##[group]Run python3 kc-dev-flow-2/scripts/test_poc_readme.py
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6421664Z ^[[36;1mpython3 kc-dev-flow-2/scripts/test_poc_readme.py^[[0m
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6461098Z shell: /usr/bin/bash -e {0}
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6461238Z env:
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6461358Z   SPACEDOCK_VERSION: v0.27.2
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6461570Z   SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:18.6461800Z ##[endgroup]
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8164500Z .......F.
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8164860Z ======================================================================
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8165519Z FAIL: test_the_source_derives_to_four_stages_that_never_route_through_ideation (__main__.DeriveTests.test_the_source_derives_to_four_stages_that_never_route_through_ideation)
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8166190Z ----------------------------------------------------------------------
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8166520Z Traceback (most recent call last):
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8167144Z   File "/home/runner/work/kc-claude-plugins/kc-claude-plugins/kc-dev-flow-2/scripts/test_poc_readme.py", line 88, in test_the_source_derives_to_four_stages_that_never_route_through_ideation
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8167853Z     self.assertEqual(stray, [])
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8168056Z     ~~~~~~~~~~~~~~~~^^^^^^^^^^^
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8168391Z AssertionError: Lists differ: ['these on existing tasks. Budgets start w[395 chars]es.'] != []
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8168685Z 
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8168785Z First list contains 1 additional elements.
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8169010Z First extra element 0:
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8170762Z 'these on existing tasks. Budgets start with `N cycles per stage`, `[N ideation, ]N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.'
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8172024Z 
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8172092Z + []
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8172333Z - ['these on existing tasks. Budgets start with `N cycles per stage`, `[N '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8172743Z -  'ideation, ]N implementation and M validation cycles`, or `at most N '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8173332Z -  'dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8173728Z -  'Only messages with a named `Symptom:` count. Minutes are not counted. '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8174130Z -  'Default: keep results, report remaining work and stop adding, unless he '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8174539Z -  'decides otherwise. Use bold **AC-N** declarations with individual evidence '
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8174853Z -  'clauses.']
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8174955Z 
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8175081Z ----------------------------------------------------------------------
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8175622Z Ran 9 tests in 1.121s
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8175727Z 
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8175800Z FAILED (failures=1)
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8176043Z POC README matches the five-stage README without ideation
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8176317Z --- derived
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8176487Z +++ /tmp/tmpummwkrtg/poc.md
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8176687Z @@ -7,7 +7,7 @@
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8176856Z  extensions: [learn, peers]
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177046Z  second-reviewer: ""
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177235Z  state: .spacedock-state
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177419Z -trunk: next
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177574Z +trunk: main
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177728Z  stages:
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8177872Z    defaults:
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8178026Z      worktree: false
+unit tests (python3)	test_poc_readme.py	2026-11-13T15:26:19.8269577Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,13 @@
+{
+  "name": "verified-mutation-ac7-no-rounds",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/rounds_census.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+  ],
+  "exit": 1,
+  "seconds": 11.14,
+  "log": "logs/verified-mutation-ac7-no-rounds.log"
+}

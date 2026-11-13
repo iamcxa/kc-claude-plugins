@@ -1,0 +1,26 @@
+[
+  {
+    "name": "role",
+    "status": "passed",
+    "message": "63 run; 0 skipped",
+    "file": "logs/suite-role_triggers.log"
+  },
+  {
+    "name": "dispatch (unadapted worktree)",
+    "status": "passed",
+    "message": "56 run; 0 skipped",
+    "file": "logs/suite-dispatch-worktree.log"
+  },
+  {
+    "name": "timeline",
+    "status": "passed",
+    "message": "13 run; 0 skipped",
+    "file": "logs/suite-task_timeline.log"
+  },
+  {
+    "name": "design",
+    "status": "passed",
+    "message": "234 run; 4 skipped",
+    "file": "logs/suite-design_surfaces.log"
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "name": "comments",
+  "command": [
+    "python3",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+    "bfc53d82510006b52baf41569c1e25176e99d87a",
+    "2661da44a77c2b2f93991a3968fb1515bb4e7132",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+  ],
+  "exit": 0,
+  "log": "logs/comments.log"
+}

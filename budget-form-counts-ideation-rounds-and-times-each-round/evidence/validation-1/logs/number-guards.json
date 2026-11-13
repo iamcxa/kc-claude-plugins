@@ -1,0 +1,18 @@
+{
+  "name": "number-guards",
+  "command": [
+    "python3",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+    "check",
+    "--repo",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round",
+    "--workflow-dir",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+    "--task",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round.md",
+    "--head",
+    "2661da44a77c2b2f93991a3968fb1515bb4e7132"
+  ],
+  "exit": 0,
+  "log": "logs/number-guards.log"
+}

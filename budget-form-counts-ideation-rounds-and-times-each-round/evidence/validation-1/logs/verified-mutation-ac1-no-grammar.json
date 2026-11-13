@@ -1,0 +1,12 @@
+{
+  "name": "verified-mutation-ac1-no-grammar",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_role_triggers.py",
+    "BudgetTest.test_fixed_forms_are_narrow_and_case_insensitive"
+  ],
+  "exit": 1,
+  "seconds": 0.13,
+  "log": "logs/verified-mutation-ac1-no-grammar.log"
+}

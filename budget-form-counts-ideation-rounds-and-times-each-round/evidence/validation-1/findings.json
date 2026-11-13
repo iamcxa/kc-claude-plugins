@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "medium",
+    "title": "F1 \u2014 Needs decision: the approved budget wording fails POC derivation CI",
+    "file": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "line": 88,
+    "detail": "At 2661da44, the derived POC README has the correct four stages, but the existing blanket check rejects the new shared budget phrase [N ideation, ]. Base: 9 tests pass. Candidate: 8 pass, 1 fails. The same failure is in GitHub run 43452561375. No broken POC stage routing was demonstrated. Repair may require a file outside the approved ten-file scope.",
+    "fix": "FO should disposition the compatibility/test repair and authorize its scope before repair. Revalidate the repaired candidate; no product bytes were changed.",
+    "status": "open"
+  }
+]

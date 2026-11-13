@@ -1,0 +1,17 @@
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 2.360s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/tmp/tmpmp0ifilc/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

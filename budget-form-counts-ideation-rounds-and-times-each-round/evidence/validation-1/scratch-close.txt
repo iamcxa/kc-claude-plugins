@@ -1,0 +1,2 @@
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1 (493196673 bytes)
+Evidence: evidence/validation-1/ (108 files, 164.2 KiB)

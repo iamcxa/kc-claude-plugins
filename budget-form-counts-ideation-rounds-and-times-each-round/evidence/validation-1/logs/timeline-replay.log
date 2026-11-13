@@ -1,0 +1,21 @@
+task: merge-ask-holds-missing-clauses
+  backlog: 2026-10-21T07:26:21Z -> 2026-10-21T07:28:43Z  2.4 min (before gate 0.0, Captain wait 2.4, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T07:26:21Z, closed 2026-10-21T07:28:43Z, approve
+  ideation: 2026-10-21T07:29:53Z -> 2026-10-21T19:12:41Z  702.8 min (before gate 145.8, Captain wait 556.3, after gate 0.7); dispatches 3, repeats 2
+    round 1: 2026-10-21T07:29:53Z -> 2026-10-21T08:13:29Z  43.6 min; withdrawn
+    round 2: 2026-10-21T08:13:29Z -> 2026-10-21T17:35:39Z  562.2 min; revise
+    round 3: 2026-10-21T17:35:39Z -> 2026-10-21T19:12:41Z  97.0 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T08:00:21Z, closed 2026-10-21T08:13:25Z, withdrawn
+    gate attempt 2: opened 2026-10-21T08:32:21Z, closed 2026-10-21T17:35:24Z, revise
+    gate attempt 3: opened 2026-10-21T19:12:11Z, closed 2026-10-21T19:12:14Z, approve
+  implementation: 2026-10-21T19:12:41Z -> 2026-10-22T04:00:22Z  527.7 min (before gate 527.7, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    round 1: 2026-10-21T19:12:41Z -> 2026-10-22T04:00:22Z  527.7 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-22T04:00:22Z -> 2026-10-22T10:05:53Z  365.5 min (before gate 354.7, Captain wait 2.8, after gate 8.0); dispatches 1, repeats 0
+    round 1: 2026-10-22T04:00:22Z -> 2026-10-22T10:05:53Z  365.5 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-22T09:55:03Z, closed 2026-10-22T09:57:52Z, approve
+  done: 2026-10-22T10:05:53Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 1; amendments outside a gate: 0

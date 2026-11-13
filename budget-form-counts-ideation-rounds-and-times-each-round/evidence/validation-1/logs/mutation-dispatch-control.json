@@ -1,0 +1,14 @@
+{
+  "name": "mutation-dispatch-control",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it",
+    "DispatchStageTests.test_pilot_default_holds_the_third_ideation",
+    "DispatchStageTests.test_ideation_ignores_owed_special_roles"
+  ],
+  "exit": 0,
+  "seconds": 7.99,
+  "log": "logs/mutation-dispatch-control.log"
+}

@@ -1,0 +1,546 @@
+[
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "--require",
+      "0085"
+    ],
+    "exit": 0,
+    "log": "logs/adr.log"
+  },
+  {
+    "name": "base-comparison",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/compare_budgets.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/base/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+    ],
+    "exit": 0,
+    "seconds": 160.29,
+    "log": "logs/base-comparison.log"
+  },
+  {
+    "name": "ci-poc-base",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/base/kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "seconds": 2.48,
+    "log": "logs/ci-poc-base.log"
+  },
+  {
+    "name": "ci-poc-candidate",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 1,
+    "seconds": 2.48,
+    "log": "logs/ci-poc-candidate.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "2661da44a77c2b2f93991a3968fb1515bb4e7132",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "log": "logs/comments.log"
+  },
+  {
+    "name": "dispatch-export-diagnostic",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it"
+    ],
+    "exit": 1,
+    "seconds": 0.75,
+    "log": "logs/dispatch-export-diagnostic.log"
+  },
+  {
+    "name": "documents",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "2661da44a77c2b2f93991a3968fb1515bb4e7132",
+      "--json"
+    ],
+    "exit": 0,
+    "log": "logs/documents.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "seconds": 0.25,
+    "log": "logs/lint.log"
+  },
+  {
+    "name": "mutation-adr-control",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/docs/adr",
+      "--root",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant",
+      "--require",
+      "0085"
+    ],
+    "exit": 0,
+    "seconds": 0.05,
+    "log": "logs/mutation-adr-control.log"
+  },
+  {
+    "name": "mutation-dispatch-control",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it",
+      "DispatchStageTests.test_pilot_default_holds_the_third_ideation",
+      "DispatchStageTests.test_ideation_ignores_owed_special_roles"
+    ],
+    "exit": 0,
+    "seconds": 7.99,
+    "log": "logs/mutation-dispatch-control.log"
+  },
+  {
+    "name": "mutation-lint-control",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "seconds": 0.18,
+    "log": "logs/mutation-lint-control.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round.md",
+      "--head",
+      "2661da44a77c2b2f93991a3968fb1515bb4e7132"
+    ],
+    "exit": 0,
+    "log": "logs/number-guards.log"
+  },
+  {
+    "name": "records",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round"
+    ],
+    "exit": 0,
+    "log": "logs/records.log"
+  },
+  {
+    "name": "replay-1",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "2 ideation, 1 implementation and 2 validation cycles",
+      "2"
+    ],
+    "exit": 0,
+    "seconds": 1.34,
+    "log": "logs/replay-1.log"
+  },
+  {
+    "name": "replay-2",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "2 ideation, 1 implementation and 2 validation cycles",
+      "3"
+    ],
+    "exit": 1,
+    "seconds": 0.8,
+    "log": "logs/replay-2.log"
+  },
+  {
+    "name": "replay-3",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "3 ideation, 1 implementation and 2 validation cycles",
+      "3"
+    ],
+    "exit": 0,
+    "seconds": 0.85,
+    "log": "logs/replay-3.log"
+  },
+  {
+    "name": "replay-4",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "1 implementation and 2 validation cycles",
+      "2"
+    ],
+    "exit": 0,
+    "seconds": 0.77,
+    "log": "logs/replay-4.log"
+  },
+  {
+    "name": "replay-5",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "1 implementation and 2 validation cycles",
+      "3"
+    ],
+    "exit": 1,
+    "seconds": 0.75,
+    "log": "logs/replay-5.log"
+  },
+  {
+    "name": "replay-6",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "two ideation, one implementation and two validation cycles, in one package PR.",
+      "3"
+    ],
+    "exit": 1,
+    "seconds": 0.73,
+    "log": "logs/replay-6.log"
+  },
+  {
+    "name": "replay-no-default",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "1 implementation and 2 validation cycles",
+      "3"
+    ],
+    "exit": 0,
+    "seconds": 0.64,
+    "log": "logs/replay-no-default.log"
+  },
+  {
+    "name": "replay-no-grammar",
+    "command": [
+      "bash",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/replay.sh",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1",
+      "merge-ask-holds-missing-clauses",
+      "2 ideation, 1 implementation and 2 validation cycles",
+      "3"
+    ],
+    "exit": 0,
+    "seconds": 0.62,
+    "log": "logs/replay-no-grammar.log"
+  },
+  {
+    "name": "rounds-census",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/rounds_census.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+    ],
+    "exit": 0,
+    "seconds": 12.57,
+    "log": "logs/rounds-census.log"
+  },
+  {
+    "name": "suite-design_surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "seconds": 18.71,
+    "log": "logs/suite-design_surfaces.log"
+  },
+  {
+    "name": "suite-dispatch-export-adapted-v2",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/dispatch_export_suite.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2"
+    ],
+    "exit": 1,
+    "seconds": 235.61,
+    "log": "logs/suite-dispatch-export-adapted-v2.log"
+  },
+  {
+    "name": "suite-dispatch-export-adapted",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/dispatch_export_suite.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2"
+    ],
+    "exit": 5,
+    "seconds": 0.11,
+    "log": "logs/suite-dispatch-export-adapted.log"
+  },
+  {
+    "name": "suite-dispatch_stage",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "exit": 1,
+    "seconds": 107.67,
+    "log": "logs/suite-dispatch_stage.log"
+  },
+  {
+    "name": "suite-role_triggers",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "seconds": 81.59,
+    "log": "logs/suite-role_triggers.log"
+  },
+  {
+    "name": "suite-task_timeline",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_task_timeline.py"
+    ],
+    "exit": 0,
+    "seconds": 5.27,
+    "log": "logs/suite-task_timeline.log"
+  },
+  {
+    "name": "timeline-replay",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state",
+      "merge-ask-holds-missing-clauses"
+    ],
+    "exit": 0,
+    "seconds": 0.12,
+    "log": "logs/timeline-replay.log"
+  },
+  {
+    "name": "verified-mutation-ac1-no-grammar",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_role_triggers.py",
+      "BudgetTest.test_fixed_forms_are_narrow_and_case_insensitive"
+    ],
+    "exit": 1,
+    "seconds": 0.13,
+    "log": "logs/verified-mutation-ac1-no-grammar.log"
+  },
+  {
+    "name": "verified-mutation-ac10-no-pointer",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/docs/adr",
+      "--root",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant",
+      "--require",
+      "0085"
+    ],
+    "exit": 1,
+    "seconds": 0.05,
+    "log": "logs/verified-mutation-ac10-no-pointer.log"
+  },
+  {
+    "name": "verified-mutation-ac2-no-ideation-hook",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it"
+    ],
+    "exit": 1,
+    "seconds": 1.43,
+    "log": "logs/verified-mutation-ac2-no-ideation-hook.log"
+  },
+  {
+    "name": "verified-mutation-ac3-no-round-print",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_three_design_dispatches_have_separate_times_and_results"
+    ],
+    "exit": 1,
+    "seconds": 0.96,
+    "log": "logs/verified-mutation-ac3-no-round-print.log"
+  },
+  {
+    "name": "verified-mutation-ac4-no-default",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_pilot_default_holds_the_third_ideation"
+    ],
+    "exit": 1,
+    "seconds": 1.5,
+    "log": "logs/verified-mutation-ac4-no-default.log"
+  },
+  {
+    "name": "verified-mutation-ac5-full-role-check",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_ideation_ignores_owed_special_roles"
+    ],
+    "exit": 1,
+    "seconds": 0.91,
+    "log": "logs/verified-mutation-ac5-full-role-check.log"
+  },
+  {
+    "name": "verified-mutation-ac6-hold-admitted",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/compare_budgets.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/base/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+    ],
+    "exit": 1,
+    "seconds": 159.73,
+    "log": "logs/verified-mutation-ac6-hold-admitted.log"
+  },
+  {
+    "name": "verified-mutation-ac7-no-rounds",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/rounds_census.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+    ],
+    "exit": 1,
+    "seconds": 11.14,
+    "log": "logs/verified-mutation-ac7-no-rounds.log"
+  },
+  {
+    "name": "verified-mutation-ac8-prose-hold",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 1,
+    "seconds": 0.18,
+    "log": "logs/verified-mutation-ac8-prose-hold.log"
+  },
+  {
+    "name": "verified-mutation-ac9-no-default",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py",
+      "DispatchStageTests.test_pilot_default_holds_the_third_ideation"
+    ],
+    "exit": 1,
+    "seconds": 1.52,
+    "log": "logs/verified-mutation-ac9-no-default.log"
+  },
+  {
+    "name": "word-counts",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/word_counts.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1"
+    ],
+    "exit": 0,
+    "seconds": 1.33,
+    "log": "logs/word-counts.log"
+  },
+  {
+    "name": "suite-dispatch-worktree",
+    "command": [
+      "SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock",
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "cwd": "assigned product worktree",
+    "exit": 0,
+    "log": "logs/suite-dispatch-worktree.log"
+  },
+  {
+    "name": "captain-acceptance",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/validation-1/acceptance.sh"
+    ],
+    "exit": 1,
+    "log": "logs/captain-acceptance.log"
+  }
+]

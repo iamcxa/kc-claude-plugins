@@ -1,0 +1,14 @@
+{
+  "name": "base-comparison",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/compare_budgets.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/base/kc-dev-flow-2/scripts",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/candidate/kc-dev-flow-2/scripts",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"
+  ],
+  "exit": 0,
+  "seconds": 160.29,
+  "log": "logs/base-comparison.log"
+}

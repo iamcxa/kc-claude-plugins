@@ -1,0 +1,157 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "evidence": [
+      "logs/replay-1.log",
+      "logs/replay-2.log",
+      "logs/replay-3.log",
+      "logs/replay-4.log",
+      "logs/replay-5.log",
+      "logs/replay-6.log",
+      "logs/suite-role_triggers.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac1-no-grammar",
+      "mutation": "role_triggers.py: if rounds: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "evidence": [
+      "logs/suite-dispatch-worktree.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac2-no-ideation-hook",
+      "mutation": "dispatch_stage.py: if args.stage in (\"ideation\", \"implementation\", \"validation\"): -> if args.stage in (\"implementation\", \"validation\"):",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "evidence": [
+      "logs/replay-2.log",
+      "logs/replay-3.log",
+      "logs/timeline-replay.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac3-no-round-print",
+      "mutation": "task_timeline.py: for x in r[\"rounds\"]: -> for x in []:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "evidence": [
+      "logs/replay-4.log",
+      "logs/replay-5.log",
+      "logs/suite-dispatch-worktree.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac4-no-default",
+      "mutation": "role_triggers.py: if default: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "evidence": [
+      "logs/suite-dispatch-worktree.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac5-full-role-check",
+      "mutation": "dispatch_stage.py: role_args.append(\"--budget-only\") -> pass",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "evidence": [
+      "logs/base-comparison.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac6-hold-admitted",
+      "mutation": "role_triggers.py: return bool(admitted and over), summary, bound -> return bool(admitted), summary, bound",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "evidence": [
+      "logs/rounds-census.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac7-no-rounds",
+      "mutation": "task_timeline.py: \"rounds\": rounds, -> \"rounds\": [],",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "evidence": [
+      "logs/lint.log",
+      "logs/word-counts.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac8-prose-hold",
+      "mutation": "../references/sd/workflow.md: ideation dispatch, two by default. -> ideation dispatch; FO holds a third for the Captain.",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "evidence": [
+      "logs/suite-role_triggers.log",
+      "logs/suite-dispatch-worktree.log",
+      "logs/suite-task_timeline.log",
+      "logs/suite-design_surfaces.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac9-no-default",
+      "mutation": "role_triggers.py: if default: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "evidence": [
+      "logs/adr.log",
+      "logs/number-guards-live.log"
+    ],
+    "falsifier": {
+      "name": "verified-mutation-ac10-no-pointer",
+      "mutation": "role_triggers.py:     # see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md\n -> ",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    }
+  }
+]

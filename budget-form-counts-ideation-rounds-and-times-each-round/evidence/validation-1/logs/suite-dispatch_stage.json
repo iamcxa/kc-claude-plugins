@@ -1,0 +1,11 @@
+{
+  "name": "suite-dispatch_stage",
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+  ],
+  "exit": 1,
+  "seconds": 107.67,
+  "log": "logs/suite-dispatch_stage.log"
+}

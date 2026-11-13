@@ -1,0 +1,13 @@
+{
+  "name": "timeline-replay",
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/task_timeline.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state",
+    "merge-ask-holds-missing-clauses"
+  ],
+  "exit": 0,
+  "seconds": 0.12,
+  "log": "logs/timeline-replay.log"
+}

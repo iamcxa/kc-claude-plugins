@@ -1,0 +1,11 @@
+{
+  "name": "suite-design_surfaces",
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py"
+  ],
+  "exit": 0,
+  "seconds": 18.71,
+  "log": "logs/suite-design_surfaces.log"
+}

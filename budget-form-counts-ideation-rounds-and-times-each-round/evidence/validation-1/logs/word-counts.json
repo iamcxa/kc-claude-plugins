@@ -1,0 +1,12 @@
+{
+  "name": "word-counts",
+  "command": [
+    "python3",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/word_counts.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1"
+  ],
+  "exit": 0,
+  "seconds": 1.33,
+  "log": "logs/word-counts.log"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "verified-mutation-ac10-no-pointer",
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/docs/adr",
+    "--root",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant",
+    "--require",
+    "0085"
+  ],
+  "exit": 1,
+  "seconds": 0.05,
+  "log": "logs/verified-mutation-ac10-no-pointer.log"
+}

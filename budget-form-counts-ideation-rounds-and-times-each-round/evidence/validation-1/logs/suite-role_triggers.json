@@ -1,0 +1,11 @@
+{
+  "name": "suite-role_triggers",
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/test_role_triggers.py"
+  ],
+  "exit": 0,
+  "seconds": 81.59,
+  "log": "logs/suite-role_triggers.log"
+}

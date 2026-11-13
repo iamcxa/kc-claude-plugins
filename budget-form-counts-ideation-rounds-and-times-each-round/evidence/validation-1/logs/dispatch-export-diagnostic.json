@@ -1,0 +1,12 @@
+{
+  "name": "dispatch-export-diagnostic",
+  "command": [
+    "python3",
+    "-B",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it"
+  ],
+  "exit": 1,
+  "seconds": 0.75,
+  "log": "logs/dispatch-export-diagnostic.log"
+}

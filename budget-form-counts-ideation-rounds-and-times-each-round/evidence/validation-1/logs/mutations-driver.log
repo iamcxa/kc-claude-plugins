@@ -1,0 +1,124 @@
+{"name": "mutation-dispatch-control", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it", "DispatchStageTests.test_pilot_default_holds_the_third_ideation", "DispatchStageTests.test_ideation_ignores_owed_special_roles"], "exit": 0, "seconds": 7.99, "log": "logs/mutation-dispatch-control.log"}
+...
+----------------------------------------------------------------------
+Ran 3 tests in 7.877s
+
+OK
+
+{"name": "mutation-lint-control", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/lint-skills.py"], "exit": 0, "seconds": 0.18, "log": "logs/mutation-lint-control.log"}
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 6097 of 6097 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+
+{"name": "mutation-adr-control", "command": ["python3", "-B", "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/docs/adr", "--root", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant", "--require", "0085"], "exit": 0, "seconds": 0.05, "log": "logs/mutation-adr-control.log"}
+1 ADR file(s) checked, 0 legacy
+
+{"name": "verified-mutation-ac1-no-grammar", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_role_triggers.py", "BudgetTest.test_fixed_forms_are_narrow_and_case_insensitive"], "exit": 1, "seconds": 0.13, "log": "logs/verified-mutation-ac1-no-grammar.log"}
+E
+======================================================================
+ERROR: test_fixed_forms_are_narrow_and_case_insensitive (__main__.BudgetTest.test_fixed_forms_are_narrow_and_case_insensitive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_role_triggers.py", line 782, in test_fixed_forms_are_narrow_and_case_insensitive
+    self.assertEqual(tuple(budget_bound(value).values()), expected)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'values'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.030s
+
+FAILED (errors=1)
+
+{"name": "verified-mutation-ac2-no-ideation-hook", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", "DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it"], "exit": 1, "seconds": 1.43, "log": "logs/verified-mutation-ac2-no-ideation-hook.log"}
+F
+======================================================================
+FAIL: test_ideation_bound_holds_the_dispatch_past_it (__main__.DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 203, in test_ideation_bound_holds_the_dispatch_past_it
+    self.assertIn("budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,", first.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.327s
+
+FAILED (failures=1)
+
+{"name": "verified-mutation-ac3-no-round-print", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", "TimelineTests.test_three_design_dispatches_have_separate_times_and_results"], "exit": 1, "seconds": 0.96, "log": "logs/verified-mutation-ac3-no-round-print.log"}
+---------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 135, in test_three_design_dispatches_have_separate_times_and_results
+    self.assertIn(f"round {r['round']}: {r['start']} -> {r['end']}  {r['minutes']} min; {r['result']}", output)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'round 1: 2026-01-01T00:10:00Z -> 2026-01-01T00:30:00Z  20.0 min; withdrawn' not found in 'task: demo\n  ideation: 2026-01-01T00:10:00Z -> 2026-01-01T01:30:00Z  80.0 min (before gate 15.0, Captain wait 9.0, after gate 56.0); dispatches 3, repeats 2\n    asks outside a gate: not recorded\n    gate attempt 1: opened 2026-01-01T00:15:00Z, closed 2026-01-01T00:18:00Z, withdrawn\n    gate attempt 2: opened 2026-01-01T00:35:00Z, closed 2026-01-01T00:38:00Z, revise\n    gate attempt 3: opened 2026-01-01T01:05:00Z, closed 2026-01-01T01:08:00Z, approve\n  implementation: 2026-01-01T01:30:00Z -> 2026-01-01T01:40:00Z  10.0 min (before gate 10.0, Captain wait 0, after gate 0.0); dispatches 1, repeats 0\n    asks outside a gate: not recorded\n  done: 2026-01-01T01:40:00Z\n  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 1; amendments outside a gate: 0\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.778s
+
+FAILED (failures=1)
+
+{"name": "verified-mutation-ac4-no-default", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", "DispatchStageTests.test_pilot_default_holds_the_third_ideation"], "exit": 1, "seconds": 1.5, "log": "logs/verified-mutation-ac4-no-default.log"}
+F
+======================================================================
+FAIL: test_pilot_default_holds_the_third_ideation (__main__.DispatchStageTests.test_pilot_default_holds_the_third_ideation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 214, in test_pilot_default_holds_the_third_ideation
+    self.assertIn("spent ideation 1 of 2 by default, implementation 0", quiet.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'spent ideation 1 of 2 by default, implementation 0' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.392s
+
+FAILED (failures=1)
+
+{"name": "verified-mutation-ac5-full-role-check", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", "DispatchStageTests.test_ideation_ignores_owed_special_roles"], "exit": 1, "seconds": 0.91, "log": "logs/verified-mutation-ac5-full-role-check.log"}
+PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/tmp/dispatch-stage-d03xvig8/code/docs/dev2/.spacedock-state/dispatch-fixture-85b37222d3c54d89a0e2f125642ba24a.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/tmp/dispatch-stage-d03xvig8/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/tmp/dispatch-stage-d03xvig8/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; dispatch-fixture-85b37222d3c54d89a0e2f125642ba24a budget or special-role check held:\nnext: dispatch-fixture-85b37222d3c54d89a0e2f125642ba24a has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nbudget: Budget: 2 ideation, 1 implementation and 2 validation cycles; spent ideation 1, implementation 0, validation 0\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.789s
+
+FAILED (failures=1)
+
+{"name": "verified-mutation-ac6-hold-admitted", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/compare_budgets.py", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/base/kc-dev-flow-2/scripts", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"], "exit": 1, "seconds": 159.73, "log": "logs/verified-mutation-ac6-hold-admitted.log"}
+-checks-what-exists-first', 0, 1), ('observer-check-learn-only-when-listed', 0, 1), ('pr-watch-tasks-foreign-worktree', 0, 1), ('ready-pr-gets-a-codex-code-review-without-fo-noticing', 0, 1), ('worth-questions-asked-only-before-the-design-gate', 0, 1), ('budget-form-counts-ideation-rounds-and-times-each-round', 0, 1), ('delivery-gate-s4-skips-removed-scratch', 0, 1), ('design-check-reads-each-pilot-criterion-for-its-proof-record', 0, 1), ('merge-ask-is-produced-from-records', 0, 1)]
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/compare_budgets.py", line 18, in <module>
+    assert not exits, exits
+           ^^^^^^^^^
+AssertionError: [('design-surfaces-task-dir-crash', 0, 1), ('dispatch-close-out-archives-evidence-and-removes-scratch', 0, 1), ('each-task-records-stage-time-revises-and-interruptions', 0, 1), ('gate-question-facts-are-checked-before-the-captain-reads-them', 0, 1), ('held-and-closed-tasks-leave-the-design-queue', 0, 1), ('merge-ask-tests-the-merge-result', 0, 1), ('new-work-checks-what-exists-first', 0, 1), ('observer-check-learn-only-when-listed', 0, 1), ('pr-watch-tasks-foreign-worktree', 0, 1), ('ready-pr-gets-a-codex-code-review-without-fo-noticing', 0, 1), ('worth-questions-asked-only-before-the-design-gate', 0, 1), ('budget-form-counts-ideation-rounds-and-times-each-round', 0, 1), ('delivery-gate-s4-skips-removed-scratch', 0, 1), ('design-check-reads-each-pilot-criterion-for-its-proof-record', 0, 1), ('merge-ask-is-produced-from-records', 0, 1)]
+
+{"name": "verified-mutation-ac7-no-rounds", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/rounds_census.py", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/state"], "exit": 1, "seconds": 11.14, "log": "logs/verified-mutation-ac7-no-rounds.log"}
+archived tasks 170; rounds 0; ideation rounds 0; ideation rows whose round count differs from dispatches 144; rounds without end 0; zero-minute rounds 0
+results: 
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/rounds_census.py", line 24, in <module>
+    assert mismatch == 0 and no_end == 0, (mismatch, no_end)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (144, 0)
+
+{"name": "verified-mutation-ac8-prose-hold", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/lint-skills.py"], "exit": 1, "seconds": 0.18, "log": "logs/verified-mutation-ac8-prose-hold.log"}
+FAIL: references/sd/workflow.md: 6101 words exceeds the budget of 6097; move the added text out of the README, or add a raise step of 4 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS
+
+{"name": "verified-mutation-ac9-no-default", "command": ["python3", "-B", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", "DispatchStageTests.test_pilot_default_holds_the_third_ideation"], "exit": 1, "seconds": 1.52, "log": "logs/verified-mutation-ac9-no-default.log"}
+F
+======================================================================
+FAIL: test_pilot_default_holds_the_third_ideation (__main__.DispatchStageTests.test_pilot_default_holds_the_third_ideation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 214, in test_pilot_default_holds_the_third_ideation
+    self.assertIn("spent ideation 1 of 2 by default, implementation 0", quiet.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'spent ideation 1 of 2 by default, implementation 0' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.421s
+
+FAILED (failures=1)
+
+{"name": "verified-mutation-ac10-no-pointer", "command": ["python3", "-B", "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/docs/adr", "--root", "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant", "--require", "0085"], "exit": 1, "seconds": 0.05, "log": "logs/verified-mutation-ac10-no-pointer.log"}
+0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md: kc-dev-flow-2/scripts/role_triggers.py has no pointer; add a comment line 'see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md'
+
+10 mutations killed

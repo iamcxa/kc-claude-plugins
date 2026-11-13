@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_ideation_bound_holds_the_dispatch_past_it (__main__.DispatchStageTests.test_ideation_bound_holds_the_dispatch_past_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-1/mutant/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 203, in test_ideation_bound_holds_the_dispatch_past_it
+    self.assertIn("budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,", first.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,' not found in "[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 1.327s
+
+FAILED (failures=1)
