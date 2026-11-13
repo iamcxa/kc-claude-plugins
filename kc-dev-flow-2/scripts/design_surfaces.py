@@ -1042,6 +1042,7 @@ def check_seed_fields(name, text):
     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
     if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
         errors.append(f"{name}: Budget must start with 'N cycles per stage', 'N implementation and M validation cycles', "
+                      "'N ideation, N implementation and M validation cycles', "
                       "'at most N dispatches total' or '最多 N 次派工'; an explicit agent-minutes clause may precede it, but minutes are not counted")
     return errors
 

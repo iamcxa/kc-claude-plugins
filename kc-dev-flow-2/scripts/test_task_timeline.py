@@ -111,6 +111,28 @@ class TimelineTests(unittest.TestCase):
                           (self.stamp(30), self.stamp(40), "approve")])
         self.assertEqual((row["before_gate_min"], row["captain_wait_min"], row["after_gate_min"]), (15.0, 15.0, 10.0))
         self.assertEqual((result["withdrawn_gate_attempts"], result["gate_revise_decisions"]), (1, 0))
+        self.assertEqual(row["rounds"], [dict(round=1, start=self.stamp(10), end=self.stamp(50),
+                                             minutes=40.0, result="withdrawn, approve")])
+
+    def test_three_design_dispatches_have_separate_times_and_results(self):
+        (self.state / "_archive").mkdir()
+        for number, start, outcome in ((1, 10, "withdrawn"), (2, 30, "revise"), (3, 60, "approve")):
+            self.dispatch("ideation", number, start, entering=number == 1)
+            self.room("ideation", number, start + 5)
+            self.gates("ideation", [(n, kind, minute + 8) for n, minute, kind in
+                       ((1, 10, "withdrawn"), (2, 30, "revise"), (3, 60, "approve")) if n <= number])
+            self.commit(f"gate {number} {outcome}", start + 8)
+        self.dispatch("implementation", 1, 90, entering=True)
+        self.finish(100)
+        row = json.loads(self.cli("demo", "--json").stdout)["stages"][0]
+        self.assertEqual(row["dispatches"], 3)
+        self.assertEqual(row["rounds"], [
+            dict(round=1, start=self.stamp(10), end=self.stamp(30), minutes=20.0, result="withdrawn"),
+            dict(round=2, start=self.stamp(30), end=self.stamp(60), minutes=30.0, result="revise"),
+            dict(round=3, start=self.stamp(60), end=self.stamp(90), minutes=30.0, result="approve")])
+        output = self.cli("demo").stdout
+        for r in row["rounds"]:
+            self.assertIn(f"round {r['round']}: {r['start']} -> {r['end']}  {r['minutes']} min; {r['result']}", output)
 
     def test_repeated_stage_preserves_each_cycles_after_gate_time(self):
         (self.state / "_archive").mkdir()

@@ -140,6 +140,18 @@ def timeline(state, slug):
             before, after = 0.0, round(row["elapsed"] - wait, 1)
         # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
         n = max(len(starts.get(stage, [])), max(records.get(stage, {}), default=0))
+        # see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md
+        rounds = []
+        for (start, st), end in zip(segments, ends):
+            if st != stage:
+                continue
+            closed = [a for a in attempts if a["closed"] and start <= a["closed"] <= (end or now)]
+            opened = [a for a in attempts if not a["closed"] and start <= a["opened"] <= (end or now)]
+            following = next((s for t, s in segments if t == end), None) if end else None
+            result = (", ".join(a["outcome"] for a in closed) if closed else "gate open" if opened else "running" if end is None
+                      else "redispatched" if following == stage else f"next {following}" if following else "archived")
+            rounds.append({"round": len(rounds) + 1, "start": iso(start), "end": iso(end),
+                           "minutes": mins(start, end or now), "result": result})
         out.append({
             "stage": stage, "start": iso(row["start"]), "end": iso(row["end"]),
             "elapsed_min": round(row["elapsed"], 1),
@@ -147,6 +159,7 @@ def timeline(state, slug):
             "captain_wait_min": round(wait, 1), "after_gate_min": after,
             "dispatches": n, "repeat_dispatches": max(n - 1, 0), "dispatch_records": len(records.get(stage, {})),
             "gate_attempts": [{**a, "opened": iso(a["opened"]), "closed": iso(a["closed"])} for a in attempts],
+            "rounds": rounds,
         })
     asks_file = folder(task) / "asks.jsonl"
     asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
@@ -183,6 +196,8 @@ def show(t):
         print(f"  {r['stage']}: {r['start']} -> {r['end'] or 'running'}  {r['elapsed_min']} min "
               f"(before gate {r['before_gate_min']}, Captain wait {r['captain_wait_min']}, after gate {r['after_gate_min']}); "
               f"dispatches {r['dispatches']}, repeats {r['repeat_dispatches']}")
+        for x in r["rounds"]:
+            print(f"    round {x['round']}: {x['start']} -> {x['end'] or 'running'}  {x['minutes']} min; {x['result']}")
         print(f"    asks outside a gate: {r['asks_outside_gate'] if r['asks_outside_gate'] is not None else 'not recorded'}")
         for ask in r["asks"]:
             print(f"      {ask['at']}: {ask['asked']}")
