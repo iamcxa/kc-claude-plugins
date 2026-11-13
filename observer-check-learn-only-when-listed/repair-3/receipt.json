@@ -1,0 +1,130 @@
+{
+  "candidate": "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+  "repair_parent": "17eccdda05fde54e6dff66f4989787864219ef43",
+  "integration_base": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+  "checks": [
+    {
+      "output": "fixtures.json",
+      "exit": 0
+    },
+    {
+      "output": "mutation.json",
+      "exit": 0
+    },
+    {
+      "output": "real-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "historical-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "focused.log",
+      "exit": 0
+    },
+    {
+      "output": "pr-watch.log",
+      "exit": 0
+    },
+    {
+      "output": "laws.log",
+      "exit": 0
+    },
+    {
+      "output": "recovery.log",
+      "exit": 0
+    },
+    {
+      "output": "words.json",
+      "exit": 0
+    },
+    {
+      "output": "unreadable.json",
+      "exit": 0
+    },
+    {
+      "output": "after-reproducer.json",
+      "exit": 0
+    },
+    {
+      "output": "mutations-run.log",
+      "exit": 0
+    },
+    {
+      "output": "lint.log",
+      "exit": 0
+    },
+    {
+      "output": "adr-lint.log",
+      "exit": 0
+    },
+    {
+      "output": "number-guards.log",
+      "exit": 0
+    },
+    {
+      "output": "comment-ratio.log",
+      "exit": 0
+    },
+    {
+      "output": "doc-impact.log",
+      "exit": 0
+    },
+    {
+      "output": "design-check.log",
+      "exit": 0
+    },
+    {
+      "output": "diff-check-probe-base.log",
+      "exit": 0
+    },
+    {
+      "output": "full-suite.log",
+      "exit": 0
+    },
+    {
+      "output": "full-suite-summary-run.log",
+      "exit": 0
+    }
+  ],
+  "red_tests": [
+    {
+      "output": "red-laws.log",
+      "exit": 1
+    },
+    {
+      "output": "red-watcher.log",
+      "exit": 1
+    }
+  ],
+  "full_suite": {
+    "scripts": 25,
+    "total": 1377,
+    "passed": 1366,
+    "skipped": 11,
+    "duplicates": 0
+  },
+  "focused": {
+    "total": 245,
+    "passed": 244,
+    "skipped": 1
+  },
+  "mutations_detected": 11,
+  "new_tmp_scratch": 0,
+  "retained_pr_text": "/tmp/impl-observer-check-learn-only-when-listed-pr.md",
+  "delegated_not_run": [
+    "product push",
+    "RoboRev rerun",
+    "hosted CI",
+    "independent validation"
+  ],
+  "ci_cost_per_pr": "not measured",
+  "doc_impact": [
+    {
+      "path": "learning.md",
+      "disposition": "unaffected",
+      "reason": "shared-parser and laws-checking practices remain correct"
+    }
+  ]
+}

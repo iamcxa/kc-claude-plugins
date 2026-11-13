@@ -1,0 +1,17 @@
+{
+  "after_evidence_commit": "5fa337558",
+  "removed": [
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-repair3-scratch",
+      "absent": true
+    }
+  ],
+  "tmp_scratch_created": 0,
+  "retained": [
+    {
+      "path": "/tmp/impl-observer-check-learn-only-when-listed-pr.md",
+      "reason": "required PR text from the implementation handoff"
+    }
+  ],
+  "product_worktree_and_branch_retained": true
+}

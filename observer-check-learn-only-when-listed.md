@@ -272,3 +272,47 @@ The approved repair is locally committed on the required current base, with PR 8
 ### Trial round 2
 
 Premise and goal: the unchanged current integration base still emits learning steps without selection (goal matrix exit 1, 12/24 pass in `implementation/baseline-goal.json`), while candidate `17eccdda05fde54e6dff66f4989787864219ef43` meets both Stop-condition branches (24/24, exit 0). Start 2026-11-13 08:43:28, evidence end 2026-11-13 08:55:27 Asia/Taipei (UTC+08:00), source `clock.curr_time` UTC readings converted by +8 hours. Base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`; check `python3 -B "$E/probe.py" fixtures --code "$WT" --scratch "$WT/.context/observer-learn-proof-scratch" > "$E/fixtures.json"`, saved as `implementation/fixtures.json`, exit 0. Since round 1, PRs 858/860/859 landed; the assigned clean branch was fast-forwarded to current origin/main, the six-file patch reapplied, and 858's two watcher-file changes retained; the proof baseline was updated accordingly. Initial sandbox fetch limits and one mutation-harness import escape were resolved, with primary evidence retained. Blocked: no build blocker; publication/review/validation are delegated, and the accepted exact-old-incident/source-replay limits remain. Fired: none — no overturned premise, Captain-only scope/criterion/trade-off, new component boundary without contract, Production trigger, or change outside the named files/Budget. This is build round 2 of at most 3 and the first implementation dispatch; task state remains implementation for FO handoff.
+
+
+## Stage Report: implementation
+
+- DONE: Verify RoboRev job 1809's High finding before changing production code, make both checks use the same extension reader, and add a failing-before regression.
+  Confirmed on `17eccdda0`: quoted/commented block learn enables observer steps but L1 exits 0 and skips; `repair-3/before-reproducer.json`, red laws/watcher logs. After repair, L1 exits 1 with a violation; the new two tests pass and each legacy-parser reversal fails.
+- DONE: List every other extension-list reader in the design's six files and repair inconsistent consumers inside that scope.
+  `repair-3/scope-and-readers.json`: observer already shared; laws now delegates with Cannot/dependency guards; watcher tasks now shares the reader; generic frontmatter copies no longer select extensions; three test files contain fixtures/assertions, not competing activation parsers.
+- DONE: Build the approved six-file outcome on the required integration base and reconcile the watcher files with PR 858.
+  Integration base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`; repair parent `17eccdda05fde54e6dff66f4989787864219ef43`; candidate `97fe3d6ff9f9afe220b463c71ac428e380fc4dc5`, branch `spacedock-ensign/observer-check-learn-only-when-listed`. Four repair files, six combined; PR 858 fact behavior retained.
+- DONE: AC-1 unlisted archived workflows omit learn steps and preserve the observer verdict/remedy.
+  `repair-3/fixtures.json` and `mutation.json`, exits 0; 12 unselected cases pass among 24; unconditional-learn reversal fails its matrix oracle with exit 1.
+- DONE: AC-2 selected archived stdout/exit and live/committed historical report behavior remain correct.
+  `repair-3/fixtures.json`: 12 enabled cases match base; `focused.log`: 23 tests pass, exits 0. Deletion/reordering, disk-read and live-learn mutations each fail their intended assertion.
+- DONE: AC-3 explicit/discovered README, detached-state commands and unreadable selection diagnostics.
+  `repair-3/pr-watch.log`: 137 tests pass; `unreadable.json`: real permission denial produces checker exit 2, a cause and zero next actions; positive helpers exit 0. Omitted printed README causes real post-archive exit 2 and a failing mutation test.
+- DONE: AC-4 rerun the read-only real-corpus and historical-configuration comparison.
+  `repair-3/real-counts.json`: 237 identical output/verdict pairs; `historical-counts.json`: 82 intended deletions, zero unexpected; exits 0. Unexpected output mutation is detected; private adopter artifacts are counts only.
+- DONE: AC-5 package callers, parser dependency and native archive recovery.
+  `repair-3/laws.log`: 85 total, 84 passed and one optional source replay skipped; watcher 137 passed; `recovery.log`: native archive/remedy/publish/validate passes; exits 0. Dependency omission and both legacy-parser reversals fail their named oracles.
+- DONE: AC-6 source/dependency/CI scope, repository lint and per-moment reading footprint.
+  `repair-3/scope-and-readers.json`, `lint.log`, `words.json` and `diff-check-probe-base.log` pass. No version, new dependency, workflow or CI file change; canonical unlisted archive output -22 words, merged command +2, other changed-path moments 0; copied governing-document edit fails identity.
+- DONE: Every acceptance criterion's evidence command rerun on the new candidate, with each falsifier demonstrated (python3 -B, caches cleared).
+  Exact commands in `repair-3/README.md`; `mutations.json`: 11/11 detected, each negative child exit 1 for its intended failure. Two new regression methods failed before the repair and pass after it. Helper preparation and dependent-read errors were corrected without changing candidate bytes; initial errors are retained.
+- DONE: Run the repository-declared full local unit command and account for every script and test result.
+  `repair-3/full-suite-command.txt`, `full-suite.log`, `full-suite-exit.json`, `full-suite-summary.json`: exit 0, 25 scripts with no duplicates, 1377 tests total, 1366 passed, 11 skipped. This command excludes three pinned-Spacedock integration scripts; native observer recovery also ran separately.
+- DONE: Repository lint, ADR lint, number guards, comment ratio and design check pass; record affected-document disposition.
+  `repair-3/lint.log`, `adr-lint.log`, `number-guards.log`, `comment-ratio.log`, `design-check.log`: exits 0; 74 ADRs, no findings, comments 0.0% versus 5% maximum. No migration path is declared and no migration/ADR changes; `doc-impact.log`: learning.md unaffected because its shared-parser/laws practice remains correct.
+- DONE: Commit locally, no product push, and prepare Conventional Commit PR text; state CI cost measured or not measured.
+  Candidate `97fe3d6ff9f9afe220b463c71ac428e380fc4dc5` locally committed; required `/tmp/impl-observer-check-learn-only-when-listed-pr.md` updated and byte-pinned by `repair-3/pr-text-sha256.txt`. CI unchanged; cost per PR not measured.
+- SKIPPED: Product publication, fresh RoboRev, hosted CI and independent validation.
+  FO owns pushing the repair to PR #861 and rerunning RoboRev/validation. The reported High was reproduced and repaired; no fresh clean review or hosted result is claimed by this worker.
+- DONE: Commit evidence, remove owned scratch by exact path, retain required PR text and preserve both product/probe worktrees and branches.
+  Evidence commit `5fa337558`; removed only the assigned worktree's `.context/observer-learn-repair3-scratch`, verified absent in `repair-3/cleanup.json`; no /tmp scratch created, required PR text retained.
+- DONE: Preserve approved scope, criteria, gate authority and package identity.
+  No frontmatter, prior reports, accepted criterion, gate or stage transition edited. Codex-host workflow sha256 `075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb`; dispatch package 0.39.1; accepted chain audit and ADRs reused, no new ruling needed.
+
+### Summary
+
+This report supersedes the preceding implementation report for candidate `17eccdda0`; the confirmed parser mismatch is repaired at `97fe3d6ff9f9afe220b463c71ac428e380fc4dc5` within the approved six files. All six acceptance criteria, the 25-script local unit command and 11 falsifiers pass their stated evidence boundaries; FO still owns publication, fresh review and independent validation, and the accepted historical-incident/source-probe limits remain.
+
+### Trial round 3
+
+Premise and goal: RoboRev's quoted-block-list mismatch is real—before the repair L1 skipped an enabled learn workflow (native laws exit 0, observer exit 1 with learn), while the repaired native fixture reports the missing-observer violation (laws exit 1 with L1, observer still enables learn). Start 2026-11-13 09:02:22, verification end 2026-11-13 09:20:50 Asia/Taipei (UTC+08:00), source `clock.curr_time` UTC readings converted by +8 hours. Integration base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`, repair parent `17eccdda05fde54e6dff66f4989787864219ef43`, candidate `97fe3d6ff9f9afe220b463c71ac428e380fc4dc5`. Goal command `PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/reproduce.py" --code "$WT" > "$E/after-reproducer.json"`, helper exit 0; the two focused regression commands in `repair-3/README.md` failed before and pass after repair; full merge-test command exit 0 is saved in `full-suite-exit.json`. Since round 2, FO published PR #861 and reported job 1809's High; this round confirms it, removes both inconsistent parsers and adds the two regressions. Blocked: no build blocker; FO-owned review/validation remain and no fresh clean review is claimed. Fired: none of scope/criterion change, overturned premise, new component boundary without contract, Production trigger or outside-file/Budget work. This is the last permitted build round (3 of 3); any further build repair returns to the Captain rather than starting another round. Task state remains implementation for FO handoff.

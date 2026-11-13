@@ -1,0 +1,17 @@
+stage=implementation
+status=DONE start=279 end=280 text=Verify RoboRev job 1809's High finding before changing production code, make both checks use the same extension reader, and add a failing-before regression.
+status=DONE start=281 end=282 text=List every other extension-list reader in the design's six files and repair inconsistent consumers inside that scope.
+status=DONE start=283 end=284 text=Build the approved six-file outcome on the required integration base and reconcile the watcher files with PR 858.
+status=DONE start=285 end=286 text=AC-1 unlisted archived workflows omit learn steps and preserve the observer verdict/remedy.
+status=DONE start=287 end=288 text=AC-2 selected archived stdout/exit and live/committed historical report behavior remain correct.
+status=DONE start=289 end=290 text=AC-3 explicit/discovered README, detached-state commands and unreadable selection diagnostics.
+status=DONE start=291 end=292 text=AC-4 rerun the read-only real-corpus and historical-configuration comparison.
+status=DONE start=293 end=294 text=AC-5 package callers, parser dependency and native archive recovery.
+status=DONE start=295 end=296 text=AC-6 source/dependency/CI scope, repository lint and per-moment reading footprint.
+status=DONE start=297 end=298 text=Every acceptance criterion's evidence command rerun on the new candidate, with each falsifier demonstrated (python3 -B, caches cleared).
+status=DONE start=299 end=300 text=Run the repository-declared full local unit command and account for every script and test result.
+status=DONE start=301 end=302 text=Repository lint, ADR lint, number guards, comment ratio and design check pass; record affected-document disposition.
+status=DONE start=303 end=304 text=Commit locally, no product push, and prepare Conventional Commit PR text; state CI cost measured or not measured.
+status=SKIPPED start=305 end=306 text=Product publication, fresh RoboRev, hosted CI and independent validation.
+status=DONE start=307 end=308 text=Commit evidence, remove owned scratch by exact path, retain required PR text and preserve both product/probe worktrees and branches.
+status=DONE start=309 end=310 text=Preserve approved scope, criteria, gate authority and package identity.

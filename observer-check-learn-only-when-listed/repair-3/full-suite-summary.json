@@ -1,0 +1,186 @@
+{
+  "command_exit": 0,
+  "scripts": 25,
+  "duplicates": 0,
+  "total": 1377,
+  "passed": 1366,
+  "skipped": 11,
+  "results": [
+    {
+      "file": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+      "total": 9,
+      "passed": 9,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+      "total": 14,
+      "passed": 14,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "total": 230,
+      "passed": 229,
+      "skipped": 1,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "total": 234,
+      "passed": 230,
+      "skipped": 4,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+      "total": 136,
+      "passed": 135,
+      "skipped": 1,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "total": 85,
+      "passed": 84,
+      "skipped": 1,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_learning.py",
+      "total": 50,
+      "passed": 50,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_lint_skills.py",
+      "total": 47,
+      "passed": 47,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_merge_audit.py",
+      "total": 17,
+      "passed": 17,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_number_guards.py",
+      "total": 38,
+      "passed": 38,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_package_version.py",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "total": 9,
+      "passed": 9,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "total": 137,
+      "passed": 137,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+      "total": 8,
+      "passed": 8,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+      "total": 63,
+      "passed": 63,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+      "total": 12,
+      "passed": 12,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_validation_security.py",
+      "total": 5,
+      "passed": 5,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+      "total": 13,
+      "passed": 13,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+      "total": 36,
+      "passed": 36,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+      "total": 15,
+      "passed": 15,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+      "total": 122,
+      "passed": 118,
+      "skipped": 4,
+      "status": "passed"
+    },
+    {
+      "file": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+      "total": 5,
+      "passed": 5,
+      "skipped": 0,
+      "status": "passed"
+    }
+  ],
+  "boundary": "repository merge-test command; three pinned-Spacedock integration scripts excluded by that command"
+}
