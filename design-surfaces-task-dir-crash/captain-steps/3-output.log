@@ -1,0 +1,30 @@
+label=after-860 tree=bc11417970d97c02d190aabe6324380e5ae89870 start=2026-11-12T19:21:13Z
+exit=0 | lint-skills.py | 
+exit=0 | kc-dev-flow-2/extensions/codex/test_codex_review.py | Ran 36 tests in 0.004s OK 
+exit=0 | kc-dev-flow-2/extensions/copilot/test_copilot_review.py | Ran 15 tests in 0.000s OK 
+exit=0 | kc-dev-flow-2/extensions/journey-map/test_map_footprint.py | Ran 23 tests in 0.206s OK 
+exit=0 | kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py | Ran 122 tests in 5.797s OK (skipped=4) 
+exit=0 | kc-dev-flow-2/extensions/roborev/test_roborev_gate.py | Ran 5 tests in 1.760s OK 
+exit=0 | kc-dev-flow-2/scripts/test_adr_doc_checks.py | Ran 9 tests in 0.941s OK 
+exit=0 | kc-dev-flow-2/scripts/test_comment_ratio.py | Ran 14 tests in 6.551s OK 
+exit=0 | kc-dev-flow-2/scripts/test_decision_ledger.py | Ran 23 tests in 0.444s OK 
+exit=0 | kc-dev-flow-2/scripts/test_delivery_gate.py | Ran 230 tests in 120.177s OK (skipped=1) 
+exit=0 | kc-dev-flow-2/scripts/test_design_surfaces.py | Ran 234 tests in 15.264s OK (skipped=4) 
+exit=0 | kc-dev-flow-2/scripts/test_dispatch_records.py | Ran 136 tests in 116.589s OK (skipped=1) 
+exit=0 | kc-dev-flow-2/scripts/test_laws_check.py | Ran 84 tests in 100.892s OK (skipped=1) 
+exit=0 | kc-dev-flow-2/scripts/test_learning.py | Ran 50 tests in 43.980s OK 
+exit=0 | kc-dev-flow-2/scripts/test_lint_skills.py | Ran 47 tests in 9.469s OK 
+exit=0 | kc-dev-flow-2/scripts/test_merge_audit.py | Ran 17 tests in 11.498s OK 
+exit=0 | kc-dev-flow-2/scripts/test_number_guards.py | Ran 38 tests in 24.813s OK 
+exit=0 | kc-dev-flow-2/scripts/test_observer_check.py | Ran 19 tests in 5.728s OK 
+exit=0 | kc-dev-flow-2/scripts/test_package_version.py | Ran 23 tests in 6.813s OK 
+exit=0 | kc-dev-flow-2/scripts/test_poc_readme.py | Ran 9 tests in 1.857s OK 
+exit=0 | kc-dev-flow-2/scripts/test_pr_watch.py | Ran 136 tests in 62.521s OK 
+exit=0 | kc-dev-flow-2/scripts/test_replay_dispatch.py | Ran 8 tests in 4.197s OK 
+exit=0 | kc-dev-flow-2/scripts/test_role_triggers.py | Ran 63 tests in 65.301s OK 
+exit=0 | kc-dev-flow-2/scripts/test_validation_security.py | Ran 5 tests in 0.535s OK 
+exit=0 | kc-dev-flow-2/scripts/test_workflow_checkout.py | Ran 13 tests in 6.253s OK 
+exit=0 | test_dispatch_stage.py | Ran 46 tests in 141.796s OK 
+exit=0 | test_sd_dispatch.py | 
+exit=0 | test_observer_recovery.py | 
+end=2026-11-12T19:34:48Z nonzero=0 of 28
