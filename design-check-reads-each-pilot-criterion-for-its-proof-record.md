@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-13T09:54:53Z
 worktree: .worktrees/spacedock-ensign-design-check-reads-each-pilot-criterion-for-its-proof-record
+pr: iamcxa/kc-claude-plugins#866
 ---
 
 ## Scope
