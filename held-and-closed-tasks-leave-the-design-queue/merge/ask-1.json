@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "model": "not run",
+  "necessity": "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md, kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py change against the PR's base (gh pr view 856 file lis",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'No new Material, Needs decision or'",
+    "point: deferred: 'Validation rounds: 3. Round 1 REJECTED'",
+    "point: deferred: 'FO declines F1 Deferred risk at'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 5 dated 2026-11-13'",
+    "point: path: 'docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#856",
+  "sufficiency": "a task carrying a Held section is named in one fact line at startup and idle and is not proposed as waiting work, within the word bound of Captain amendment 4 (validation-3 report, Astra, 2026-11-13, ",
+  "time": "2026-11-13T05:15:05Z",
+  "verdict": "ask"
+}

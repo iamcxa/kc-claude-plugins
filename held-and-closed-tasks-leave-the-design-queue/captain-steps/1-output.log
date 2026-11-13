@@ -1,0 +1,10 @@
+EXPORT 5859c3ccd25a86c79df3b36cafdda9762bd8142e
+NATIVE INPUTS 15
+...........                                         [100%]
+- generated xml file: /tmp/captain-acceptance-v3.rt0cXg/results/held-tests.xml -
+11 passed, 152 deselected in 12.55s
+76 ADR file(s) checked, 0 legacy
+ONE held=1 words=17 maximum=21 PASS; over-bound 22 REJECTED
+CURRENT held=15 words=33 maximum=35 PASS; over-bound 36 REJECTED
+LARGER held=125 words=145 maximum=145 PASS; over-bound 146 REJECTED
+PASS: exact candidate held behavior, ADR and amendment-4 counts
