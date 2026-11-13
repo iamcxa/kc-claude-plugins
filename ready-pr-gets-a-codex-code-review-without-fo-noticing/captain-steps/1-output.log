@@ -1,0 +1,13 @@
+22:- **When marking ready:** when FO marks a PR ready, it comments `@codex review` on the PR once.
+23-- **After a repair:** when FO pushes a repair to the PR, it comments `@codex review` there,
+24-  because a push brings no new review by itself.
+Falsifier PASS: removed sentence returns exit 1
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 6099 of 6099 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+....................................
+----------------------------------------------------------------------
+Ran 36 tests in 0.004s
+
+OK
+ACCEPTANCE PASS: 1c8a29faf402ef6d7018c298f59bad58d38cfb1d
