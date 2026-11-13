@@ -65,6 +65,17 @@ gates:
                 id: briefing:observer-check-learn-only-when-listed:validation:attempt-2:revision-1
                 digest: sha256:3a10e55c604ba01779a2d9a58c1ae0f72d622f2dfedc4ae087dcc9d96c215226
                 room-ref: ./observer-check-learn-only-when-listed/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:observer-check-learn-only-when-listed:validation:2
+                briefing: briefing:observer-check-learn-only-when-listed:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-13T02:08:06.228571Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #861（沒有啟用學習擴充的專案，任務封存後不再被叫去跑學習；有啟用的照舊）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；改了六個檔，比准入時我說的「一個主要檔」大；合併前本機審查抓到一個高嚴重度問題（兩個檢查讀擴充清單的方式不一致），已修正並由驗證者確認三處讀法一致；未合併的 #854、#856 也改其中兩個檔，之後要在新主線上重跑測試；原始事件的舊紀錄已不存在，無法原樣重播；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 97fe3d6ff9f9afe220b463c71ac428e380fc4dc5, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-12T17:02:57Z
 worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
 pr: iamcxa/kc-claude-plugins#861
