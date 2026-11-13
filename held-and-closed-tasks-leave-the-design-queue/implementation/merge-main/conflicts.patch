@@ -1,0 +1,637 @@
+diff --cc kc-dev-flow-2/scripts/dispatch_stage.py
+index 4c818e479,d1b4dae89..000000000
+--- a/kc-dev-flow-2/scripts/dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/dispatch_stage.py
+@@@ -13,7 -13,7 +13,11 @@@ import sy
+  from design_surfaces import task_folder
+  from number_guards import Misconfigured, frontmatter
+  from role_triggers import budget_text, rank
+++<<<<<<< HEAD
+ +from scratch import notes_for, root_for
+++=======
++ from scratch import claim_root, notes_for
+++>>>>>>> origin/main
+  
+  SCRIPTS = Path(__file__).resolve().parent
+  
+@@@ -250,8 -259,6 +263,11 @@@ def main(argv=None)
+          sys.stdout.buffer.write(path.read_bytes())
+          return 0
+      command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
+++<<<<<<< HEAD
+ +    scratch = root_for(args.workflow_dir, folder.name, path.stem)
+ +    scratch.mkdir(parents=True, exist_ok=True)
+++=======
+++>>>>>>> origin/main
+      scoped = scratch / "scope-notes.md"
+      scoped.write_bytes(notes_for(args.workflow_dir, folder, path.stem, notes, SCRIPTS.parent).encode("utf-8"))
+      for name in ("workflow_dir", "entity_path", "stage", "checklist_file", "scope_notes_file", "host", "feedback_context_file"):
+diff --cc kc-dev-flow-2/scripts/pr_watch.py
+index 65b8ba414,159669012..000000000
+--- a/kc-dev-flow-2/scripts/pr_watch.py
++++ b/kc-dev-flow-2/scripts/pr_watch.py
+@@@ -7,10 -7,9 +7,11 @@@
+    pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
+    pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
+  
++ Tasks reports a task with no PR and an absent worktree as a fact, with no PR-recording action.
+  Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
+  With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
+ +Tasks names held tasks by stage and asks for ## Held when its reopen or close quote is missing or unverified.
+ +A failed held-task query prints a next: diagnostic and exits 2.
+  
+  Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
+  $CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
+@@@ -75,11 -74,11 +76,15 @@@ import sy
+  import time
+  
+  sys.path.insert(0, str(Path(__file__).resolve().parent))
+ -from role_triggers import review_facts  # noqa: E402
+ -from dispatch_records import coverage, worker_stages  # noqa: E402
+ +from role_triggers import review_facts, outside_fences  # noqa: E402
+ +from dispatch_records import coverage, worker_stages, named_section  # noqa: E402
+ +from decision_ledger import split_task, gate_entries  # noqa: E402
+  from learning import job_key  # noqa: E402
+  import scratch  # noqa: E402
+++<<<<<<< HEAD
+++=======
++ from workflow_extensions import readme_extensions  # noqa: E402
+++>>>>>>> origin/main
+  
+  SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
+  SCRIPTS = Path(__file__).resolve().parent
+@@@ -611,7 -560,7 +616,11 @@@ def archived_learning(workflow, state, 
+  def scratch_lines(workflow, state, found, merged=()):
+      if not scratch.BASE.exists():
+          return []
+++<<<<<<< HEAD
+ +    directory = scratch.BASE / scratch.repository(toplevel(workflow))
+++=======
++     directory = scratch.BASE / scratch.repository(toplevel(workflow), state)
+++>>>>>>> origin/main
+      if not directory.exists():
+          return []
+      scratch.safe_path(directory)
+@@@ -720,7 -665,8 +729,12 @@@ def tasks(opts, look=look, ask=gh, cloc
+                  errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
+              if "learn" not in listed:
+                  continue
+++<<<<<<< HEAD
+ +            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
+++=======
++             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
++                                    "--readme", str(workflow / "README.md")],
+++>>>>>>> origin/main
+                                    capture_output=True, text=True)
+              if done.returncode:
+                  out += [f"next: keep {slug} out of pr-merge's scan in this pass.", *done.stdout.splitlines()]
+diff --cc kc-dev-flow-2/scripts/scratch.py
+index aa8d3bfa1,9380e0c82..000000000
+--- a/kc-dev-flow-2/scripts/scratch.py
++++ b/kc-dev-flow-2/scripts/scratch.py
+@@@ -5,6 -5,7 +5,10 @@@ import argpars
+  from datetime import datetime, timezone
+  import gzip
+  import hashlib
+++<<<<<<< HEAD
+++=======
++ import json
+++>>>>>>> origin/main
+  import os
+  from pathlib import Path
+  import re
+@@@ -22,12 -23,24 +26,32 @@@ def git(repo, *args)
+                            text=True, check=True).stdout.strip()
+  
+  
+++<<<<<<< HEAD
+ +def repository(repo):
+++=======
++ def identity(repo, state):
+++>>>>>>> origin/main
+      url = git(repo, 'remote', 'get-url', 'origin').rstrip('/')
+      name = re.split(r'[/\\:]', url)[-1].removesuffix('.git')
+      if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', name):
+          raise ValueError('origin has no usable repository name')
+++<<<<<<< HEAD
+ +    return name
+++=======
++     common = Path(git(repo, 'rev-parse', '--git-common-dir'))
++     common = (common if common.is_absolute() else Path(repo) / common).resolve()
++     digest = hashlib.sha256(json.dumps([url, str(common), str(state.resolve())]).encode()).hexdigest()
++     return name, digest
++ 
++ 
++ def repository(repo, state):
++     name, digest = identity(repo, state)
++     return name + '-' + digest[:16]
++ 
++ 
++ def state_of(folder):
++     return folder.parent.parent if folder.parent.name == '_archive' else folder.parent
+++>>>>>>> origin/main
+  
+  
+  def dispatch_name(record):
+@@@ -36,10 -49,38 +60,45 @@@
+      return re.sub(r'-message-[1-9][0-9]*$', '', record)
+  
+  
+++<<<<<<< HEAD
+ +def root_for(repo, slug, record):
+ +    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', slug):
+ +        raise ValueError('invalid task folder name')
+ +    return BASE / repository(repo) / slug / dispatch_name(record)
+++=======
++ def root_for(repo, folder, record):
++     folder = Path(folder)
++     slug = folder.name
++     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', slug):
++         raise ValueError('invalid task folder name')
++     return BASE / repository(repo, state_of(folder)) / slug / dispatch_name(record)
++ 
++ 
++ def owner_for(repo, folder, record):
++     return dict(repository=identity(repo, state_of(folder))[1], task=folder.name, record=dispatch_name(record))
++ 
++ 
++ def check_owner(root, owner):
++     marker = root / '.owner.json'
++     safe_path(root)
++     safe_path(marker)
++     if not root.is_dir() or not marker.is_file() or json.loads(marker.read_text()) != owner:
++         raise ValueError(f'scratch ownership missing or differs: {root}')
++ 
++ 
++ def claim_root(repo, folder, record):
++     root = root_for(repo, folder, record)
++     safe_path(root)
++     owner = owner_for(repo, folder, record)
++     try:
++         root.mkdir(parents=True)
++     except FileExistsError:
++         check_owner(root, owner)
++     else:
++         with (root / '.owner.json').open('x') as output:
++             json.dump(owner, output, sort_keys=True)
++     return root
+++>>>>>>> origin/main
+  
+  
+  def safe_path(path):
+@@@ -48,8 -89,10 +107,15 @@@
+  
+  
+  def notes_for(repo, folder, record, notes, package):
+++<<<<<<< HEAD
+ +    root = root_for(repo, folder.name, record)
+ +    safe_path(root)
+++=======
++     root = root_for(repo, folder, record)
++     safe_path(root)
++     if root.exists():
++         check_owner(root, owner_for(repo, folder, record))
+++>>>>>>> origin/main
+      for raw in re.findall(r'(?<![\w/])/(?:private/)?tmp/[^\s`\'"<>()\[\]{};,]+', notes):
+          path = Path(os.path.abspath(raw.rstrip('.')))
+          if str(path).startswith('/tmp/'):
+@@@ -59,10 -102,11 +125,18 @@@
+      command = shlex.join(['python3', str(package / 'scripts/scratch.py'), 'close', str(folder), record])
+      # see docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md
+      return (notes + '\nScratch: ' + str(root).replace(str(BASE.parent), '/tmp', 1) + '\n'
+++<<<<<<< HEAD
+ +            "Put every file or checkout you create outside the task worktree and the state checkout under that folder. "
+ +            f"Copy what your report cites into evidence/{record}/ in the task folder, and nothing that holds a secret or "
+ +            "a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. "
+ +            f"Before your report, run `{command}` and paste the lines it prints.\n")
+++=======
++             "Put files and checkouts outside the task worktree or state checkout under that folder. "
++             f"Copy cited evidence into evidence/{record}/ in the task folder. "
++             "Never archive private repository evidence, secrets or personal data; instead write "
++             "`Not archived (private): <what>; reproduce: <command>`. "
++             f"Before reporting, run `{command}` and paste its output.\n")
+++>>>>>>> origin/main
+  
+  
+  def evidence(folder, record):
+@@@ -77,7 -121,7 +151,11 @@@
+      manifest = target / 'SHA256SUMS'
+      safe_path(manifest)
+      previous = dict(line.split('  ', 1)[::-1] for line in manifest.read_text().splitlines()) if manifest.exists() else {}
+++<<<<<<< HEAD
+ +    sums = []
+++=======
++     sums, compress = [], []
+++>>>>>>> origin/main
+      for path in (p for p in paths if p.is_file()):
+          name = path.relative_to(target).as_posix()
+          compressed = name.endswith('.gz') and name[:-3] in previous and not path.with_suffix('').exists()
+@@@ -91,10 -135,14 +169,21 @@@
+              destination = path.with_name(path.name + '.gz')
+              if destination.exists():
+                  raise ValueError(f'evidence compression would overwrite {destination}')
+++<<<<<<< HEAD
+ +            destination.write_bytes(gzip.compress(data, mtime=0))
+ +            path.unlink()
+ +    target.mkdir(parents=True, exist_ok=True)
+ +    manifest.write_text(''.join(sums))
+++=======
++             compress.append(path)
++     target.mkdir(parents=True, exist_ok=True)
++     manifest.write_text(''.join(sums))
++     for path in compress:
++         destination = path.with_name(path.name + '.gz')
++         with destination.open('xb') as output:
++             output.write(gzip.compress(path.read_bytes(), mtime=0))
++         path.unlink()
+++>>>>>>> origin/main
+      size = sum(p.stat().st_size for p in target.rglob('*') if p.is_file())
+      if size > 1024 * 1024:
+          raise ValueError('evidence exceeds 1 MiB after compression; trim or record a reproduce command')
+@@@ -109,8 -157,10 +198,15 @@@ def close(folder, record)
+      safe_path(source)
+      if not source.is_file():
+          raise ValueError(f'dispatch record missing: {source}')
+++<<<<<<< HEAD
+ +    root = root_for(folder, folder.name, name)
+ +    safe_path(root)
+++=======
++     root = root_for(folder, folder, name)
++     safe_path(root)
++     if root.exists():
++         check_owner(root, owner_for(folder, folder, name))
+++>>>>>>> origin/main
+      stated = re.findall(r'^Scratch: (.+)$', source.read_text(), re.M)
+      if stated and (len(stated) != 1 or Path(stated[0]).resolve() != root):
+          raise ValueError('record scratch root differs from the derived path')
+diff --cc kc-dev-flow-2/scripts/test_dispatch_stage.py
+index ece927d55,573b8989c..000000000
+--- a/kc-dev-flow-2/scripts/test_dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@@ -66,7 -67,10 +67,14 @@@ class DispatchStageTests(unittest.TestC
+          self.spy.chmod(0o755)
+  
+      def remove_artifacts(self):
+++<<<<<<< HEAD
+ +        shutil.rmtree(scratch.BASE / "dispatch-code" / self.slug, ignore_errors=True)
+++=======
++         shutil.rmtree(scratch.BASE / self.scratch_namespace / self.slug, ignore_errors=True)
++         namespace = scratch.BASE / self.scratch_namespace
++         if namespace.is_dir() and not any(namespace.iterdir()):
++             namespace.rmdir()
+++>>>>>>> origin/main
+          for path in Path("/tmp/spacedock-dispatch").glob(f"*{self.slug}*"):
+              if path.is_file():
+                  path.unlink()
+@@@ -376,17 -380,49 +384,62 @@@
+          original = self.notes.read_bytes()
+          result = self.build()
+          record = self.record().read_text()
+++<<<<<<< HEAD
+ +        expected = f'Scratch: /tmp/dev2/dispatch-code/{self.slug}/ideation-1'
+ +        self.assertEqual(record.splitlines().count(expected), 1)
+ +        artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
+ +        self.assertEqual(artifact.splitlines().count(expected), 1)
+++=======
++         expected = f'Scratch: /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1'
++         self.assertEqual(record.splitlines().count(expected), 1)
++         artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
++         self.assertEqual(artifact.splitlines().count(expected), 1)
++         for emitted in (record, artifact):
++             self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+++>>>>>>> origin/main
+          self.assertIn('Not archived (private): <what>; reproduce: <command>', artifact)
+          self.assertIn(str(ROOT / 'scripts/scratch.py') + ' close ', artifact)
+          self.assertEqual(self.notes.read_bytes(), original)
+  
+++<<<<<<< HEAD
+ +    def test_scope_notes_outside_scratch_refuse_before_record_and_build(self):
+ +        for path in ('/tmp/x', '/private/tmp/x',
+ +                     f'/tmp/dev2/dispatch-code/{self.slug}/ideation-1/../escape'):
+++=======
++     def test_next_validation_accepts_its_own_scratch_path_and_retries(self):
++         self.set_stage('validation')
++         candidate = ('--candidate', 'a' * 40, '--symptom', 'none')
++         self.build('validation', candidate)
++         first = self.record('validation').read_bytes()
++         second_root = scratch.root_for(self.repo, self.folder, 'validation-2')
++         self.notes.write_text(self.notes.read_text() + f'Use {second_root}/checkout\n')
++         result = self.build('validation', candidate)
++         second = self.record('validation', 2)
++         self.assert_committed(second, f'dispatch: {self.slug} entering validation')
++         artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
++         self.assertIn(f'Use {second_root}/checkout', artifact)
++         self.assertIn(f'Scratch: {str(second_root).replace("/private/tmp/", "/tmp/", 1)}', artifact)
++         self.assertEqual(self.record('validation').read_bytes(), first)
++         self.build('validation', candidate)
++         self.assertFalse(self.record('validation', 3).exists())
++ 
++     def test_next_role_accepts_its_own_scratch_path_and_retries(self):
++         self.role()
++         first = self.record('engineering-reviewer').read_bytes()
++         second_root = scratch.root_for(self.repo, self.folder, 'engineering-reviewer-2')
++         self.notes.write_text(self.notes.read_text() + f'Use {second_root}/checkout\n')
++         result = self.role()
++         second = self.record('engineering-reviewer', 2)
++         self.assert_committed(second, f'state: update {self.slug}')
++         self.assertIn(f'Use {second_root}/checkout', result.stdout)
++         self.assertEqual(self.record('engineering-reviewer').read_bytes(), first)
++         self.role()
++         self.assertFalse(self.record('engineering-reviewer', 3).exists())
++ 
++     def test_scope_notes_outside_scratch_refuse_before_record_and_build(self):
++         for path in ('/tmp/x', '/private/tmp/x',
++                      f'/tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/../escape'):
+++>>>>>>> origin/main
+              with self.subTest(path=path):
+                  self.notes.write_text(f'Package root: {ROOT}\nSend your completion message to `main`.\nRead {path}\n')
+                  result = self.build(extra=('--spacedock', self.spy), expected=1)
+@@@ -395,10 -431,21 +448,28 @@@
+                  self.assertFalse(self.record().exists())
+  
+      def test_scope_notes_inside_scratch_are_kept(self):
+++<<<<<<< HEAD
+ +        self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/dispatch-code/{self.slug}/ideation-1/checkout\n')
+ +        self.build()
+ +        self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
+ +
+++=======
++         self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/checkout\n')
++         self.build()
++         self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
++ 
++     def test_foreign_root_owner_refuses_before_build_or_notes_write(self):
++         root = scratch.claim_root(self.repo, self.folder, 'ideation-1')
++         notes = root / 'scope-notes.md'
++         notes.write_text('peer notes')
++         (root / '.owner.json').write_text('{"repository":"foreign"}')
++         result = self.build(extra=('--spacedock', self.spy), expected=1)
++         self.assertIn('ownership', result.stderr)
++         self.assertFalse(self.marker.exists())
++         self.assertFalse(self.record().exists())
++         self.assertEqual(notes.read_text(), 'peer notes')
++ 
+++>>>>>>> origin/main
+      def assert_committed(self, path, subject):
+          self.assertEqual(self.git(self.state, "log", "-1", "--format=%s", "--", path), subject)
+          root = Path(self.git(self.state, "rev-parse", "--show-toplevel"))
+diff --cc kc-dev-flow-2/scripts/test_pr_watch.py
+index 5d68a3efc,21e46dd2f..000000000
+--- a/kc-dev-flow-2/scripts/test_pr_watch.py
++++ b/kc-dev-flow-2/scripts/test_pr_watch.py
+@@@ -1113,7 -1017,7 +1113,11 @@@ class TasksTests(unittest.TestCase)
+          self.git(self.state, 'commit', '-qm', 'test: dispatch')
+  
+      def scratch_root(self, slug, record):
+++<<<<<<< HEAD
+ +        root = watch.scratch.BASE / 'r' / slug / record
+++=======
++         root = watch.scratch.BASE / watch.scratch.repository(self.repo, self.state) / slug / record
+++>>>>>>> origin/main
+          root.mkdir(parents=True, exist_ok=True)
+          return root
+  
+@@@ -1140,6 -1044,11 +1144,14 @@@
+  
+      def test_merged_scratch_prompt_precedes_merge_record(self):
+          self.readme('learn')
+++<<<<<<< HEAD
+++=======
++         detached = self.root / 'detached-state'
++         self.state.rename(detached)
++         self.state = detached
++         readme = self.workflow / 'README.md'
++         readme.write_text(readme.read_text().replace('state: .spacedock-state', f'state: {self.state}'))
+++>>>>>>> origin/main
+          self.task('merged', pr='o/r#7', worktree=False)
+          self.report('merged')
+          self.scratch_dispatch('merged', 'validation-1')
+@@@ -1148,6 -1057,15 +1160,18 @@@
+          self.assertEqual(code, 0, lines)
+          close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
+          self.assertLess(close, lines.index('next: let pr-merge record merged.'))
+++<<<<<<< HEAD
+++=======
++         observer = next(line.split('`')[1] for line in lines if line.startswith('after pr-merge: run '))
++         self.assertIn(f'--readme {readme.resolve()}', observer)
++         done = subprocess.run(observer.split(), capture_output=True, text=True, env={**os.environ, **IDENTITY})
++         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
++         readme.write_text(readme.read_text().replace('extensions: [learn]', 'extensions: []'))
++         code, lines = self.tasks({}, look=lambda *a, **k: snap(state='MERGED'))
++         self.assertEqual(code, 0, lines)
++         self.assertTrue(any('scripts/scratch.py close ' in line for line in lines), lines)
++         self.assertFalse(any('observer_check.py' in line or 'let pr-merge' in line for line in lines), lines)
+++>>>>>>> origin/main
+  
+      def test_post_archive_removal_record_preserves_learn_and_observer_results(self):
+          self.readme('learn')
+diff --cc kc-dev-flow-2/scripts/test_scratch.py
+index d5de04969,6c32905cd..000000000
+--- a/kc-dev-flow-2/scripts/test_scratch.py
++++ b/kc-dev-flow-2/scripts/test_scratch.py
+@@@ -36,8 -36,7 +36,12 @@@ class ScratchTests(unittest.TestCase)
+          (self.folder / 'dispatch').mkdir(parents=True)
+          self.record = self.folder / 'dispatch/validation-1.md'
+          self.record.write_text('# validation-1\n')
+++<<<<<<< HEAD
+ +        self.root = scratch.root_for(self.repo, self.folder.name, 'validation-1')
+ +        self.root.mkdir(parents=True)
+++=======
++         self.root = scratch.claim_root(self.repo, self.folder, 'validation-1')
+++>>>>>>> origin/main
+          self.addCleanup(shutil.rmtree, self.root.parent.parent, True)
+          self.evidence = self.folder / 'evidence/validation-1'
+          self.evidence.mkdir(parents=True)
+@@@ -79,6 -78,67 +83,70 @@@
+          with self.assertRaises((EOFError, OSError)):
+              gzip.decompress(restored[:-8])
+  
+++<<<<<<< HEAD
+++=======
++     def test_compression_collision_refuses_before_changes_and_retry_keeps_digests(self):
++         originals = {'a.txt': b'a' * (256 * 1024 + 1), 'z.txt': b'z' * (256 * 1024 + 1)}
++         for name, data in originals.items():
++             (self.evidence / name).write_bytes(data)
++         collision = self.evidence / 'z.txt.gz'
++         collision.write_bytes(b'occupied destination')
++         before = {p.name: p.read_bytes() for p in self.evidence.iterdir()}
++         with self.assertRaisesRegex(ValueError, 'would overwrite'):
++             self.close()
++         self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
++         self.assertTrue(self.root.exists())
++         collision.unlink()
++         self.close()
++         sums = (self.evidence / 'SHA256SUMS').read_text()
++         for name, data in originals.items():
++             self.assertEqual(gzip.decompress((self.evidence / (name + '.gz')).read_bytes()), data)
++             self.assertIn(hashlib.sha256(data).hexdigest() + '  ' + name + '\n', sums)
++         self.assertNotIn('  a.txt.gz\n', sums)
++         self.assertFalse(self.root.exists())
++ 
++     def test_existing_gzip_is_validated_before_compressing_other_files(self):
++         original = b'a' * (256 * 1024 + 1)
++         kept = b'previous public evidence'
++         (self.evidence / 'a.txt').write_bytes(original)
++         manifest = self.evidence / 'SHA256SUMS'
++         manifest.write_text(hashlib.sha256(kept).hexdigest() + '  z.txt\n')
++         saved = self.evidence / 'z.txt.gz'
++         for bad in (b'not gzip', gzip.compress(b'wrong original', mtime=0)):
++             with self.subTest(bad=bad[:8]):
++                 saved.write_bytes(bad)
++                 before = {p.name: p.read_bytes() for p in self.evidence.iterdir()}
++                 with self.assertRaises((OSError, ValueError)):
++                     self.close()
++                 self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
++                 self.assertTrue(self.root.exists())
++         saved.write_bytes(gzip.compress(kept, mtime=0))
++         self.close()
++         self.assertEqual(gzip.decompress((self.evidence / 'a.txt.gz').read_bytes()), original)
++         self.assertIn(hashlib.sha256(original).hexdigest() + '  a.txt\n', manifest.read_text())
++ 
++     def test_later_gzip_write_failure_keeps_original_digests_for_retry(self):
++         originals = {'a.txt': b'a' * (256 * 1024 + 1), 'z.txt': b'z' * (256 * 1024 + 1)}
++         for name, data in originals.items():
++             (self.evidence / name).write_bytes(data)
++         original_open = Path.open
++         def fail_later(path, mode='r', *args, **kwargs):
++             if path == self.evidence / 'z.txt.gz' and mode == 'xb':
++                 raise OSError('fixture write failure')
++             return original_open(path, mode, *args, **kwargs)
++         with mock.patch.object(Path, 'open', fail_later):
++             with self.assertRaisesRegex(OSError, 'fixture write failure'):
++                 self.close()
++         self.assertTrue(self.root.exists())
++         self.assertTrue((self.evidence / 'a.txt.gz').exists())
++         self.close()
++         sums = (self.evidence / 'SHA256SUMS').read_text()
++         for name, data in originals.items():
++             self.assertIn(hashlib.sha256(data).hexdigest() + '  ' + name + '\n', sums)
++             self.assertEqual(gzip.decompress((self.evidence / (name + '.gz')).read_bytes()), data)
++         self.assertNotIn('  a.txt.gz\n', sums)
++ 
+++>>>>>>> origin/main
+      def test_dirty_registered_worktree_removed_and_external_worktree_survives(self):
+          worktree, external = self.root / 'checkout with spaces', self.repo / 'external'
+          self.git('worktree', 'add', '--detach', worktree)
+@@@ -94,6 -154,23 +162,26 @@@
+          self.assertIn('uncommitted-files=2', (self.folder / 'scratch-removed.txt').read_text())
+          self.git('worktree', 'remove', external)
+  
+++<<<<<<< HEAD
+++=======
++     def test_close_keeps_another_dispatch_in_the_same_repository(self):
++         peer_root = scratch.claim_root(self.repo, self.folder, 'validation-2')
++         peer = peer_root / 'peer-checkout'
++         own = self.root / 'own-checkout'
++         self.git('worktree', 'add', '--detach', own)
++         self.git('worktree', 'add', '--detach', peer)
++         (peer / 'uncommitted').write_text('keep peer work')
++         self.close()
++         listed = [Path(line.removeprefix('worktree ')) for line in
++                   self.git('worktree', 'list', '--porcelain').splitlines() if line.startswith('worktree ')]
++         self.assertFalse(self.root.exists())
++         self.assertEqual(sum(path.is_relative_to(self.root) for path in listed), 0)
++         self.assertEqual(sum(path.is_relative_to(peer_root) for path in listed), 1)
++         self.assertIn(peer, listed)
++         self.assertEqual((peer / 'uncommitted').read_text(), 'keep peer work')
++         self.git('worktree', 'remove', '--force', peer)
++ 
+++>>>>>>> origin/main
+      def test_missing_record_refuses_without_deletion(self):
+          sentinel = self.root / 'sentinel'
+          sentinel.write_text('keep')
+@@@ -106,7 -183,7 +194,11 @@@
+          sentinel = self.repo / 'sentinel'
+          sentinel.mkdir()
+          (sentinel / 'keep').write_text('keep')
+++<<<<<<< HEAD
+ +        self.root.rmdir()
+++=======
++         shutil.rmtree(self.root)
+++>>>>>>> origin/main
+          self.root.symlink_to(sentinel, target_is_directory=True)
+          with self.assertRaisesRegex(ValueError, 'symlinked'):
+              self.close()
+@@@ -154,7 -231,7 +246,11 @@@
+      def test_follow_up_uses_parent_dispatch_root(self):
+          follow = self.folder / 'dispatch/validation-1-message-2.md'
+          follow.write_text('# continuation\n')
+++<<<<<<< HEAD
+ +        self.assertEqual(scratch.root_for(self.repo, 'task', follow.stem), self.root)
+++=======
++         self.assertEqual(scratch.root_for(self.repo, self.folder, follow.stem), self.root)
+++>>>>>>> origin/main
+          self.close(follow.stem)
+          self.assertFalse(self.root.exists())
+          self.assertFalse((self.folder / 'evidence' / follow.stem).exists())
+@@@ -166,6 -243,67 +262,70 @@@
+          self.assertIn('dispatch record missing', done.stderr)
+          self.assertTrue(self.root.exists())
+  
+++<<<<<<< HEAD
+++=======
++     def test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees(self):
++         origin = self.git('remote', 'get-url', 'origin').strip()
++         for number, url in enumerate((origin.replace('/fixtures/', '/another-owner/'), origin)):
++             with self.subTest(origin=url):
++                 self.root = scratch.claim_root(self.repo, self.folder, 'validation-1')
++                 other = self.repo / f'clone-{number}'
++                 other.mkdir()
++                 def git(*args):
++                     result = subprocess.run(['git', '-C', str(other), *map(str, args)],
++                                             capture_output=True, text=True, env=self.env)
++                     self.assertEqual(result.returncode, 0, result.stderr)
++                     return result.stdout
++                 git('init', '-q', '-b', 'main')
++                 git('remote', 'add', 'origin', url)
++                 (other / 'tracked').write_text('original')
++                 git('add', 'tracked'); git('commit', '-qm', 'test: peer clone')
++                 folder = other / 'task'
++                 folder.mkdir()
++                 peer = scratch.claim_root(other, folder, 'validation-1')
++                 self.addCleanup(shutil.rmtree, peer.parent.parent, True)
++                 self.assertNotEqual(self.root, peer)
++                 checkout = peer / 'checkout'
++                 git('worktree', 'add', '--detach', checkout)
++                 (checkout / 'uncommitted').write_text('peer work')
++                 self.close()
++                 self.assertEqual((checkout / 'uncommitted').read_text(), 'peer work')
++                 self.assertIn(str(checkout), git('worktree', 'list', '--porcelain'))
++                 git('worktree', 'remove', '--force', checkout)
++ 
++     def test_foreign_or_unowned_root_refuses_notes_reuse_and_close(self):
++         notes = self.root / 'scope-notes.md'
++         notes.write_text('peer notes')
++         marker = self.root / '.owner.json'
++         for content in (None, '{"repository":"other","task":"task","record":"validation-1"}'):
++             with self.subTest(marker=content):
++                 marker.unlink(missing_ok=True)
++                 if content is not None:
++                     marker.write_text(content)
++                 with self.assertRaisesRegex(ValueError, 'ownership'):
++                     scratch.claim_root(self.repo, self.folder, 'validation-1')
++                 with self.assertRaisesRegex(ValueError, 'ownership'):
++                     scratch.notes_for(self.repo, self.folder, 'validation-1', 'notes', self.repo)
++                 with self.assertRaisesRegex(ValueError, 'ownership'):
++                     self.close()
++                 self.assertEqual(notes.read_text(), 'peer notes')
++                 self.assertFalse((self.evidence / 'SHA256SUMS').exists())
++ 
++     def test_archive_move_and_linked_worktree_keep_identity(self):
++         other_workflow = self.repo / 'another-workflow/task'
++         self.assertNotEqual(scratch.root_for(self.repo, other_workflow, 'validation-1'), self.root)
++         linked = self.repo / 'linked'
++         self.git('worktree', 'add', '--detach', linked)
++         self.assertEqual(scratch.root_for(linked, self.folder, 'validation-1'), self.root)
++         self.git('worktree', 'remove', linked)
++         (self.repo / '_archive').mkdir()
++         archived = self.repo / '_archive/task'
++         self.folder.rename(archived)
++         self.assertEqual(scratch.root_for(self.repo, archived, 'validation-1'), self.root)
++         scratch.close(archived, 'validation-1')
++         self.assertFalse(self.root.exists())
++ 
+++>>>>>>> origin/main
+  
+  if __name__ == '__main__':
+      unittest.main()

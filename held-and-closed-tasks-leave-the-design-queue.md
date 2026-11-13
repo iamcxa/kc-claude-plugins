@@ -552,3 +552,28 @@ validation-2/review.md retains the initial sandbox network failures and sparse-e
 
 - F1 Polish — kind: evidence or form. PR #856 still describes superseded 3N+6 (validation-2/pr-856.json); no current product or protected-boundary loss was demonstrated. FO should update that explanation before delivery.
 - F2 Polish — kind: evidence or form. FO alignment says four implementation reports; there are five and four counted repair passes (validation-2/task-at-entry.md, role-triggers.log). The unchanged-source/single-formula rationale is supported, so the count correction does not require a fresh role call or product repair.
+
+## Stage Report: implementation
+
+- DONE: Re-establish the assigned worktree, profile, amendments and role prerequisites; fetch origin first
+  Working tree/root and branch verified clean before merge; git fetch origin succeeded, pinning main at 46e9d0ed4bb86889022457adcdf656965dc97e73. The dispatched 0.39.1 role check exits 0: budget 1 implementation / 3 validation cycles, spent 1 / 2; Pilot and amendments 1–5 apply.
+- SKIPPED: One Draft PR implementing the approved design and acceptance criteria, decisions D1 and D2 and amendment 1, using only the design's files
+  Existing Draft PR #856 and product HEAD 455846c6d30d4ab650c1c4503bc591722231586d are retained; no replacement candidate or PR is created. The merge needs conflict resolution outside the three authorized paths, triggering the explicit stop condition.
+- SKIPPED: ADR 0081 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  Existing ADR 0081 is retained without manual edits; no fresh lint or ruling-quote acceptance is claimed for the unresolved merge.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run
+  AC-1–7 and NP-1–4, their mutations and amendment 4's one/current/larger word counts are not rerun: no merged candidate exists. Earlier evidence applies only to its recorded source, not the conflicted working tree; live Held edits remain FO-owned and NP-5 remains upstream.
+- SKIPPED: Repository skill lint, installed ADR lint --require 0081, number guards, comment ratio, design surfaces, document impact and local product commit; no push; PR text and delegated review
+  No check is run on the conflicted tree. Product push, PR edits, RoboRev, hosted CI, independent review and validation remain FO-owned; no new PR text or /tmp scratch is created. CI cost per PR is not measured; no worker-authored CI change is made.
+- SKIPPED: Merge origin/main into the branch with a merge commit, resolve conflicts keeping both sides' behaviour, report each resolution and confirm the diff against main contains only this task's change
+  The authorized merge is started but halted unresolved; merge.log, unmerged-index.txt, conflicts.patch and product-status.txt record six conflicting files. dispatch_stage.py, scratch.py, test_dispatch_stage.py and test_scratch.py are outside the approved design. No hunk in those four or the in-scope pr_watch.py / test_pr_watch.py conflicts is resolved; no merge commit or clean three-file diff can be claimed.
+- SKIPPED: Rerun every acceptance criterion's evidence command and the full package test list on the merged candidate, including amendment 4 at the current held count
+  Blocked by the scope stop above; tests, native acceptance commands, falsifiers and word measurement were not run in this round.
+- DONE: Captain amendment 5 stands: Budget 1 implementation and 3 validation cycles; one more validation follows and rejection there stops the task; amendments 1–4 unchanged
+  The role guard confirms spent implementation 1 / validation 2. This is the same implementation dispatch's follow-up and a scope-stop report, not an extra implementation or validation cycle.
+- DONE: Append a complete superseding stage report; commit locally and report candidate SHA; do not push
+  This report and implementation/merge-main evidence are committed path-scoped locally. Candidate HEAD remains 455846c6d30d4ab650c1c4503bc591722231586d; MERGE_HEAD is 46e9d0ed4bb86889022457adcdf656965dc97e73. The product merge remains in progress; no push, rebase, force push, config change or held-task edit occurs.
+
+### Summary
+
+This complete report supersedes earlier implementation reports for the current merge-up dispatch: work stops because four conflicting files lie outside the approved design, as the dispatch explicitly requires. No new merged candidate or fresh acceptance pass exists; FO must resolve the scope boundary before conflict resolution and full revalidation can resume. Round start: 2026-11-13 12:08:50 Asia/Taipei, from clock.curr_time UTC plus 08:00; exact end time is in the completion message. No /tmp scratch was created or removed in this round (exact-path removal list: none).
