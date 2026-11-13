@@ -385,8 +385,8 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None, hea
             problems.append(f"second reviewer declaration must name {second} because <nonempty trigger>, or not triggered")
     if observations is not None:
         plain = "\n".join(outside_fences(text))
-        if {row["reviewer"] for row in observations} != set(extensions) & {"codex", "copilot", "roborev"}:
-            problems.append("configured reviewers differ from the delivery observation")
+        if {row["reviewer"] for row in observations if row.get("scope") == "pr"} != set(extensions) & {"codex", "copilot"}:
+            problems.append("configured remote reviewers differ from the delivery observation")
         for row in observations:
             reviewer, outcome, identity = row["reviewer"], row["outcome"], row.get("evidence")
             if outcome in {"findings", "answered"}:
