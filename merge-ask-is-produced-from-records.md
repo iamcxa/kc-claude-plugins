@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:merge-ask-is-produced-from-records:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:merge-ask-is-produced-from-records-backlog-1
+              briefing:
+                id: briefing:merge-ask-is-produced-from-records:backlog:attempt-1:revision-1
+                digest: sha256:4fc17bafe54536ccf49044c7b1d56e9218ed069be1e6f0e69edd13a6ede24a7e
+                room-ref: ./merge-ask-is-produced-from-records/review/backlog/briefing-1
 ---
 
 ## Scope
