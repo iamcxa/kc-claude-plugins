@@ -3,7 +3,7 @@ title: Before any new work, the worker finds what already exists, states what it
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #859（階段原則加一段「做新東西前先查既有的」：worker 動手前先查既有程式、上游、相鄰專案和生效中的決策紀錄，寫出查了什麼、找到什麼，再決定新東西怎麼接上去）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；實作守則多 106 個字；沒有機械檢查，worker 仍可能跳過；獨立證明只有一次冷跑觀察，證明那一次有照做，不代表每次都會；第一次驗證因驗證者自己的測試設置出錯兩次而缺這項證明，第二次補上；只有 Codex 審過，第二審查者未觸發；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit 1fc2f05f88b18a62d4eda598158ffa385df9fae8, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T17:03:29Z
 worktree: .worktrees/spacedock-ensign-new-work-checks-what-exists-first
 pr: pr-merge:859
+verdict: PASSED
+completed: 2026-11-13T00:42:23Z
+archived: 2026-11-13T00:42:23Z
 ---
 
 ## Scope
