@@ -15,6 +15,10 @@ gates:
                 id: briefing:merge-ask-is-produced-from-records:backlog:attempt-1:revision-1
                 digest: sha256:4fc17bafe54536ccf49044c7b1d56e9218ed069be1e6f0e69edd13a6ede24a7e
                 room-ref: ./merge-ask-is-produced-from-records/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-13T13:41:47.915088Z"
+                reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
 ---
 
 ## Scope
