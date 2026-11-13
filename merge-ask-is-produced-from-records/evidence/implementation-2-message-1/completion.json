@@ -1,0 +1,19 @@
+{
+  "start_taipei": "2026-11-14 00:53:19",
+  "investigation_end_taipei": "2026-11-14 01:30:17",
+  "time_source": "clock.curr_time UTC plus 08:00; final delivery check may be later",
+  "candidate": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "clean_product": true,
+  "product_files_unchanged": 9,
+  "product_added": 0,
+  "product_removed": 0,
+  "paired_cases": 52,
+  "legacy_rules_inventoried": 44,
+  "real_adapter_cases": 3,
+  "repair_applied": false,
+  "repair_tests_run": false,
+  "whole_suite_rerun": false,
+  "external_service_calls": false,
+  "scratch_removed": true,
+  "entity_frontmatter_sha256": "6e8c60b2b8f302b2db4ebf8b9d4a4e6a4b13bf3850195f295ce4a9e874918fa7"
+}

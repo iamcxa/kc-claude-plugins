@@ -1,6 +1,6 @@
 # Investigation: record-route review and legacy-rule parity
 
-Start: 2026-11-14 00:53:19 Asia/Taipei (clock.curr_time UTC +08:00). Investigation end time is recorded in completion.json alongside final delivery checks.
+Start: 2026-11-14 00:53:19 Asia/Taipei (clock.curr_time UTC +08:00). End: 2026-11-14 01:30:17 Asia/Taipei (same source). Final delivery checks may be later; see evidence/implementation-2-message-1/completion.json.
 
 Both RoboRev findings reproduce at candidate `de564ef9e2b608d4106d96c56448e22f31a6fc5b`. The candidate is unchanged; this report authorizes no repair or merge. I missed these semantic enforcement gaps when I validated record shape and command parsing.
 
@@ -104,3 +104,5 @@ Commands, exits and saved output paths are in `commands.json`. The eight reporte
 Two harness issues are retained: the first untriggered control duplicated the declaration between question and summary, and an initial missing-step expectation assumed a legacy check-time existence validation which the code does not perform (legacy check 0, question 2). The final 39-case run starts fresh with corrected fixture/expectation definitions; no failed attempt is hidden.
 
 No product files, HEAD, branch, version, config or PR changed. This report does not rerun the earlier whole suite or treat its previous green results as semantic policy coverage. The finding-disposition and waiver truth limits, real provider history, a live gate/merge, hosted CI and RoboRev remain outside this investigation.
+
+Evidence root: `evidence/implementation-2-message-1/`. The separately checked new evidence is distinct from the earlier implementation-2 evidence which the canonical scratch close command re-verifies. Close output: `implementation/investigation-1-close.txt`. Product unchanged proof: `candidate-unchanged.json`.

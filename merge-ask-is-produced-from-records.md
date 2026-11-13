@@ -446,3 +446,34 @@ Exact scratch close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1726910 bytes)
 Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Investigation only, no change to the candidate: RoboRev job 1857 on de564ef9e returned two High findings on kc-dev-flow-2/scripts/delivery_gate.py
+  Product HEAD stays de564ef9e2b608d4106d96c56448e22f31a6fc5b; clean tree and all nine file hashes match start (evidence/implementation-2-message-1/candidate-unchanged.json).
+- DONE: First: on the record route a reviewer finding is saved as an outcome and the question check accepts the record without requiring a disposition
+  Real Codex P1 exit 1 and Copilot High-comment exit 0 yield record check/question 0/0; deleting old outcome evidence holds legacy 1/1, but an old citation-only unresolved-finding control also passes 0/0 (results.json; adapter-observations.json).
+- DONE: Second: on the record route a Copilot refusal for quota is saved as not run and the question check does not require the merge question to name the unread reviewer and offer the retry
+  Actual adapter exit 5, with retry/unread omitted, yields record 0/0 and legacy 1/1; disclosed control passes both, so requiring the retained reader duty would falsify the unsafe accept (results.json).
+- DONE: For each: real or not, with command, exit and saved output in the task's evidence folder; which rule of the old route was lost and where the contract document says who now carries it; the smallest repair inside the nine changed files with lines added and removed; and whether the contract needs a field or a reader rule for it
+  implementation/investigation-1.md gives ownership and limits; commands.json joins exits/output; unapplied proposal is checker +34/-4 and contract +9/-0, reader rules with existing fields; no repair execution or test delta measured.
+- DONE: List every other rule the summary route enforced on the question or the summary (second-reviewer trigger and waiver, declined findings and their reasons, validation rounds, merge-result run, Captain steps) and say for each whether the record route still enforces it, so this class is found once
+  rule-audit.json has 44 rules; 39 broader pairs plus 5 merge-head pairs expose missing declarations, quoted-prod/head/config gaps and missing count/scope disclosures; inspected-only shared guards are labelled and no whole-suite rerun is claimed.
+- DONE: Retain public evidence and close the owned scratch root
+  New evidence manifest verified separately; the canonical close re-verifies earlier implementation-2 evidence and removes only the assigned root; outputs are in implementation/investigation-1-evidence.txt and investigation-1-close.txt.
+- SKIPPED: Apply a repair, change the PR or candidate, push state/product, or run repaired-candidate validation
+  Investigation-only dispatch; FO explicitly reserves repair authorization. The proposed judgment-presence check cannot certify per-finding truth or Captain waiver; automatic count/scope disclosure needs explicit design/ADR disposition.
+
+### Summary
+
+Both reported safety gaps reproduce; the old route required declaration/outcome evidence but never automatically adjudicated every remote P1/High or Captain waiver. This complete investigation report supersedes the earlier implementation report's review-policy assurance, preserves its test-execution facts as earlier evidence, and leaves candidate/PR text untouched; repair authorization and the disclosure-design disposition remain FO-owned.
+
+Start: 2026-11-14 00:53:19; investigation end: 2026-11-14 01:30:17 Asia/Taipei, clock.curr_time UTC +08:00. The fresh 52-pair observations establish current differences, including unsafe accepts, and are not validation of a repair.
+
+Canonical close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1884098 bytes)
+Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
+```
