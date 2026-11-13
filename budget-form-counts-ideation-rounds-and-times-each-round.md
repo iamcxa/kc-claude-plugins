@@ -34,6 +34,17 @@ gates:
                 id: briefing:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1
                 digest: sha256:e69ca9f332bff2f0d592e9da3d3f095975def68e05d9e30d3866b3318321a7c0
                 room-ref: ./budget-form-counts-ideation-rounds-and-times-each-round/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:budget-form-counts-ideation-rounds-and-times-each-round:ideation:1
+                briefing: briefing:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-13T15:02:19.725092Z"
+                decision: approve
+                reason: 'The Captain answered 「核准預算寫法的設計，五項都照建議」 (chat, 2026-11-13), answering 「決定：要不要核准「預算把設計輪數算進去」的設計並開始實作？建議核准，五個決定都照建議：一、寫法用你的原話「N ideation, N implementation and M validation cycles」，既有的兩種寫法意思不變；二、Pilot 的預算沒寫設計輪數時預設兩輪、由程式把關，流程文件裡那句靠我記得的規則刪掉（少 2 個字）；三、設計派工時只檢查預算，不檢查欠不欠顧問諮詢；四、新增一份決策紀錄，是擴充既有三份，不取代；五、每一輪的結果取自那一輪關掉的關卡紀錄，不看階段報告。 同意即接受：有一張待辦任務的預算剛好寫了「一輪設計」，上線後它第二次設計派工會被擋下來問你；預設兩輪不會顯示在預算那一行，只顯示在派工時的提示（每次多 6 個字）；Prod 和沒寫可計數預算的任務不受設計輪數限制；到目前為止沒有任何任務的設計派到第三次，所以這道把關還沒有被真實需要過。」; accepts the design with decisions D1 to D5 as recommended. Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-13T09:54:58Z
 ---
 
