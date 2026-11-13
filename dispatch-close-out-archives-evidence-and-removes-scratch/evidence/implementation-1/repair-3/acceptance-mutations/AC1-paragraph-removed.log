@@ -1,0 +1,14 @@
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... FAIL
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 384, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    self.assertEqual(record.splitlines().count(expected), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 1.384s
+
+FAILED (failures=1)

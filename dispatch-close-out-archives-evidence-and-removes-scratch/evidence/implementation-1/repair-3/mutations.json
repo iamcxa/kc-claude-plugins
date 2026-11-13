@@ -1,0 +1,102 @@
+[
+ {
+  "name": "collision-partial-write",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "gzip-validation-after-write",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "validation-next-root",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "role-next-root",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "merged-cleanup-lost",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "printed-readme-lost",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "later-write-loses-digest",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "AC3-skip-worktree-remove",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "threshold-disabled",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "size-cap-disabled",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "root-mismatch-allowed",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "symlink-follows-sentinel",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "truncated-gzip",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "idle-sweep-disabled",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "AC1-paragraph-removed",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "outside-scope-notes-allowed",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "AC2-reports-scanned",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "AC4-own-worktree-left",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "AC4-peer-root-deleted",
+  "status": "passed",
+  "message": "mutation rejected"
+ },
+ {
+  "name": "F1-private-repository-ban-removed",
+  "status": "passed",
+  "message": "mutation rejected"
+ }
+]

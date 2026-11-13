@@ -1,0 +1,24 @@
+{
+ "dispatch": {
+  "second_validation_built_with_own_path": true,
+  "identical_retry_reuses_second_record": true,
+  "first_record_unchanged": true,
+  "private_repository_rule_kept": true
+ },
+ "compression": {
+  "collision_refusal_changed_no_files": true,
+  "retry_original_digests_correct": true,
+  "committed_gzip_restores_originals": true,
+  "own_root_absent": true,
+  "own_registered_worktrees": 0,
+  "peer_registered_worktrees": 1,
+  "peer_uncommitted_preserved": true
+ },
+ "removed_fixture_paths": [
+  "/private/tmp/dev2/dispatch-code-6298d87e42466f9e/dispatch-fixture-a2702d81f50b4bff98eb0e8b75919a18",
+  "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/acceptance-candidate/tmp/dispatch-stage-bd9tgu1l",
+  "/private/tmp/dev2/scratch-3bec461fdb7c467bbde65bf2b4c4e845-0d482a336b9ff8c0",
+  "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/acceptance-candidate/tmp/scratch-test-_ylspyi3"
+ ],
+ "synthetic_only": true
+}

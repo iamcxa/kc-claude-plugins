@@ -1,0 +1,63 @@
+[
+  {
+    "name": "test_scratch.ScratchTests.test_archive_move_and_linked_worktree_keep_identity",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_cli_returns_nonzero_for_refused_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py\", line 148, in test_close_keeps_another_dispatch_in_the_same_repository\n    self.assertEqual(sum(path.is_relative_to(scratch.BASE) for path in listed), 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2 != 1\n"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_compression_collision_refuses_before_changes_and_retry_keeps_digests",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_follow_up_uses_parent_dispatch_root",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_foreign_or_unowned_root_refuses_notes_reuse_and_close",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_missing_record_refuses_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_same_basename_repositories_and_clones_keep_foreign_dirty_worktrees",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_symlinked_evidence_and_log_refuse_without_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "test_scratch.ScratchTests.test_threshold_restore_and_idempotence",
+    "status": "passed"
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "name": "test_scratch.ScratchTests.test_later_gzip_write_failure_keeps_original_digests_for_retry",
+    "status": "passed"
+  }
+]

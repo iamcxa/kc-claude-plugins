@@ -1,0 +1,14 @@
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... FAIL
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 388, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+AssertionError: 'Never archive private repository evidence, secrets or personal data' not found in '# ideation-1\nDispatched: fa07b1f913f205ad5d085d1e86b9aab3c34ffca9 (workflow checkout)\nModel: fixture-model\nBudget: not recorded\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-7e29ae5c747c6aab/dispatch-fixture-e467d93f51744d4a8e782803ae5aaad6/ideation-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/dispatch-stage-g4qrpo9_/code/docs/dev2/.spacedock-state/dispatch-fixture-e467d93f51744d4a8e782803ae5aaad6 ideation-1` and paste its output.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.413s
+
+FAILED (failures=1)

@@ -1,0 +1,8 @@
+{
+  "head": "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+  "refused": "evidence compression would overwrite /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/scratch-test-7tpg8q7a/task/evidence/validation-1/z.txt.gz",
+  "earlier_original_deleted_before_refusal": true,
+  "retry_manifest_names_compressed_file": true,
+  "retry_keeps_original_digest": false,
+  "synthetic_only": true
+}

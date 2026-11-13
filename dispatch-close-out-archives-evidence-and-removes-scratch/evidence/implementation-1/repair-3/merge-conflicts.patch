@@ -1,0 +1,37 @@
+diff --cc kc-dev-flow-2/scripts/pr_watch.py
+index 84d6dee09,1bd1d1d85..000000000
+--- a/kc-dev-flow-2/scripts/pr_watch.py
++++ b/kc-dev-flow-2/scripts/pr_watch.py
+@@@ -76,7 -77,7 +77,11 @@@ sys.path.insert(0, str(Path(__file__).r
+  from role_triggers import review_facts  # noqa: E402
+  from dispatch_records import coverage, worker_stages  # noqa: E402
+  from learning import job_key  # noqa: E402
+++<<<<<<< HEAD
+ +import scratch  # noqa: E402
+++=======
++ from workflow_extensions import readme_extensions  # noqa: E402
+++>>>>>>> origin/main
+  
+  SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
+  SCRIPTS = Path(__file__).resolve().parent
+@@@ -656,14 -621,9 +661,20 @@@ def tasks(opts, look=look, ask=gh, cloc
+          if now["state"] == "OPEN":
+              snaps[ref] = now
+              out += [facts(ref, now)] + next_for(ref, now)
+++<<<<<<< HEAD
+ +        elif now["state"] == "MERGED":
+ +            try:
+ +                out += [line for line in scratch_lines(workflow, state, found, {slug}) if line not in out]
+ +            except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
+ +                errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
+ +            if "learn" not in listed:
+ +                continue
+ +            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
+++=======
++         elif now["state"] == "MERGED" and "learn" in listed:
++             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
++                                    "--readme", str(workflow / "README.md")],
+++>>>>>>> origin/main
+                                    capture_output=True, text=True)
+              if done.returncode:
+                  out += [f"next: keep {slug} out of pr-merge's scan in this pass.", *done.stdout.splitlines()]

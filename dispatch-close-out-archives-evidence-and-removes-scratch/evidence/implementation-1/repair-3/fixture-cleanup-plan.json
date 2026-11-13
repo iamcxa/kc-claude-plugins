@@ -1,0 +1,1016 @@
+{
+ "recorded_inside_root_count": 6828,
+ "inside_root_removed_by_parent_close": "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1",
+ "outside_existing_files": [
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-09ff3b4a-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6ec7396064a38d7a769f8b526fa1c4f9c5190254caf8c0c6a36e3abc7a363aed",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-09ff3b4a-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "c704ce8ef3ac8d62ee0f40ea53ae0445f586ebd898209089c0d4afc7e6e01b9a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-0bb78a4c-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8966c99faa4a0bc48232fa703de4cfbd7d045cb8f65b531d9a2b5a558b12e383",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-0f3d6f55-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "c1e60dadda861220d784d9f30432bfc3a8daaf844fa230767ca58fc072332afc",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1186e64f80bd4c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "f2b5b6b00387ce39da8a52d5b4428fe612fa7d762ea931e92068ddc3ce2754de",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-143ad94935a741-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "45d43b3ccca63e79e5a386eb35a37040d495e731ae00c60e28bab105aa5a7045",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1677945e-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "5ccb4ab310071bac07ba19edc80034ce4cfbcdf373366fe403f9951207fdcf35",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-177c2ec9cea147-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "74ecac0ffed34214be32897b5f4278f415705ce8417dbb3f7de4c87bceb611d2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1cbd1d89cc82-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "60f8386e483922fb167685f88a80fd24db5041e6681919f4045e9d462a812146",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1d4a78db-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "c7d2ca2ac45031d9a6121d7f85969097eb9334dc4ce4e70a41bda11d2c44bc79",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1d4a78dbecdb-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ef60dd7b96b6202fddb1b114ff4a5717dbff4f5a05f4973b3f38baccc5bd7a7b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-1da41e12-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "2879080f530245f4ab5f2e28e22a061c4309d7a735de29fa7ba81d83867eba21",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-220c86c9-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "736b1415178298709730aa2e4af3ca24aba017f853226d43f8911212bfb9fc62",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-227ef7a678dc4d-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6f4305a219a102787b72074b98de00bff5640590ae6f2904f24e1f3678e003e7",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2466f375e48344-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "fddaf41f71c7563fee75738a14dafafeec461adbd3511de4874a9c95bc4743da",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-24d97ac0-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8a07f1d178ec80632546cdd106e2aee9f11fcfe4104af54638b192e9a56171d6",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2db461c8-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "07347286966c83e45e049c26fa3bed51a8ba5934e2c28e9c0937e765d44acb4a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2db461c8-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "bd1325a1f6041ffef58b7763d365344b38427e24e9b8a6698ebfc09d6bf4b50a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2db461c8ea064e-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8ca3e182aef6dcdf6a1bd9d4e735f9dbce66d346bd5a2bdfa3df0513535f25ac",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-2e1b6e520bf945-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "220e5402c0f935bab91446a51e160fb8f973db965a6492e48dd09519e611a673",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-306f7fcf-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "50c5e32f40c6881916165076b7aa751c8029fc8b11b9c44146c7b231c0b1f56d",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-307382f5f54f42-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "08e3eb2279adcf9ff1e231a1abb48a22da67c4e2114e0aa15861866359243967",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-31f4114c26494b-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6324e7dcbce8c6a6728f4ad6b023a6bfd1df67f728f8aa6293643cf72ffb5258",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3295042b-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b94be4a54a7121c3c3e79d8466a2c2c1cd8cc863fcae91d59fbf6aebdb43d627",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-332bdac5490548-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "bbf2bfe06a02ac7ad0e8f64640606e074a3e97175243a6513f7f6161733a4fe9",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-33f81f7e2f424a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "77011785f90aef7b23b3ab4b0d7dbe90a5b3d6bf3efcfcc7661cd4c6ab188c9e",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-377a6bc3-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "122fbba8f9397ea9e4af48f5bf4302f9f35fe39644f8d6f5ef7b4f07b3bbef48",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3988fee8101844-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4b7fc382c5b7f48991c4bd5a5df7d88206daac11c8146e12c5f578b1ab2cbb56",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3d689029f5eb4f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "681c3ba907957ca816e78d206f113a0f2eae4ca35ff4160e6a40486c34b6219a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3dfb5de8-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "79594793e32f56388c5b736766de64def4b262cf3156d4288dc8c5a4f31c5c6b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3dfb5de8-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "1f208563761af724ffafe34e255aaabbd01b2b7f3e6021e146a5df2801b8300b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-3dfb5de8090f4a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "c40bb7fd55588318f00ce2823fa6e80bf7ee02f291ed80488548c01646b1d23c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-4292eaa5072f4a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6bb076de13f9b09a5c88a056b1af34d30e5b9697e557aa633286ad264949ecf0",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-44a4acf7-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b70bfbcaf4bb9eb1d5c108803dcc3029429d136692329e12a78f8328b94b6c3b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-44f260a0396040-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "507a1ca8664c627bdb367cf5b27f89675933587828299b46afa4b7d35f1c22ad",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-45b122e5-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b45368760f59482e5db1a2812b589240b9a5607106d6fcc476aee7f8da392cac",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-470f35e093cd40-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "97afca4687e91e1566f933dbf2dda1a18bc550dfa545b0ad0e20142c717ede92",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-47d8a25102b14f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6b115744a20b7cd0be47c33c79c4dd6b4866afa482407d162875710b05b1a2de",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-4a82d079da8349-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "5a9c8f70628e22d978e57ded90e3233df9cfee476267efe30def32c553ce1276",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-4d4077a6-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "93e6a385e2fe0f532fd7382151a804e7fc6ae09ac982854a31ba742b4b5391b1",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-4f2afdfd-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8817835c398fab28c9855b790132a862c5d99b975ca50f034cba031275aa26c4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-53130c3a-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "01a209df63aede0de04b2a637c2cc7803485d478db2b327edc97ffde62fb0e24",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-53e9c53b-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "de85b635d157d5a1d2acaad39f59a7fc8f644d6272fe8494285cf40991732099",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-53e9c53b-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ed87a1f32c58905ff479508a3b1c5c3ffb17b3b5e3edf50c021971d965d9152f",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-53e9c53bfa5f48-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4d68974d4c002cbabc76630019f547402c9d5263c5794d60c4ad36ef8cbdb934",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-55a02e506c3b49-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "cad7914d9c690ad2ab71d20460e8a4620fbd7c6429d67770ecdac5bacf0a6edf",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-58663a4c355541-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "11975dc4362009f5145aea7f73f81f0df8d74caa193ec0a9bbb1a53079e94306",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-59f7c9c2143240-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "3b26d0c3ecea0b5cfa34984cc0cb7a9b356eb6d56a31644289ef048cbbea3076",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-5b3d25d0-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "f1cb6fe50f6f29c74529c5975405038ec8529208c8bc2ba1d2a3effb423618ff",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-5d66ccb18ede4f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "917b2dd7061a591c96622d3291998489fdd43d65a19077453f7c4c07111f90a3",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6271608d11494f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "856e9a71323cd020f38b3fc3cb0835b9c3c7fcff5b2523d56d6024e4b4ec791b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-62a7dc8e-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "10bd7e2b9d67814b1a99e7c9ee6bb186b9a30c05a4cf0d6ef4341c003e725a4c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6a1373b4-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "48890553dcb220ae5ce315a229aa0871d540874b38f49f65c453a74773dcb391",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6bc06193d31645-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ffb33e6376c1ab3f60c25dc8d9bcbf540aedbb2a55a3780014aeffe9fa0c69c6",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-6c87454f-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d23a6f99d6833c0b47659cea556f197a6561c9b35520ea7b6a6cdff8c70c9074",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7037218efe4b46-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "1a4aecf2ba2814cf867ed49d76a7ce63c8314376bce9aed8c667b21ea2bf43cc",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-71420691fd4047-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d7abea01a5ec5ff8ec44ce5c8f3504e975e78a836982892be327ad5812c7796a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-73d9add3-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "1fe3b7ac1ff87209c545cb6eee715ed234fbac2dd24d069a61f68f01ace4709f",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-73d9add3516d-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "e8067fdded8191ebad3d7edd9227cd6079c5e60c21244826e93d88524f166ce6",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-73edf959-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "47288441fe8181f56b730680f0d3579fdb1379d5c1319c48aa1a10cec644d826",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-74026a1664ae4f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "51ff0051b3eb1672cc2a6723f7d6ad910e3030896f11f7fac941a56a6622a59d",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7592164c-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4ac93626e8930b3320997fb28048adb353db4c2d556b604a71f0e71905a62a89",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-785d159c-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ac64af947e3dc7a903982f6057ff458e91e5a94940ea59c26e24556296526894",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-78dd4a91c9064a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "dc5b1eb1a9956d7f01da6aface11b3dd3e3e13257e4efc6d1bd593787770b877",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7d28cd1b-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b4b85c490ade46b03c9e343f4776a4bfb9f060c00e1a8e40e58b85f68f14e077",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7e7514f375d94f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "85880cdf759d947cdcd3b61426b4b88a531992c487c1eaed2ed0de6a20aeb40a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7e81a2f7-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a0ac30a3cde3a4d405a58a5e4a71ce11cc505c2154a40d3fabff06ecab76d015",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7e81a2f7-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "bc5589fa614f4b5c397b84c41932b6c39a2c775a095ac5e20a912eaa68d1c131",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7e81a2f7efa045-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d1c9545c5b5da05ceb3f11d53667d67e3c91d885ae43a66ac5e1c95482a4e920",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-7f0ddf380a2e4c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a029400540eca911d0cd5f5010d9c41e134fc7fc18dea97cb54d719605ff9b43",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-805f0a22621746-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "2d8a80c5116ea3bb78a8ec707364ac59a19860007e567052c138a6e81731a11c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-81d6fb2c94cc47-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "e09ccf379ab30ee244a398adbd99495eff1be7c306bfa73a29d0ce36cd686464",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-824733ea-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d06bbdb65db1d1612b67064d566b72f4d70b26e92e547a5ce6c3d58ee13396a4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-838e05b461b94b-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ec42d07a759dbd1ffe15029f628c6dcd0afa581cc1a3db233beb2e1bf642392e",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-8446441a-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "49f7ad7d418d3cdce17e26ffeeb5404024ebe921237c861feaf3284205d1f357",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-85628941cf2c4c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "535e461a42cd6c8ad1bf1f59820f0650cbb2c7140e151967916f0132bd449f5c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-867ab59f94ac4b-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a21863151eb07fbe9b20c844b17af0143edb2dc51e355890dd06c43105e853e4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-8755e73bf94247-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "760fdd63db1164696b7d88aac4e0706a60e2b8b0216daeb066f6afddb267decb",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-87cafffba82f43-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b41ff778232eb1c17f62c537ffb001f2b5a3b122f82e0f7f3735861e4a3db44b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-8ad8fa57370248-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d6a982828e5a74864a7c5c123a4b668226a5a594ae12ec3ddd4435de0e4f9ec1",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-8f5253688c2447-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ac7eda440d17acb35d7b3dd9ab7f064bde851b441235e565065b822e389c96d7",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-903da4b14e93-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "86809b99ff477230da3e8063166fdd6615711e4a3de8f56730160ecd059f3564",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-90583535-implementation-advance.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "04d3b8bb08858cce2cc0acdfd5b4951c3801844ae9f30cb0943050183e460cc6",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-90583535-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "319ddd459f1e5307473e374a28fd8d1245310a983d7172231506354ad15aa4bb",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-90d2d24d-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4f06f924890cad3b2f70790ba75d39277630a99cf6cf586975708e4dd6400871",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-9294d72d52b34c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a8c5623b8c092705651f11d764d6abd4d807700027a3a16dadbda60c1287ecc8",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-92a46b83c6dd-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a35c1c0434c6efe8a531aa2d781e793b367fcb6511dc526840b30d42b48b6a0d",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-93deda7cf81047-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "286a9f3d839f084faf51d69f54419f9dc88d18a07008f1d9ab4abc072bb4b1df",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-9908b29d322240-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "3fb77310a7549f4bcd035ada9ac759c73d99d7324e256a9b51bc9330873987a5",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-990bc8f8007445-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "733ff9bbf99fc123b9a24d1254ff099ff6a922ce4ffac59873a04f78001f1bd2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-997dc285-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6187e5cccb529a8316285020b2910cf53c867e05e806eb9236efcb4141df166b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a1bb62c05d1d4c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "433c4f96207302ca3c6cd53951cc9b58681dd86b33adb440dbdc07d5696be396",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a1d83090-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "f97d4a2df05302f64fa573b6044e6640af0d3fe24e3d8df42aa11534c2862f98",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a680fd83-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a7e678a95c444676323d10f45018e6d95931c313cb4397caffd260294117a4ea",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-a8129df4-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a0263d42fd008819cfb45d0947e4fd98811ba97776e696267927ed0a87ba23a7",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ac8c722c-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "2f5497bc6cdc0de5f918a7ec1cb9e6510115cb80845c1a7e596cc7c7422cf8f4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-adf558bd-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "7258673b8a829525b48c35a05e11b2fd07c6c6c71c58cc9d01572ad43011fcc0",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-af3a1bc2755742-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "2a0b3981db09b01c99367f21399e25231ed7060e8059e53a6b970e4d45e2fe87",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b0edd5f022db-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "88fc09ac386f6748dc750b207f4f37cb02dc628d4a8b5eb38b60832f63f8b6e2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b16ee657dc6542-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4088df4a3454700344594fa1c78b543bdd7ddc8b25f61e024be8aa32567c8906",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b2921e7721474c-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "bb04447344388ac27683e0e0dd054371ca0c4c9994728ba2574c9918b0bd0667",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b2fda5a2-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "15aaec943dc21a17bca6e2ffd90eb1b1970b997e2d2b3f34deb028505e6a031f",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-b77f4897bf1542-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "a81d4ac80ac0b047a80715985e0d8c685f34755e9afe1eb1f82d953e989f0a94",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-bc80b9e028bb45-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "109a16b43ee99d95f8c71d9d8daba435c296568595bdf54da7f9025bbcfb7711",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-beb1625c-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "5c8ca04b6e53462a9d555618c1ad77348427edb87b6e65555d1a753a633d5314",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c21da847e2df48-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "0a279fb690a8763c5479c8f76a94ac9de76428cb0f88592ad53c1d5752fba81c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c5c58cf84afa43-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "42028ff3b512cea69aa5fac1f38b479d7e2996fab5375d7c3c73e9923ff1a4b9",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c61db24f-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "f6d7704e60a596ecdf8b3f054fd63e1caf80ae4b246afcb8c61d0894ea17ce4e",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c7ea5f88-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "ec5397890141414d0fae61a191b2276a8d42ad62621c296bb14df83767eb838e",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c7ea5f8800f7-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4fa5898309d29851deab29532ca03f667cb051080708d2a2c261808e76e748a3",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c82ded82-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "47a5368f065324c05517b9fdfbcc35caaae466b2f0aec04a5fb47e6ff0537761",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-c869ab9a2ebf41-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8c0205477c721f10c62c878aab0b0f61e94c33479e96f17c4ad181632b5de310",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ca37cd6e-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8cfce41758d007dabd62fa269dea18423b39a96502705457c8a2c02d6238b33c",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-cb80d8f2-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "bae2fd2b1990b530d661e9e2ed7bfd642f73d8dd9c3396ba10b58dda003a506e",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-cecb5505-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "6000fd780d806221597235da3b9a01bc7068ca1ef4b0a4f0d5a16e3f58e557d6",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d006552f-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "1451b180cda60091fb8ce07546d768d8b85117c4e58e31a072043024a9ec5db1",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d0a71481ae3f4e-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "00ffe723be63b65e6a6852058521709fa74d5a9355e1ad34fffefe15987aef8b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d0ee17a83ff4-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "87cb7815082599779f6ee759552d18bc46934e7acc17ca47b451e72fa600fb66",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d1e586c779e540-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "0b879bba4828ac46399e50e0c5e13e6648cc5a04230f6a2c2e542bd480e4dda5",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d3d6e43931bf4d-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "0c7313064015745c86492c5c1fb00dbd2c281d04a72a293da50d5527a06a9c4d",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d8e9bf80-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "cb0e886af8e3377da431ada86bf3cd437f5cff04d2a055ac2428a3d9f366aa4a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-d94d1a02-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "2fa69f25115d9d606919e75a51ab815028c7ebd892de1179a6065d820cc9f43b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-dcc77eb398bc43-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "3776e05b913d8fde795fb41e35d14a252327ce0c348ef7d73a4c87fa858acd4b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-dd1b0fd1-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "3b60f3c1db345350928880c4f465fa20921b871cb1d4326a30d5846aae077dd2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-de3ec1ebad4a43-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "f823d2fbd4f68f13a6312cc2725356ced253165a40e04b791e9e3432a34b80bf",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-df2952e1092345-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "084463eee7d3bcb77db98b89752ddc15e78e3fce41346fe8373f0d7ccc1bc6ae",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e08d44a875ce44-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4c415bdfd11bc910b0c9edc941b3d57a5824a2d17f248cb81ff0cf233083ca4b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e0d738677a7945-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "87c2613380c26851520476c8ab373a94f1821f00ed2a18e4376e02d58a0fc5a0",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e1467b7537124f-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "df60c2913e3e1eef3720a1755dc80cb266e04e77936f044f7816f399430c7fb3",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e15f40c9eeba40-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "3e2e083532d45da5020f7537c7d67e5ec1a33762b0f0440ef009501aefc401d2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e349685769a44a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "b10c57ecd404a82895fe2ec39e464f0b285f5fc2313ca7551516588220848a51",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-e684809f200740-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "5469f8fe0d57a87f9cad5200a41428567f169ca1a09c4debc4e9bf67b6b9d1f5",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ea26406a-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "d2f59d49543753554dd48d0a9badb08a32bf05b3207410e38999148f5eec9b6b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ea826e9d991649-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "112a6b24c2cf046d54cb28b5512401b57c010495a18bc6cd02c19aa24ab94c3a",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ea8961984d8e49-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "8d6c01e5a6fc0d29075ef0058684906e16b9cdbbdb91bd7acf26d0ccde3f0ec4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-eb9586847cce45-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "34db70fb2ad83b9a093559dda806329559e99c4b8d9aa759215c42a099cb796b",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ec2642a99c4748-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "425cb6497e770cf72e87c890ee04fa49f045c8b9229b1f08b1eeb9e536689e37",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f3c8e2dc92904a-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "4d904c4bb7953a900ef5e1c7531e117c2b15132e9a05ae792e71cea4548e99e3",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f4d3557f-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "1532d0892db85179d5b12f7db504f590a0ee9c84e24cf52b645b5750f2acbcdb",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f4d3557f43af-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "13368d3952b2ed5ba4290f59dd0d5d69f347f11492a368b7d840655edc07da49",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f629a53f023d-validation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "eb0fe4d3768ec0b879160c917fb5c7517182093dab937894fe6fdeb9328fe7f4",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-f6f81a25d0f942-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "50e08f37d2a429983e759cdc9cc966e93c86fa99a7e40b0d16ca6eeb9bff4475",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ff4bcad139f04b-ideation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "c62da1c33c76e1976bbc42589fe8b0e829946c94d57f98bc54000226648247ff",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  },
+  {
+   "path": "/private/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-ff76c4c4-implementation.md",
+   "already_absent": false,
+   "type": "owned native dispatch file",
+   "sha256": "38427cadbad354e811fd16d85bacab4af76509887aa25e0e23e1301a899a0ec2",
+   "ownership": "emitted by recorded child command and contains this dispatch root"
+  }
+ ],
+ "outside_already_absent_count": 327,
+ "all_recorded_exact_paths": "fixture-paths.txt"
+}

@@ -1,0 +1,10 @@
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+............................................................................................................................
+----------------------------------------------------------------------
+Ran 156 tests in 91.637s
+
+OK
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmp6py4fthn/dev2/scratch-0a3c64a8e607488da8b7d2f57c7f5689-ecdce7e0410cd7bd/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)

@@ -1,0 +1,12 @@
+{
+ "candidate": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+ "first_final_pass_product_bytes_commit": "d49aa24ca41e44eba2cb146cf64cac917e7381a5",
+ "changed_after_that_snapshot": [
+  "kc-dev-flow-2/scripts/test_pr_watch.py"
+ ],
+ "replacement_entrypoint": "kc-dev-flow-2/scripts/test_pr_watch.py",
+ "reason": "canonicalize only the test expectation for /tmp versus /private/tmp",
+ "all_other_package_file_sha256_unchanged": true,
+ "preserved_start_head_metadata": "4be5fe99faa009e682065e1a8e406290caef7f3e",
+ "other_reference": "test_design_surfaces.py:2705 imports the watcher fixture in an opt-in historical test, skipped as recorded; test_dispatch_records.py mentions only the test filename in fixture text"
+}

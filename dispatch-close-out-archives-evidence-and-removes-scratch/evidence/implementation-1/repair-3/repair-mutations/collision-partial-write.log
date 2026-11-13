@@ -1,0 +1,15 @@
+test_compression_collision_refuses_before_changes_and_retry_keeps_digests (test_scratch.ScratchTests.test_compression_collision_refuses_before_changes_and_retry_keeps_digests) ... FAIL
+
+======================================================================
+FAIL: test_compression_collision_refuses_before_changes_and_retry_keeps_digests (test_scratch.ScratchTests.test_compression_collision_refuses_before_changes_and_retry_keeps_digests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 90, in test_compression_collision_refuses_before_changes_and_retry_keeps_digests
+    self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
+AssertionError: {'z.t[262193 chars]a.txt.gz': b'\x1f\x8b\x08\x00\x00\x00\x00\x00\[1106 chars]x00'} != {'z.t[262193 chars]a.txt': b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[262106 chars]aaa'}
+Diff is 656889 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.954s
+
+FAILED (failures=1)

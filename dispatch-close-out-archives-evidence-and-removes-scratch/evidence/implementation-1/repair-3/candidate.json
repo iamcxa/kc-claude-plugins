@@ -1,0 +1,30 @@
+{
+ "head": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+ "branch": "spacedock-ensign/dispatch-close-out-archives-evidence-and-removes-scratch",
+ "reviewed_parent": "d4fe39e54dc7069b099d61c4b0e3fa2e5aecd8c6",
+ "merged_main": "abe8c08ea2716e5f1c046823082e122759703b87",
+ "merge_commit": "2f454b7bd565bde7eb8ad15e3857453b3780bf38",
+ "merge_parents": [
+  "2cdad4c444b01d0b7aa981c3047624b79242b041",
+  "abe8c08ea2716e5f1c046823082e122759703b87"
+ ],
+ "owned_paths_relative_to_main": [
+  "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+  "kc-dev-flow-2/scripts/dispatch_stage.py",
+  "kc-dev-flow-2/scripts/pr_watch.py",
+  "kc-dev-flow-2/scripts/scratch.py",
+  "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+  "kc-dev-flow-2/scripts/test_pr_watch.py",
+  "kc-dev-flow-2/scripts/test_scratch.py"
+ ],
+ "file_sha256": {
+  "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md": "8ff5f5e9cea6b1d5ec2ce5107dd008426d50089ecbbcb440fe537ffb160fa2bd",
+  "kc-dev-flow-2/scripts/dispatch_stage.py": "790acaf5f8ea6c07f86c1e506a35a524b160a19f729e08d83a3c30afae4f7138",
+  "kc-dev-flow-2/scripts/pr_watch.py": "b740ec67740c39f808f345a33160d728400a61d7d2f736b82bdd7199beb5c2f3",
+  "kc-dev-flow-2/scripts/scratch.py": "f76d30d95aadbcd2bf5cc34b7d87ce54145a644dc654bba7351b31c0841b1e63",
+  "kc-dev-flow-2/scripts/test_dispatch_stage.py": "67ff29b9db867c22a7ae17302afe522ae2b48d261a6543c8d137324c5d92fcc8",
+  "kc-dev-flow-2/scripts/test_pr_watch.py": "3255b41925f319f34cfc777be56910103d66a5d4fb143a7a8e89e6893971cf3d",
+  "kc-dev-flow-2/scripts/test_scratch.py": "c3b5f72f1f51d7be2f115ab778b19dd139c525135b39bae3ef5942cd7195a3ec"
+ },
+ "product_push": false
+}

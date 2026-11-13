@@ -1,0 +1,18 @@
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.........................................................................................F..................................
+======================================================================
+FAIL: test_merged_scratch_prompt_precedes_merge_record (__main__.TasksTests.test_merged_scratch_prompt_precedes_merge_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_pr_watch.py", line 1061, in test_merged_scratch_prompt_precedes_merge_record
+    self.assertIn(f'--readme {readme}', observer)
+AssertionError: '--readme /tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmp3qpkcf61/repo/docs/dev2/README.md' not found in 'python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/observer_check.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmp3qpkcf61/detached-state merged --readme /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmp3qpkcf61/repo/docs/dev2/README.md'
+
+----------------------------------------------------------------------
+Ran 156 tests in 117.169s
+
+FAILED (failures=1)
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmpj1zytob3/dev2/scratch-75eb603ee4d34726a851339fa266c2d3-5d8f4594067bdd13/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)

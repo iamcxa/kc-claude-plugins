@@ -1,0 +1,18 @@
+test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel) ... FAIL
+
+======================================================================
+FAIL: test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel)
+----------------------------------------------------------------------
+ValueError: scratch ownership missing or differs: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/scratch-test-9a4nxgdl/sentinel
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 167, in test_symlink_root_and_parent_leave_sentinel
+    with self.assertRaisesRegex(ValueError, 'symlinked'):
+AssertionError: "symlinked" does not match "scratch ownership missing or differs: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/scratch-test-9a4nxgdl/sentinel"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.264s
+
+FAILED (failures=1)

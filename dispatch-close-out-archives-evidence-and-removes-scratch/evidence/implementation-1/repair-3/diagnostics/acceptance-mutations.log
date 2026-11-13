@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/implementation-1/repair-2/mutate.py", line 24, in <module>
+    probe("truncated-gzip|ScratchTests.test_threshold_restore_and_idempotence",scratch,src,test_scratch,"scratch","gzip.compress(data, mtime=0)","gzip.compress(data, mtime=0)[:-8]")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/implementation-1/repair-2/mutate.py", line 7, in probe
+    if original not in source: raise RuntimeError("missing mutation target: "+name)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: missing mutation target: truncated-gzip|ScratchTests.test_threshold_restore_and_idempotence

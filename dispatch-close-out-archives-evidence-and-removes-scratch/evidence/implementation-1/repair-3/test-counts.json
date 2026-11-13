@@ -1,0 +1,13 @@
+{
+ "entrypoints": 28,
+ "unittest_cases_run": 1448,
+ "passed_unittest_cases": 1438,
+ "skipped_unittest_cases": 10,
+ "native_programs_passed": [
+  "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+  "kc-dev-flow-2/scripts/test_observer_recovery.py"
+ ],
+ "failed": 0,
+ "candidate": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+ "coverage_binding": "coverage-binding.json"
+}

@@ -1,0 +1,7 @@
+[
+  {
+    "name": "test_scratch.ScratchTests.test_later_gzip_write_failure_keeps_original_digests_for_retry",
+    "status": "failed",
+    "message": "Traceback (most recent call last):\n  File \"/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py\", line 138, in test_later_gzip_write_failure_keeps_original_digests_for_retry\n    self.assertIn(hashlib.sha256(data).hexdigest() + '  ' + name + '\\n', sums)\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'c592f4a6b099700b5050ce8bc67367f0c8f44810203124e86405c3e7b6f1a2ba  a.txt\\n' not found in 'b683e5e3c2e5f7f081019158786970dada15b233b47ae3faf353adf73bfdddaf  a.txt.gz\\n1ed43fb29fbaa2eac07de3e4a2b965450f148efc6eba66935080e6e2ff169937  z.txt\\n'\n"
+  }
+]

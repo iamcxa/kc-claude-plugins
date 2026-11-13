@@ -1,0 +1,11 @@
+{
+ "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+ "binary_sha256": "86974bf3eb974087bf47ab2fee5a5a026405651744ccf1a34a8525891be8050a",
+ "plugin_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+ "python": "3.11.14 (main, Oct 13 2025, 15:28:41) [Clang 17.0.0 (clang-1700.0.13.5)]",
+ "platform": "macOS-27.0.1-arm64-arm-64bit",
+ "assigned_policy_package": "kc-dev-flow-2 0.39.1",
+ "merged_source_package": "0.40.0",
+ "clock_source": "clock.curr_time (UTC), converted to Asia/Taipei",
+ "round_start_taipei": "2026-11-13 10:41:47"
+}

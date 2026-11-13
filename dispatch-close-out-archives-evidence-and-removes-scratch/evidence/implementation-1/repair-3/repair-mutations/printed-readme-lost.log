@@ -1,0 +1,14 @@
+test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record) ... FAIL
+
+======================================================================
+FAIL: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_pr_watch.py", line 1061, in test_merged_scratch_prompt_precedes_merge_record
+    self.assertIn(f'--readme {readme.resolve()}', observer)
+AssertionError: '--readme /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmpjbio1_oh/repo/docs/dev2/README.md' not found in 'python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/observer_check.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmpjbio1_oh/detached-state merged '
+
+----------------------------------------------------------------------
+Ran 1 test in 1.126s
+
+FAILED (failures=1)

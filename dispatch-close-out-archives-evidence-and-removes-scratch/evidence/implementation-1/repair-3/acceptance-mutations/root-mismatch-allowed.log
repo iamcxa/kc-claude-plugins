@@ -1,0 +1,14 @@
+test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse) ... FAIL
+
+======================================================================
+FAIL: test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_scratch.py", line 181, in test_mismatched_root_and_traversal_refuse
+    with self.assertRaisesRegex(ValueError, 'differs'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.329s
+
+FAILED (failures=1)

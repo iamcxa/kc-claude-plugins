@@ -1,0 +1,20 @@
+test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries) ... FAIL
+
+======================================================================
+FAIL: test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 415, in test_next_role_accepts_its_own_scratch_path_and_retries
+    result = self.role()
+             ^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+AssertionError: 1 != 0 : (['/Users/kent/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/candidate-repair-mutations/old-selection.py'), '--workflow-dir', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/dispatch-stage-h0kxpqgj/code/docs/dev2'), '--entity-path', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/dispatch-stage-h0kxpqgj/code/docs/dev2/.spacedock-state/dispatch-fixture-218b515bf03d4b13bf98b30700ff89d2.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/dispatch-stage-h0kxpqgj/checklist.txt'), '--scope-notes-file', PosixPath('/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/dispatch-stage-h0kxpqgj/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-03095e063633afff/dispatch-fixture-218b515bf03d4b13bf98b30700ff89d2/engineering-reviewer-1: /private/tmp/dev2/dispatch-code-03095e063633afff/dispatch-fixture-218b515bf03d4b13bf98b30700ff89d2/engineering-reviewer-2/checkout. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.562s
+
+FAILED (failures=1)

@@ -1,0 +1,18 @@
+[
+ {
+  "severity": "medium",
+  "title": "Later dispatch scope is validated against its selected root",
+  "file": "kc-dev-flow-2/scripts/dispatch_stage.py",
+  "line": 131,
+  "detail": "Material, kind build. Verified on d4fe39e54 with the real native builder. Repaired stage and special-role selection; later-root and retry tests pass, and restoring the old selector fails both.",
+  "status": "fixed"
+ },
+ {
+  "severity": "medium",
+  "title": "Refusal and retry preserve original evidence digests",
+  "file": "kc-dev-flow-2/scripts/scratch.py",
+  "line": 124,
+  "detail": "Material, kind build, against ADR 0079. Verified collision loss on d4fe39e54. Read-only validation covers destinations, saved gzip and digests; the original digest list is saved before compression. Later write-error retry is also covered.",
+  "status": "fixed"
+ }
+]

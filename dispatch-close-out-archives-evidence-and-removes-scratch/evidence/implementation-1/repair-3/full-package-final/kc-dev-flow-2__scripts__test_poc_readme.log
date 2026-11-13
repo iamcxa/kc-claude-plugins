@@ -1,0 +1,17 @@
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 2.486s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/dev2/kc-claude-plugins-3042bb224e995ded/dispatch-close-out-archives-evidence-and-removes-scratch/implementation-1/repair-3/tmp/tmpx_zy_aqe/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false

@@ -1,0 +1,15 @@
+test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record) ... ERROR
+
+======================================================================
+ERROR: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch/kc-dev-flow-2/scripts/test_pr_watch.py", line 1058, in test_merged_scratch_prompt_precedes_merge_record
+    close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+----------------------------------------------------------------------
+Ran 1 test in 0.986s
+
+FAILED (errors=1)
