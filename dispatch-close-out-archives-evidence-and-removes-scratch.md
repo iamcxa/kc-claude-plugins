@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:dispatch-close-out-archives-evidence-and-removes-scratch:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:dispatch-close-out-archives-evidence-and-removes-scratch-validation-1
+              briefing:
+                id: briefing:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1
+                digest: sha256:23f1c18c0d9994fd477798c5ceb0d3ce23e28f3c6ca7fa2e938cfcdbe1e23f95
+                room-ref: ./dispatch-close-out-archives-evidence-and-removes-scratch/review/validation/briefing-1
 started: 2026-11-12T05:17:00Z
 worktree: .worktrees/spacedock-ensign-dispatch-close-out-archives-evidence-and-removes-scratch
 pr: iamcxa/kc-claude-plugins#854

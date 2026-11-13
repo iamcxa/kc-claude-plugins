@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1",
+  "question": "決定：合併 #854（每次派工結束時，把必要證據壓縮封存進任務資料夾、刪掉這次派工自己的暫存；派工文字會指定暫存只能放在它自己的資料夾）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；封存時沒有機械檢查證據是否公開，你已放行這一項並另開任務；它經過四輪修正和三次驗證才通過；「發版後拿一張真實任務跑一次收尾」這項停止條件還沒驗，要發版後才能做；Codex 審過，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit c429ab1815a5fc5507056ee54f8005be024e1e69, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4b3a9d13bb45db7052ef08273194474c144a9a63/dispatch-close-out-archives-evidence-and-removes-scratch.md",
+      "rev": "sha256:290cf0e52c5b6b8747f02d1e9daed1e4a4b661db0357941be4f5da8c74867536",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of dispatch-close-out-archives-evidence-and-removes-scratch, PR #854, route experiment of 2026-11-12, Cycle 2.\nSufficiency: a dispatch's cited evidence is kept compressed with its original digests and restores from the archive, its own scratch root is removed, and a later dispatch that names its own scratch root builds (validation-3 report, Astra, 2026-11-13, PASSED at c429ab181; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: the close-out helper, the dispatch builder, the watcher, ADR 0079 and their tests change against the PR's base (gh pr view 854 file list, FO read 2026-11-13; judged in the validation-3 report, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-3/acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 854 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: origin/main is abe8c08ea, which this PR's branch already contains, so no merge-result run is owed (git merge-base, FO run 2026-11-13).\nExternal rounds: 4.\nExternal round sources: Codex review 5873421269 on d4fe39e54 left two P2 findings, repaired in c429ab181; Codex code review of c429ab181 completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6821181686@c429ab181); RoboRev clean on d4fe39e54 (FO run 2026-11-12); RoboRev job 1815 on c429ab181 returned one High finding, waived for this PR by the Captain on 2026-11-13 and carried by backlog task evidence-is-declared-public-before-state-publication.\nSecond reviewer: Copilot because the PR adds a step FO runs at every dispatch close-out, a workflow rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5885846046\nCopilot retry: available when the Captain confirms quota is back.\nCI: six checks on c429ab181 finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 3. Round 1 REJECTED at 223dbb6d1, round 2 PASSED at d4fe39e54, round 3 PASSED at c429ab181 with one Deferred risk finding the Captain's waiver covers.\nCaptain amendments: 3.\nNot proven: the Stop condition's real-task run after release."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/4b3a9d13bb45db7052ef08273194474c144a9a63/dispatch-close-out-archives-evidence-and-removes-scratch/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:7b9e4567e3856788e3d0c30c6c862bdf198eaef94d7dc4fa93b879f0e035ad1f"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/4b3a9d13bb45db7052ef08273194474c144a9a63/dispatch-close-out-archives-evidence-and-removes-scratch/review/copilot-not-run.txt",
+      "mediaType": "text/plain",
+      "rev": "sha256:ca1f3c8997115674b7f0a595f691890beeabf23f3e6cc40c66267b0fb08bc62f"
+    }
+  ]
+}
