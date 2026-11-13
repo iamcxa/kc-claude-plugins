@@ -185,8 +185,8 @@ authority requires a hold report rather than a baseline or default-profile
 substitution.
 Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design
 says why not; it is never pushed or deployed and uses no credential or shared
-environment. For every criterion, including provenance, run its proof once; record command, exit
-and output path beside it; if unrunnable: `Not provable now`. A probe round is one
+environment. Every criterion's evidence command runs once on it, recording command, exit and output path
+per criterion, provenance included; unrunnable: `Not provable now`. A probe round is one
 ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
 repository file, branch or commit. The design, the criteria and any ADR draft live in
 the task file, and a draft carries no ADR number.
