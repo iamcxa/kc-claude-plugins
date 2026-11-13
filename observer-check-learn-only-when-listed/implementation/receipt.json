@@ -94,6 +94,12 @@
     {
       "output": "diff-check-probe-base.log",
       "exit": 0
+    },
+    {
+      "output": "unreadable.json",
+      "exit": 0,
+      "checker_exit": 2,
+      "expected_checker_exit": 2
     }
   ],
   "baseline_goal_exit": 1,

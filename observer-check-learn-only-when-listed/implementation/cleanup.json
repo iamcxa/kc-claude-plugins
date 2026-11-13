@@ -1,0 +1,18 @@
+{
+  "after_evidence_commit": "c05ca66c7",
+  "removed": [
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-proof-scratch",
+      "absent": true
+    }
+  ],
+  "tmp_scratch_created": 0,
+  "retained": [
+    {
+      "path": "/tmp/impl-observer-check-learn-only-when-listed-pr.md",
+      "reason": "required First Officer PR title/body handoff",
+      "sha256": "fe5f095d9827a44ff2d1d9684dfceabf3dc5ba6fed5af73585b5541aa0cc3173"
+    }
+  ],
+  "product_worktree_and_branch_retained": true
+}

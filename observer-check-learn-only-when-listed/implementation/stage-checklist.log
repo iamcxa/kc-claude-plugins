@@ -1,0 +1,16 @@
+stage=implementation
+status=DONE start=236 end=237 text=Build the approved design in the six named scripts/tests from current origin/main and reconcile the watcher files with PR 858.
+status=SKIPPED start=238 end=239 text=One Draft PR from the implementation branch.
+status=DONE start=240 end=241 text=AC-1 unlisted archived workflows print no learn steps and preserve the observer verdict/remedy.
+status=DONE start=242 end=243 text=AC-2 enabled archived stdout/exit matches the base; live and committed historical report semantics remain covered.
+status=DONE start=244 end=245 text=AC-3 explicit/discovered README, detached-state command execution and unreadable-selection hold.
+status=DONE start=246 end=247 text=AC-4 read-only real corpus comparison and historical unlisted configuration.
+status=DONE start=248 end=249 text=AC-5 callers, isolated parser dependency and native archive recovery.
+status=DONE start=250 end=251 text=AC-6 bounded source/dependency/CI scope, lint and per-moment reading comparison.
+status=DONE start=252 end=253 text=Every acceptance criterion green with its evidence rerun, and every named falsifier failing under a mutation (python3 -B, caches cleared).
+status=DONE start=254 end=255 text=Repository lint-skills.py, package adr_lint.py, number_guards.py check and comment_ratio.py pass.
+status=DONE start=256 end=257 text=Commit locally, no product push, and prepare Conventional Commit PR text for FO; state CI cost measured or not measured.
+status=DONE start=258 end=259 text=Record the affected-document disposition and existing-chain findings.
+status=SKIPPED start=260 end=261 text=RoboRev, hosted CI and independent validation.
+status=DONE start=262 end=263 text=Commit the evidence, remove owned scratch by exact path, retain the required PR text and preserve the probe/product branches.
+status=DONE start=264 end=265 text=Record the host-loaded workflow source hash and preserve stage authority.

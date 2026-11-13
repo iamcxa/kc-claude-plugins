@@ -229,3 +229,45 @@ The probe reproduces and repairs unconditional post-archive learn instructions u
 Premise tested: current checker adds learn steps even when the workflow does not select learn; the base failed the no-learn comparison, and the probe meets both branches of the Stop condition. Evidence interval: start 2026-11-13 01:05:05, end 2026-11-13 01:24:02 Asia/Taipei (UTC+08:00), source `clock.curr_time` UTC readings converted by +8 hours. Base `8125e6d516d32abbf79c6772de10cde2c20900a8`; probe `5be1ed9695497d50d64f03f0a1d51b0157c25fe8`. Goal check: `python3 "$E/probe.py" fixtures --code "$WT" --scratch /tmp/observer-learn-probe-8fcbee7d > "$E/fixtures.json"`, exit 0, 24/24; real checks/commands and saved count outputs are AC-4. Blocked: no current build blocker; exact original archive and optional source replay remain unproved. Fired: none of premise overturned; Captain-only scope/criterion/trade-off; component boundary without contract; production data/credentials, broad exposure, migration, recurring operation, support or release/rollback ownership; change outside this task's named repair/budget. Build round 1 of at most 3; this ideation probe has not consumed an implementation or validation dispatch. Scratch cleanup follows the evidence commit and is recorded as counts/paths in `ideation/cleanup.json`.
 
 Cleanup verified after evidence commit `b0a5e7295`: removed exact paths `/tmp/observer-learn-focused.log`, `/tmp/observer-learn-probe-8fcbee7d` (empty run root), `/tmp/observer-learn-puppeteer-8fcbee7d.json`; `ideation/cleanup.json` records each. Probe worktree and branch retained; no live probe subprocess remains.
+
+
+## Stage Report: implementation
+
+- DONE: Build the approved design in the six named scripts/tests from current origin/main and reconcile the watcher files with PR 858.
+  Branch `spacedock-ensign/observer-check-learn-only-when-listed`; base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`; candidate `17eccdda05fde54e6dff66f4989787864219ef43`; `implementation/scope.json` proves the six-file scope and retained absent-worktree fact behavior.
+- SKIPPED: One Draft PR from the implementation branch.
+  Explicit dispatch delegation: no product push or PR opened by this worker; FO owns both. PR title/body is `/tmp/impl-observer-check-learn-only-when-listed-pr.md`, with a saved copy and SHA256 in `implementation/`.
+- DONE: AC-1 unlisted archived workflows print no learn steps and preserve the observer verdict/remedy.
+  `implementation/fixtures.json`, exit 0 (12 unselected cases among 24); `mutation.json` detects unconditional learn; named negative matrix exits 1 with 12/24 passing.
+- DONE: AC-2 enabled archived stdout/exit matches the base; live and committed historical report semantics remain covered.
+  `implementation/fixtures.json`, exit 0 (12 enabled cases); `focused.log`, exit 0 (23 tests); deleting/reordering learn lines, reading disk and printing learn live each fail the intended oracle in `mutations.json`.
+- DONE: AC-3 explicit/discovered README, detached-state command execution and unreadable-selection hold.
+  `implementation/pr-watch.log`, exit 0 (136 tests), and `focused.log`; omitted printed README reaches the actual archive boundary and returns 2, making its mutation test exit 1 (`AC3-omit-printed-readme.log`).
+- DONE: AC-4 read-only real corpus comparison and historical unlisted configuration.
+  `implementation/real-counts.json`: 237 identical output/verdict pairs; `historical-counts.json`: 82 intended changes, zero unexpected; both exit 0. Unexpected output mutation causes 12 differences and exits 1. Public artifacts contain counts only for private adopters.
+- DONE: AC-5 callers, isolated parser dependency and native archive recovery.
+  `implementation/laws.log`: 84 total, 83 passed and 1 optional source replay skipped; `pr-watch.log`: 136 passed; `recovery.log`: native archive/remedy/publish/validate passed; exits 0. Parser-omission fixture fails the expected L1 assertion, exit 1.
+- DONE: AC-6 bounded source/dependency/CI scope, lint and per-moment reading comparison.
+  `implementation/scope.json`, `lint.log`, `words.json` and both `diff-check*.log` pass; no version, runtime dependency or CI trigger changes. Unlisted archive output -22 words, merged command +2 words; other changed-path moments 0. Copied governing-document edit fails the identity check.
+- DONE: Every acceptance criterion green with its evidence rerun, and every named falsifier failing under a mutation (python3 -B, caches cleared).
+  Exact commands and limits are `implementation/README.md`; 9/9 mutations detected in `mutations.json`, all negative children exit 1 for the intended reason. Initial harness PYTHONPATH escape (8/9) is retained and corrected; candidate bytes stayed unchanged.
+- DONE: Repository lint-skills.py, package adr_lint.py, number_guards.py check and comment_ratio.py pass.
+  `implementation/lint.log`, `adr-lint.log`, `number-guards-fresh.log`, `comment-ratio.log`: exits 0; 74 ADRs checked; no findings; no migrations-path means migration guard skipped, with no migration/ADR changes here; added comments 0.0%, maximum 5%.
+- DONE: Commit locally, no product push, and prepare Conventional Commit PR text for FO; state CI cost measured or not measured.
+  Local candidate above; `implementation/pr-text.md` matches the retained required /tmp file. CI unchanged; cost per PR not measured. State evidence commits are the separately authorized synchronization route.
+- DONE: Record the affected-document disposition and existing-chain findings.
+  `implementation/doc-impact.log`, exit 0: `learning.md` unaffected because its laws/shared-parser practice remains true. Approved chain audit reused under Accepted ADR 0083; current origin/main, PR 858 behavior and governing ADR 0035 rechecked; no new ADR needed.
+- SKIPPED: RoboRev, hosted CI and independent validation.
+  Delegated to FO under the dispatch; not run and not reported clean. The full package suite was not run; reported test totals are the three named focused suites.
+- DONE: Commit the evidence, remove owned scratch by exact path, retain the required PR text and preserve the probe/product branches.
+  Evidence committed at `c05ca66c7`; removed only `.context/observer-learn-proof-scratch` in the assigned implementation worktree, verified absent in `implementation/cleanup.json`; no /tmp scratch created beyond the required retained PR file.
+- DONE: Record the host-loaded workflow source hash and preserve stage authority.
+  Codex-host `references/sd/workflow.md` sha256 remains `075005be5d2ba9e8ac2a30400faba8324754aef47077e5f7301462c3e19623eb`; selected operational package 0.39.1. No task frontmatter, Captain criterion, gate decision or stage transition was edited.
+
+### Summary
+
+The approved repair is locally committed on the required current base, with PR 858's watcher behavior preserved, 242 focused tests passed and one optional replay skipped, 24 fixtures passed, and nine falsifiers detected. FO receives prepared PR text and committed count-only evidence for publication, RoboRev, hosted CI and independent validation; the unavailable exact historical incident and the original design's limits remain explicit.
+
+### Trial round 2
+
+Premise and goal: the unchanged current integration base still emits learning steps without selection (goal matrix exit 1, 12/24 pass in `implementation/baseline-goal.json`), while candidate `17eccdda05fde54e6dff66f4989787864219ef43` meets both Stop-condition branches (24/24, exit 0). Start 2026-11-13 08:43:28, evidence end 2026-11-13 08:55:27 Asia/Taipei (UTC+08:00), source `clock.curr_time` UTC readings converted by +8 hours. Base `c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`; check `python3 -B "$E/probe.py" fixtures --code "$WT" --scratch "$WT/.context/observer-learn-proof-scratch" > "$E/fixtures.json"`, saved as `implementation/fixtures.json`, exit 0. Since round 1, PRs 858/860/859 landed; the assigned clean branch was fast-forwarded to current origin/main, the six-file patch reapplied, and 858's two watcher-file changes retained; the proof baseline was updated accordingly. Initial sandbox fetch limits and one mutation-harness import escape were resolved, with primary evidence retained. Blocked: no build blocker; publication/review/validation are delegated, and the accepted exact-old-incident/source-replay limits remain. Fired: none — no overturned premise, Captain-only scope/criterion/trade-off, new component boundary without contract, Production trigger, or change outside the named files/Budget. This is build round 2 of at most 3 and the first implementation dispatch; task state remains implementation for FO handoff.
