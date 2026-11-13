@@ -183,8 +183,13 @@ worker authors the PRFAQ and the artifact each recorded surface owes. When
 as a `Result:` line before dispatching the worker. Missing skill or profile
 authority requires a hold report rather than a baseline or default-profile
 substitution.
-Ideation writes no repository file, branch or commit: the design, the criteria and any
-ADR draft live in the task file, and a draft carries no ADR number.
+Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design
+says why not; it is never pushed or deployed and uses no credential or shared
+environment. Every criterion's evidence command runs once on it, recording command, exit and output path
+per criterion, provenance included; unrunnable: `Not provable now`. A probe round is one
+ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
+repository file, branch or commit. The design, the criteria and any ADR draft live in
+the task file, and a draft carries no ADR number.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.

@@ -5,3 +5,4 @@ Test owned behavior and exposed failure/retry paths, retaining enough diagnostic
 for limited use and the next iteration. Document consumer-visible changes where
 the delivery boundary requires them. Surface added production obligations
 before expanding implementation.
+Read a branch the design records under `Probe:`; delete it once your candidate is committed.

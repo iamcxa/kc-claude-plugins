@@ -79,11 +79,14 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=25, why="record outside-gate questions when asked and read stage times and counts on demand",
          captain='「五份都核准（建議）」 (Captain, ideation gate, 2026-11-12), answering the bound question: 「一、計時紀錄：「重做」算同一階段第二次以後的派工；「打斷」算我在關卡以外問你的每一題，由我在問的當下記一筆；工具只報告缺漏、不擋任務；流程說明多 25 個字。」',
          loaded="startup and resume of the First Officer, and before each outside-gate Captain question"),
+    # see docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md
+    dict(delta=66, why="Pilot ideation carries probe permission, local bounds, criterion proof runs and a third-dispatch hold instead of the blanket write ban",
+         captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
+         loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {
-    ("skills/ideation/principles.md", "ideation writes no repository file branch or commit"),
     # FO reads the workflow copy before presenting the gate; the validation worker reads its own.
     ("skills/validation/principles.md", "validation runs python3 <package>/scripts/adr_lint.py"),
     # The workflow copy stays for FO (Delivery authority); workers no longer receive that section.
