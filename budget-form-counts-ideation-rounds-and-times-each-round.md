@@ -3,7 +3,7 @@ title: The task budget counts ideation rounds, and the timeline helper reports e
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'The Captain chose 「兩張都進設計（建議）」 (host question dialog, 2026-11-13), answering 「決定：要不要讓「把 Pilot 試作補完整」的兩張小任務進設計階段？建議要。第一張：設計關卡前的檢查程式逐條檢查 Pilot 的驗收條件，缺「指令、結束代碼、輸出位置」又沒寫明為什麼跑不了的就擋下。第二張：預算寫法可以把設計階段的試作輪數一起算進去，由程式擋下超過的派工，時間工具列出每一輪的起訖和結果。兩張預算都是 1 implementation and 2 validation cycles，各一個套件 PR。同意即接受：兩張的設計階段都先做試作，這次試作的許可我照已合併但未發版的新規則手寫進派工；設計回來各自在設計關卡給你裁定，我不代記；兩張可能都要動流程文件的字數上限，所以實作會排先後、不並行合併；第二張會擴充一份已核准的決策紀錄（預算寫法那份），設計若發現必須取代它而不是擴充，就回來找你。」; accepts outcome, scope and Budget as seeded. Recommendation: followed.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
