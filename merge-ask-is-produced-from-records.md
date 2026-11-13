@@ -43,6 +43,20 @@ gates:
                 id: briefing:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1
                 digest: sha256:985f4847756de221746fee5e02914e5b0d92ede7fdf16089977ac36f8c302a28
                 room-ref: ./merge-ask-is-produced-from-records/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-is-produced-from-records:ideation:1
+                briefing: briefing:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-13T14:58:43.868928Z"
+                decision: approve
+                reason: 'Ideation round 2 fired no stop (worker''s Round 2 line: none newly; the stored-observation question of round 1 was settled by Captain amendment 1). design_surfaces.py check exit 0 (FO run 2026-11-13). The design removes the hand-written summary: the delivery check saves what it observes as a record in the task folder and FO writes the question and what the tool cannot observe; four files, workflow text 6099 to 6071 words; two recorded deliveries replayed through check, question and native gate preparation with no hand-written summary, and one live read-only observation saved with the delivery held (worker''s runs, not rerun by FO). Surfaces none, one component, no option left for the Captain. Recommendation: followed.'
+                conn:
+                    quote: 五張都准，授權代記設計關卡（建議）
+                    source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-13T13:42:46Z
 ---
 
