@@ -1,0 +1,27 @@
+{
+  "class": "never",
+  "head": "a4f2fc41413866f0148e1f176f447e81216ca6cf",
+  "merge_result": null,
+  "model": "not run",
+  "necessity": "the budget reader, the dispatch builder, the timeline helper, the workflow text, the lint budget, ADR 0085 and their tests change against the PR's base (gh pr view 868 file list, FO read 2026-11-14; j",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'evidence/validation-2/README.md#captain-steps contains the one exact fresh-Bash'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: acceptance-not-run: '- DONE: Judge decisions D1 to'",
+    "point: amendment: 'Amendment 1 dated 2026-11-14'",
+    "point: path: 'docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-ro'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/task_timeline.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_stage.py'",
+    "point: more: 3 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#868",
+  "sufficiency": "a budget naming ideation rounds is read as three bounds, a Pilot budget naming none allows two, the dispatch that would exceed it is held, and the timeline helper prints one line per round; the derive",
+  "time": "2026-11-13T16:53:46Z",
+  "verdict": "ask"
+}
