@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-13T09:54:53Z
+worktree: .worktrees/spacedock-ensign-design-check-reads-each-pilot-criterion-for-its-proof-record
 ---
 
 ## Scope
