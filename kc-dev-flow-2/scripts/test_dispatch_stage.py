@@ -390,6 +390,36 @@ class DispatchStageTests(unittest.TestCase):
         self.assertIn(str(ROOT / 'scripts/scratch.py') + ' close ', artifact)
         self.assertEqual(self.notes.read_bytes(), original)
 
+    def test_next_validation_accepts_its_own_scratch_path_and_retries(self):
+        self.set_stage('validation')
+        candidate = ('--candidate', 'a' * 40, '--symptom', 'none')
+        self.build('validation', candidate)
+        first = self.record('validation').read_bytes()
+        second_root = scratch.root_for(self.repo, self.folder, 'validation-2')
+        self.notes.write_text(self.notes.read_text() + f'Use {second_root}/checkout\n')
+        result = self.build('validation', candidate)
+        second = self.record('validation', 2)
+        self.assert_committed(second, f'dispatch: {self.slug} entering validation')
+        artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
+        self.assertIn(f'Use {second_root}/checkout', artifact)
+        self.assertIn(f'Scratch: {str(second_root).replace("/private/tmp/", "/tmp/", 1)}', artifact)
+        self.assertEqual(self.record('validation').read_bytes(), first)
+        self.build('validation', candidate)
+        self.assertFalse(self.record('validation', 3).exists())
+
+    def test_next_role_accepts_its_own_scratch_path_and_retries(self):
+        self.role()
+        first = self.record('engineering-reviewer').read_bytes()
+        second_root = scratch.root_for(self.repo, self.folder, 'engineering-reviewer-2')
+        self.notes.write_text(self.notes.read_text() + f'Use {second_root}/checkout\n')
+        result = self.role()
+        second = self.record('engineering-reviewer', 2)
+        self.assert_committed(second, f'state: update {self.slug}')
+        self.assertIn(f'Use {second_root}/checkout', result.stdout)
+        self.assertEqual(self.record('engineering-reviewer').read_bytes(), first)
+        self.role()
+        self.assertFalse(self.record('engineering-reviewer', 3).exists())
+
     def test_scope_notes_outside_scratch_refuse_before_record_and_build(self):
         for path in ('/tmp/x', '/private/tmp/x',
                      f'/tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/../escape'):

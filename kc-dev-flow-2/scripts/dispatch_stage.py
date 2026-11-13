@@ -127,11 +127,14 @@ def select_record(args, folder, dispatched, checklist, notes):
     if newest:
         path = directory / f"{args.stage}-{newest}.md"
         rel = path.relative_to(state).as_posix()
-        expected = record_text(args, newest, dispatched, checklist, notes)
         added = git(state, "log", "-1", "--diff-filter=A", "--format=%H", "--", rel)
-        if (added == git(state, "rev-parse", "HEAD") and path.is_file()
-                and path.read_bytes() == expected.encode("utf-8")):
-            return path, False
+        if added == git(state, "rev-parse", "HEAD") and path.is_file():
+            try:
+                expected = record_text(args, newest, dispatched, checklist, notes)
+            except ValueError:
+                expected = None
+            if expected is not None and path.read_bytes() == expected.encode("utf-8"):
+                return path, False
     path = directory / f"{args.stage}-{newest + 1}.md"
     if git(state, "ls-files", "--", path.relative_to(state).as_posix()):
         raise FileExistsError(f"record already exists in index: {path}")

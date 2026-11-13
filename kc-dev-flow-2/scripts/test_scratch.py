@@ -78,6 +78,46 @@ class ScratchTests(unittest.TestCase):
         with self.assertRaises((EOFError, OSError)):
             gzip.decompress(restored[:-8])
 
+    def test_compression_collision_refuses_before_changes_and_retry_keeps_digests(self):
+        originals = {'a.txt': b'a' * (256 * 1024 + 1), 'z.txt': b'z' * (256 * 1024 + 1)}
+        for name, data in originals.items():
+            (self.evidence / name).write_bytes(data)
+        collision = self.evidence / 'z.txt.gz'
+        collision.write_bytes(b'occupied destination')
+        before = {p.name: p.read_bytes() for p in self.evidence.iterdir()}
+        with self.assertRaisesRegex(ValueError, 'would overwrite'):
+            self.close()
+        self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
+        self.assertTrue(self.root.exists())
+        collision.unlink()
+        self.close()
+        sums = (self.evidence / 'SHA256SUMS').read_text()
+        for name, data in originals.items():
+            self.assertEqual(gzip.decompress((self.evidence / (name + '.gz')).read_bytes()), data)
+            self.assertIn(hashlib.sha256(data).hexdigest() + '  ' + name + '\n', sums)
+        self.assertNotIn('  a.txt.gz\n', sums)
+        self.assertFalse(self.root.exists())
+
+    def test_existing_gzip_is_validated_before_compressing_other_files(self):
+        original = b'a' * (256 * 1024 + 1)
+        kept = b'previous public evidence'
+        (self.evidence / 'a.txt').write_bytes(original)
+        manifest = self.evidence / 'SHA256SUMS'
+        manifest.write_text(hashlib.sha256(kept).hexdigest() + '  z.txt\n')
+        saved = self.evidence / 'z.txt.gz'
+        for bad in (b'not gzip', gzip.compress(b'wrong original', mtime=0)):
+            with self.subTest(bad=bad[:8]):
+                saved.write_bytes(bad)
+                before = {p.name: p.read_bytes() for p in self.evidence.iterdir()}
+                with self.assertRaises((OSError, ValueError)):
+                    self.close()
+                self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
+                self.assertTrue(self.root.exists())
+        saved.write_bytes(gzip.compress(kept, mtime=0))
+        self.close()
+        self.assertEqual(gzip.decompress((self.evidence / 'a.txt.gz').read_bytes()), original)
+        self.assertIn(hashlib.sha256(original).hexdigest() + '  a.txt\n', manifest.read_text())
+
     def test_dirty_registered_worktree_removed_and_external_worktree_survives(self):
         worktree, external = self.root / 'checkout with spaces', self.repo / 'external'
         self.git('worktree', 'add', '--detach', worktree)
@@ -105,7 +145,7 @@ class ScratchTests(unittest.TestCase):
                   self.git('worktree', 'list', '--porcelain').splitlines() if line.startswith('worktree ')]
         self.assertFalse(self.root.exists())
         self.assertEqual(sum(path.is_relative_to(self.root) for path in listed), 0)
-        self.assertEqual(sum(path.is_relative_to(scratch.BASE) for path in listed), 1)
+        self.assertEqual(sum(path.is_relative_to(peer_root) for path in listed), 1)
         self.assertIn(peer, listed)
         self.assertEqual((peer / 'uncommitted').read_text(), 'keep peer work')
         self.git('worktree', 'remove', '--force', peer)

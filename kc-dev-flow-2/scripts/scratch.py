@@ -121,7 +121,7 @@ def evidence(folder, record):
     manifest = target / 'SHA256SUMS'
     safe_path(manifest)
     previous = dict(line.split('  ', 1)[::-1] for line in manifest.read_text().splitlines()) if manifest.exists() else {}
-    sums = []
+    sums, compress = [], []
     for path in (p for p in paths if p.is_file()):
         name = path.relative_to(target).as_posix()
         compressed = name.endswith('.gz') and name[:-3] in previous and not path.with_suffix('').exists()
@@ -135,8 +135,12 @@ def evidence(folder, record):
             destination = path.with_name(path.name + '.gz')
             if destination.exists():
                 raise ValueError(f'evidence compression would overwrite {destination}')
-            destination.write_bytes(gzip.compress(data, mtime=0))
-            path.unlink()
+            compress.append(path)
+    for path in compress:
+        destination = path.with_name(path.name + '.gz')
+        with destination.open('xb') as output:
+            output.write(gzip.compress(path.read_bytes(), mtime=0))
+        path.unlink()
     target.mkdir(parents=True, exist_ok=True)
     manifest.write_text(''.join(sums))
     size = sum(p.stat().st_size for p in target.rglob('*') if p.is_file())
