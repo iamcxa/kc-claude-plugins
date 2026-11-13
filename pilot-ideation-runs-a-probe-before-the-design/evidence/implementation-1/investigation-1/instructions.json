@@ -1,0 +1,218 @@
+[
+  {
+    "order": 1,
+    "file": "live/checklist.txt",
+    "line": 3,
+    "words": 24,
+    "text": "Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 2,
+    "file": "stage-def.regenerated.txt",
+    "line": 15,
+    "words": 22,
+    "text": "Each criterion's evidence command runs once on it, recording command, exit and output path; what cannot run goes under `Not provable now`.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 3,
+    "file": "stage-def.regenerated.txt",
+    "line": 21,
+    "words": 16,
+    "text": "Current design definition and acceptance criteria with reproducible evidence clauses; unresolved decisions identified for the user.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 4,
+    "file": "stage-def.regenerated.txt",
+    "line": 29,
+    "words": 18,
+    "text": "Required diagram defects or missing current-stage evidence block recommendation and gate preparation/presentation; honest unverified future checks do not.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 5,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/SKILL.md",
+    "line": 15,
+    "words": 17,
+    "text": "Required inputs: the exact work item, recorded variant/profile, current stage, approved scope and the stage's available artifact/evidence.",
+    "kind": "Input boundary",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 6,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/SKILL.md",
+    "line": 29,
+    "words": 24,
+    "text": "Select the recorded row and read its shared profile principles first, then [stage principles](principles.md), then that row's stage reference and relevant adopted project learning.",
+    "kind": "Declared loading order",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 7,
+    "file": "live/package/kc-dev-flow-2/references/profiles/pilot.md",
+    "line": 10,
+    "words": 11,
+    "text": "Test owned behavior and real seams rather than stable vendor internals.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 8,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 15,
+    "words": 17,
+    "text": "Use or repair what exists before adding a replacement; record the conclusion and observation in this design.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 9,
+    "file": "live/package/kc-dev-flow-2/skills/implementation/principles.md",
+    "line": 55,
+    "words": 29,
+    "text": "Before designing or coding a task, check what already exists in its own repository, the upstream packages/frameworks it depends on, relevant sibling projects and third-party tools it will use.",
+    "kind": "Linked Before new work; provenance context",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 10,
+    "file": "live/package/kc-dev-flow-2/skills/implementation/principles.md",
+    "line": 59,
+    "words": 27,
+    "text": "In the existing design or report, state what you checked, what you found, any inaccessible sources, and whether the proposed work uses, extends, changes or replaces it.",
+    "kind": "Linked Before new work; provenance context",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 11,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 17,
+    "words": 32,
+    "text": "In `### Worth questions`, answer per scope part: which Captain words it serves; what breaks without it; which single premise would make the task unneeded and what cheap test checks it now.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 12,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 18,
+    "words": 13,
+    "text": "Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence plan.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 13,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 31,
+    "words": 15,
+    "text": "Before reporting, run `python3 <package>/scripts/design_surfaces.py check <task>` and cite its output in the Stage Report.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 14,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 33,
+    "words": 64,
+    "text": "The gate is not presentable without the artifact each recorded surface owes, or without a usable `## Acceptance criteria` section: the first line that equals that heading in any case once surrounding whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar `spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 15,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 41,
+    "words": 20,
+    "text": "Correct contradictions in depicted or required boundaries and missing current-stage evidence before reporting completion; if blocked, report the concrete gap.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 16,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 43,
+    "words": 6,
+    "text": "Future implementation checks may remain unverified.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 17,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 44,
+    "words": 21,
+    "text": "In the existing Stage Report checklist, name each acceptance criterion separately with its actual current evidence or an honest not-yet-verified statement.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 18,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/principles.md",
+    "line": 45,
+    "words": 18,
+    "text": "A range such as AC-1..AC-3 is not per-criterion mapping; a future proof plan is not a passed result.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 19,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+    "line": 3,
+    "words": 18,
+    "text": "Define the smallest useful end-to-end slice, who will use it, its real seams, acceptance evidence and explicit non-goals.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 20,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+    "line": 9,
+    "words": 29,
+    "text": "Build the probe as the first paragraph of [POC implementation](../../implementation/profiles/poc.md) builds a proof: falsify the riskiest assumption first; when it holds, widen toward the slice and check the next.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 21,
+    "file": "live/package/kc-dev-flow-2/skills/implementation/profiles/poc.md",
+    "line": 3,
+    "words": 15,
+    "text": "Build the smallest real path that can falsify the recorded assumption within the accepted budget.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 22,
+    "file": "live/package/kc-dev-flow-2/skills/implementation/profiles/poc.md",
+    "line": 4,
+    "words": 17,
+    "text": "Record observed outcome, elapsed limit, primary evidence, cleanup and what the proof leaves unanswered; avoid production scaffolding.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 23,
+    "file": "live/package/kc-dev-flow-2/skills/implementation/profiles/poc.md",
+    "line": 6,
+    "words": 11,
+    "text": "Record `boundary-crossed:` as the shared profile defines it when it applies.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  },
+  {
+    "order": 24,
+    "file": "live/package/kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+    "line": 11,
+    "words": 27,
+    "text": "Under `Probe:` in the design, record the branch, base and last commit and each hypothesis with its result; remove the worktree before reporting and keep the branch.",
+    "kind": "proof/report instruction",
+    "order_basis": "Declared read order; cold dispatch and scope not recovered."
+  }
+]

@@ -1,0 +1,52 @@
+# Ideation principles
+
+FO owns goal and direction alignment. Before design, check `## FO alignment` in
+the task file; when the heading is absent, when it records alignment as needed
+with no `Result:` line, or when the route includes ideation and records no
+`Surfaces:` or no `Visible change:` line, stop and report instead of starting
+the design. Ask for research when missing facts can change the decision; the
+worker authors the requested artifact, not user approval.
+Treat each `Follow-up:` line in Scope as a proposal, not accepted scope. Adopt it
+into the design only if no accepted criterion, Captain ruling or journey contract
+depends on the behaviour it changes; otherwise return it to FO as a Needs decision,
+and say in the design which, and why.
+Prefer the smallest working mechanism for the accepted goal. Before designing,
+apply [Before new work](../implementation/principles.md#before-new-work), then the
+bounded capability check there when applicable. Use or repair what exists before
+adding a replacement; record the conclusion and observation in this design.
+In `### Worth questions`, answer per scope part: which Captain words it serves; what breaks without it; which single premise would make the task unneeded and what cheap test checks it now. Name parts serving no Captain words for him to keep or cut.
+Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
+plan. Mermaid must match the prose's actors, order, alternatives and stops.
+When another task is live in the workflow, end the design with `### Batch overlap`: for each such task, the files, checks, tables and numbered records both would change, counting a shared index such as an ADR list, then a `Recommended order:` line; write `none` when none.
+Each recorded `Surfaces:` value owes its own artifact, fidelity before prettiness:
+- `ui` (a person sees or operates it; read from the surface, not the diff) —
+  a `UI proposal:` line with the short text proposal first, then a `Preview:`
+  line naming the preview, run and operable for an interactive surface rather
+  than a static screenshot; use a mechanism the repository already has, mark
+  it disposable, and add no online resource without Captain approval. Before reporting, run the design review in
+  [design-review.md](design-review.md) and give each finding a disposition.
+- `db` (schema, migration or row-level security change) — the schema change
+  shown explicitly (a column table, or a Mermaid `erDiagram` when relations
+  change) and a `Migration source:` line naming the migration source of truth.
+`none` uses the PRFAQ/Mermaid alone. Before reporting, run
+`python3 <package>/scripts/design_surfaces.py check <task>` and cite its
+output in the Stage Report. The gate is not presentable without the
+artifact each recorded surface owes, or without a usable `## Acceptance criteria`
+section: the first line that equals that heading in any case once surrounding
+whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
+`spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
+A design that lands an ADR names the ruling and
+the file's short title, with no ADR number: FO reserves the number when it dispatches
+implementation. Reconcile material research and feedback
+into the same definition before handoff. Correct contradictions in depicted or
+required boundaries and missing current-stage evidence before reporting completion;
+if blocked, report the concrete gap. Future implementation checks may remain unverified.
+In the existing Stage Report checklist, name each acceptance criterion separately with its
+actual current evidence or an honest not-yet-verified statement. A range such as
+AC-1..AC-3 is not per-criterion mapping; a future proof plan is not a passed result.
+Return only unresolved material scope, interface, acceptance-criteria or authority
+choices to FO. Before recommending one, read the ADRs in its area and the `Override:`
+lines in the gate records (`git -C <workflow dir>/.spacedock-state grep -n 'Override:'`);
+when a past ruling went against a similar recommendation, name it and follow it or
+say why not. Keep routine wording and test placement in the recommendation,
+not separate user decisions. Do not begin implementation.

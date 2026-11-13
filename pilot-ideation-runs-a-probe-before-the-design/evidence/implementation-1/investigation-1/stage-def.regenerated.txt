@@ -1,0 +1,67 @@
+### `ideation`
+
+FO may dispatch ideation on a stronger model when the design is hard to reverse,
+such as an event model, an architecture or a security boundary, and says so in
+the dispatch. The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
+work item's recorded variant/profile and the skill's own profile routing table.
+FO aligns direction and requests research when it can change a decision; the
+worker authors the PRFAQ and the artifact each recorded surface owes. When
+`## FO alignment` records alignment as needed, FO records the alignment result
+as a `Result:` line before dispatching the worker. Missing skill or profile
+authority requires a hold report rather than a baseline or default-profile
+substitution.
+Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design
+says why not; it is never pushed or deployed and uses no credential or shared
+environment. Each criterion's evidence command runs once on it, recording command, exit
+and output path; what cannot run goes under `Not provable now`. A probe round is one
+ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
+repository file, branch or commit. The design, the criteria and any ADR draft live in
+the task file, and a draft carries no ADR number.
+
+- **Outputs:** Current design definition and acceptance criteria with reproducible
+  evidence clauses; unresolved decisions identified for the user.
+- **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
+  approvals and stops, worth answers, acceptance evidence/limits, and each recorded
+  `Surfaces:` value's artifact. The gate is not presentable without the
+  artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+  output in the gate material at any exit, and treats a non-zero exit as the gate
+  not presentable. Required diagram defects or missing current-stage
+  evidence block recommendation and gate preparation/presentation; honest
+  unverified future checks do not.
+  FO may correct design prose/Mermaid to reflect established decisions under an
+  actual Captain grant covering that task's exact design section; reuse a matching
+  standing grant. Template adoption grants no authority. Record the decision basis;
+  preserve scope, acceptance criteria, risk acceptance, product code, worker
+  evidence, prior reports, approvals and verdicts. Withdraw an affected open binding
+  before editing, then reprepare through the applicable SD lifecycle. Other
+  corrections require an authorized author; hold where no supported route applies,
+  without inventing same-stage rework. Corrections neither replace user approval nor advance stages.
+
+## Dispatch facts
+
+- **Team:** You are one worker in a team completing the project goal; your stage
+  and handoff serve that goal. Before substantial work or retrying a failure,
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
+- **Signal:** send the completion message once, to the first officer by the name
+  your session lists as addressable (`main` under Claude Code dispatch). The
+  completion block's `team-lead` is Spacedock's default and is not registered
+  there (spacedock-dev/spacedock #523, #608); do not try it first and do not
+  describe a fallback in the report.
+- **Package:** `<package>` in stage text is the `Package root:` line of the
+  kc-dev-flow-2 skill you loaded; your dispatch's scope notes state the same path,
+  and if they differ, use the skill's. Run package scripts only from it; never
+  search the filesystem, `/tmp` or another install for them.
+- **Secrets:** `<wrapper>` is the only route to a development secret: run a
+  command that needs one as `<wrapper> <command>`. Never read or print a value.
+  If a guard refuses a command that only mentions a secret-reading tool, rephrase
+  it; do not split, encode or wrap the command to pass the guard.

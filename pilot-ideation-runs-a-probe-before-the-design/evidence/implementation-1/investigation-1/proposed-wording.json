@@ -1,0 +1,12 @@
+{
+  "file": "kc-dev-flow-2/references/sd/workflow.md",
+  "line": 188,
+  "removed": "Each criterion's evidence command runs once on it, recording command, exit\nand output path; what cannot run goes under `Not provable now`.",
+  "added": "For every criterion, including provenance, run its proof once; record command, exit\nand output path beside it; if unrunnable: `Not provable now`.",
+  "removed_words": 22,
+  "added_words": 22,
+  "word_delta": 0,
+  "workflow_words_before": 6099,
+  "workflow_words_after": 6099,
+  "applied": false
+}

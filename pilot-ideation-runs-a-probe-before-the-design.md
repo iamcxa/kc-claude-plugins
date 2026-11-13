@@ -407,3 +407,25 @@ Verdict: REJECTED. The candidate carries the approved Pilot-only rule and the li
 
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1 (absent)
 Evidence: evidence/validation-1/ (107 files, 142.7 KiB)
+
+## Stage Report: implementation
+
+- DONE: Investigation only, no change to the candidate, the product worktree or the task's criteria: validation-1 finding F2 (the report is evidence/validation-1/report.md; the test subject's output is under evidence/validation-1/live/) says a history-free worker dispatched from the candidate built a probe before its design but wrote command, exit and output path for two of its three criteria only
+  Investigation only at unchanged candidate f0e00d30ce00542b2895f13173bd41075cc8bfd4; no product changes, criteria unchanged and no model run (evidence/implementation-1/investigation-1/read-only-final.json). Full finding: investigation-1/report.md.
+- DONE: Find out why from the record, not from guesswork: list every sentence the built ideation dispatch and the candidate's skill and profile files put in front of that subject about running each criterion's proof and what to write beside it, in the order it would read them, with word counts; say what its third criterion was and what it wrote instead; say whether the candidate text asks for the three fields beside every criterion in one place or leaves a reading under which a provenance-style criterion needs none
+  24 source-derived instruction entries with whitespace word counts are in investigation-1/instructions.json and report.md, in declared order only. Checklist and Pilot profile hashes match; rebuilt dispatch and scope do not, even after transparent path relocation, so those two originals are not recovered (input-comparison.json). The native stage definition was regenerated, not recovered. Worker AC-3 is provenance/no-duplicate-patch identity; source-identity.json records facts but no exact command or exit; original subject output remains untouched.
+- DONE: Say whether this is a wording defect in the candidate, a property of that one criterion, or not decidable from one run, and give the smallest wording change you would make and where, with the words added and removed; do not make it
+  Observed omission confirmed, but one run cannot decide whether wording caused it. The existing rule says each criterion and all three fields, with no provenance exemption; placement is separately described as actual evidence. Proposed only: replace the existing 22-word proof sentence at kc-dev-flow-2/references/sd/workflow.md:188 with the 22 words in investigation-1/proposed-wording.diff, explicitly including provenance and per-criterion placement. Whole workflow remains 6099 words by the same counter; no budget/lint step or product edit made.
+- DONE: Captain amendment 2 stands (AC-3's evidence command corrected; the Budget is unchanged and one validation cycle remains)
+  Captain amendment 2 retained without edits. F1 is settled, budget unchanged; role_triggers exits 0 with implementation 1 / validation 1, leaving one validation cycle. Repair authorization remains with FO after this investigation.
+- DONE: Record the missing cold-run input archive as a separate evidence-preservation finding.
+  FO confirms no original copy exists. validation-1 retains hashes and a removed scratch path but not dispatch/checklist/scope/stage bytes, limiting exhaustive and causal claims. The reconstructed files, regenerated stage and exact hash comparisons are now retained under investigation-1; report.md separates this gap from candidate F2 and proposes no product repair for it.
+- DONE: Retain cited investigation evidence and close the assigned scratch.
+  implementation/investigation-1-close.txt records the close output; evidence/implementation-1/SHA256SUMS now includes 96 files. Existing implementation/validation evidence and the independent REJECTED verdict are preserved.
+
+### Summary
+
+This investigation report supersedes the earlier implementation summary for current follow-up status: Captain amendment 2 settles F1, while F2's ledger omission is confirmed but its cause is not decidable from one run and partially unrecovered inputs. The single-sentence, word-neutral clarification remains unapplied; FO must separately authorize any repair before the remaining validation cycle.
+
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1 (156734474 bytes)
+Evidence: evidence/implementation-1/ (96 files, 316.0 KiB)

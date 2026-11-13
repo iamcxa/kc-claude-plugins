@@ -1,0 +1,34 @@
+[
+  {
+    "file": "dispatch.md",
+    "expected": "a537f52dadf207254570e934a407d457ea3a70a710224dd4c6b459eed5e043ff",
+    "regenerated_sha256": "1bf76f0b80d0dfdd09ed02398432fedf99fbd712795f89e0680f0c2d6fe873f7",
+    "raw_match": false,
+    "relocation_only_sha256": "e7a171e19f221ceb6d918b62a734e78d6c8127efa72dbd9551a64825e70c0799",
+    "relocation_only_match": false
+  },
+  {
+    "file": "checklist.txt",
+    "expected": "94508bdcfa6324406c56a727606d7b26e1164203e311212c500947da5e0197d7",
+    "regenerated_sha256": "94508bdcfa6324406c56a727606d7b26e1164203e311212c500947da5e0197d7",
+    "raw_match": true,
+    "relocation_only_sha256": "94508bdcfa6324406c56a727606d7b26e1164203e311212c500947da5e0197d7",
+    "relocation_only_match": true
+  },
+  {
+    "file": "scope.txt",
+    "expected": "1bc8a3fa81dad26e4e3af19cbdfe3f4a933d62a1fdffd1ef343778300eae2d3b",
+    "regenerated_sha256": "72f69272d40719cc05bb24aca211c1367a83448d407db070406dea63ff344cb2",
+    "raw_match": false,
+    "relocation_only_sha256": "e4635ad076d7166929c31603e7c3916d344dcc157e76e49fdc07e267dccfeb33",
+    "relocation_only_match": false
+  },
+  {
+    "file": "package/kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+    "expected": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3",
+    "regenerated_sha256": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3",
+    "raw_match": true,
+    "relocation_only_sha256": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3",
+    "relocation_only_match": true
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "severity": "high",
+    "title": "F2: provenance criterion lacks command and exit",
+    "file": "evidence/validation-1/live/task.md",
+    "line": 156,
+    "detail": "Observed omission confirmed. The causal role of wording is not decidable from one run; no provenance exemption is explicit. Proposed clarification remains unapplied."
+  },
+  {
+    "severity": "medium",
+    "title": "Cold-run inputs were not archived before close-out",
+    "file": "evidence/validation-1/live/input-digests.json",
+    "detail": "Checklist/profile hashes match the reconstruction; original dispatch and scope do not. Enumerated order is declared only; stage definition is regenerated, not recovered."
+  }
+]
