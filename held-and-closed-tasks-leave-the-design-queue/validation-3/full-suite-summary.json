@@ -1,0 +1,16 @@
+{
+  "candidate": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "commands_covered": 30,
+  "test_files_covered": 29,
+  "unittest_cases": 1471,
+  "passed_unittest_cases": 1461,
+  "skipped_unittest_cases": 10,
+  "custom_native_integration_commands_passed": 2,
+  "initial_completed_commands": 26,
+  "initial_failing_commands": 6,
+  "initial_runner_stopped": true,
+  "all_cases_covered_after_environment_reruns": true,
+  "single_clean_full_suite_run_claimed": false,
+  "coverage_unique": true,
+  "details": "full-suite-resolved.json"
+}

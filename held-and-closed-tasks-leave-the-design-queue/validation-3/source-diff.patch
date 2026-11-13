@@ -1,0 +1,291 @@
+diff --git a/docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md b/docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md
+new file mode 100644
+index 000000000..85c229005
+--- /dev/null
++++ b/docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md
+@@ -0,0 +1,52 @@
++# 0081. Held and closed tasks are named at startup and idle
++
++Date: 2026-11-12
++
++## Status
++
++Accepted
++
++## Context
++
++The task held-and-closed-tasks-leave-the-design-queue found ten held tasks
++listed as ideation work. Spacedock already derives gate-readiness as
++not-applicable and excludes them from status --next. The startup and idle
++tasks output did not name them. Captain amendment 1 permits this record of
++the ideation ruling; it adds no other decision.
++
++## Decision
++
++**Words:** 「五份都核准（建議）」 — Captain, host question dialog,
++2026-11-12, ideation gate attempt 1.
++
++**Asked, relevant passage:** 「四、擱置的任務：啟動和閒置檢查多印一行列出擱置中的任務，每張擱置任務引你的原話寫明何時重開或已關閉；已關閉的任務留在原階段、不用強制手段歸檔；其中「進場檢查要求對齊結果」那張記為已關閉、「關卡摘要逐項寫理由」那張維持擱置、「旅程畫布託管試作」那張不動，留給它所屬的工作階段問你。」
++
++**Options considered:**
++- Name held tasks in startup and idle output; require a verbatim reopen or
++  close line in each Held section; retain closed tasks at their stage (chosen).
++- Force-archive held tasks as rejected, or request an upstream close route
++  instead of retaining them at their stage (not chosen).
++- Add a dispatch guard for held tasks (not chosen).
++
++**Recommended:** the approved design's held-task output and quoted Held
++sections, with closed tasks retained without force-archiving, subject to the
++Captain's three task-specific dispositions quoted above.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/pr_watch.py` — held_lines, the startup and idle held-task output
++
++The tasks command names held tasks by stage and asks FO to write a Held
++section whose Reopen when or Closed text occurs verbatim in the newest hold
++reason or a Captain amendment. Missing instructions go to the Captain at
++the next sitting. The query fails visibly if held tasks cannot be read.
++FO owns the task-body edits; gate records remain intact. No new stage,
++state field, dispatch guard or forced archive is introduced.
++
++## Consequences
++
++Startup and idle gain one fact line and a next line while Held sections are
++missing or unverified. Plain status still lists closed tasks at their
++original stage; the readiness field and startup/idle output distinguish
++them from waiting work. The journey-canvas task remains unchanged pending
++its own workflow's question. This records the approved direction, not a
++new ruling about when that task reopens.
+diff --git a/kc-dev-flow-2/scripts/pr_watch.py b/kc-dev-flow-2/scripts/pr_watch.py
+index 159669012..8b5af5d41 100755
+--- a/kc-dev-flow-2/scripts/pr_watch.py
++++ b/kc-dev-flow-2/scripts/pr_watch.py
+@@ -10,6 +10,8 @@
+ Tasks reports a task with no PR and an absent worktree as a fact, with no PR-recording action.
+ Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
+ With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
++Tasks names held tasks by stage and asks for ## Held when its reopen or close quote is missing or unverified.
++A failed held-task query prints a next: diagnostic and exits 2.
+ 
+ Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
+ $CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
+@@ -74,8 +76,9 @@ import sys
+ import time
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+-from role_triggers import review_facts  # noqa: E402
+-from dispatch_records import coverage, worker_stages  # noqa: E402
++from role_triggers import review_facts, outside_fences  # noqa: E402
++from dispatch_records import coverage, worker_stages, named_section  # noqa: E402
++from decision_ledger import split_task, gate_entries  # noqa: E402
+ from learning import job_key  # noqa: E402
+ import scratch  # noqa: E402
+ from workflow_extensions import readme_extensions  # noqa: E402
+@@ -430,6 +433,56 @@ def ready_rows(workflow):
+     return json.loads(done.stdout)["ready_gates"]
+ 
+ 
++def held_rows(workflow):
++    binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
++    done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--where",
++                           "gate-readiness=not-applicable", "--fields", "slug,status", "--json", "--limit", "0"],
++                          capture_output=True, text=True)
++    if done.returncode:
++        raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "spacedock held-task query failed")
++    data = json.loads(done.stdout)
++    rows = data["entities"]
++    if not isinstance(rows, list) or any(not isinstance(row, dict) or
++            any(not isinstance(row.get(key), str) or not row[key].strip() for key in ("slug", "status")) for row in rows):
++        raise ValueError("invalid held-task rows")
++    if len({row["slug"] for row in rows}) != len(rows):
++        raise ValueError("duplicate held-task rows")
++    pagination = data.get("pagination", {})
++    if str(pagination.get("has_next", "false")).lower() != "false" or int(pagination.get("total", len(rows))) != len(rows):
++        raise ValueError("incomplete held-task rows")
++    return rows
++
++
++def held_quote(task):
++    fm, body = split_task(task.read_text(encoding="utf-8"))
++    body = "\n".join(outside_fences(body))
++    quotes = re.findall(r"^(?:Reopen when|Closed):[ \t]*(.*\S)[ \t]*$", named_section(body, "Held"), re.M)
++    if len(quotes) != 1:
++        return False
++    reasons = [entry.get("reason", "") for entry in gate_entries(fm or [])
++               if entry.get("kind") == "resolution" and entry.get("decision") == "hold"]
++    sources = reasons[-1:] + re.findall(r"^Captain:[ \t]*(.+)$", named_section(body, "Captain amendments"), re.M)
++    return any(quotes[0] in source for source in sources)
++
++
++# see docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md
++def held_lines(rows, found):
++    if not rows:
++        return []
++    stages, missing = {}, []
++    for row in sorted(rows, key=lambda row: (row["status"], row["slug"])):
++        slug = row["slug"]
++        stages.setdefault(row["status"], []).append(slug)
++        if slug not in found or not held_quote(found[slug]):
++            missing.append(slug)
++    grouped = "; ".join(f"{stage} {', '.join(slugs)}" for stage, slugs in stages.items())
++    lines = [f"fact: held by the Captain, not waiting: {grouped}; each ## Held section says what reopens it."]
++    if missing:
++        lines.append(f"next: write ## Held in {', '.join(missing)}: copy Reopen when: <his words> or Closed: <his words> "
++                     "verbatim from the hold reason or a Captain amendment; where neither states one, ask him at the next sitting.")
++    return lines
++
++
+ LIST_LINE = ("next: before asking, list each open decision of these tasks once, from their decision sections and the map's "
+              "open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; "
+              "then ask one at a time; a decision that blocks no worker waits for the next sitting.")
+@@ -602,6 +655,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
+     except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
+         errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
+     stages = None
++    try:
++        out += held_lines(held_rows(workflow), dict(found))
++    except (RuntimeError, KeyError, TypeError, ValueError, OSError) as error:
++        errors.append(f"next: report held-task query failure to the Captain: {str(error)[:120]}.")
+     for slug, task in found:
+         try:
+             meta = front(task)
+diff --git a/kc-dev-flow-2/scripts/test_pr_watch.py b/kc-dev-flow-2/scripts/test_pr_watch.py
+index 21e46dd2f..8a46b8f37 100644
+--- a/kc-dev-flow-2/scripts/test_pr_watch.py
++++ b/kc-dev-flow-2/scripts/test_pr_watch.py
+@@ -566,6 +566,13 @@ print(json.dumps(answer))
+ """
+ SD_STUB = """#!/usr/bin/env python3
+ import os, sys
++if sys.argv[1:] == ["status", "--workflow-dir", os.environ["SD_DIR"], "--where", "gate-readiness=not-applicable", "--fields", "slug,status", "--json", "--limit", "0"]:
++    text = open(os.environ["SD_HELD"]).read()
++    if text == "FAIL":
++        sys.stderr.write("stub spacedock: held query down")
++        sys.exit(3)
++    print(text)
++    sys.exit(0)
+ if sys.argv[1:] != ["status", "--workflow-dir", os.environ["SD_DIR"], "--next", "--json"]:
+     sys.stderr.write("stub spacedock: unexpected " + " ".join(sys.argv[1:]))
+     sys.exit(2)
+@@ -772,6 +779,8 @@ class TasksTests(unittest.TestCase):
+         sd.chmod(0o755)
+         self.next = self.root / "next.json"
+         self.next.write_text(json.dumps({"ready_gates": []}))
++        self.held = self.root / "held.json"
++        self.held.write_text(json.dumps({"entities": []}))
+         self.repo = self.root / "repo"
+         self.workflow = self.repo / "docs/dev2"
+         self.state = self.workflow / ".spacedock-state"
+@@ -811,7 +820,7 @@ class TasksTests(unittest.TestCase):
+         self.git(self.state, "commit", "-qm", "report")
+ 
+     def sd_env(self):
+-        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_DIR": str(self.workflow.resolve()),
++        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_HELD": str(self.held), "SD_DIR": str(self.workflow.resolve()),
+                 **({"SD_LOG": str(self.root / "sd.log")} if self.log_calls else {})}
+ 
+     def gates(self, *rows):
+@@ -828,6 +837,93 @@ class TasksTests(unittest.TestCase):
+             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
+         return code, out.getvalue().splitlines()
+ 
++    def held_task(self, body="", reason="reopen after an adopter fails", folder=False):
++        self.readme("")
++        self.task("paused", worktree=False, status="ideation", folder=folder, body=body.encode())
++        path = self.state / ("paused/index.md" if folder else "paused.md")
++        text = path.read_text()
++        gates = ("gates:\n    version: 1\n    records:\n        - stage: ideation\n          attempts:\n"
++                 "            - id: gate-attempt:paused-ideation-1\n              resolution:\n"
++                 "                type: Resolution\n                decision: hold\n"
++                 f"                reason: {json.dumps(reason)}\n")
++        path.write_text(text.replace("\n---\n", "\n" + gates + "---\n", 1))
++        self.git(self.state, "add", str(path))
++        self.git(self.state, "commit", "-qm", "hold")
++        self.held.write_text(json.dumps({"entities": [{"slug": "paused", "status": "ideation"}]}))
++        return path
++
++    def test_no_held_task_prints_no_held_line(self):
++        self.readme("")
++        self.assertEqual(self.tasks({}), (0, []))
++
++    def test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks(self):
++        for folder in (False, True):
++            with self.subTest(folder=folder):
++                self.held_task("## Held\nReopen when: reopen after an adopter fails\n", folder=folder)
++                self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; "
++                                                     "each ## Held section says what reopens it."]))
++                (self.state / ("paused/index.md" if folder else "paused.md")).unlink()
++
++    def test_held_missing_section_or_unverified_quote_names_the_task(self):
++        path = self.held_task()
++        original = path.read_text()
++        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
++                     "## Scope\nClosed: reopen after an adopter fails\n",
++                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
++                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
++            with self.subTest(body=body):
++                path.write_text(original + body)
++                code, lines = self.tasks({})
++                self.assertEqual(code, 0, lines)
++                self.assertEqual(len(lines), 2, lines)
++                self.assertTrue(lines[1].startswith("next: write ## Held in paused:"), lines)
++
++    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
++        path = self.held_task("## Held\nClosed: 「關掉」\n")
++        original = path.read_text()
++        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
++                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
++                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
++            with self.subTest(section=section):
++                path.write_text(original + section)
++                code, lines = self.tasks({})
++                self.assertEqual(code, 0, lines)
++                self.assertEqual(len(lines), 1 if good else 2, lines)
++
++    def test_held_quote_uses_newest_hold_reason(self):
++        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
++        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
++                 "                decision: hold\n                reason: wait for a different condition\n")
++        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
++        code, lines = self.tasks({})
++        self.assertEqual(code, 0, lines)
++        self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
++
++    def test_held_fact_groups_stages_and_names_each_task_once(self):
++        self.held_task("## Held\nClosed: reopen after an adopter fails\n")
++        self.task("waiting", worktree=False, status="ideation")
++        self.task("later", worktree=False, status="validation", body=b"## Held\nClosed: finished\n## Captain amendments\nCaptain: finished\n")
++        self.held.write_text(json.dumps({"entities": [{"slug": "later", "status": "validation"},
++                                                     {"slug": "paused", "status": "ideation"}]}))
++        self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; validation later; "
++                                             "each ## Held section says what reopens it."]))
++
++    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
++        self.readme("")
++        row = {"slug": "paused", "status": "ideation"}
++        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
++                 json.dumps({"entities": [{"slug": "paused"}]}),
++                 json.dumps({"entities": [row, row]}),
++                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
++                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
++        for text in cases:
++            with self.subTest(text=text):
++                self.held.write_text(text)
++                code, lines = self.tasks({})
++                self.assertEqual(code, 2, lines)
++                self.assertEqual(len(lines), 1, lines)
++                self.assertTrue(lines[0].startswith("next: report held-task query failure to the Captain:"), lines)
++
+     def test_release_walk_due_is_gated_by_listing_and_map_presence(self):
+         self.readme("")
+         (self.state / "built.md").write_text("---\ntitle: built\nstatus: done\njourney: demo\njourney-release: r1\n---\n")
+@@ -1871,7 +1967,8 @@ class TasksTests(unittest.TestCase):
+         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
+             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)])
+         self.assertEqual(code, 2)
+-        self.assertRegex(out.getvalue(), r"^next: report the awaiting gates to the Captain: ")
++        self.assertIn("next: report held-task query failure to the Captain: ", out.getvalue())
++        self.assertIn("next: report the awaiting gates to the Captain: ", out.getvalue())
+ 
+     def test_the_sitting_line_writes_no_file(self):
+         self.readme("roborev")

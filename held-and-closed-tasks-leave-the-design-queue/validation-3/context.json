@@ -1,0 +1,16 @@
+{
+  "candidate": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "base": "46e9d0ed4bb86889022457adcdf656965dc97e73",
+  "start": "2026-11-13T12:47:21+08:00",
+  "time_source": "clock.curr_time UTC plus 08:00",
+  "scratch": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch",
+  "state_head": "b95cd65093cfc26bde59ca9075ac43e4866a7f5b",
+  "additional_scratch": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306",
+  "python": "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+  "python_version": "3.11.14",
+  "pyyaml_version": "6.0.1",
+  "pytest_version": "8.4.2",
+  "spacedock": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3",
+  "git_ceiling": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306:/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/tmp",
+  "plain_copy_fixture_scratch": "/tmp/validation3-fixtures-20261113-1259"
+}

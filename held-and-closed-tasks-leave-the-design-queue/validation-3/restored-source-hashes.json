@@ -1,0 +1,20 @@
+{
+  "kc-dev-flow-2/scripts/pr_watch.py": {
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/suite": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/suite": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/candidate": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04"
+  },
+  "kc-dev-flow-2/scripts/test_pr_watch.py": {
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/suite": "00cd84d720bb618de2eac0583997b413ea6e1856106fd8ab044ba7e89bb75ddb",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate": "00cd84d720bb618de2eac0583997b413ea6e1856106fd8ab044ba7e89bb75ddb",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/suite": "00cd84d720bb618de2eac0583997b413ea6e1856106fd8ab044ba7e89bb75ddb",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/candidate": "00cd84d720bb618de2eac0583997b413ea6e1856106fd8ab044ba7e89bb75ddb"
+  },
+  "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md": {
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/suite": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/suite": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306/candidate": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde"
+  }
+}

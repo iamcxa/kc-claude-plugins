@@ -1,0 +1,75 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.40.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "46e9d0ed4bb86889022457adcdf656965dc97e73",
+      "--require",
+      "0081"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch-installed-adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "46e9d0ed4bb86889022457adcdf656965dc97e73",
+      "--require",
+      "0081"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.40.0/scripts/comment_ratio.py",
+      "46e9d0ed4bb86889022457adcdf656965dc97e73",
+      "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.40.0/scripts/doc_impact.py",
+      "46e9d0ed4bb86889022457adcdf656965dc97e73",
+      "5859c3ccd25a86c79df3b36cafdda9762bd8142e"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.40.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.40.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue"
+    ],
+    "exit": 0
+  }
+]

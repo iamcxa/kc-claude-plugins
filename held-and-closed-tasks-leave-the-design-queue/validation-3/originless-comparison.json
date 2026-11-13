@@ -1,0 +1,8 @@
+{
+  "base_exit": 2,
+  "candidate_exit": 2,
+  "same_diagnostic_prefix": "next: report scratch close-out to the Captain:",
+  "candidate_fact_line_count": 1,
+  "candidate_real_workflow_exit": 0,
+  "meaning": "inherited origin-less fixture limitation; no general workflow pass inferred"
+}

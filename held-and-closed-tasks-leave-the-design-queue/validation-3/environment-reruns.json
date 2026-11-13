@@ -1,0 +1,47 @@
+[
+  {
+    "name": "test_design_surfaces.py",
+    "log": "git-isolation-rerun.log",
+    "passed": true
+  },
+  {
+    "name": "test_adr_doc_checks.py",
+    "log": "git-isolation-rerun.log",
+    "passed": true
+  },
+  {
+    "name": "test_pr_watch.py",
+    "log": "watcher.log",
+    "passed": true
+  },
+  {
+    "name": "dispatch native context",
+    "log": "dispatch-native-isolated.log",
+    "passed": true
+  },
+  {
+    "name": "dispatch plain copy",
+    "log": "dispatch-plain-copy-outside-repo.log",
+    "passed": true
+  },
+  {
+    "name": "delivery plain state",
+    "log": "delivery-non-git-outside-repo.log",
+    "passed": true
+  },
+  {
+    "name": "dispatch stage",
+    "log": "dispatch-stage-isolated.log",
+    "passed": true
+  },
+  {
+    "name": "native dispatch integration",
+    "log": "sd-dispatch-isolated.log",
+    "passed": true
+  },
+  {
+    "name": "native observer recovery",
+    "log": "observer-recovery-isolated.log",
+    "passed": true
+  }
+]

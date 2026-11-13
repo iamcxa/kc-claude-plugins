@@ -1,0 +1,19 @@
+EXPORT 5859c3ccd25a86c79df3b36cafdda9762bd8142e
+NATIVE INPUTS 15
+...........                                         [100%]
+- generated xml file: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-3/captain-results/held-tests.xml -
+11 passed, 152 deselected in 10.91s
+0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md: protects kc-dev-flow-2/extensions/codex/codex_review.py, which does not exist
+0049-special-roles-and-stage-defaults-follow-one-model-table.md: protects kc-dev-flow-2/agents/chief-engineer.md, which does not exist
+0049-special-roles-and-stage-defaults-follow-one-model-table.md: protects kc-dev-flow-2/agents/engineering-reviewer.md, which does not exist
+0049-special-roles-and-stage-defaults-follow-one-model-table.md: protects kc-dev-flow-2/agents/design-director.md, which does not exist
+0049-special-roles-and-stage-defaults-follow-one-model-table.md: protects kc-dev-flow-2/agents/observer.md, which does not exist
+0049-special-roles-and-stage-defaults-follow-one-model-table.md: protects kc-dev-flow-2/references/model-roster.md, which does not exist
+0053-a-release-walk-runs-off-production-and-production-waits-for-a-clean-closed-walk.md: protects kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py, which does not exist
+0056-the-idle-look-prompts-unclaimed-release-walks-from-versioned-progress.md: protects kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py, which does not exist
+required ADR 0008: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+required ADR 0007: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+required ADR 0006: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+required ADR 0005: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+required ADR 0003: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+required ADR 0001: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation

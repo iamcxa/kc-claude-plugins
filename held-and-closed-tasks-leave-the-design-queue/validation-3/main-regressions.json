@@ -1,0 +1,54 @@
+[
+  {
+    "pr": 858,
+    "commit": "9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58",
+    "added_watcher_tests": [
+      "test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent"
+    ],
+    "covered_by": "watcher.xml",
+    "checks": [
+      {
+        "name": "test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "pr": 861,
+    "commit": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+    "added_watcher_tests": [
+      "test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words"
+    ],
+    "covered_by": "watcher.xml",
+    "checks": [
+      {
+        "name": "test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "pr": 854,
+    "commit": "46e9d0ed4bb86889022457adcdf656965dc97e73",
+    "added_watcher_tests": [
+      "test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown",
+      "test_merged_scratch_prompt_precedes_merge_record",
+      "test_post_archive_removal_record_preserves_learn_and_observer_results"
+    ],
+    "covered_by": "watcher.xml",
+    "checks": [
+      {
+        "name": "test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown",
+        "passed": true
+      },
+      {
+        "name": "test_merged_scratch_prompt_precedes_merge_record",
+        "passed": true
+      },
+      {
+        "name": "test_post_archive_removal_record_preserves_learn_and_observer_results",
+        "passed": true
+      }
+    ]
+  }
+]

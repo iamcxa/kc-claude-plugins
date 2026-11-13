@@ -1,0 +1,9 @@
+{
+  "reason": "Known .worktrees fixture-path rejection; remaining native integrations and scratch command already rerun successfully in independent fixtures. Stop duplicate failing-environment work, retain original prefix.",
+  "runner_pid": 83923,
+  "descendant_pids": [
+    74602,
+    46420
+  ],
+  "processes": "46420 83923 03:01 python3\n74602 46420 00:00 /Users/kent/.pyenv/versions/3.11.14/bin/python3\n83923 62375 17:00 python3\n"
+}

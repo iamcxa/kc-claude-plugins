@@ -1,0 +1,18 @@
+Scratch removed: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/tmp/tmpn7uicmrs/dev2/scratch-a248b2524fdc468fae7a30fb4a4e725d-bb47c701613008a5/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.................................................................F.................................................................
+======================================================================
+FAIL: test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2 (__main__.TasksTests.test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/suite/kc-dev-flow-2/scripts/test_pr_watch.py", line 1755, in test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2
+    self.assertRegex(lines[0], r"^next: report some-task to the Captain: .*git cannot read the dispatch records")
+AssertionError: Regex didn't match: '^next: report some-task to the Captain: .*git cannot read the dispatch records' not found in 'next: report some-task to the Captain: cannot tell whether a chief-engineer or engineering-reviewer call is owed: no task file for some-task at HEAD in /Users/.'
+
+----------------------------------------------------------------------
+Ran 163 tests in 98.304s
+
+FAILED (failures=1)

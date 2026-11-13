@@ -1,0 +1,320 @@
+[
+  {
+    "name": "ac1-query",
+    "ok": true,
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--where",
+      "status=ideation",
+      "--where",
+      "gate-readiness=not-applicable",
+      "--fields",
+      "slug",
+      "--json",
+      "--limit",
+      "0"
+    ]
+  },
+  {
+    "name": "AC-1",
+    "ok": true,
+    "count": 10
+  },
+  {
+    "name": "AC-1 falsifier",
+    "ok": true,
+    "kind": "remove a native query row"
+  },
+  {
+    "name": "ac2-next",
+    "ok": true,
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--next",
+      "--json"
+    ]
+  },
+  {
+    "name": "AC-2",
+    "ok": true,
+    "rows": 56,
+    "held": 0
+  },
+  {
+    "name": "AC-2 falsifier",
+    "ok": true,
+    "kind": "inject a held scheduler row"
+  },
+  {
+    "name": "ac1-status-display",
+    "ok": true,
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--where",
+      "status=ideation",
+      "--fields",
+      "slug,status,gate-readiness"
+    ]
+  },
+  {
+    "name": "ac4-dispatch",
+    "ok": true,
+    "exit": 0,
+    "expected": 0,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "dispatch",
+      "build",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--entity-path",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2/.spacedock-state/adoption-asks-which-extensions.md",
+      "--stage",
+      "ideation",
+      "--checklist-file",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/checklist.txt"
+    ],
+    "resolved_by": "ac4-outside-worktrees.log"
+  },
+  {
+    "name": "AC-4",
+    "ok": true,
+    "artifacts": 0,
+    "resolved_by": "ac4-outside-worktrees.log",
+    "exit": 0
+  },
+  {
+    "name": "AC-4 falsifier",
+    "ok": true,
+    "kind": "refusal exit rejects build claim; oracle mutation only"
+  },
+  {
+    "name": "ac5-merge-guard",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "merge",
+      "guard",
+      "fo-write-checks-parse-top-level",
+      "--verdict",
+      "rejected",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2"
+    ]
+  },
+  {
+    "name": "ac5-set-done",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--set",
+      "fo-write-checks-parse-top-level",
+      "status=done",
+      "verdict=REJECTED"
+    ]
+  },
+  {
+    "name": "ac5-archive",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "status",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch/candidate/docs/dev2",
+      "--archive",
+      "fo-write-checks-parse-top-level"
+    ]
+  },
+  {
+    "name": "AC-5 falsifier",
+    "ok": true,
+    "kind": "successful close rejects refusal claim; oracle mutation only"
+  },
+  {
+    "name": "AC-6",
+    "ok": true
+  },
+  {
+    "name": "AC-6 falsifier",
+    "ok": true,
+    "kind": "remove successor"
+  },
+  {
+    "name": "AC-7",
+    "ok": true,
+    "quotes": 7
+  },
+  {
+    "name": "AC-7 falsifier",
+    "ok": true,
+    "kind": "change one quote character"
+  },
+  {
+    "name": "NP-1 exact list",
+    "ok": true,
+    "held": 14
+  },
+  {
+    "name": "NP-1 empty",
+    "ok": true
+  },
+  {
+    "name": "NP-2 missing sections",
+    "ok": true
+  },
+  {
+    "name": "NP-4 copy",
+    "ok": true,
+    "valid": 14,
+    "frontmatter_unchanged": true,
+    "synthetic": true
+  },
+  {
+    "name": "NP-4 falsifier",
+    "ok": true,
+    "kind": "frontmatter mutation"
+  },
+  {
+    "name": "NP-3 amended bound",
+    "ok": true,
+    "words": 32,
+    "held": 14,
+    "maximum": 34
+  },
+  {
+    "name": "NP-3 falsifier",
+    "ok": true,
+    "words": 35
+  },
+  {
+    "name": "live Held state",
+    "ok": true,
+    "held": 15,
+    "valid": 0,
+    "meaning": "deferred FO state edits, not acceptance failure"
+  },
+  {
+    "name": "mutation-quote-comparison",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "mutation-query-exit",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "mutation-no-held",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "mutation-newest-hold",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "mutation-list-wiring",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "mutation-candidate-removed",
+    "ok": true,
+    "exit": 1,
+    "expected": 1,
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "-m",
+      "pytest",
+      "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "-k",
+      "held",
+      "-q"
+    ]
+  },
+  {
+    "name": "candidate bytes restored",
+    "ok": true
+  }
+]

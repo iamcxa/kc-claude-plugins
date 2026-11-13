@@ -1,0 +1,8 @@
+{
+  "ac4_initial_exit": 1,
+  "cause": "Spacedock rejects entity paths containing .worktrees",
+  "ac4_isolated_exit": 0,
+  "all_other_recheck_predicates_pass": true,
+  "same_candidate_source": true,
+  "created_dispatch_file": "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md"
+}

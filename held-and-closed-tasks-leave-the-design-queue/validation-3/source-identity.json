@@ -1,0 +1,26 @@
+{
+  "exact_original_delta": true,
+  "changed_paths": [
+    "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "main_files": {
+    "kc-dev-flow-2/scripts/dispatch_stage.py": {
+      "equal": true,
+      "sha256": "790acaf5f8ea6c07f86c1e506a35a524b160a19f729e08d83a3c30afae4f7138"
+    },
+    "kc-dev-flow-2/scripts/scratch.py": {
+      "equal": true,
+      "sha256": "f76d30d95aadbcd2bf5cc34b7d87ce54145a644dc654bba7351b31c0841b1e63"
+    },
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": {
+      "equal": true,
+      "sha256": "67ff29b9db867c22a7ae17302afe522ae2b48d261a6543c8d137324c5d92fcc8"
+    },
+    "kc-dev-flow-2/scripts/test_scratch.py": {
+      "equal": true,
+      "sha256": "c3b5f72f1f51d7be2f115ab778b19dd139c525135b39bae3ef5942cd7195a3ec"
+    }
+  }
+}
