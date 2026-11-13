@@ -1,0 +1,17 @@
+[
+  {
+    "name": "poc",
+    "status": "passed",
+    "message": "9 tests; poc.log"
+  },
+  {
+    "name": "role",
+    "status": "passed",
+    "message": "63 tests; role.log"
+  },
+  {
+    "name": "dispatch",
+    "status": "passed",
+    "message": "56 tests; dispatch.log"
+  }
+]

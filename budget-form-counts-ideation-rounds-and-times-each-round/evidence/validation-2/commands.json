@@ -1,0 +1,127 @@
+[
+  {
+    "name": "poc",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "role",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "--require",
+      "0085"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "documents",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "a4f2fc41413866f0148e1f176f447e81216ca6cf",
+      "--json"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "a4f2fc41413866f0148e1f176f447e81216ca6cf",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+    ],
+    "exit": 0
+  },
+  {
+    "name": "records",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "numbers",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round.md",
+      "--head",
+      "a4f2fc41413866f0148e1f176f447e81216ca6cf"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_stage.py"
+    ],
+    "env": {
+      "SPACEDOCK_BIN": "/Users/kent/.local/bin/spacedock",
+      "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-2/tmp"
+    },
+    "exit": 0
+  },
+  {
+    "name": "adopted",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/poc_readme.py",
+      "check",
+      "docs/dev2-poc/README.md",
+      "docs/dev2/README.md"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "acceptance",
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/validation-2/acceptance.sh"
+    ],
+    "exit": 0,
+    "temporary_directory_override_only": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-2/tmp"
+  }
+]

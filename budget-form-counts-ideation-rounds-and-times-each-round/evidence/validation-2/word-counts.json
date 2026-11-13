@@ -1,0 +1,14 @@
+{
+  "base": {
+    "whitespace": 6099,
+    "normalized": 6155
+  },
+  "previous": {
+    "whitespace": 6097,
+    "normalized": 6153
+  },
+  "candidate": {
+    "whitespace": 6097,
+    "normalized": 6154
+  }
+}

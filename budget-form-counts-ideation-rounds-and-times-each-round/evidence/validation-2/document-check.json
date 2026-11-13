@@ -1,0 +1,156 @@
+{
+  "count": 18,
+  "all_have_dispositions": true,
+  "dispositions": [
+    {
+      "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: existing start-plus-deltas rule is followed by a -2 step; no raise."
+    },
+    {
+      "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: worker ownership and its historical +144 word step are preserved."
+    },
+    {
+      "doc": "docs/adr/0041-seed-admission-enforces-required-fields.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/design_surfaces.py"
+      ],
+      "verdict": "unaffected: seed fields remain required; the Budget diagnostic gains the accepted form."
+    },
+    {
+      "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py",
+        "kc-dev-flow-2/scripts/role_triggers.py"
+      ],
+      "verdict": "unaffected: model ranks and stage defaults are unchanged."
+    },
+    {
+      "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: FO permission authority and its historical word-count ruling are unchanged."
+    },
+    {
+      "doc": "docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/design_surfaces.py"
+      ],
+      "verdict": "unaffected: criterion comparison and amendment behavior are unchanged."
+    },
+    {
+      "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/dispatch_stage.py"
+      ],
+      "verdict": "unaffected: record/write/check/build ordering and separate preflights remain."
+    },
+    {
+      "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/dispatch_stage.py"
+      ],
+      "verdict": "unaffected: special-role dispatch behavior remains unchanged."
+    },
+    {
+      "doc": "docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/design_surfaces.py"
+      ],
+      "verdict": "unaffected: story-record checks are unchanged."
+    },
+    {
+      "doc": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/design_surfaces.py",
+        "kc-dev-flow-2/scripts/dispatch_stage.py",
+        "kc-dev-flow-2/scripts/role_triggers.py"
+      ],
+      "verdict": "unaffected: immutable ruling extended by ADR 0085; old grammar semantics and admission exemption retained."
+    },
+    {
+      "doc": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py",
+        "kc-dev-flow-2/scripts/task_timeline.py"
+      ],
+      "verdict": "unaffected: immutable ruling extended by ADR 0085; existing timing, asks and missing-record behavior retained."
+    },
+    {
+      "doc": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: immutable ruling extended by ADR 0085 only for the round hold; probe and branch cleanup bounds retained."
+    },
+    {
+      "doc": "docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md",
+      "state": "updated",
+      "terms": [
+        "kc-dev-flow-2/scripts/dispatch_stage.py",
+        "kc-dev-flow-2/scripts/role_triggers.py",
+        "kc-dev-flow-2/scripts/task_timeline.py"
+      ],
+      "verdict": "updated in original candidate; unaffected by placement repair: same grammar, default, checks, round results and -2 whitespace-word step."
+    },
+    {
+      "doc": "docs/dev2-poc/README.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: adopted 0.41.0 workflow copy; package update/adoption is outside this task. Source template carries the change."
+    },
+    {
+      "doc": "docs/dev2/README.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: adopted 0.41.0 workflow copy; package update/adoption is outside this task. Source template carries the change."
+    },
+    {
+      "doc": "kc-dev-flow-2/README.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: generic design, lint and delivery entry points remain accurate."
+    },
+    {
+      "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: unchanged word-budget arithmetic and maintenance command."
+    },
+    {
+      "doc": "learning.md",
+      "state": "review",
+      "terms": [
+        "kc-dev-flow-2/scripts/lint-skills.py"
+      ],
+      "verdict": "unaffected: historical practices stay verbatim; current reading moments are measured in word-counts.txt."
+    }
+  ]
+}

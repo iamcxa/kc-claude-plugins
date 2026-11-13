@@ -1,0 +1,10 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/budget-form-counts-ideation-rounds-and-times-each-round/evidence/validation-2/acceptance.sh"
+  ],
+  "exit": 0,
+  "temporary_directory_override_only": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/budget-form-counts-ideation-rounds-and-times-each-round/validation-2/tmp"
+}

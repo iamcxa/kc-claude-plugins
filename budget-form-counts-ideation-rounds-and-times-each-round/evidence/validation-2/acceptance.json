@@ -1,0 +1,201 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/replay-1.log",
+      "../validation-1/logs/replay-2.log",
+      "../validation-1/logs/replay-3.log",
+      "../validation-1/logs/replay-4.log",
+      "../validation-1/logs/replay-5.log",
+      "../validation-1/logs/replay-6.log",
+      "../validation-1/logs/suite-role_triggers.log"
+    ],
+    "fresh_evidence": [
+      "acceptance-final.log",
+      "role.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac1-no-grammar",
+      "mutation": "role_triggers.py: if rounds: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/suite-dispatch-worktree.log"
+    ],
+    "fresh_evidence": [
+      "dispatch.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac2-no-ideation-hook",
+      "mutation": "dispatch_stage.py: if args.stage in (\"ideation\", \"implementation\", \"validation\"): -> if args.stage in (\"implementation\", \"validation\"):",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-3",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/replay-2.log",
+      "../validation-1/logs/replay-3.log",
+      "../validation-1/logs/timeline-replay.log"
+    ],
+    "fresh_evidence": [
+      "acceptance-final.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac3-no-round-print",
+      "mutation": "task_timeline.py: for x in r[\"rounds\"]: -> for x in []:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate.",
+    "fresh_falsifier": "Three ideation bound allows the same third replay that two holds."
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/replay-4.log",
+      "../validation-1/logs/replay-5.log",
+      "../validation-1/logs/suite-dispatch-worktree.log"
+    ],
+    "fresh_evidence": [
+      "acceptance-final.log",
+      "dispatch.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac4-no-default",
+      "mutation": "role_triggers.py: if default: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/suite-dispatch-worktree.log"
+    ],
+    "fresh_evidence": [
+      "dispatch.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac5-full-role-check",
+      "mutation": "dispatch_stage.py: role_args.append(\"--budget-only\") -> pass",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/base-comparison.log"
+    ],
+    "fresh_evidence": [],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac6-hold-admitted",
+      "mutation": "role_triggers.py: return bool(admitted and over), summary, bound -> return bool(admitted), summary, bound",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/rounds-census.log"
+    ],
+    "fresh_evidence": [],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac7-no-rounds",
+      "mutation": "task_timeline.py: \"rounds\": rounds, -> \"rounds\": [],",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-8",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/lint.log",
+      "../validation-1/logs/word-counts.log"
+    ],
+    "fresh_evidence": [
+      "lint.log",
+      "lint-falsifier.log",
+      "word-counts.json"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac8-prose-hold",
+      "mutation": "../references/sd/workflow.md: ideation dispatch, two by default. -> ideation dispatch; FO holds a third for the Captain.",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate.",
+    "fresh_falsifier": "Restoring prose hold gives 6101/6097, exit 1."
+  },
+  {
+    "name": "AC-9",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/suite-role_triggers.log",
+      "../validation-1/logs/suite-dispatch-worktree.log",
+      "../validation-1/logs/suite-task_timeline.log",
+      "../validation-1/logs/suite-design_surfaces.log"
+    ],
+    "fresh_evidence": [
+      "role.log",
+      "dispatch.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac9-no-default",
+      "mutation": "role_triggers.py: if default: -> if False:",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  },
+  {
+    "name": "AC-10",
+    "status": "passed",
+    "prior_evidence": [
+      "../validation-1/logs/adr.log",
+      "../validation-1/logs/number-guards-live.log"
+    ],
+    "fresh_evidence": [
+      "adr.log",
+      "numbers-live.log"
+    ],
+    "prior_falsifier": {
+      "name": "verified-mutation-ac10-no-pointer",
+      "mutation": "role_triggers.py:     # see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md\n -> ",
+      "exit": 1,
+      "expected": 1,
+      "passed": true
+    },
+    "basis": "Fresh affected checks plus explicitly authorized reuse; only workflow.md differs from prior candidate."
+  }
+]
