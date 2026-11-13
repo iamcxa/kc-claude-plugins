@@ -59,7 +59,7 @@ Replay the design check. For each backlog and ideation briefing, take the sha in
 `git archive` into a new empty temporary directory, and run
 `python3 <package>/scripts/design_surfaces.py check [--seed, for backlog] <that copy of <TASK>.md>`.
 Report "FO runs `python3 <package>/scripts/design_surfaces.py check`" as `ok` on exit 0, and as `violation` quoting its first line on exit 1.
-For seed-field failures or `design needs '### Worth questions'` on historical copies, report current-schema incompatibility.
+For seed-field failures, `design needs '### Worth questions'` or a `Pilot criterion` proof-record line on historical copies, report current-schema incompatibility.
 Call it a historical violation only if the event-time README required the same form;
 without that README, report `can't tell`.
 

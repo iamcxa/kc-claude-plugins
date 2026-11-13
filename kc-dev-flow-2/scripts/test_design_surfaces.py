@@ -184,6 +184,144 @@ def write_task(directory, text):
     return path
 
 
+class PilotProofTests(unittest.TestCase):
+    RECORD = "**AC-1** Result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`."
+    HEADER = "---\ntitle: Proof fixture\nprofile: pilot\nstatus: ideation\n{gates}---\n"
+    BODY = ("## FO alignment\nSurfaces: none\nVisible change: none\n"
+            "## Design\n### Worth questions\nAsked, without, premise.\n"
+            "## Acceptance criteria\n")
+    APPROVED = """gates:
+    version: 1
+    records:
+        - id: gate:t:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:t-ideation-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t:ideation:1
+                by: person:captain
+                at: "2026-11-12T00:00:00Z"
+                decision: approve
+                reason: accepted design
+"""
+    REPLAYS = ('**AC-1** No PR plus absent worktree emits only the exact fact. Evidence: absent.json command, exit 0, '
+     'absent.stdout.txt, no next action, no watch state and unchanged task bytes. Falsifier: restoring a '
+     'PR-recording next line or mutating task/state fails the probe. Passed on existing source, not new '
+     'implementation.\n'
+     '\n'
+     '**AC-2** No PR and no worktree field stays silent. Evidence: bare.json command, exit 0, empty '
+     'bare.stdout.txt, no watch state, unchanged task. Falsifier: unconditional missing-PR text makes '
+     'exact-output check fail. Passed.\n'
+     '\n'
+     '**AC-3** No duplicate product patch and exact existing-fix identity. Evidence: source-identity.json; '
+     'exported script equals pinned git-show bytes; existing fix is an ancestor; probe commit retained and '
+     'worktree removed. Reproduce with git merge-base --is-ancestor and byte comparison against authoritative '
+     'package. Falsifier: product delta or mismatched export invalidates no-change premise. Passed for fixture '
+     'source only.',
+     '**AC-1** — An empty PR with an absent worktree produces the exact existing fact in both a flat '
+     'relative-path task and a folder absolute-path task, with no PR-recording action, provider call, input '
+     'mutation or watch-state creation. Evidence command: `python3 -B '
+     '<probe-worktree>/.replay/pr_watch_probe.py AC-1` with the replay environment above; final exit 0, '
+     '`evidence/AC-1.log`, `AC-1.json` and per-case stdout. Falsifier: restoring the old `next: record` '
+     'branch; it was executed and rejected in both cases. Current evidence: passed within the offline '
+     'entrypoint boundary.\n'
+     '\n'
+     '**AC-2** — Existing local PR discovery retains qualified record/state-commit actions; a recorded PR is '
+     'watched despite a missing directory; no-field and merged/archived controls retain their current bounded '
+     'output. Evidence command: same runner with `AC-2`; exit 0, `evidence/AC-2.log`, `AC-2.json` and '
+     'provider-call logs. Falsifier: suppressing local discovery, skipping a known PR based on its absent '
+     'worktree, or changing the ready-authority qualifier breaks the assertions. Current evidence: passed with '
+     'synthetic provider replies; live provider and native Spacedock behavior are Not provable now.\n'
+     '\n'
+     '**AC-3** — The no-change recommendation binds the executed watcher to pinned product bytes, finds the '
+     'existing regression, and introduces no product diff or undeclared adopter proof. Evidence command: same '
+     'runner with `AC-3`; exit 0, `evidence/AC-3.log` and `AC-3.json`. Falsifier: changed watcher bytes, '
+     'removal of the named regression, or any product diff fails. Current evidence: passed for source '
+     'identity/diff; the existing application unit, integration and e2e suites were not run as required by the '
+     'harness. Private adopter coverage: 0 checked, 3 unavailable.\n'
+     '\n'
+     '**AC-4** — Before/after reading uses a declared per-moment reader packet, reports zero deltas for the '
+     'four exercised moments, and leaves the merge ask/live optional-hook totals explicitly unmeasured. '
+     'Evidence command: same runner with `AC-4`; corrected exit 0, `evidence/AC-4.log` and `AC-4.json`. '
+     'Falsifier: a product-document change fails the identity assertion; a newly claimed full lifecycle saving '
+     'without the missing live outputs would not satisfy this criterion. Current evidence: bounded packet '
+     'measured; full live lifecycle and merge ask are Not provable now.')
+
+    def check(self, criteria=None, extra="", profile="pilot", stage="ideation", gates="", seed=False):
+        text = (self.HEADER.format(gates=gates) + self.BODY
+                + (self.RECORD if criteria is None else criteria) + "\n" + extra)
+        text = text.replace("profile: pilot", "profile: " + profile).replace("status: ideation", "status: " + stage)
+        with tempfile.TemporaryDirectory() as directory:
+            return ds.check_task(write_task(directory, text), seed=seed)
+
+    def test_trial_replays_refuse_only_the_missing_third_record(self):
+        errors = self.check(self.REPLAYS[0])
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("Pilot criterion AC-3 has no command, exit", errors[0])
+        self.assertEqual(self.check(self.REPLAYS[1]), [])
+
+    def test_each_record_field_is_required(self):
+        for old, new, field in (("Evidence command: `python3 check.py`", "Evidence: inspected", "command"),
+                                ("exit 0", "completed", "exit"),
+                                ("`evidence/result.log`", "saved", "output path")):
+            with self.subTest(field=field):
+                criterion = self.RECORD.replace(old, new)
+                if field == "command":
+                    criterion = criterion.replace("`evidence/result.log`", "evidence/result.log")
+                errors = self.check(criterion)
+                self.assertEqual(len(errors), 1, errors)
+                self.assertIn("has no " + field + " in its proof record", errors[0])
+
+    def test_falsifier_cannot_supply_a_record(self):
+        errors = self.check("**AC-1** Read the design. Falsifier: command `python3 check.py`; exit 1; `out.log`.")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("has no command, exit, output path", errors[0])
+        self.assertEqual(self.check("**AC-1** Result. Falsifier: removing it. Current evidence: "
+                                   "command `python3 check.py`; exit 0; `out.log`."), [])
+
+    def test_unprovable_heading_requires_a_named_reason(self):
+        incomplete = "**AC-1** Read the design."
+        for level in ("##", "###", "####"):
+            with self.subTest(level=level):
+                self.assertEqual(self.check(incomplete, level + " Not provable now\n- AC-1: provider is unavailable offline."), [])
+        for extra in ("### Not provable now\n- AC-1", "### Not provable now\n- AC-1: provider offline",
+                      "### Not provable now\n- AC-2: provider is unavailable offline.",
+                      "Not provable now: AC-1 provider is unavailable offline.",
+                      "### Not provable now\n### Notes\n- AC-1: provider is unavailable offline.",
+                      "```\n### Not provable now\n- AC-1: provider is unavailable offline.\n```"):
+            with self.subTest(extra=extra):
+                self.assertEqual(len(self.check(incomplete, extra)), 1)
+
+    def test_fenced_record_does_not_complete_a_criterion(self):
+        errors = self.check("**AC-1** Read the design.\n```\ncommand `python3 check.py`; exit 0; out.log\n```")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("has no command, exit, output path", errors[0])
+
+    def test_only_pilot_ideation_owes_records(self):
+        incomplete = "**AC-1** Read the design."
+        for profile, stage in (("pilot", "implementation"), ("pilot", "validation"), ("pilot", "done"),
+                               ("poc", "ideation"), ("prod", "ideation")):
+            with self.subTest(profile=profile, stage=stage):
+                self.assertFalse(any("Pilot criterion" in e for e in self.check(incomplete, profile=profile, stage=stage)))
+
+    def test_ideation_approval_exempts_a_design_still_in_ideation(self):
+        self.assertEqual(self.check("**AC-1** Read the design.", gates=self.APPROVED), [])
+        for gates in (self.APPROVED.replace("decision: approve", "decision: revise"),
+                      self.APPROVED.replace("stage: ideation", "stage: backlog")):
+            with self.subTest(gates=gates):
+                self.assertEqual(len(self.check("**AC-1** Read the design.", gates=gates)), 1)
+
+    def test_seed_admission_does_not_owe_a_proof_record(self):
+        self.assertFalse(any("Pilot criterion" in e for e in self.check("**AC-1** Read the design.", seed=True)))
+
+    def test_document_reading_has_no_special_exemption(self):
+        self.assertEqual(len(self.check("**AC-1** Evidence: read the documentation.")), 1)
+        self.assertEqual(self.check("**AC-1** Evidence command: `git show HEAD:README.md`; exit 0; readme.txt."), [])
+
+    def test_planned_clause_is_a_documented_recognition_limit(self):
+        self.assertEqual(self.check("**AC-1** Evidence: `python3 check.py` must exit 0 and write `out.log`."), [])
+
 class DesignSurfacesTests(unittest.TestCase):
     def write(self, d, text, preview=True):
         if preview:
@@ -849,9 +987,9 @@ Asked: requested slice; without: outcome fails; premise: needed, check one use.
 ## Acceptance criteria
 
 **AC-1**: a.
-Verified by: a test.
+Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.
 **AC-2**: b.
-Verified by: a test.
+Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.
 """
 
 
@@ -1328,9 +1466,9 @@ Preview: preview.html
 ## Acceptance criteria
 
 **AC-1**: a.
-Verified by: a test.
+Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.
 **AC-2**: b.
-Verified by: a test.
+Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.
 """
 
 
@@ -1643,7 +1781,7 @@ Asked: requested seats; without: no count; premise: seats vary, check one slot.
 
 ## Acceptance criteria
 
-**AC-1**: a driver sees seats.
+**AC-1**: a driver sees seats. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.
 """
 AMENDED = """
 ## Captain amendments
