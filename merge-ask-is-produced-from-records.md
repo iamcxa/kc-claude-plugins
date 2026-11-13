@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:merge-ask-is-produced-from-records:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:merge-ask-is-produced-from-records-ideation-1
+              briefing:
+                id: briefing:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1
+                digest: sha256:985f4847756de221746fee5e02914e5b0d92ede7fdf16089977ac36f8c302a28
+                room-ref: ./merge-ask-is-produced-from-records/review/ideation/briefing-1
 started: 2026-11-13T13:42:46Z
 ---
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1",
+  "question": "Design gate decided by FO under the Captain's standing grant for the route trial; the question he answered was: 獨立審查說原本的合約不能直接跑，我已照它修正（設計關卡保留、Prod 不動、每張最多 3 輪實作）。要不要用下面五張小任務開始試跑，並授權我在第一輪沒踩到停止條件時，代你記錄設計關卡通過？五張：①做新東西前先查既有的（你的首要方向，預期第一輪後會停下來問你）②設計檢查腳本遇到同名資料夾會當掉 ③合併檢查不該要求已刪除的暫存路徑 ④沒啟用學習擴充的專案不該被叫去跑學習 ⑤PR 監看不該對別台機器的任務提示。預算每張：1 implementation and 2 validation cycles。",
+  "artifacts": [
+    {
+      "id": "artifact:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4393f0c031ff9744fc53301dd656aab21b582f11/merge-ask-is-produced-from-records.md",
+      "rev": "sha256:99649fa17e934e5f31a1f6117c4439b20c577ec1c9aa2de49de75ca180eae3d2",
+      "mediaType": "text/markdown",
+      "summary": "Ideation round 2 fired no stop (worker's Round 2 line: none newly; the stored-observation question of round 1 was settled by Captain amendment 1). design_surfaces.py check exit 0 (FO run 2026-11-13). The design removes the hand-written summary: the delivery check saves what it observes as a record in the task folder and FO writes the question and what the tool cannot observe; four files, workflow text 6099 to 6071 words; two recorded deliveries replayed through check, question and native gate preparation with no hand-written summary, and one live read-only observation saved with the delivery held (worker's runs, not rerun by FO). Surfaces none, one component, no option left for the Captain. Recommendation: followed."
+    }
+  ]
+}
