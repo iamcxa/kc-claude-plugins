@@ -258,7 +258,7 @@ The existing `asks.jsonl` rule wrote nothing: 0 records in this workflow while 9
   `python3 <package>/scripts/adr_lint.py docs/adr --since 1c3e714ff6752b8c84a490064639baf0d0ef3c9c --require 0086` exit 0, 79 ADR files (`adr-final.log`); the criterion's bare file form checked zero records, so this required-directory run is the evidence.
 - DONE: AC-9 (Captain amendment 1, replacing AC-6) — approved ask sentence plus --by is an exact match, 41 words; one budget step quotes his words and names startup.
   `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exit 0 (`lint-final.log`, `wording-check.log`); removal of this step fails (`mutation-budget.log`). Sentence 25 → 41; workflow 6097 → 6113, delta +16 (`word-counts.json`); wording/budget alone are the last commit `3d65ebd7a`.
-- DONE: Run the whole CI test list, using python3 per test file from the product worktree, with SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock for dispatch suites.
+- DONE: Run the whole CI test list, using python3 per test file from the product worktree, with SPACEDOCK_BIN=<home>/.local/bin/spacedock for dispatch suites.
   `python3 <scratch>/run_ci.py` exit 0: all 29 commands, 1,478 unittest tests / 11 optional skips plus native dispatch checks (`ci-results.json`, `ci-summary.json`, `ci-*.log`); final affected suites refreshed after the last relevant edits. Binary 0.27.2, activated plugin root 0.28.0. CI cost per PR: not measured.
 - DONE: Each named falsifier shown failing by a mutation, using python3 -B with caches cleared.
   `python3 -B <scratch>/mutations.py` exit 0: 12 / 12 caught; separate budget-step removal caught, total 13 (`mutation-results.json`, `mutation-budget.log`); no unexpected import failure substituted for the intended failures.

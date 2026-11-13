@@ -1,15 +1,15 @@
 import json,os,re,subprocess,time
 from pathlib import Path
-wt=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
+wt=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
 scratch=Path('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1')
-env={**os.environ,'TMPDIR':str(scratch/'tmp'),'SPACEDOCK_BIN':'/Users/kent/.local/bin/spacedock'}
+env={**os.environ,'TMPDIR':str(scratch/'tmp'),'SPACEDOCK_BIN':'<home>/.local/bin/spacedock'}
 commands=[]
 for line in (wt/'.github/workflows/kc-dev-flow-2-tests.yml').read_text().splitlines():
     m=re.search(r'run: (.*python3 .*)',line)
     if not m: continue
     command=m[1]
     command=re.sub(r'^SPACEDOCK_BIN="[^"]+" ', '',command)
-    command=command.replace('"$GITHUB_WORKSPACE/.sd-plugin-root"','/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0')
+    command=command.replace('"$GITHUB_WORKSPACE/.sd-plugin-root"','<home>/.codex/plugins/cache/spacedock/spacedock/0.28.0')
     commands.append(command)
 results=[]
 for i,command in enumerate(commands,1):

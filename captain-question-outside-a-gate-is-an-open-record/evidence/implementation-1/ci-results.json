@@ -219,7 +219,7 @@
     "name": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
     "status": "passed",
     "exit": 0,
-    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.28.0",
+    "command": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <home>/.codex/plugins/cache/spacedock/spacedock/0.28.0",
     "log": "ci-test_sd_dispatch-28.log",
     "seconds": 56.58
   },

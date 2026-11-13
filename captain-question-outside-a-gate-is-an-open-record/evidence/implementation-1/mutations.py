@@ -1,6 +1,6 @@
 import json,os,shutil,subprocess
 from pathlib import Path
-wt=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
+wt=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
 scratch=Path('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1')
 root=scratch/'mutants/kc-dev-flow-2'
 shutil.copytree(wt/'kc-dev-flow-2/scripts', root/'scripts', dirs_exist_ok=True, ignore=shutil.ignore_patterns('__pycache__'))

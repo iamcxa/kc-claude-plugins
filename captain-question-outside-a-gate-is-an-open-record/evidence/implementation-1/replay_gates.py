@@ -1,9 +1,9 @@
 import importlib.util,json,subprocess,sys
 from pathlib import Path
 from datetime import timedelta
-wt=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
+wt=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record')
 scratch=Path('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1')
-state=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state')
+state=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state')
 rows=json.loads((state/'captain-question-outside-a-gate-is-an-open-record/evidence/ideation-1/day-2026-11-13.json').read_text())
 replay=scratch/'replay-state-copy'
 selected={r['task'] for r in rows if r['src']=='gate'}

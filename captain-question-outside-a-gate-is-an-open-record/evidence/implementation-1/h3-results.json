@@ -34,7 +34,7 @@
     "command": [
       "python3",
       "-B",
-      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
+      "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
       "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
       "demo"
     ],
@@ -47,7 +47,7 @@
     "command": [
       "python3",
       "-B",
-      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
+      "<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
       "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
       "demo",
       "--json"

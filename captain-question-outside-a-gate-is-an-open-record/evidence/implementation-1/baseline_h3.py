@@ -1,13 +1,13 @@
 import json,os,shutil,subprocess
 from pathlib import Path
-wt=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record');scratch=Path('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1')
+wt=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record');scratch=Path('/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1')
 folder=scratch/'baseline-scripts';shutil.copytree(wt/'kc-dev-flow-2/scripts',folder,ignore=shutil.ignore_patterns('__pycache__'))
 (folder/'task_timeline.py').write_bytes(subprocess.check_output(['git','-C',str(wt),'show','1c3e714ff:kc-dev-flow-2/scripts/task_timeline.py']))
 state=scratch/'h3-state';state.mkdir()
 (state/'demo/dispatch').mkdir(parents=True)
 (state/'demo.md').write_text('---\ntitle: demo\nstatus: ideation\n---\n')
 (state/'demo/dispatch/ideation-1.md').write_text('record\n')
-source=Path('/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record/evidence/ideation-1/h3-fixture-asks.jsonl')
+source=Path('<home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record/evidence/ideation-1/h3-fixture-asks.jsonl')
 shutil.copyfile(source,state/'demo/asks.jsonl')
 subprocess.run(['git','init','-q',str(state)],check=True)
 subprocess.run(['git','-C',str(state),'add','--all'],check=True)
