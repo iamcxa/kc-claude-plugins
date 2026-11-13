@@ -1,0 +1,82 @@
+[
+ {
+  "case": "run1-replay",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay/run1-replay.md",
+  "exit": 1,
+  "want_exit": 1,
+  "proof_lines": [
+   "run1-replay.md: Pilot criterion AC-3 has no command, exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+  ],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run2-replay",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-replay/run2-replay.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-replay.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run2-AC2-exit-removed",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed/run2-AC2-exit-removed.md",
+  "exit": 1,
+  "want_exit": 1,
+  "proof_lines": [
+   "run2-AC2-exit-removed.md: Pilot criterion AC-2 has no exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+  ],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run2-AC2-exit-removed-unprovable-with-reason",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed-unprovable-with-reason/run2-AC2-exit-removed-unprovable-with-reason.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed-unprovable-with-reason.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run2-AC2-exit-removed-unprovable-bare-id",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed-unprovable-bare-id/run2-AC2-exit-removed-unprovable-bare-id.md",
+  "exit": 1,
+  "want_exit": 1,
+  "proof_lines": [
+   "run2-AC2-exit-removed-unprovable-bare-id.md: Pilot criterion AC-2 has no exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+  ],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC2-exit-removed-unprovable-bare-id.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run2-AC1-record-only-in-falsifier",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC1-record-only-in-falsifier/run2-AC1-record-only-in-falsifier.md",
+  "exit": 1,
+  "want_exit": 1,
+  "proof_lines": [
+   "run2-AC1-record-only-in-falsifier.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+  ],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run2-AC1-record-only-in-falsifier.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run1-replay-status-implementation",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-status-implementation/run1-replay-status-implementation.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-status-implementation.stdout.txt",
+  "ok": true
+ },
+ {
+  "case": "run1-replay-profile-prod",
+  "command": "<home>/.pyenv/versions/3.11.14/bin/python3 -B <home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-design-check-reads-each-pilot-criterion-for-its-proof-record/kc-dev-flow-2/scripts/design_surfaces.py check <scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-prod/run1-replay-profile-prod.md",
+  "exit": 0,
+  "want_exit": 0,
+  "proof_lines": [],
+  "output": "<scratch>/design-check-reads-each-pilot-criterion-for-its-proof-record/ideation-1/out/cases/run1-replay-profile-prod.stdout.txt",
+  "ok": true
+ }
+]

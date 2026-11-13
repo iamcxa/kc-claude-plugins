@@ -1,0 +1,2 @@
+run1-replay.md: Pilot criterion AC-3 has no command, exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading
+scope check not run: no closed backlog approval

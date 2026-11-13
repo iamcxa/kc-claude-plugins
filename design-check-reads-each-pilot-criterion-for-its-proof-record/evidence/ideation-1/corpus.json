@@ -1,0 +1,38 @@
+{
+ "dev2": {
+  "pilot task files": 236,
+  "in ideation now": 15,
+  "with Probe line": 3,
+  "refused: as-is (stage+profile)": 11,
+  "refused: forced ideation, no exemption": 155,
+  "refused: forced ideation, Probe line required": 2,
+  "refused: forced ideation, started>=PR864 merge": 0
+ },
+ "adopter-1": {
+  "pilot task files": 113,
+  "in ideation now": 13,
+  "with Probe line": 3,
+  "refused: as-is (stage+profile)": 11,
+  "refused: forced ideation, no exemption": 92,
+  "refused: forced ideation, Probe line required": 3,
+  "refused: forced ideation, started>=PR864 merge": 1
+ },
+ "adopter-2": {
+  "pilot task files": 98,
+  "in ideation now": 1,
+  "with Probe line": 1,
+  "refused: as-is (stage+profile)": 1,
+  "refused: forced ideation, no exemption": 82,
+  "refused: forced ideation, Probe line required": 1,
+  "refused: forced ideation, started>=PR864 merge": 0
+ },
+ "adopter-3": {
+  "pilot task files": 137,
+  "in ideation now": 3,
+  "with Probe line": 1,
+  "refused: as-is (stage+profile)": 3,
+  "refused: forced ideation, no exemption": 67,
+  "refused: forced ideation, Probe line required": 1,
+  "refused: forced ideation, started>=PR864 merge": 0
+ }
+}

@@ -1,0 +1,162 @@
+diff --git a/.probe/cases.py b/.probe/cases.py
+new file mode 100644
+index 000000000..84d96cdb3
+--- /dev/null
++++ b/.probe/cases.py
+@@ -0,0 +1,43 @@
++"""Throwaway probe: replay the two trial designs and edge variants through the probe check.
++usage: python3 -B cases.py <design_surfaces.py> <run1.md> <run2.md> <out-dir>"""
++import json, re, subprocess, sys
++from pathlib import Path
++
++checker, run1, run2, out = sys.argv[1], Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4])
++out.mkdir(parents=True, exist_ok=True)
++r1, r2 = run1.read_text(), run2.read_text()
++AC1 = re.search(r"^\*\*AC-1\*\*.*$", r2, re.M).group(0)
++AC2 = re.search(r"^\*\*AC-2\*\*.*$", r2, re.M).group(0)
++no_exit_ac2 = r2.replace(AC2, AC2.replace("exit 0, ", ""))
++falsifier_only = r2.replace(AC1, "**AC-1** — The probe refuses an empty record. Evidence: read the design. "
++                                 "Falsifier: if the check exits 1 the run writes `evidence/AC-1.log` from command `python3 x.py`.")
++heading = "\n### Not provable now\n\n"
++cases = [
++    ("run1-replay", r1, 1, "Pilot criterion AC-3 "),
++    ("run2-replay", r2, 0, None),
++    ("run2-AC2-exit-removed", no_exit_ac2, 1, "Pilot criterion AC-2 has no exit"),
++    ("run2-AC2-exit-removed-unprovable-with-reason", no_exit_ac2.replace("\n## Acceptance criteria",
++        heading + "- AC-2: the live provider is unavailable offline, so no exit was observed.\n\n## Acceptance criteria", 1), 0, None),
++    ("run2-AC2-exit-removed-unprovable-bare-id", no_exit_ac2.replace("\n## Acceptance criteria",
++        heading + "- AC-2\n\n## Acceptance criteria", 1), 1, "Pilot criterion AC-2 has no exit"),
++    ("run2-AC1-record-only-in-falsifier", falsifier_only, 1, "Pilot criterion AC-1 has no command, exit, output path"),
++    ("run1-replay-status-implementation", r1.replace("status: ideation", "status: implementation", 1), 0, None),
++    ("run1-replay-profile-prod", r1.replace("profile: pilot", "profile: poc", 1), 0, None),
++]
++results = []
++for name, text, want_exit, want_reason in cases:
++    path = out / name / f"{name}.md"
++    path.parent.mkdir(exist_ok=True)
++    path.write_text(text)
++    cmd = [sys.executable, "-B", checker, "check", str(path)]
++    done = subprocess.run(cmd, capture_output=True, text=True)
++    (out / f"{name}.stdout.txt").write_text(done.stdout)
++    proof_lines = [l for l in done.stdout.splitlines() if "Pilot criterion" in l]
++    ok = done.returncode == want_exit and (want_reason is None and not proof_lines or
++                                           want_reason is not None and any(want_reason in l for l in proof_lines))
++    results.append(dict(case=name, command=" ".join(cmd), exit=done.returncode, want_exit=want_exit,
++                        proof_lines=proof_lines, output=str(out / f"{name}.stdout.txt"), ok=ok))
++(out / "cases.json").write_text(json.dumps(results, indent=1))
++for r in results:
++    print(("PASS " if r["ok"] else "FAIL ") + r["case"], r["exit"], r["proof_lines"][:1])
++sys.exit(0 if all(r["ok"] for r in results) else 1)
+diff --git a/.probe/corpus.py b/.probe/corpus.py
+new file mode 100644
+index 000000000..b59da9fb0
+--- /dev/null
++++ b/.probe/corpus.py
+@@ -0,0 +1,38 @@
++"""Throwaway probe: count Pilot task files the probe proof-record rule refuses under each exemption option.
++usage: python3 -B corpus.py <design_surfaces.py> <out.json> <label>=<state-root> ...   (task files: <root>/*.md, <root>/_archive/*.md)"""
++import json, os, re, subprocess, sys, tempfile
++from pathlib import Path
++
++checker, out = sys.argv[1], Path(sys.argv[2])
++CUTOFF = "2026-11-13T09:27:23Z"  # PR 864 merge time; the probe stands in for a release date
++modes = {
++    "as-is (stage+profile)": ("stage", None),
++    "forced ideation, no exemption": ("stage", "ideation"),
++    "forced ideation, Probe line required": ("probe-line", "ideation"),
++    "forced ideation, started>=PR864 merge": (f"started>={CUTOFF}", "ideation"),
++}
++report = {}
++for arg in sys.argv[3:]:
++    label, root = arg.split("=", 1)
++    root = Path(root)
++    files = [p for p in sorted(list(root.glob("*.md")) + list(root.glob("_archive/*.md")))
++             if re.search(r"\A---\n(?:.*\n)*?profile:[ \t]*pilot[ \t]*\n(?:.*\n)*?---\n", p.read_text(errors="replace"))]
++    counts = {"pilot task files": len(files),
++              "in ideation now": sum(bool(re.search(r"^status:[ \t]*ideation\b", p.read_text(), re.M)) for p in files),
++              "with Probe line": sum(bool(re.search(r"^(?:#{1,4}[ \t]*)?Probe\b", p.read_text(), re.M)) for p in files)}
++    for mode, (env, force) in modes.items():
++        refused = 0
++        with tempfile.TemporaryDirectory() as tmp:
++            for p in files:
++                text = p.read_text()
++                if force:
++                    text = re.sub(r"^status:.*$", f"status: {force}", text, count=1, flags=re.M)
++                copy = Path(tmp) / p.name
++                copy.write_text(text)
++                done = subprocess.run([sys.executable, "-B", checker, "check", str(copy)], capture_output=True, text=True,
++                                      env={**os.environ, "PROBE_EXEMPT": env})
++                refused += any("Pilot criterion" in l for l in done.stdout.splitlines())
++        counts[f"refused: {mode}"] = refused
++    report[label] = counts
++out.write_text(json.dumps(report, indent=1))
++print(json.dumps(report, indent=1))
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index 6ad921da7..7224b1021 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -190,6 +190,52 @@ def check_criteria(name, lines, errors):
+     return declared
+ 
+ 
++PROOF_EXIT = re.compile(r"\bexit(?:ed| code)?\s*[:=]?\s*-?\d+", re.I)
++PROOF_PATH = re.compile(r"[\w.<>~-]*/[\w./<>-]*\w|\b[\w-]+(?:\.[\w-]+)*\.(?:log|json|jsonl|txt|md|out|err|stdout|stderr|diff|xml|csv|html|png)\b")
++PROOF_COMMAND = re.compile(r"\bcommand\b|`[^`\n]+`", re.I)
++FALSIFIER_PART = re.compile(r"Falsifiers?\b:?.*?(?=Current evidence:|Evidence(?: command)?:|$)", re.S | re.I)
++UNPROVABLE_HEADING = re.compile(r"^[ \t]*#{2,4}[ \t]*Not provable now\b", re.I)
++
++
++def unprovable_entries(lines):
++    named, inside, level = {}, False, 0
++    for line in unfenced(lines):
++        head = re.match(r"^[ \t]*(#{1,6})[ \t]", line)
++        if UNPROVABLE_HEADING.match(line):
++            inside, level = True, len(head.group(1))
++            continue
++        if inside and head and len(head.group(1)) <= level:
++            inside = False
++        if inside:
++            for found in AC_ID.findall(line):
++                if len(words_of(AC_ID.sub("", line))) >= 3:
++                    named[found] = line.strip()
++    return named
++
++
++def proof_gaps(lines):
++    body = section(lines, AC_HEADING) or []
++    unprovable = unprovable_entries(lines)
++    gaps = []
++    for key, block in criterion_blocks(unfenced(body)).items():
++        claim = FALSIFIER_PART.sub(" ", block)
++        missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
++                   if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]
++        if missing and key not in unprovable:
++            gaps.append((key, missing))
++    return gaps
++
++
++def probe_scope(text):
++    mode = os.environ.get("PROBE_EXEMPT", "stage")
++    if mode == "probe-line":
++        return bool(re.search(r"^(?:#{1,4}[ \t]*)?Probe\b", text, re.M))
++    if mode.startswith("started>="):
++        found = re.search(r"^started:[ \t]*(\S+)", text, re.M)
++        return bool(found) and found.group(1) >= mode.split(">=", 1)[1]
++    return True
++
++
+ def declarations(lines):
+     return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
+ 
+@@ -1206,6 +1252,11 @@ def check_task(path, seed=False, notes=None):
+                 errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
+         if needed:
+             errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
++    if profile and status and (profile.group(1), status.group(1)) == ("pilot", "ideation") and probe_scope(text):
++        for key, missing in proof_gaps(lines):
++            errors.append(f"{path.name}: Pilot criterion {key} has no {', '.join(missing)} in its proof record "
++                          "(command, observed exit <n>, output path; Falsifier text does not count) and is not named "
++                          "with a reason under a 'Not provable now' heading")
+     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
+         summary = check_security(path, plain, declared, errors)
+         if summary and notes is not None:
