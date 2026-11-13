@@ -9,7 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from unittest.mock import patch
 
 import task_timeline as tt
@@ -198,7 +198,7 @@ class TimelineTests(unittest.TestCase):
         self.assertIsNone(tt.timeline(self.state, "demo")["asks_outside_gate"])
         before = datetime.now(timezone.utc).replace(microsecond=0)
         for question in ("May I continue?", "要先處理哪件事？"):
-            run = self.cli("demo", "ask", question)
+            run = self.cli("demo", "ask", question, "--holds", "task", "--by", "test FO")
             self.assertEqual(run.returncode, 0, run.stderr)
         path = self.state / "demo/asks.jsonl"
         saved = path.read_bytes()
@@ -216,7 +216,7 @@ class TimelineTests(unittest.TestCase):
         self.dispatch("implementation", 1, 30, entering=True)
         with contextlib.redirect_stdout(io.StringIO()):
             for minute in (5, 15, 30):
-                tt.record_ask(self.state, "demo", f"question {minute}", tt.when(self.stamp(minute)))
+                tt.record_ask(self.state, "demo", f"question {minute}", tt.when(self.stamp(minute)), holds="task", by="test FO")
         result = tt.timeline(self.state, "demo")
         self.assertEqual([r["asks_outside_gate"] for r in result["stages"]], [1, 1])
         self.assertEqual(len(result["unassigned_asks"]), 1)
@@ -241,6 +241,191 @@ class TimelineTests(unittest.TestCase):
         self.assertNotEqual(run.returncode, 0)
         self.assertIn("missing or unclosed frontmatter", run.stderr)
 
+
+    def ask(self, **fields):
+        return tt.write_event(self.state, "demo", "ask", dict(asked="Proceed?", asked_at="now",
+                              channel="chat", by="test FO", holds="acceptance", **fields))
+
+    def event(self, event, key="demo#1", **fields):
+        return tt.write_event(self.state, "demo", event, {"key": key, **fields})
+
+    def test_contract_v2_six_events_and_revision_fields_persist(self):
+        first = self.ask(options=[dict(id="yes", text="Proceed", effect="Start work")], recommend="yes",
+                         approve_means="yes", tasks=["other"], refs=[dict(kind="file", ref="design.md", ready=False)])
+        self.assertEqual((first["key"], first["v"], first["asked_at"]), ("demo#1", 1, first["at"]))
+        self.event("reask", channel="review", briefing="briefing:one")
+        self.event("revise", revision=2, asked="Proceed now?", holds="task", reason="New scope")
+        self.event("answer", channel="review", revision=1, words=None, option=None, resolution="resolution:one")
+        self.event("acted", what="Started work")
+        second = self.ask()
+        self.event("withdraw", key=second["key"], reason="No longer needed")
+        entries = tt.read_asks(self.state / "demo/asks.jsonl")
+        self.assertEqual([e["event"] for e in entries], ["ask", "reask", "revise", "answer", "acted", "ask", "withdraw"])
+        q = tt.fold_question(entries[:5])
+        self.assertEqual((q["state"], q["answer"]["option"], q["interruptions"]), ("done", "yes", 2))
+        self.assertIsNone(q["tasks"])
+        self.assertEqual(q["revisions"][1]["options"][0]["effect"], "Start work")
+        self.assertEqual(q["revisions"][1]["tasks"], ["other"])
+        self.assertEqual(tt.open_rows(self.state), [])
+
+    def test_contract_writer_refuses_unknown_event(self):
+        with self.assertRaisesRegex(ValueError, "unknown event"):
+            tt.write_event(self.state, "demo", "invent", {})
+        self.assertFalse((self.state / "demo/asks.jsonl").exists())
+
+    def test_contract_writer_refuses_every_event_after_closing_except_one_acted(self):
+        for closed in ("answer", "withdraw"):
+            for event in ("reask", "revise", "answer", "withdraw", "acted"):
+                with self.subTest(closed=closed, event=event):
+                    (self.state / "demo/asks.jsonl").unlink(missing_ok=True)
+                    self.ask()
+                    self.event(closed, **(dict(channel="chat", words="yes", option=None, resolution=None)
+                                           if closed == "answer" else dict(reason="Stop")))
+                    if closed == "answer" and event == "acted":
+                        self.event("acted", what="Done")
+                    saved = (self.state / "demo/asks.jsonl").read_bytes()
+                    with self.assertRaisesRegex(ValueError, "after closing"):
+                        self.event(event, channel="chat", revision=1, asked="Again", holds="task",
+                                   reason="Again", words="yes", option=None, resolution=None, what="Done")
+                    self.assertEqual((self.state / "demo/asks.jsonl").read_bytes(), saved)
+
+    def test_contract_writer_refuses_acted_without_answer(self):
+        self.ask()
+        with self.assertRaisesRegex(ValueError, "acted needs an answer"):
+            self.event("acted", what="Done")
+
+    def test_contract_writer_refuses_wordless_answer_without_approve_means(self):
+        self.ask(options=[dict(id="a", text="A")])
+        with self.assertRaisesRegex(ValueError, "wordless answer needs approve_means"):
+            self.event("answer", channel="chat", words=None, option="a", resolution=None)
+
+    def test_contract_writer_refuses_recommendation_outside_options(self):
+        with self.assertRaisesRegex(ValueError, "recommend must name an option"):
+            self.ask(options=[dict(id="a", text="A")], recommend="missing")
+        self.assertFalse((self.state / "demo/asks.jsonl").exists())
+
+    def test_contract_writer_refuses_revision_not_previous_plus_one(self):
+        self.ask()
+        with self.assertRaisesRegex(ValueError, r"revision must be previous \+ 1"):
+            self.event("revise", revision=3, asked="Changed", holds="task", reason="Change")
+
+    def test_contract_writer_refuses_answer_that_does_not_match_last_channel_showing(self):
+        self.ask()
+        self.event("revise", revision=2, asked="Changed", holds="task", reason="Change")
+        with self.assertRaisesRegex(ValueError, "latest showing"):
+            self.event("answer", channel="chat", revision=2, words="Yes", option=None, resolution=None)
+        self.event("answer", channel="chat", revision=1, words="Yes", option=None, resolution=None)
+
+    def test_missing_owner_prints_complete_command_without_writing(self):
+        result = self.cli("demo", "ask", "May I continue?", "--holds", "acceptance", "--recommend", "yes", "--option", "yes=Proceed")
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("--by '<session>'", result.stderr)
+        self.assertIn("'May I continue?' --holds acceptance --recommend yes --option yes=Proceed --channel chat", result.stderr)
+        self.assertFalse((self.state / "demo/asks.jsonl").exists())
+
+    def test_review_escalation_after_three_showings_and_unknown_wait_bound(self):
+        tt.write_event(self.state, "demo", "ask", dict(asked="Proceed?", asked_at=None,
+                       channel="chat", by="test FO", holds="nothing"), tt.when(self.stamp(10)))
+        for minute in (15, 20):
+            tt.write_event(self.state, "demo", "reask", dict(key="demo#1", channel="chat", briefing=None), tt.when(self.stamp(minute)))
+        row = tt.open_rows(self.state, tt.when(self.stamp(30)))[0]
+        self.assertEqual((row["waiting_since"], row["waiting_min"], row["waiting_bound"], row["holds"]), (None, 20, "at least", "nothing"))
+        self.assertTrue(row["publish_review"])
+        tt.write_event(self.state, "demo", "reask", dict(key="demo#1", channel="review", briefing="briefing:one"), tt.when(self.stamp(25)))
+        self.assertFalse(tt.open_rows(self.state, tt.when(self.stamp(30)))[0]["publish_review"])
+
+    def test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json(self):
+        self.dispatch("ideation", 1, 0, entering=True)
+        self.write("demo/asks.jsonl", json.dumps(dict(at=self.stamp(5), asked="Legacy")) + "\n")
+        ask = tt.write_event(self.state, "demo", "ask", dict(asked="New", asked_at="now", channel="chat", by="test FO", holds="task"), tt.when(self.stamp(10)))
+        self.assertEqual(ask["key"], "demo#1")
+        tt.write_event(self.state, "demo", "reask", dict(key=ask["key"], channel="chat", briefing=None), tt.when(self.stamp(20)))
+        tt.write_event(self.state, "demo", "answer", dict(key=ask["key"], channel="chat", words="Yes", option=None, resolution=None), tt.when(self.stamp(30)))
+        result = self.cli("demo", "--json")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["asks_outside_gate"], 3)
+        self.assertEqual(self.cli("demo").returncode, 0)
+        self.assertIn("shown again: demo#1", self.cli("demo").stdout)
+        self.assertEqual(tt.open_rows(self.state), [])
+
+    def test_reader_ignores_unknown_and_pre_ask_events_and_does_not_reopen_closed_key(self):
+        first = self.ask()
+        events = [dict(v=1, event="reask", key="demo#1"), first,
+                  dict(v=1, event="future", key="demo#1"), first,
+                  dict(v=1, event="withdraw", key="demo#1", reason="Stop"),
+                  dict(v=1, event="reask", key="demo#1")]
+        self.assertEqual((tt.fold_question(events)["state"], tt.fold_question(events)["interruptions"]), ("withdrawn", 1))
+        self.assertEqual(tt.fold_question([first, dict(v=2, event="answer", key="demo#1")])["state"], "unknown")
+
+    def test_replayed_fourteen_questions_at_declared_synthetic_times(self):
+        for i, fixture in enumerate(REPLAY_2026_11_13):
+            slug, question, answered = fixture
+            (self.state / f"{slug}.md").write_text("---\ntitle: Replay\n---\n")
+            answer_time = tt.when(answered)
+            ask_time = answer_time - timedelta(minutes=10 + i)
+            entry = tt.write_event(self.state, slug, "ask", dict(asked=question, asked_at="now", channel="chat", by="replay FO", holds=("task", "acceptance", "nothing")[i % 3]), ask_time)
+            tt.write_event(self.state, slug, "answer", dict(key=entry["key"], channel="chat", words="Recorded answer", option=None, resolution=None), answer_time)
+        clocks = sorted({tt.when(t) + delta for _, _, t in REPLAY_2026_11_13 for delta in (timedelta(minutes=-30), timedelta(minutes=-5), timedelta(), timedelta(minutes=5))})
+        self.assertEqual(len(REPLAY_2026_11_13), 14)
+        for clock in clocks:
+            expected = {f"{slug}#1": (i, tt.when(t) - timedelta(minutes=10 + i)) for i, (slug, _, t) in enumerate(REPLAY_2026_11_13)
+                        if tt.when(t) - timedelta(minutes=10 + i) <= clock < tt.when(t)}
+            run = self.cli("--open", "--json", "--as-of", tt.iso(clock))
+            self.assertEqual(run.returncode, 0, run.stderr)
+            actual = {r["key"]: r for r in json.loads(run.stdout)}
+            self.assertEqual(set(actual), set(expected), tt.iso(clock))
+            for key, (i, since) in expected.items():
+                self.assertEqual((actual[key]["by"], actual[key]["waiting_since"], actual[key]["waiting_min"], actual[key]["interruptions"], actual[key]["state"], actual[key]["holds"]),
+                                 ("replay FO", tt.iso(since), tt.mins(since, clock), 1, "open", ("task", "acceptance", "nothing")[i % 3]))
+
+    def test_gate_wait_uses_first_naming_commit_after_archive_moves_room(self):
+        (self.state / "_archive").mkdir()
+        key = "briefing:demo:ideation:1"
+        self.task.write_text('---\ntitle: Demo\ngates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:demo:1\n          briefing:\n            id: ' + key + '\n            room-ref: demo/review/ideation/briefing-1\n---\n')
+        self.write("demo/review/ideation/briefing-1/index.json", json.dumps(dict(question="Proceed?")))
+        self.commit("first names briefing", 10)
+        self.task.write_text(self.task.read_text().replace("---\n", "---\n", 1).replace("\n---\n", '\n          resolution:\n            at: "' + self.stamp(30) + '"\n            decision: approve\n---\n'))
+        self.commit("resolve", 30)
+        self.finish(50)
+        row = tt.open_rows(self.state, tt.when(self.stamp(20)), gates=True)[0]
+        self.assertEqual((row["key"], row["waiting_since"], row["waiting_min"], row["waiting_bound"], row["question"]),
+                         (key, self.stamp(10), 10, "at least", "Proceed?"))
+        self.assertEqual(tt.open_rows(self.state, tt.when(self.stamp(30)), gates=True), [])
+        self.assertEqual(tt.open_rows(self.state, gates=True), [])
+        self.assertEqual(tt.open_rows(self.state, tt.when(self.stamp(5)), gates=True), [])
+
+
+
+# Public 2026-11-13 replay; asking times and replay owner are synthetic in the test.
+REPLAY_2026_11_13 = [('replay-1',
+  '#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 '
+  'worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。',
+  '2026-11-13T10:40:43+08:00'),
+ ('replay-2', '#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明', '2026-11-13T02:22:34+08:00'),
+ ('replay-3', '有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則', '2026-11-13T14:49:47+08:00'),
+ ('replay-4',
+  '#864（Pilot '
+  '設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功',
+  '2026-11-13T16:01:58+08:00'),
+ ('replay-5', '要不要開「Pilot 流程改動', '2026-11-05T17:40:56+08:00'),
+ ('replay-6', '「自動觸發 Codex 審查', '2026-11-13T21:57:48+08:00'),
+ ('replay-7', '下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段', '2026-11-13T10:24:54+08:00'),
+ ('replay-8',
+  'Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation '
+  'cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。',
+  '2026-11-13T15:14:02+08:00'),
+ ('replay-9', '要不要開「待決定事項紀錄', '2026-11-13T14:45:53+08:00'),
+ ('replay-10', '#866 這張要怎麼走？', '2026-11-13T20:22:30+08:00'),
+ ('replay-11',
+  '一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦',
+  '2026-11-13T17:51:53+08:00'),
+ ('replay-12',
+  '#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 '
+  '#854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker '
+  '不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的',
+  '2026-11-13T11:45:10+08:00'),
+ ('replay-13', '這張要怎麼走？', '2026-11-13T22:18:20+08:00'),
+ ('replay-14', '合併檢查存紀錄這張，要不要做成邊界合約？', '2026-11-13T23:51:21+08:00')]
 
 if __name__ == "__main__":
     unittest.main()
