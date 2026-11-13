@@ -189,3 +189,7 @@ Recommended order: no implementation to order under the stop route; if reopened,
 ### Summary
 
 The POC did not run and the task stops under its stop condition with no package change, because Paseo's only Antigravity mode is the one Scope forbids. The new fact for the Captain: headless `agy` reports `always-proceed` even with no flag, so never passing the flag does not by itself restrict a reviewer. The checker already accepts a Gemini model string, so the launch is the only block found; browser operation under any restricted mode is untested.
+
+## Held
+
+Reopen when: Paseo offers an Antigravity mode a test shows refusing a write.
