@@ -242,9 +242,10 @@ def ask_files(state):
 
 
 def fold_question(events):
-    q = None
+    q, future_key = None, None
     for e in events:
         if e.get("v", 0) > 1:
+            future_key = e.get("key")
             if q:
                 q["state"] = "unknown"
             continue
@@ -278,6 +279,8 @@ def fold_question(events):
             q["state"], q["answer"] = "answered", e
         elif event == "withdraw":
             q["state"] = "withdrawn"
+    if future_key is not None:
+        q = {**(q or {"key": future_key}), "state": "unknown"}
     return q
 
 

@@ -355,7 +355,9 @@ class TimelineTests(unittest.TestCase):
                   dict(v=1, event="withdraw", key="demo#1", reason="Stop"),
                   dict(v=1, event="reask", key="demo#1")]
         self.assertEqual((tt.fold_question(events)["state"], tt.fold_question(events)["interruptions"]), ("withdrawn", 1))
-        self.assertEqual(tt.fold_question([first, dict(v=2, event="answer", key="demo#1")])["state"], "unknown")
+        future = dict(v=2, event="answer", key="demo#1")
+        for events in ([first, future], [future, first], [future]):
+            self.assertEqual(tt.fold_question(events)["state"], "unknown")
 
     def test_replayed_fourteen_questions_at_declared_synthetic_times(self):
         for i, fixture in enumerate(REPLAY_2026_11_13):
