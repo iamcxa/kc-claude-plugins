@@ -190,6 +190,10 @@ Recommended order: budget-form first (it is in validation and owns the `task_tim
 
 Not provable now: that FO records questions at the moment of asking on a real day after release (needs a live day; AC-4 enforces only that a record exists by the next gate); a reader in another repository reading the remote branch (needs the release).
 
+## Number guards
+
+ADR: 0086
+
 ## Stage Report: ideation
 
 - DONE: Contract first: write the record's format as a contract document before any probe code, in the task folder as contract-draft.md
