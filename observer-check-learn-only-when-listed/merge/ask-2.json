@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+  "model": "not run",
+  "necessity": "kc-dev-flow-2/scripts/laws_check.py, kc-dev-flow-2/scripts/observer_check.py, kc-dev-flow-2/scripts/pr_watch.py and their three test files change against the PR's base (gh pr view 861 file list, FO re",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: path: 'kc-dev-flow-2/scripts/laws_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/observer_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_laws_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_observer_check.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#861",
+  "sufficiency": "on a workflow README that does not list learn the archived-task check prints no learn step, and on one that lists it the steps print as before; the three readers of the extension list agree on eight o",
+  "time": "2026-11-13T02:06:03Z",
+  "verdict": "ask"
+}
