@@ -47,6 +47,7 @@ gates:
 ## FO alignment
 
 Alignment: needed at ideation; the relayed wishes above are confirmed with the Captain before the design builds on them.
+Result: the Captain confirmed the scope first-hand with 「開「待決定事項紀錄」任務，照這個範圍」 (chat, 2026-11-13) and admitted it with 「改革試驗：兩張都進設計階段」 (chat, 2026-11-14); the two relayed wishes (one place used with Spacedock Review; a briefing after two unanswered turns) are not confirmed to this session, so the design carries them as options for him at the design gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
