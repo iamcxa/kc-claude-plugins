@@ -9,7 +9,7 @@ worktree; independent files ran in up to four processes and native tests in orde
 Six new regression methods reject the original checker; six isolated in-memory
 guard mutations fail their owning test. A mutation harness exit 0 means expected
 rejection, not a repaired-candidate test failure. Initial CI/fixture and evidence
-collection failures remain: the first suite stopped after 13 completed commands;
+collection failures remain: the first suite stopped after 15 completed commands;
 the intermediate POC retry also failed until empty-observation configuration was
 made consistent. The original baseline grouping counted two subcases separately;
 final grouping verifies six failing methods, seven subcases, and zero errors.
