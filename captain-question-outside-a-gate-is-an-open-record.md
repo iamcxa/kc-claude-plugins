@@ -3,7 +3,7 @@ title: A question to the Captain outside a gate is one record in the task's stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'The Captain answered 「改革試驗：兩張都進設計階段」 (chat, 2026-11-14), answering 「決定：要不要讓兩張任務進設計階段，當作改革試驗（十分鐘內先回報、分鐘預算加喚醒、同一階段派第二次重來就停）的其中兩張？建議要。第一張：關卡以外問你的每一題做成一筆紀錄，答案記錄前都算待決定，先寫格式合約再實作，Bridge 那邊當只看文件的讀者。第二張：專案的架構文件有固定的版面，每個事實、裁定和想法只有一個家（這張是 11/11 另一個工作階段照你的意思建的，背後的試驗我沒有重跑過）。兩張預算都是 1 implementation and 2 validation cycles，各一個套件 PR。同意即接受：兩張都不是小修正，設計裡會有要你選的選項，所以不適用常設授權，設計關卡都由你裁定；我照試驗的三條做法回報；第二張的預算原本寫「一輪設計、一輪實作、一輪驗證」，現在的檢查不接受那個寫法，我改成上面這個；試驗另外三張是已經准入的「驗證者留下的東西能直接用」、已在設計階段等重派的「設計階段先查 RFC」，第五張之後再補。」; admits the task with outcome, scope and Budget as seeded. Recommendation: followed.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
