@@ -50,3 +50,7 @@ Alignment: needed before ideation; no bite yet.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Held
+
+Reopen when: a real task archives with a superseded criterion still declared.
