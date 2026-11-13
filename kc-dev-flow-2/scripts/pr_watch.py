@@ -77,6 +77,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from role_triggers import review_facts  # noqa: E402
 from dispatch_records import coverage, worker_stages  # noqa: E402
 from learning import job_key  # noqa: E402
+import scratch  # noqa: E402
 from workflow_extensions import readme_extensions  # noqa: E402
 
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
@@ -556,6 +557,38 @@ def archived_learning(workflow, state, ask):
     return out, errors
 
 
+def scratch_lines(workflow, state, found, merged=()):
+    if not scratch.BASE.exists():
+        return []
+    directory = scratch.BASE / scratch.repository(toplevel(workflow), state)
+    if not directory.exists():
+        return []
+    scratch.safe_path(directory)
+    live = dict(found)
+    archived = dict(entities(state / "_archive")) if (state / "_archive").is_dir() else {}
+    out = []
+    for slug in sorted(directory.iterdir()):
+        task = live.get(slug.name) or archived.get(slug.name)
+        if not task:
+            out.append(f"fact: scratch {slug} has no task; left untouched.")
+            continue
+        folder = task.parent if task.name == "index.md" else task.with_suffix("")
+        newest = git("-C", str(state), "log", "--diff-filter=A", "--no-renames", "--name-only", "--format=",
+                     "-n", "1", "--", str(folder / "dispatch"))
+        records = sorted(Path(p).stem for p in newest.splitlines() if p.endswith('.md'))
+        current = scratch.dispatch_name(records[-1]) if records else None
+        if slug.is_symlink() or not slug.is_dir():
+            out.append(f"fact: scratch {slug} is not a regular task directory; left untouched.")
+            continue
+        for root in sorted(slug.iterdir()):
+            if not scratch.RECORD.fullmatch(root.name):
+                out.append(f"fact: scratch {root} has no dispatch name; left untouched.")
+            elif slug.name in archived or slug.name in merged or (current and root.name != current):
+                command = shlex.join(['python3', str(SCRIPTS / 'scratch.py'), 'close', str(folder), root.name])
+                out.append(f"next: run `{command}`; that dispatch has ended. Commit the scratch-removed.txt it writes with the task path.")
+    return out
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -564,6 +597,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors, live, rounds = [], {}, [], [], {}
     found = entities(state)
+    try:
+        out += scratch_lines(workflow, state, found)
+    except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
+        errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
     stages = None
     for slug, task in found:
         try:
@@ -621,7 +658,13 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         if now["state"] == "OPEN":
             snaps[ref] = now
             out += [facts(ref, now)] + next_for(ref, now)
-        elif now["state"] == "MERGED" and "learn" in listed:
+        elif now["state"] == "MERGED":
+            try:
+                out += [line for line in scratch_lines(workflow, state, found, {slug}) if line not in out]
+            except (OSError, ValueError, RuntimeError, subprocess.CalledProcessError) as error:
+                errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
+            if "learn" not in listed:
+                continue
             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
                                    "--readme", str(workflow / "README.md")],
                                   capture_output=True, text=True)
