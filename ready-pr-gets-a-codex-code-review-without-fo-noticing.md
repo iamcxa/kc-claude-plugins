@@ -3,7 +3,7 @@ title: A PR marked ready gets its Codex code review without FO noticing a securi
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
