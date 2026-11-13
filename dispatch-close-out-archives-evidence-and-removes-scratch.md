@@ -101,9 +101,16 @@ Evidence: `git -C <code repo> worktree list --porcelain | grep -c '^worktree /\(
 Run now: 90 worktrees registered, 3 under `/tmp`, none under `/tmp/dev2/`; count 0, exit 1 (`evidence/code-repo-tmp-worktrees.txt`). This shows the command works; it proves nothing about close yet.
 Falsifier: a `git worktree add` inside a root that close leaves registered.
 
+### Amendment 3 — 2026-11-13, chat
+Captain: 「加預算，修完：#854、#856 各改成 1 implementation and 3 validation cycles」 (chat, 2026-11-13)
+Asked: 「#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。」
+Supersedes: none
+Budget: 1 implementation and 3 validation cycles
+
 ### Feedback Cycles
 
 - Cycle 1 (FO, 2026-11-12): validation-1 on #854 head 223dbb6d1 recommended REJECTED with two findings: F1 assessed Material and owned (kind build; the generated dispatch instruction omits the Captain's rule that private repository evidence is never archived and bans only secrets and personal data); F2 Needs decision (kind aim or scope; AC-3's whole-repository zero-worktree count conflicts with the rule that a close-out removes only its own scratch root), settled by Captain amendment 2. Routed to the implementation worker as a repair message.
+- Cycle 2 (FO, 2026-11-13): after validation-2 passed at d4fe39e54, Codex review 5873421269 left two P2 findings on that head (a later-dispatch scratch path is validated against the previous dispatch's root, so a second validation dispatch that names its scratch root cannot be built; a compression that fails partway and is retried records the compressed file's digest as the original's), and merges of PRs 858 and 861 left a conflict with main in kc-dev-flow-2/scripts/pr_watch.py. FO assesses both findings Material and owned (kind build, inside the approved design: the first blocks an ordinary second-validation dispatch, the second breaks ADR 0079's original-digest statement). Captain amendment 3 grants the third validation cycle; repair by follow-up message to the implementation worker, then an engineering-reviewer read, then validation-3.
 
 ## Design
 
