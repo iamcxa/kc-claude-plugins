@@ -15,6 +15,10 @@ gates:
                 id: briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-1:revision-1
                 digest: sha256:86f5ecfa7e4c86ae717d90246f83f5b9d57be182e55d8f8cff001e90558d85fb
                 room-ref: ./ready-pr-gets-a-codex-code-review-without-fo-noticing/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-13T13:42:01.503467Z"
+                reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
 ---
 
 ## Scope
