@@ -1,0 +1,20 @@
+......F....                                         [100%]
+=================================== FAILURES ===================================
+______________ TasksTests.test_held_quote_uses_newest_hold_reason ______________
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_uses_newest_hold_reason>
+
+    def test_held_quote_uses_newest_hold_reason(self):
+        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
+        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
+                 "                decision: hold\n                reason: wait for a different condition\n")
+        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+>       self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
+E       AssertionError: False is not true : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:900: AssertionError
+=========================== short test summary info ============================
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_uses_newest_hold_reason
+1 failed, 10 passed, 152 deselected in 9.16s

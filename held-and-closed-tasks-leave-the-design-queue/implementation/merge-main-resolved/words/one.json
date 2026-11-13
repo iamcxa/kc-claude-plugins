@@ -1,0 +1,31 @@
+{
+  "case": "one",
+  "held_tasks": 1,
+  "stages_present": [
+    "ideation"
+  ],
+  "configured_stages": [
+    "backlog",
+    "ideation",
+    "implementation",
+    "validation",
+    "done"
+  ],
+  "all_stages_present": false,
+  "measured_words": 17,
+  "maximum_words": 21,
+  "passed": true,
+  "measured_fixed_words": 15,
+  "bound_from_approved_asked": "每張擱置的任務最多多 1 個字，另加固定 20 個字",
+  "captain_answer": "可以，照列名稱（建議）",
+  "synthetic_rows": false,
+  "fact_line": "fact: held by the Captain, not waiting: ideation adoption-asks-which-extensions; each ## Held section says what reopens it.",
+  "wc_command": [
+    "wc",
+    "-w",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/words/one-fact.txt"
+  ],
+  "wc_output": "17 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/words/one-fact.txt",
+  "candidate": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "formatter_sha256": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04"
+}

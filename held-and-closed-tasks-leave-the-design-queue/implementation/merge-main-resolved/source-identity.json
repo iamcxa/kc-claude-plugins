@@ -1,0 +1,39 @@
+{
+  "candidate": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+  "parents": [
+    "455846c6d30d4ab650c1c4503bc591722231586d",
+    "46e9d0ed4bb86889022457adcdf656965dc97e73"
+  ],
+  "main": "46e9d0ed4bb86889022457adcdf656965dc97e73",
+  "branch": "spacedock-ensign/held-and-closed-tasks-leave-the-design-queue",
+  "changed_files": [
+    "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "all_original_added_removed_lines_unchanged": true,
+  "base_owned": {
+    "kc-dev-flow-2/scripts/dispatch_stage.py": {
+      "sha256": "790acaf5f8ea6c07f86c1e506a35a524b160a19f729e08d83a3c30afae4f7138",
+      "identical_to_main": true
+    },
+    "kc-dev-flow-2/scripts/scratch.py": {
+      "sha256": "f76d30d95aadbcd2bf5cc34b7d87ce54145a644dc654bba7351b31c0841b1e63",
+      "identical_to_main": true
+    },
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": {
+      "sha256": "67ff29b9db867c22a7ae17302afe522ae2b48d261a6543c8d137324c5d92fcc8",
+      "identical_to_main": true
+    },
+    "kc-dev-flow-2/scripts/test_scratch.py": {
+      "sha256": "c3b5f72f1f51d7be2f115ab778b19dd139c525135b39bae3ef5942cd7195a3ec",
+      "identical_to_main": true
+    }
+  },
+  "source_hashes": {
+    "docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md": "9faa426ed292eb7ebdcb521b77245b5826937ef35c622011a2c4c0e4e97c8cde",
+    "kc-dev-flow-2/scripts/pr_watch.py": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04",
+    "kc-dev-flow-2/scripts/test_pr_watch.py": "00cd84d720bb618de2eac0583997b413ea6e1856106fd8ab044ba7e89bb75ddb"
+  },
+  "status": ""
+}

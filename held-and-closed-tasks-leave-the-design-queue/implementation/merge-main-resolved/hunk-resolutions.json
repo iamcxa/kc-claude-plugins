@@ -1,0 +1,65 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/pr_watch.py",
+    "hunk": "@@ -9,6 +9,8 @@",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/pr_watch.py",
+    "hunk": "@@ -73,8 +75,9 @@ import sys",
+    "leading_context_trimmed": 3,
+    "trailing_context_trimmed": 1,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/pr_watch.py",
+    "hunk": "@@ -428,6 +431,56 @@ def ready_rows(workflow):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/pr_watch.py",
+    "hunk": "@@ -600,6 +653,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "hunk": "@@ -566,6 +566,13 @@ print(json.dumps(answer))",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "hunk": "@@ -772,6 +779,8 @@ class TasksTests(unittest.TestCase):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "hunk": "@@ -811,7 +820,7 @@ class TasksTests(unittest.TestCase):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "hunk": "@@ -828,6 +837,93 @@ class TasksTests(unittest.TestCase):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "hunk": "@@ -1821,7 +1917,8 @@ class TasksTests(unittest.TestCase):",
+    "leading_context_trimmed": 0,
+    "trailing_context_trimmed": 0,
+    "change": "original task additions/deletions unchanged"
+  }
+]

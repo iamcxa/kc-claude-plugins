@@ -1,0 +1,78 @@
+......F....                                         [100%]
+=================================== FAILURES ===================================
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='## Held\nClosed: invented ruling\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 1 != 2 : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words (section='## Notes\nCaptain: 「關掉」 (chat)\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words>
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 1 if good else 2, lines)
+E               AssertionError: 1 != 2 : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:891: AssertionError
+_ TasksTests.test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words (section='## Captain amendments\n```\nCaptain: 「關掉」\n```\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words>
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 1 if good else 2, lines)
+E               AssertionError: 1 != 2 : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:891: AssertionError
+______________ TasksTests.test_held_quote_uses_newest_hold_reason ______________
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_uses_newest_hold_reason>
+
+    def test_held_quote_uses_newest_hold_reason(self):
+        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
+        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
+                 "                decision: hold\n                reason: wait for a different condition\n")
+        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+>       self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
+E       AssertionError: False is not true : ['fact: held by the Captain, not waiting: ideation paused; each ## Held section says what reopens it.']
+
+kc-dev-flow-2/scripts/test_pr_watch.py:900: AssertionError
+=========================== short test summary info ============================
+(body='## Held\nClosed: invented ruling\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(section='## Notes\nCaptain: 「關掉」 (chat)\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words
+(section='## Captain amendments\n```\nCaptain: 「關掉」\n```\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_uses_newest_hold_reason
+4 failed, 10 passed, 152 deselected in 10.29s

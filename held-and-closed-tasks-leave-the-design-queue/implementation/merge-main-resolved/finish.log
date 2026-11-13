@@ -1,0 +1,15 @@
+{
+  "commands": 30,
+  "passed": 30,
+  "failed": 0,
+  "unittest_tests": 1471,
+  "native_integration_separate": true,
+  "sd_mod_revision": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "sd_mod_sha256": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a",
+  "package_test_files": 29,
+  "unittest_skipped": 10,
+  "unittest_passed": 1461,
+  "custom_native_integration_commands": 2,
+  "ci_configuration_changed": false,
+  "ci_cost_per_pr": "not measured"
+}

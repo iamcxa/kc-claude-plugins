@@ -1,0 +1,1 @@
+Error: entity fo-write-checks-parse-top-level: terminal status --set refused — its gate authority cannot be classified (entity carries no binding pending terminal-target approval (condition "not-applicable")); merge guard fo-write-checks-parse-top-level is the sole terminal consumer while that authority is unreadable, stale, or in force. (--force bypasses this guard.)

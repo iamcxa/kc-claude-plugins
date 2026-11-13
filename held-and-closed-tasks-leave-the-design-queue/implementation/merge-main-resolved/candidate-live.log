@@ -1,0 +1,82 @@
+fact: held by the Captain, not waiting: backlog product-review-path-before-backlog, superseded-criterion-without-dispatch-caught; ideation adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, delivery-gate-s4-skips-removed-scratch, fo-write-checks-parse-top-level, gate-summary-names-each-decline, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, step-back-answer-has-a-record-line; validation adr-required-statement, journey-server-host-pilot; each ## Held section says what reopens it.
+next: write ## Held in product-review-path-before-backlog, superseded-criterion-without-dispatch-caught, adoption-asks-which-extensions, adr-silent-undo-probe, captain-ruling-sources-checked, comment-check-reaches-delivery-gate, delivery-gate-s4-skips-removed-scratch, fo-write-checks-parse-top-level, gate-summary-names-each-decline, journey-canvas-hosted-poc, picky-reviewers-may-run-on-gemini, seed-check-requires-alignment-result, step-back-answer-has-a-record-line, adr-required-statement, journey-server-host-pilot: copy Reopen when: <his words> or Closed: <his words> verbatim from the hold reason or a Captain amendment; where neither states one, ask him at the next sitting.
+next: adr-required-statement has no dispatch record for completed validation; hold advancement and gate preparation and report the gap to Captain.
+fact: journey-server-host-pilot has no recorded PR; its worktree is not on this machine.
+next: pr-review-lite-value-pilot has no dispatch record for completed implementation; hold advancement and gate preparation and report the gap to Captain.
+fact: pr-review-lite-value-pilot has no recorded PR; its worktree is not on this machine.
+fact: validation-reads-pr-review-comments has no recorded PR; its worktree is not on this machine.
+next: adr-required-statement has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+next: journey-server-host-pilot has 9 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what is the smallest next step, given the findings so far?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+next: journey-server-host-pilot has replacing amendment 6; dispatch kc-dev-flow-2:engineering-reviewer on fable or gpt-6-astra (Surfaces db) with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+next: ops-inbox-r1-setup-and-isolation has 4 replacing amendments; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>` instead.
+next: ops-inbox-r1-setup-and-isolation has replacing amendments 1, 2, 3, 4; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.
+budget: Budget: at most 3 days (FO proposal; the Captain sets it).; spent implementation 2, validation 0; states no cycles
+next: pr-review-lite-value-pilot has 31 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what is the smallest next step, given the findings so far?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+next: the seed check fails for these backlog tasks (agents-md-holds-instructions, autopilot-l3-dogfood-spacedock-bridge, built-screen-check-round3-followups, ci-pinned-spacedock-survives-release-download-outage, delivery-gate-skipped-run-settles, deprecate-kc-dev-flow-v1, design-director-model-follows-task, design-director-runs-where-it-pays, dispatch-sets-reasoning-effort, domain-note-reaches-worker-poc, fo-asks-to-raise-concurrency, fo-narrates-outward-writes, gpt-partner-extension-proposal, ideation-preview-is-one-static-file, interrogation-strangers-isolated, journey-card-notes, journey-fold-answers-open-placeholders, journey-map-contract-round3-followups, journey-review-check-round3-followups, kc-adr-dev2-sharing-better-way, learn-fallback-pr-after-wrong-evidence, learn-names-agents-md-candidates, local-agent-roles-and-profiles, local-extensions-load-automatically, paseo-fo-board, prod-split-owes-chief-engineer-route-review, published-ui-docs-checked-on-screen-change, repair-dispatch-asks-for-sibling-sites, retire-task-with-unconsumed-approval, review-briefing-links-repeated-in-chat, reviewer-negative-claim-shows-reach, rewalk-binds-prior-and-carries-complaints, unattended-browser-check-without-repo-tool, workflow-checkout-round3-followups, workflow-readme-in-invocation-test); before preparing the gate of one, fix the reported seed fields and run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/kc-dev-flow-2/scripts/design_surfaces.py check --seed <task>`.
+next: run kc-dev-flow-2:learn for a-worker-holds-while-a-role-call-is-owed.
+next: run kc-dev-flow-2:learn for adr-lint-tells-supersession-assertion-from-pointer.
+next: run kc-dev-flow-2:learn for adr-reservation-crosses-workflows.
+next: run kc-dev-flow-2:learn for agent-reads-governing-adr.
+next: run kc-dev-flow-2:learn for amendment-checked-when-written.
+next: run kc-dev-flow-2:learn for board-optout.
+next: run kc-dev-flow-2:learn for budget-overrun-holds-and-findings-meet-non-goals.
+next: run kc-dev-flow-2:learn for codex-reader-counts-code-review-only.
+next: run kc-dev-flow-2:learn for codex-reader-reads-receipt-marker.
+next: run kc-dev-flow-2:learn for codex-security-only-prompts-code-review.
+next: run kc-dev-flow-2:learn for counts-name-the-run-that-produced-them.
+next: run kc-dev-flow-2:learn for decline-becomes-task-only-with-a-bite.
+next: run kc-dev-flow-2:learn for delivery-check-before-ask-is-provable.
+next: run kc-dev-flow-2:learn for delivery-check-passes-a-skipped-by-design-run.
+next: run kc-dev-flow-2:learn for delivery-check-resolves-links-from-the-task.
+next: run kc-dev-flow-2:learn for delivery-gate-ignores-url-paths-and-data-fences.
+next: run kc-dev-flow-2:learn for delivery-gate-pr-body-attribution-link.
+next: run kc-dev-flow-2:learn for delivery-question-requires-worktree-clause.
+next: run kc-dev-flow-2:learn for denied-command-denies-only-that-command.
+next: run kc-dev-flow-2:learn for design-check-says-not-run-without-a-scope.
+next: run kc-dev-flow-2:learn for design-surfaces-task-dir-crash.
+next: run kc-dev-flow-2:learn for dispatch-and-report-hygiene.
+next: run kc-dev-flow-2:learn for dispatch-build-writes-the-dispatch-record.
+next: run kc-dev-flow-2:learn for dispatch-close-out-archives-evidence-and-removes-scratch.
+next: run kc-dev-flow-2:learn for each-task-records-stage-time-revises-and-interruptions.
+next: run kc-dev-flow-2:learn for extension-instruction-check-sees-every-listed-extension.
+next: run kc-dev-flow-2:learn for gate-presentation-asks-one-thing-plainly.
+next: run kc-dev-flow-2:learn for gate-question-facts-are-checked-before-the-captain-reads-them.
+next: run kc-dev-flow-2:learn for ideation-gaps.
+next: run kc-dev-flow-2:learn for idle-names-failing-seeds.
+next: run kc-dev-flow-2:learn for issue-815-fo-record-gaps.
+next: run kc-dev-flow-2:learn for journey-render-keeps-annotations.
+next: run kc-dev-flow-2:learn for kept-data-lifecycle-at-ui-ideation.
+next: run kc-dev-flow-2:learn for learning-serialize-evaluation.
+next: run kc-dev-flow-2:learn for main-tests-pass-with-worth-check-and-story-test.
+next: run kc-dev-flow-2:learn for merge-ask-holds-missing-clauses.
+next: run kc-dev-flow-2:learn for merge-ask-tests-the-merge-result.
+next: run kc-dev-flow-2:learn for migration-and-number-guards.
+next: run kc-dev-flow-2:learn for new-work-checks-what-exists-first.
+next: run kc-dev-flow-2:learn for new-work-starts-from-a-story-map.
+next: run kc-dev-flow-2:learn for observer-check-learn-only-when-listed.
+next: run kc-dev-flow-2:learn for observer-lists-unasked-merges.
+next: run kc-dev-flow-2:learn for ops-metric-event-protocol.
+next: run kc-dev-flow-2:learn for override-recorded-when-captain-departs.
+next: run kc-dev-flow-2:learn for patch-0102.
+next: run kc-dev-flow-2:learn for patch-0103.
+next: run kc-dev-flow-2:learn for poc-no-migrations.
+next: run kc-dev-flow-2:learn for pr-watch-tasks-foreign-worktree.
+next: run kc-dev-flow-2:learn for reflow-order.
+next: run kc-dev-flow-2:learn for release-review.
+next: run kc-dev-flow-2:learn for release-rollout-reaches-adopters-and-laws-pin.
+next: run kc-dev-flow-2:learn for review-cadence.
+next: run kc-dev-flow-2:learn for role-call-asks-for-the-mechanism.
+next: run kc-dev-flow-2:learn for special-role-dispatch-records-built-by-script.
+next: run kc-dev-flow-2:learn for story-done-reports-release-remaining.
+next: run kc-dev-flow-2:learn for validation-rerun-accepts-report-fixed-before-ruling.
+next: run kc-dev-flow-2:learn for validation-rerun-survives-repaired-history.
+next: run kc-dev-flow-2:learn for worker-browser-checks-use-paseo-browser.
+next: run kc-dev-flow-2:learn for worth-questions-asked-only-before-the-design-gate.
+next: report adr-required-statement to the Captain: error connecting to api.github.com
+check your internet connection or https://githubstatus.com.
+next: report held-and-closed-tasks-leave-the-design-queue to the Captain: error connecting to api.github.com
+check your internet connection or https://githubstatus.com.
+next: report merge-guard-stops-unasked-merges to the Captain: error connecting to api.github.com
+check your internet connection or https://githubstatus.com.
+next: report ops-inbox-r1-setup-and-isolation to the Captain: error connecting to api.github.com
+check your internet connection or https://githubstatus.com.

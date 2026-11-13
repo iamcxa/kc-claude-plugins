@@ -1,0 +1,10 @@
+Scratch removed: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/impl-held-merge-main-m77rxdga/tmp/tmptme3efa6/dev2/scratch-f1cb1a950a98432a83787caaa406a9cd-0ee6eeb95aae8137/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+...................................................................................................................................
+----------------------------------------------------------------------
+Ran 163 tests in 95.474s
+
+OK

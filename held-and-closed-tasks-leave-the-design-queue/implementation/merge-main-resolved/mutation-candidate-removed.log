@@ -1,0 +1,479 @@
+..F...F....                                         [100%]
+=================================== FAILURES ===================================
+_______ TasksTests.test_held_fact_groups_stages_and_names_each_task_once _______
+
+self = <test_pr_watch.TasksTests testMethod=test_held_fact_groups_stages_and_names_each_task_once>
+
+    def test_held_fact_groups_stages_and_names_each_task_once(self):
+        self.held_task("## Held\nClosed: reopen after an adopter fails\n")
+        self.task("waiting", worktree=False, status="ideation")
+        self.task("later", worktree=False, status="validation", body=b"## Held\nClosed: finished\n## Captain amendments\nCaptain: finished\n")
+        self.held.write_text(json.dumps({"entities": [{"slug": "later", "status": "validation"},
+                                                     {"slug": "paused", "status": "ideation"}]}))
+>       self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; validation later; "
+                                             "each ## Held section says what reopens it."]))
+E       AssertionError: Tuples differ: (0, []) != (0, ['fact: held by the Captain, not waiting: [75 chars]t.'])
+E       
+E       First differing element 1:
+E       []
+E       ['fact: held by the Captain, not waiting: [74 chars]it.']
+E       
+E       - (0, [])
+E       + (0,
+E       +  ['fact: held by the Captain, not waiting: ideation paused; validation later; '
+E       +   'each ## Held section says what reopens it.'])
+
+kc-dev-flow-2/scripts/test_pr_watch.py:908: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='## Held\nClosed: invented ruling\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='## Held\nClosed: \n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='## Scope\nClosed: reopen after an adopter fails\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='```md\n## Held\nClosed: reopen after an adopter fails\n```\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_missing_section_or_unverified_quote_names_the_task (body='## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_missing_section_or_unverified_quote_names_the_task>
+
+    def test_held_missing_section_or_unverified_quote_names_the_task(self):
+        path = self.held_task()
+        original = path.read_text()
+        for body in ("", "## Held\nClosed: invented ruling\n", "## Held\nClosed: \n",
+                     "## Scope\nClosed: reopen after an adopter fails\n",
+                     "```md\n## Held\nClosed: reopen after an adopter fails\n```\n",
+                     "## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n"):
+            with self.subTest(body=body):
+                path.write_text(original + body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:878: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='FAIL') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='not JSON') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='null') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='[]') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": null}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [{"slug": "paused"}]}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [{"slug": "paused", "status": "ideation"}, {"slug": "paused", "status": "ideation"}]}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [], "pagination": {"has_next": "true"}}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_query_failure_or_invalid_or_partial_json_exits_two (text='{"entities": [], "pagination": {"total": "1"}}') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_query_failure_or_invalid_or_partial_json_exits_two>
+
+    def test_held_query_failure_or_invalid_or_partial_json_exits_two(self):
+        self.readme("")
+        row = {"slug": "paused", "status": "ideation"}
+        cases = ["FAIL", "not JSON", "null", "[]", "{}", '{"entities": null}',
+                 json.dumps({"entities": [{"slug": "paused"}]}),
+                 json.dumps({"entities": [row, row]}),
+                 json.dumps({"entities": [], "pagination": {"has_next": "true"}}),
+                 json.dumps({"entities": [], "pagination": {"total": "1"}})]
+        for text in cases:
+            with self.subTest(text=text):
+                self.held.write_text(text)
+                code, lines = self.tasks({})
+>               self.assertEqual(code, 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:923: AssertionError
+_ TasksTests.test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words (section='## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words>
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 1 if good else 2, lines)
+E               AssertionError: 0 != 1 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:891: AssertionError
+_ TasksTests.test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words (section='## Notes\nCaptain: 「關掉」 (chat)\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words>
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 1 if good else 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:891: AssertionError
+_ TasksTests.test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words (section='## Captain amendments\n```\nCaptain: 「關掉」\n```\n') _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words>
+
+    def test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words(self):
+        path = self.held_task("## Held\nClosed: 「關掉」\n")
+        original = path.read_text()
+        for section, good in (("## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n", True),
+                              ("## Notes\nCaptain: 「關掉」 (chat)\n", False),
+                              ("## Captain amendments\n```\nCaptain: 「關掉」\n```\n", False)):
+            with self.subTest(section=section):
+                path.write_text(original + section)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 0, lines)
+>               self.assertEqual(len(lines), 1 if good else 2, lines)
+E               AssertionError: 0 != 2 : []
+
+kc-dev-flow-2/scripts/test_pr_watch.py:891: AssertionError
+______________ TasksTests.test_held_quote_uses_newest_hold_reason ______________
+
+self = <test_pr_watch.TasksTests testMethod=test_held_quote_uses_newest_hold_reason>
+
+    def test_held_quote_uses_newest_hold_reason(self):
+        path = self.held_task("## Held\nReopen when: reopen after an adopter fails\n")
+        newer = ("            - id: gate-attempt:paused-ideation-2\n              resolution:\n"
+                 "                decision: hold\n                reason: wait for a different condition\n")
+        path.write_text(path.read_text().replace("\n---\n", "\n" + newer + "---\n", 1))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+>       self.assertTrue(lines[-1].startswith("next: write ## Held in paused:"), lines)
+                        ^^^^^^^^^
+E       IndexError: list index out of range
+
+kc-dev-flow-2/scripts/test_pr_watch.py:900: IndexError
+_ TasksTests.test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks (folder=False) _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks>
+
+    def test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks(self):
+        for folder in (False, True):
+            with self.subTest(folder=folder):
+                self.held_task("## Held\nReopen when: reopen after an adopter fails\n", folder=folder)
+>               self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; "
+                                                     "each ## Held section says what reopens it."]))
+E               AssertionError: Tuples differ: (0, []) != (0, ['fact: held by the Captain, not waiting: [57 chars]t.'])
+E               
+E               First differing element 1:
+E               []
+E               ['fact: held by the Captain, not waiting: [56 chars]it.']
+E               
+E               - (0, [])
+E               + (0,
+E               +  ['fact: held by the Captain, not waiting: ideation paused; each ## Held '
+E               +   'section says what reopens it.'])
+
+kc-dev-flow-2/scripts/test_pr_watch.py:863: AssertionError
+_ TasksTests.test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks (folder=True) _
+
+self = <test_pr_watch.TasksTests testMethod=test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks>
+
+    def test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks(self):
+        for folder in (False, True):
+            with self.subTest(folder=folder):
+                self.held_task("## Held\nReopen when: reopen after an adopter fails\n", folder=folder)
+>               self.assertEqual(self.tasks({}), (0, ["fact: held by the Captain, not waiting: ideation paused; "
+                                                     "each ## Held section says what reopens it."]))
+E               AssertionError: Tuples differ: (0, []) != (0, ['fact: held by the Captain, not waiting: [57 chars]t.'])
+E               
+E               First differing element 1:
+E               []
+E               ['fact: held by the Captain, not waiting: [56 chars]it.']
+E               
+E               - (0, [])
+E               + (0,
+E               +  ['fact: held by the Captain, not waiting: ideation paused; each ## Held '
+E               +   'section says what reopens it.'])
+
+kc-dev-flow-2/scripts/test_pr_watch.py:863: AssertionError
+=========================== short test summary info ============================
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_fact_groups_stages_and_names_each_task_once
+(body='') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(body='## Held\nClosed: invented ruling\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(body='## Held\nClosed: \n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(body='## Scope\nClosed: reopen after an adopter fails\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(body='```md\n## Held\nClosed: reopen after an adopter fails\n```\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(body='## Held\nClosed: reopen after an adopter fails\nReopen when: reopen after an adopter fails\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_missing_section_or_unverified_quote_names_the_task
+(text='FAIL') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='not JSON') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='null') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='[]') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": null}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [{"slug": "paused"}]}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [{"slug": "paused", "status": "ideation"}, {"slug": "paused", "status": "ideation"}]}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [], "pagination": {"has_next": "true"}}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(text='{"entities": [], "pagination": {"total": "1"}}') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_query_failure_or_invalid_or_partial_json_exits_two
+(section='## Captain amendments\n### Amendment 1\nCaptain: 「關掉」 (chat)\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words
+(section='## Notes\nCaptain: 「關掉」 (chat)\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words
+(section='## Captain amendments\n```\nCaptain: 「關掉」\n```\n') SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_accepts_captain_amendment_but_not_other_or_fenced_words
+FAILED kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_quote_uses_newest_hold_reason
+(folder=False) SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks
+(folder=True) SUBFAIL kc-dev-flow-2/scripts/test_pr_watch.py::TasksTests::test_held_valid_quote_prints_only_fact_for_flat_and_folder_tasks
+23 failed, 9 passed, 152 deselected in 9.49s

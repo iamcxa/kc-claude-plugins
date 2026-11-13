@@ -1,0 +1,50 @@
+[
+  {
+    "name": "prepare",
+    "command": "python3 -B '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/prepare-replays.py' --candidate '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' --state '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state' --scratch '/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/impl-held-merge-main-m77rxdga' --output '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved' > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/prepare.log' 2>&1",
+    "exit": 0,
+    "initial_session": 17936
+  },
+  {
+    "name": "liveheld",
+    "command": "/Users/kent/.local/bin/spacedock status --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2' --where gate-readiness=not-applicable --fields slug,status --json --limit 0 > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/held-live.json'",
+    "exit": 0,
+    "initial_session": 12597
+  },
+  {
+    "name": "guard",
+    "command": "python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/role_triggers.py' '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state' 'held-and-closed-tasks-leave-the-design-queue' > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/role-triggers.log' 2>&1",
+    "exit": 0,
+    "initial_session": null
+  },
+  {
+    "name": "ratio",
+    "command": "cd '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' && python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/comment_ratio.py' 46e9d0ed4bb86889022457adcdf656965dc97e73 HEAD --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2' > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/comment-ratio.log' 2>&1",
+    "exit": 0,
+    "initial_session": null
+  },
+  {
+    "name": "adr",
+    "command": "cd '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' && python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py' docs/adr --since 46e9d0ed4bb86889022457adcdf656965dc97e73 --require 0081 > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/adr-lint.log' 2>&1",
+    "exit": 0,
+    "initial_session": null
+  },
+  {
+    "name": "surfaces",
+    "command": "python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/design_surfaces.py' check '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue.md' > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/design-surfaces.log' 2>&1",
+    "exit": 0,
+    "initial_session": null
+  },
+  {
+    "name": "docs",
+    "command": "cd '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' && python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/doc_impact.py' 46e9d0ed4bb86889022457adcdf656965dc97e73 HEAD --json > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/doc-impact.json' 2>&1",
+    "exit": 0,
+    "initial_session": null
+  },
+  {
+    "name": "numbers",
+    "command": "cd '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' && python3 -B '/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/number_guards.py' check --repo '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue' --base 46e9d0ed4bb86889022457adcdf656965dc97e73 --workflow-dir '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2' --task '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue.md' > '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/implementation/merge-main-resolved/number-guards.log' 2>&1",
+    "exit": 0,
+    "initial_session": 89028
+  }
+]
