@@ -1,0 +1,122 @@
+{
+  "base": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+  "candidate": "17eccdda05fde54e6dff66f4989787864219ef43",
+  "branch": "spacedock-ensign/observer-check-learn-only-when-listed",
+  "tests": [
+    {
+      "log": "focused.log",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0
+    },
+    {
+      "log": "pr-watch.log",
+      "total": 136,
+      "passed": 136,
+      "skipped": 0
+    },
+    {
+      "log": "laws.log",
+      "total": 84,
+      "passed": 83,
+      "skipped": 1
+    }
+  ],
+  "checks": [
+    {
+      "output": "fixtures.json",
+      "exit": 0
+    },
+    {
+      "output": "real-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "historical-counts.json",
+      "exit": 0
+    },
+    {
+      "output": "focused.log",
+      "exit": 0
+    },
+    {
+      "output": "pr-watch.log",
+      "exit": 0
+    },
+    {
+      "output": "laws.log",
+      "exit": 0
+    },
+    {
+      "output": "recovery.log",
+      "exit": 0
+    },
+    {
+      "output": "mutation.json",
+      "exit": 0
+    },
+    {
+      "output": "mutations-run.log",
+      "exit": 0
+    },
+    {
+      "output": "lint.log",
+      "exit": 0
+    },
+    {
+      "output": "adr-lint.log",
+      "exit": 0
+    },
+    {
+      "output": "number-guards-fresh.log",
+      "exit": 0
+    },
+    {
+      "output": "comment-ratio.log",
+      "exit": 0
+    },
+    {
+      "output": "words.json",
+      "exit": 0
+    },
+    {
+      "output": "design-check.log",
+      "exit": 0
+    },
+    {
+      "output": "doc-impact.log",
+      "exit": 0
+    },
+    {
+      "output": "diff-check.log",
+      "exit": 0
+    },
+    {
+      "output": "diff-check-probe-base.log",
+      "exit": 0
+    }
+  ],
+  "baseline_goal_exit": 1,
+  "mutations": {
+    "detected": 9,
+    "total": 9,
+    "expected_child_exit": 1
+  },
+  "doc_impact": [
+    {
+      "path": "learning.md",
+      "status": "unaffected",
+      "reason": "Its laws_check.py and shared-parser practices remain true; this repair changes the invocation/fixture, not the learning rule."
+    }
+  ],
+  "delegated_not_run": [
+    "RoboRev",
+    "product push",
+    "Draft PR creation",
+    "hosted CI",
+    "independent validation"
+  ],
+  "ci_changed": false,
+  "ci_cost_per_pr": "not measured",
+  "pr_text": "/tmp/impl-observer-check-learn-only-when-listed-pr.md"
+}

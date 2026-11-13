@@ -1,0 +1,16 @@
+{
+  "base": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+  "candidate": "17eccdda05fde54e6dff66f4989787864219ef43",
+  "files": [
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/observer_check.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py",
+    "kc-dev-flow-2/scripts/test_observer_check.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "pr858_fact_behavior_preserved": true,
+  "ci_changed": false,
+  "ci_cost_per_pr": "not measured",
+  "new_dependencies": false
+}

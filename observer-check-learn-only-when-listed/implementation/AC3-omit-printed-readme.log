@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after (cases.TasksTests.test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-proof-scratch/mutations/AC3-omit-printed-readme/kc-dev-flow-2/scripts/test_pr_watch.py", line 1308, in test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after
+    self.assertEqual(done.returncode, 0, done.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : cannot tell whether the observer report is committed: no workflow README above the state checkout; supply --readme FILE. Hold and report the cause.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.131s
+
+FAILED (failures=1)

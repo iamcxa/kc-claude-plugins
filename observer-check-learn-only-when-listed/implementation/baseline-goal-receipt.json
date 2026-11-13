@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/observer-check-learn-only-when-listed/implementation/probe.py",
+    "fixtures",
+    "--code",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-proof-scratch/base-without-change",
+    "--scratch",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-proof-scratch"
+  ],
+  "exit": 1,
+  "expected_exit": 1,
+  "stderr_empty": true
+}

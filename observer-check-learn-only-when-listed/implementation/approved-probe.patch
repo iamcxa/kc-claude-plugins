@@ -1,0 +1,264 @@
+diff --git a/kc-dev-flow-2/scripts/laws_check.py b/kc-dev-flow-2/scripts/laws_check.py
+index e8829f032..cbe64982f 100644
+--- a/kc-dev-flow-2/scripts/laws_check.py
++++ b/kc-dev-flow-2/scripts/laws_check.py
+@@ -140,7 +140,8 @@ def l1_observer_before_sentinel(ctx):
+             if not sentinel_at(ctx.state, commit, new) or (status != "A" and sentinel_at(ctx.state, f"{commit}^", old)):
+                 continue
+             judged += 1
+-            code, lines = run_check("observer_check.py", str(ctx.state), task[1], "--rev", commit)
++            code, lines = run_check("observer_check.py", str(ctx.state), task[1], "--rev", commit,
++                                    "--readme", str(ctx.readme))
+             if code == 1:
+                 if not re.match(r"observer report (?:not committed|blank): ", lines[0] if lines else ""):
+                     raise Cannot(f"observer_check.py exited 1 with output this runner does not parse: {lines[:1]}")
+diff --git a/kc-dev-flow-2/scripts/observer_check.py b/kc-dev-flow-2/scripts/observer_check.py
+index 152b8dfc3..28fb6783d 100644
+--- a/kc-dev-flow-2/scripts/observer_check.py
++++ b/kc-dev-flow-2/scripts/observer_check.py
+@@ -1,11 +1,14 @@
+ #!/usr/bin/env python3
+ """Check that a task's observer report is committed in the state checkout.
+ 
+-Usage: observer_check.py <state checkout> <task slug> [--rev REV]
++Usage: observer_check.py <state checkout> <task slug> [--rev REV] [--readme FILE]
+ Reads the committed tree at REV (default HEAD), not the disk. The report is <slug>/observer.md before the
+ task is archived and _archive/<slug>/observer.md after.
+ Exit 0 when that file is committed and not blank; stdout names it, and repeats the first line when it
+-starts "observer not run:"; for an archived task it adds the learn steps. Exit 1 when it is not: stdout
++starts "observer not run:"; for an archived task it adds the learn steps when the workflow README lists learn.
++The README is FILE, else the nearest ancestor README.md with entity-type: in its frontmatter.
++An archived check with no readable workflow README exits 2 rather than guessing the extension selection.
++Exit 1 when the report is not committed: stdout
+ names the observer dispatch and the save command, each as a `next:` line.
+ Exit 2 when the check cannot be made (usage, not a git work tree, REV names no commit, the slug has no task at
+ REV): stdout names the cause. Nothing here changes the checkout.
+@@ -15,6 +18,9 @@ import subprocess
+ import sys
+ from pathlib import Path
+ 
++from decision_ledger import split_task
++from workflow_extensions import readme_extensions
++
+ WAIVER = "observer not run:"
+ 
+ 
+@@ -34,15 +40,39 @@ def kind(state, rev, path):
+ 
+ def parse(args):
+     rev = "HEAD"
+-    if "--rev" in args:
+-        at = args.index("--rev")
++    readme = None
++    for flag in ("--rev", "--readme"):
++        if flag not in args:
++            continue
++        at = args.index(flag)
+         if at + 1 >= len(args):
+-            raise Unverifiable("usage: --rev needs a value")
+-        rev = args[at + 1]
++            raise Unverifiable(f"usage: {flag} needs a value")
++        if flag == "--rev":
++            rev = args[at + 1]
++        else:
++            readme = Path(args[at + 1])
+         args = args[:at] + args[at + 2:]
+     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
+         raise Unverifiable("usage: observer_check.py <state checkout> <task slug> [--rev REV]")
+-    return Path(args[0]), args[1], rev
++    return Path(args[0]), args[1], rev, readme
++
++
++def learn_enabled(state, readme):
++    try:
++        if readme is None:
++            for parent in Path(state).resolve().parents:
++                candidate = parent / "README.md"
++                if not candidate.is_file():
++                    continue
++                lines, _ = split_task(candidate.read_text())
++                if any(line.startswith("entity-type:") for line in lines or []):
++                    readme = candidate
++                    break
++        if readme is None:
++            raise Unverifiable("no workflow README above the state checkout; supply --readme FILE")
++        return "learn" in readme_extensions(readme)
++    except (OSError, ValueError) as err:
++        raise Unverifiable(f"workflow README unreadable: {err}") from err
+ 
+ 
+ def locate(state, slug, rev):
+@@ -59,12 +89,12 @@ def locate(state, slug, rev):
+     return not live and archived
+ 
+ 
+-def check(state, slug, rev):
++def check(state, slug, rev, readme=None):
+     archived = locate(state, slug, rev)
+     path = f"_archive/{slug}/observer.md" if archived else f"{slug}/observer.md"
+     code, out = git(state, "show", f"{rev}:./{path}")
+     learn = [f"next: run kc-dev-flow-2:learn for {slug}.",
+-             "next: send learn's notice, then the observer report unedited, in one message; answer none of its findings."]
++             "next: send learn's notice, then the observer report unedited, in one message; answer none of its findings."] if archived and learn_enabled(state, readme) else []
+     if code == 0 and out.strip():
+         first = out.strip().splitlines()[0].strip()
+         note = f" {first}" if first.startswith(WAIVER) else ""
+@@ -92,8 +122,8 @@ def check(state, slug, rev):
+ def main(argv=None):
+     args = sys.argv[1:] if argv is None else list(argv)
+     try:
+-        state, slug, rev = parse(args)
+-        code, message = check(state, slug, rev)
++        state, slug, rev, readme = parse(args)
++        code, message = check(state, slug, rev, readme)
+     except Unverifiable as err:
+         print(f"cannot tell whether the observer report is committed: {err}. Hold and report the cause.")
+         return 2
+diff --git a/kc-dev-flow-2/scripts/pr_watch.py b/kc-dev-flow-2/scripts/pr_watch.py
+index ebf0afbb4..c34a0dc3a 100755
+--- a/kc-dev-flow-2/scripts/pr_watch.py
++++ b/kc-dev-flow-2/scripts/pr_watch.py
+@@ -620,12 +620,14 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
+             snaps[ref] = now
+             out += [facts(ref, now)] + next_for(ref, now)
+         elif now["state"] == "MERGED" and "learn" in listed:
+-            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
++            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
++                                   "--readme", str(workflow / "README.md")],
+                                   capture_output=True, text=True)
+             if done.returncode:
+                 out += [f"next: keep {slug} out of pr-merge's scan in this pass.", *done.stdout.splitlines()]
+             else:
+-                check = f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug}"
++                check = (f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug} "
++                         f"--readme {shlex.quote(str(workflow / 'README.md'))}")
+                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
+                         "after pr-merge: do each next: line it prints."]
+     for slug in live:
+diff --git a/kc-dev-flow-2/scripts/test_laws_check.py b/kc-dev-flow-2/scripts/test_laws_check.py
+index 14444dd3a..ed5fce5c5 100644
+--- a/kc-dev-flow-2/scripts/test_laws_check.py
++++ b/kc-dev-flow-2/scripts/test_laws_check.py
+@@ -51,7 +51,7 @@ class Repo:
+ def sandbox(base, omit=(), override=None):
+     pkg = Path(base) / "pkg"
+     (pkg / "scripts").mkdir(parents=True)
+-    for name in ("laws_check.py", "decision_ledger.py", "observer_check.py", "dispatch_records.py", "design_surfaces.py"):
++    for name in ("laws_check.py", "decision_ledger.py", "workflow_extensions.py", "observer_check.py", "dispatch_records.py", "design_surfaces.py"):
+         if name not in omit:
+             shutil.copy(SCRIPTS / name, pkg / "scripts" / name)
+     for name, text in (override or {}).items():
+diff --git a/kc-dev-flow-2/scripts/test_observer_check.py b/kc-dev-flow-2/scripts/test_observer_check.py
+index 43a50f74d..f5e0e6ffd 100644
+--- a/kc-dev-flow-2/scripts/test_observer_check.py
++++ b/kc-dev-flow-2/scripts/test_observer_check.py
+@@ -35,6 +35,8 @@ class ObserverCheckTest(unittest.TestCase):
+         self.addCleanup(self.tmp.cleanup)
+         self.state = Path(self.tmp.name) / "state"
+         self.state.mkdir()
++        self.readme = self.state.parent / "README.md"
++        self.readme.write_text("---\nentity-type: task\nextensions: [learn]\n---\n")
+         git(self.state, "init", "-b", "main")
+         (self.state / SLUG).mkdir()
+         (self.state / f"{SLUG}.md").write_text("---\ntitle: t\npr: pr-merge:7\n---\nbody\n")
+@@ -95,6 +97,53 @@ class ObserverCheckTest(unittest.TestCase):
+         self.assertEqual(code, 1, out)
+         self.assertEqual(verbs, ["dispatch", "save", "run", "run", "tell", "run", "send"], out)
+ 
++    def test_archived_miss_and_report_print_no_learn_steps_without_the_extension(self):
++        self.archive()
++        for field in ("", "extensions: []\n", "extensions: [peers]\n"):
++            self.readme.write_text(f"---\nentity-type: task\n{field}---\nlearn in the body is not selection\n")
++            for reported in (False, True):
++                with self.subTest(field=field, reported=reported):
++                    if reported:
++                        self.write_report("ok\n", archived=True)
++                        self.commit("report")
++                    else:
++                        report = self.state / "_archive" / SLUG / "observer.md"
++                        if report.exists():
++                            report.unlink()
++                            self.commit("without report")
++                    code, out = check(self.state, SLUG)
++                    self.assertEqual(code, 0 if reported else 1, out)
++                    self.assertNotIn("kc-dev-flow-2:learn", out)
++                    self.assertNotIn("learn's notice", out)
++
++    def test_the_shared_extension_parser_handles_quoted_commented_and_block_lists(self):
++        self.archive()
++        for field in ("extensions: ['learn'] # chosen\n", 'extensions:\n  - "learn" # chosen\n'):
++            self.readme.write_text(f"---\nentity-type: task\n{field}---\n")
++            code, out = check(self.state, SLUG)
++            self.assertEqual(code, 1, out)
++            self.assertIn("kc-dev-flow-2:learn", out)
++
++    def test_an_explicit_readme_overrides_discovery_for_a_detached_state_checkout(self):
++        self.archive()
++        other = self.state.parent / "chosen.md"
++        other.write_text("---\nentity-type: task\nextensions: []\n---\n")
++        code, out = check(self.state, SLUG, "--readme", other)
++        self.assertEqual(code, 1, out)
++        self.assertNotIn("kc-dev-flow-2:learn", out)
++
++    def test_an_archived_check_holds_when_selection_cannot_be_read(self):
++        self.archive()
++        self.readme.unlink()
++        code, out = check(self.state, SLUG)
++        self.assertEqual(code, 2, out)
++        self.assertIn("supply --readme FILE", out)
++        for text in ("no frontmatter", "---\nentity-type: task\nextensions: [learn\n---\n"):
++            self.readme.write_text(text)
++            code, out = check(self.state, SLUG, "--readme", self.readme)
++            self.assertEqual(code, 2, out)
++            self.assertNotIn("next:", out)
++
+     def test_a_committed_report_passes_before_the_archive_and_the_commit_before_it_failed(self):
+         self.write_report("ok | rule: x\n")
+         reported = self.commit("report")
+@@ -238,6 +287,7 @@ class RecoveryCommandQuotingTest(unittest.TestCase):
+         self.addCleanup(tmp.cleanup)
+         state = Path(tmp.name) / "my state dir"
+         (state / "_archive" / SLUG).mkdir(parents=True)
++        (state.parent / "README.md").write_text("---\nentity-type: task\nextensions: [learn]\n---\n")
+         git(state, "init", "-b", "main")
+         (state / "_archive" / f"{SLUG}.md").write_text("---\ntitle: t\n---\n")
+         git(state, "add", "-A")
+diff --git a/kc-dev-flow-2/scripts/test_pr_watch.py b/kc-dev-flow-2/scripts/test_pr_watch.py
+index 9f028cad3..f3fe53a78 100644
+--- a/kc-dev-flow-2/scripts/test_pr_watch.py
++++ b/kc-dev-flow-2/scripts/test_pr_watch.py
+@@ -1284,17 +1284,33 @@ class TasksTests(unittest.TestCase):
+ 
+     def test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after(self):
+         self.readme("learn")
++        detached = self.root / "detached-state"
++        self.state.rename(detached)
++        self.state = detached
++        readme = self.workflow / "README.md"
++        readme.write_text(readme.read_text().replace("state: .spacedock-state", f"state: {self.state}"))
+         self.task("some-task", pr="o/r#7")
+         self.report("some-task")
+         code, lines = self.tasks({"pr view 7": view("MERGED")})
+         self.assertEqual(code, 0, lines)
+         self.assertEqual(lines[0], "next: let pr-merge record some-task.")
+         self.assertEqual(len(lines), 3, lines)
+-        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task`\.$")
++        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task --readme \S+README\.md`\.$")
+         self.assertEqual(lines[2], "after pr-merge: do each next: line it prints.")
+         command = lines[1].split("`")[1].split()
+         done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+         self.assertEqual(done.returncode, 0, done.stdout)
++        (self.state / "_archive").mkdir()
++        self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
++        self.git(self.state, "mv", "some-task", "_archive/some-task")
++        self.git(self.state, "commit", "-qm", "archive")
++        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
++        self.assertEqual(done.returncode, 0, done.stdout)
++        self.assertIn("kc-dev-flow-2:learn", done.stdout)
++        self.readme("")
++        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
++        self.assertEqual(done.returncode, 0, done.stdout)
++        self.assertNotIn("kc-dev-flow-2:learn", done.stdout)
+ 
+     def test_without_learn_listed_a_merged_pr_prints_no_observer_line(self):
+         self.readme("roborev, codex")
