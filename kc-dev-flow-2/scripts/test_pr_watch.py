@@ -1058,7 +1058,7 @@ class TasksTests(unittest.TestCase):
         close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
         self.assertLess(close, lines.index('next: let pr-merge record merged.'))
         observer = next(line.split('`')[1] for line in lines if line.startswith('after pr-merge: run '))
-        self.assertIn(f'--readme {readme}', observer)
+        self.assertIn(f'--readme {readme.resolve()}', observer)
         done = subprocess.run(observer.split(), capture_output=True, text=True, env={**os.environ, **IDENTITY})
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
         readme.write_text(readme.read_text().replace('extensions: [learn]', 'extensions: []'))
