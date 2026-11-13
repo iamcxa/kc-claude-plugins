@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-13T13:42:51Z
 worktree: .worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing
-pr: iamcxa/kc-claude-plugins#867
+pr: pr-merge:867
 ---
 
 ## Scope
