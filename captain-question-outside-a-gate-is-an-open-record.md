@@ -55,7 +55,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 ## Design
 
-Contract: [contract-draft.md](captain-question-outside-a-gate-is-an-open-record/contract-draft.md), revision 2 (state commit `0153c4af2`); revision 1 (`2b9480601`) went to a blind reader in another repository, and [blind-read/dispositions.md](captain-question-outside-a-gate-is-an-open-record/blind-read/dispositions.md) records each of its points.
+Blind read 1 dispositions: 35 points, 31 changed the contract (one in part), 4 declined; the reader reported 28 because it grouped several under one bullet (the duplicate-key bullet holds four, the never-needed list six); the list is in the task folder. Contract: [contract-draft.md](captain-question-outside-a-gate-is-an-open-record/contract-draft.md), revision 2 (state commit `0153c4af2`); revision 1 (`2b9480601`) went to a blind reader in another repository, and [blind-read/dispositions.md](captain-question-outside-a-gate-is-an-open-record/blind-read/dispositions.md) records each of its points.
 
 ### PRFAQ
 
@@ -90,13 +90,15 @@ flowchart TD
 
 ### Probe
 
-Branch `poc/captain-question-outside-a-gate-is-an-open-record`, base origin/main `bfc53d825`, local only, last commit named in the stage report. Throwaway `kc-dev-flow-2/scripts/captain_asks_probe.py` (writer, lister with `--as-of` and `--gates`, omission check) run against a clone of the state branch. Evidence in `evidence/ideation-1/`.
+Local only. Throwaway `kc-dev-flow-2/scripts/captain_asks_probe.py` (writer, lister with `--as-of` and `--gates`, omission check) run against a clone of the state branch. Evidence in `evidence/ideation-1/`. The probe implements contract revision 1: it wrote `by` as an object and `said_at` on answers; `tasks`, `approve_means` and option `effect` came from the blind read and the replay and were never written by a tool.
 
-- **H1, riskiest: the existing rule gets the record written.** Falsified. 0 `asks.jsonl` in the state branch (`git ls-tree -r --name-only HEAD | grep -c asks.jsonl` → 0); 9 of the day's 14 outside-gate questions came after the rule reached the README. FO sessions started before 14:38 may not have reloaded it, so this is weaker than a measured miss rate, but nothing enforces the write. The omission check on the 11 tasks the day touched: 25 answered questions in their amendments and Source lines, 0 with a record, 11 of 11 tasks exit 1 (`check-before.out`).
+Probe: branch `poc/captain-question-outside-a-gate-is-an-open-record`, base `bfc53d825`, last commit `abcec77ba`; worktree removed, branch kept.
+
+- **H1, riskiest: the existing rule gets the record written.** Falsified. 0 `asks.jsonl` in the state branch (`git ls-tree -r --name-only HEAD | grep -c asks.jsonl` → 0); 9 of the day's 14 outside-gate questions came after the rule reached the README. FO sessions started before 14:38 may not have reloaded it, so this is weaker than a measured miss rate, but nothing enforces the write. The omission check on the 11 tasks the day touched: 25 answered questions in their amendments and Source lines, 0 with a record, 11 of 11 tasks exit 1 (`check-before.out`). After the replay wrote the day's 14 records into a clone, the same check found 14 of 25: the 11 misses are 8 questions from 2026-11-12 or 2026-11-14 (not replayed) and 3 from 2026-11-13 whose one record lives under another task, so the check must also look up records that name the task in `tasks` (`check-after.out`).
 - **H2: the format holds a real day.** Held, with two additions. The 2026-11-13 records give 17 entries, 14 distinct outside-gate questions (`day-2026-11-13.json`, `replay.out`). All 14 were written as `ask` and `answer` through the writer; 2 were answered into more than one task (added `tasks`); 6 filed a new task by their answer; by my reading of their quoted text, 3 arose inside an existing task and 3 with no task in progress (contract § 7, D1). None has an asking time in any record, so every one would have to be written with `asked_at: null`.
 - **H3: v1 lines fit the existing file.** Held only with a timeline change. origin/main `task_timeline.py` on a file with a `reask` line exits 1 with `KeyError: 'asked'`; `--json` counts 4 asks for 3 showings (`h3-timeline-main.out`, `h3-timeline-main-json.out`).
 - **H4: a gate's waiting time can be read from Spacedock records.** Only as a bound. The add time of the briefing `index.json` gave a negative wait for 23 of 34 gates resolved that day (it moves on archive; `gate-since-addtime.out`). The first state commit naming the briefing id gave 0 negative of 34, but 18 of 34 under one minute before the answer, so it bounds the wait from below and understates it (`gate-since-pickaxe.out`).
-- **H5: the lister reproduces the open set at hourly times through the day.** See `replay.out` (gate rows against the set derived from the extraction, 08:00 to 23:00).
+- **H5: the lister reproduces the open set at hourly times through the day.** Weakly held, for gates only. At 16 hourly times from 08:00 to 23:00 the lister's gate rows matched the set derived from the extraction (`as-of mismatches: 0`, `replay.out`), but only 2 of the 16 times had an open gate, the comparison is a superset test, and both sides take the waiting time from the same first naming commit. A first run had 2 mismatches from a probe bug (it took the newest naming commit; `replay-run2-index-bug.out`). No outside-gate question was ever open in the replay: the day's records hold no asking time, so each ask and answer were written at the same clock. The stop condition's "right waiting time" cannot be shown from 2026-11-13's records; AC-2 uses declared synthetic asking times.
 
 ### What the design changes
 
@@ -127,7 +129,7 @@ Startup rises by 14 words, which needs his ruling under ADR 0020. The asking and
 - **The record (ask … withdraw lines).** Serves 「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」. Without it a reader infers from text (the reported misfires). Premise that would make it unneeded: FO already writes `asks.jsonl` and readers can use it; checked now: 0 files.
 - **The omission check.** Serves the same words; without it the probe shows the record is not written (0 of 9 after the rule). Premise: FO writes records unprompted once the format is richer; no cheap test, the check is the test.
 - **`--open` lister.** Serves the relayed wish of one place; without it every reader re-implements the fold. Premise: the Bridge's reader alone suffices; true for the Bridge, but FO itself has no list.
-- **Gate rows.** Serves 「跟 SD meta/gate 要有關係」 (relayed, third-hand). Optional: D2.
+- **Gate rows.** Serves the relayed wish that what waits on him is tied to Spacedock's task state and gates (third-hand, not his words to this session). Optional: D2.
 - **Contract document.** Serves 「先定格式合約再實作」. Without it the blind reader could not be built (it was, in 93 seconds, by its report).
 
 ### Decisions for the Captain
@@ -136,7 +138,7 @@ Startup rises by 14 words, which needs his ruling under ADR 0020. The asking and
 - **D2. Gate questions in the same list.** **Recommended A:** `--open --gates` lists open gates from Spacedock's own records, read-only, with waiting time shown as "at least" (the probe: Spacedock stamps no prepare time, and the first state commit came under a minute before the answer for 18 of 34 gates). Worse: gate waits are understated until Spacedock stamps prepare time, a Spacedock change outside this task. B: questions only; each reader merges gates itself.
 - **D3. Relayed wish: one place, used with Spacedock Review, tied to task state and gates.** **Recommended A:** the one place is the state branch read through `--open` (and any reader of it); Review stays where a long question is answered, its resolution id recorded on the answer. Worse: until a reader shows the list to you, you still look at chat and Review. B: publish every outside-gate question as a Review briefing; about 14 briefings on a day like 2026-11-13.
 - **D4. Relayed wish: a question unanswered after two more turns is published once as a briefing.** **Recommended A:** the list marks a question shown three or more times with no Review showing; FO publishes it and records the reask; no README words. Worse: depends on FO reading the list. B: a README rule, about 25 more startup words. C: neither, until reask counts exist.
-- **D5. Strength of the omission check.** **Recommended A:** exit 1 (gate not presentable) on a missing record; a late record is allowed with unknown asking time. Worse: a late record still has no waiting time; it fixes the count, not the wait. B: report only, as ADR 0080's helper does; the probe suggests B leaves records unwritten.
+- **D5. Strength of the omission check.** ADR 0080 (2026-11-12, his 「五份都核准（建議）」) chose to report missing records without refusing work, and named as its reopen condition observations that manual ask recording misses the interruption measure. The probe is that observation: 0 records for 9 questions asked after the rule reached the README. **Recommended A:** reopen that choice for this record only: exit 1 (gate not presentable) on an amendment whose quoted question has no record; a late record is allowed with unknown asking time. Worse: a late record still has no waiting time; it fixes the count, not the wait. B: report only, as ADR 0080's helper does; the probe suggests B leaves records unwritten.
 
 ### Batch overlap
 
@@ -153,11 +155,11 @@ Recommended order: budget-form first (it is in validation and owns the `task_tim
 
 **AC-1** The writer writes each of the six events as contract revision 2 § 3 defines and refuses every line § 3–4 forbids: an unknown event, any line after a closing line except one `acted` after an `answer`, `acted` without an answer, a wordless answer with options and no `approve_means`, a `recommend` outside `options`, a revision that is not previous + 1. Evidence: `python3 -B -m pytest kc-dev-flow-2/scripts/test_task_timeline.py -q`, one case per refusal; falsifier: deleting any one refusal fails its case.
 
-**AC-2** `task_timeline.py <state> --open --json` over a fixture replaying 2026-11-13's 14 outside-gate questions lists exactly the questions open at the fixture's time with key, `by`, waiting since (`null` with the lower bound when `asked_at` is null), `holds`, interruptions and state. Evidence: the replay fixture under `kc-dev-flow-2/scripts/` and its test; falsifier: a question with an `answer` line still listed, or one without it missing, fails.
+**AC-2** `task_timeline.py <state> --open --json` over a fixture of 2026-11-13's 14 outside-gate questions, each given a declared synthetic asking time (the day's records hold none) and its answer at the commit time that recorded it, lists at each declared as-of time exactly the questions asked and not yet answered, with key, `by`, waiting since, `holds`, interruptions and state; a question written with `asked_at: null` shows unknown with the lower bound. Evidence: the fixture and its test under `kc-dev-flow-2/scripts/`; falsifier: listing an answered question, or omitting an open one, fails. The stop condition's "right waiting time" on a real day cannot be shown from 2026-11-13's records (none has an asking time).
 
 **AC-3** `task_timeline.py <state> <task>` and `--json` read a file holding legacy, `ask`, `reask` and `answer` lines without error and count interruptions as legacy + `ask` + `reask`. Evidence: the probe's `h3` fixture as a test; base: origin/main exits 1 with `KeyError: 'asked'` and counts 4 (`h3-timeline-main.out`); falsifier: counting every line gives 4 and fails.
 
-**AC-4** `design_surfaces.py check <task>` exits 1 naming the amendment when an amendment dated on or after adoption quotes in `Asked:` a question no record holds, and passes when the record exists in the task or names it in `tasks`. Evidence: two test fixtures; the probe's check on the 11 real tasks (`check-before.out`, 11 of 11 exit 1); falsifier: removing the record lookup passes the missing case.
+**AC-4** `design_surfaces.py check <task>` exits 1 naming the amendment when an amendment dated on or after adoption quotes in `Asked:` a question no record holds, and passes when the record exists in the task or names it in `tasks`. Evidence: two test fixtures; the probe's check on the 11 real tasks before records (`check-before.out`, 11 of 11 exit 1) and after the replay wrote the day's records (`check-after.out`); falsifier: removing the record lookup passes the missing case, and a check that always fails fails the present case.
 
 **AC-5** (if D2 A) `--open --gates` lists each unresolved gate attempt once, with waiting since never later than its resolution or now. Evidence: test over the replay clone; base: the `index.json` add time gives 23 of 34 negative (`gate-since-addtime.out`), the first naming commit 0 of 34 (`gate-since-pickaxe.out`); falsifier: the add-time method fails the test.
 
@@ -168,3 +170,36 @@ Recommended order: budget-form first (it is in validation and owns the `task_tim
 **AC-8** A second blind reader, given only the contract as shipped, lists AC-2's fixture with the right key, owner and waiting time, and every question it asks is disposed in the task folder. Evidence: the reader's saved report at validation; not provable now (validation, per FO).
 
 Not provable now: that FO records questions at the moment of asking on a real day after release (needs a live day; AC-4 enforces only that a record exists by the next gate); a reader in another repository reading the remote branch (needs the release).
+
+## Stage Report: ideation
+
+- DONE: Contract first: write the record's format as a contract document before any probe code, in the task folder as contract-draft.md
+  `contract-draft.md`: revision 1 state commit `2b9480601` (blind-read by FO's reader); revision 2 `0153c4af2` folds that read: 35 reader points, 31 changed, 4 declined (`blind-read/dispositions.md`).
+- DONE: Probe it locally as the text merged by PR 864 asks: a throwaway writer and a throwaway lister on the local branch, run on one replayed day of this workflow, and save what it showed
+  Branch `poc/captain-question-outside-a-gate-is-an-open-record`, base `bfc53d825`, last `abcec77ba`; five hypotheses under `### Probe`; evidence in `evidence/ideation-1/` (`replay.out`: 14 questions written; gate rows 0 mismatches at 16 hourly times, only 2 with an open gate; no question open at any time, since the day's records hold no asking time).
+- DONE: Then the design: extend the existing asks record or add a file, whether gate questions are listed by the same command from Spacedock's own gate records, and the two relayed wishes as options for the Captain with a recommendation each
+  Extend `asks.jsonl` through `task_timeline.py`; gate rows are D2 (recommended yes, "at least" waits); the relayed wishes are D3 and D4, each with options and a recommendation.
+- DONE: Every criterion's evidence command runs once on the probe with command, exit and output path; what cannot run goes under Not provable now
+  AC-3 base: `tt_main.py <h3> demo` exit 1 `h3-timeline-main.out`, `--json` exit 0 counts 4 `h3-timeline-main-json.out`; AC-4 base: probe `check` on 11 tasks, 11 exit 1 `check-before.out`; AC-5 base: `gate-since-addtime.out` 23/34 negative, `gate-since-pickaxe.out` 0/34; AC-2 base: replay `python3 -B replay.py <probe> captain_asks_probe.py` → `as-of mismatches: 0` in `replay.out` (the script exits 0 regardless); AC-4 positive: same check on the replayed clone, 14 of 25 found `check-after.out`; design check `design-surfaces.out` exit 0. AC-1, AC-6, AC-7 need the built writer, README edit and ADR; AC-8 is validation's blind read: under Not provable now or future checks.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task and live task of other sessions that changes the same file or check
+  Under `## Design`; recommended order: budget-form, then merge-ask, then this task.
+- DONE: The words FO reads at each moment, before and after
+  Startup 25 → 39 (ADR 0020 ruling needed), asking output 5 → 14, answer output none → 12, gate prepare and idle 0 → 0 (`readme-*.txt`, `out-*.txt`).
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-1 to AC-8 under `## Acceptance criteria`; D1 to D5 under `### Decisions for the Captain`.
+- DONE: Run scratch close and paste its output
+  `Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/ideation-1 (214229736 bytes)` / `Evidence: evidence/ideation-1/ (18 files, 107.9 KiB)` / exit 0.
+- DONE: Probe worktree removed, branch kept
+  `poc/captain-question-outside-a-gate-is-an-open-record` at `abcec77ba`, local only, never pushed.
+- DONE: AC-1 writer refusals: not yet verified; the probe implemented contract revision 1 (it refuses unknown events, lines after closing and answers with no words, option or resolution); revision 2's `approve_means`, `effect` and `tasks` were never written by a tool.
+- DONE: AC-2 open listing: not yet verified; the replay could not show an open outside-gate question (no asking times in the day's records), so the criterion uses declared synthetic times.
+- DONE: AC-3 timeline reads v1 lines: base failure measured (exit 1, count 4); candidate not yet built.
+- DONE: AC-4 omission check: probe measured both sides: 0 of 25 before records (11 of 11 tasks exit 1), 14 of 25 after the replay; the 3 day-of misses need the `tasks` lookup; candidate in `design_surfaces.py` not yet built.
+- DONE: AC-5 gate waits: add time 23/34 negative, first naming commit 0/34 negative; candidate not yet built.
+- DONE: AC-6 README words: candidate counted (39); lint not yet run on an edited README.
+- DONE: AC-7 ADR lint: not yet verified (no ADR written at ideation).
+- DONE: AC-8 second blind read: not provable now; validation.
+
+### Summary
+
+The existing `asks.jsonl` rule wrote nothing: 0 records in this workflow while 9 outside-gate questions came after it reached the README, so the riskiest problem is that records are not written, not their format. The design extends `asks.jsonl` and `task_timeline.py`, gates presentability on a record for each amendment's quoted question, and leaves five choices to the Captain (no-task questions, gate rows, the two relayed wishes, check strength). The 2026-11-13 replay held 14 outside-gate questions in the format, with `tasks` added for questions answered into several tasks; none had an asking time in any record.

@@ -1,0 +1,24 @@
+budget-form-counts-ideation-rounds-and-times-each-round: amendment question has no ask record: #868（預算把設計輪數算進去）被退回，要怎麼修？ 唯一的問題：這次在預算規則加了「N ideation, …
+budget-form-counts-ideation-rounds-and-times-each-round: 2 answered questions in the task file, 1 with an ask record
+captain-question-outside-a-gate-is-an-open-record: 1 answered questions in the task file, 1 with an ask record
+design-check-reads-each-pilot-criterion-for-its-proof-record: 2 answered questions in the task file, 2 with an ask record
+dispatch-close-out-archives-evidence-and-removes-scratch: amendment question has no ask record: 要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來
+dispatch-close-out-archives-evidence-and-removes-scratch: amendment question has no ask record: 實驗裡還沒過驗證的三張任務（收尾清理、問題裡的事實、擱置的任務）要怎麼走完？我建議一次給足授權讓它們跑完：一、這三張的預
+dispatch-close-out-archives-evidence-and-removes-scratch: 3 answered questions in the task file, 1 with an ask record
+evidence-is-declared-public-before-state-publication: 1 answered questions in the task file, 1 with an ask record
+held-and-closed-tasks-leave-the-design-queue: amendment question has no ask record: 要不要允許實驗裡這四張任務的實作各多寫一份決策紀錄檔，記下你在設計關卡裁的決定？我建議允許。四張是：收尾清理（已經停下來
+held-and-closed-tasks-leave-the-design-queue: amendment question has no ask record: 「擱置的任務
+held-and-closed-tasks-leave-the-design-queue: amendment question has no ask record: 實驗裡還沒過驗證的三張任務（收尾清理、問題裡的事實、擱置的任務）要怎麼走完？我建議一次給足授權讓它們跑完：一、這三張的預
+held-and-closed-tasks-leave-the-design-queue: amendment question has no ask record: 「擱置的任務
+held-and-closed-tasks-leave-the-design-queue: amendment question has no ask record: #854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 v
+held-and-closed-tasks-leave-the-design-queue: 5 answered questions in the task file, 0 with an ask record
+merge-ask-is-produced-from-records: amendment question has no ask record: 要不要給這張第二次實作派工？ 同意即接受：合併檢查存紀錄那張的預算從 1 implementation and 2 va
+merge-ask-is-produced-from-records: source question has no ask record: 下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段
+merge-ask-is-produced-from-records: 4 answered questions in the task file, 2 with an ask record
+new-work-checks-what-exists-first: 1 answered questions in the task file, 1 with an ask record
+pilot-ideation-runs-a-probe-before-the-design: 3 answered questions in the task file, 3 with an ask record
+ready-pr-gets-a-codex-code-review-without-fo-noticing: 2 answered questions in the task file, 2 with an ask record
+validator-commands-fit-the-delivery-check: source question has no ask record: 下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段
+validator-commands-fit-the-delivery-check: 1 answered questions in the task file, 0 with an ask record
+tasks failing: 5 of 11
+classified by hand from the amendment headings: 14 of 25 found after the replay; of the 11 misses, 8 are questions dated 2026-11-12 or 2026-11-14 (not replayed) and 3 are 2026-11-13 questions whose single record lives under another task (one question answered into two tasks, one into three), which a lookup through 'tasks' would find

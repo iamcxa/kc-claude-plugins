@@ -1,0 +1,20 @@
+state HEAD 278167297c7826182a556012e23153c980d3bd3e
+outside-gate questions in records: 14 distinct (from 17 record entries); bound to more than one task: 2; asked as a 'Source' line (task filed by the answer): 6; with an asking time in any record: 0
+08:00 expected gates  1 listed  1 missing 0 extra 0 open questions 0 max wait 277 min
+09:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+10:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+11:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+12:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+13:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+14:00 expected gates  1 listed  1 missing 0 extra 0 open questions 0 max wait 44 min
+15:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+16:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+17:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+18:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+19:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+20:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+21:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+22:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+23:00 expected gates  0 listed  0 missing 0 extra 0 open questions 0 max wait - min
+as-of mismatches: 0
+exit 0
