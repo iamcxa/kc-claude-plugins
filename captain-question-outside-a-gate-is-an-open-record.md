@@ -3,7 +3,7 @@ title: A question to the Captain outside a gate is one record in the task's stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'The Captain answered 「核准待決定事項紀錄的設計，五項都照建議」 (chat, 2026-11-14), answering 「決定：要不要核准「關卡以外問你的每一題做成一筆紀錄」的設計並開始實作？建議核准，五個決定都照建議：一、還沒有任務時問你的問題（例如「要不要開一張任務」），我先把那張任務建進待辦，讓這一題變成它的准入關卡，你原本要回答的兩題合成一題；二、同一份清單也列出關卡上等你的問題，等待時間標成「至少多久」，因為 Spacedock 沒記關卡是何時準備的；三、「集中在一處」就是狀態分支上這份紀錄，Review 仍是回答長問題的地方，它的結論編號記在答案上；四、清單會標出問了三次以上還沒發過完整說明的問題，由我去發，不加流程文字；五、修正案引用的問題如果沒有對應紀錄，設計檢查就擋下（補記允許，但等待時間記為不明）。同意即接受：被你否決的點子會留下一張已關閉的任務檔；關卡的等待時間會被低估；清單要有人去讀才有用；第五項推翻了你 11/12 核准的「只回報、不擋」，依據是那條規則上線後我問了你 9 題、一筆都沒記；合約已依盲測改到第二版（35 點裡 31 點改進合約、4 點婉拒），但試作只實作了第一版，第二版新增的欄位還沒有程式寫過；這張會和另外兩張進行中的任務改到同一支時間工具和流程文件，實作要排在它們後面。」; accepts the design with decisions D1 to D5 as recommended, D5 reopening ADR 0080''s report-only choice for this record. Recommendation: followed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-13T16:37:26Z
 ---
 
