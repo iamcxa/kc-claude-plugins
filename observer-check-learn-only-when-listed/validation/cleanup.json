@@ -1,0 +1,28 @@
+{
+  "evidence_commit": "f747e695bc4c82a41a1e70cd2a238bbbcab6a4bb",
+  "task_only_commit_verified": true,
+  "removed": [
+    {
+      "path": "/tmp/observer-learn-validation-srvkjmik",
+      "absent": true,
+      "method": "removed after evidence commit"
+    },
+    {
+      "path": "/tmp/observer-learn-acceptance.U2sNa0",
+      "absent": true,
+      "method": "acceptance EXIT trap"
+    },
+    {
+      "path": "/tmp/observer-learn-acceptance.nMqBFF",
+      "absent": true,
+      "method": "acceptance EXIT trap"
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/observer-learn-validation-srvkjmik",
+      "absent": true,
+      "method": "moved into validation root before execution"
+    }
+  ],
+  "product_worktree_preserved": true,
+  "shared_git_worktrees_created_or_removed": 0
+}

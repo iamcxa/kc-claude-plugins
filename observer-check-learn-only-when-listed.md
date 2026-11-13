@@ -345,7 +345,7 @@ Premise and goal: RoboRev's quoted-block-list mismatch is real—before the repa
 - SKIPPED: Reconstruct the missing original incident, configure optional source replays, and claim delivery or clean FO-owned review.
   Historical README/current tasks do not prove coexistence; 11 optional skips and three excluded pinned integrations are disclosed (native recovery separately passed); PR remains a draft in validation/pr.json, and FO owns review, gate and delivery.
 - DONE: Record owned temporary paths for cleanup after the evidence commit.
-  validation/identity.json and acceptance-summary.json name the owned paths; validation/cleanup.json will record exact-path removal and verification after this report/evidence is committed.
+  validation/cleanup.json records exact-path removal after evidence commit f747e695bc4c82a41a1e70cd2a238bbbcab6a4bb; all four owned temporary paths are verified absent, and both existing product/probe worktrees are preserved.
 
 ### Summary
 
