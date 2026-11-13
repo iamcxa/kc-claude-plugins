@@ -24,6 +24,17 @@ gates:
                 id: briefing:merge-ask-is-produced-from-records:backlog:attempt-2:revision-1
                 digest: sha256:110960e6a9d63888a6308a54fccc52e8bc0bf08274303d8586e8c75044a8c7fe
                 room-ref: ./merge-ask-is-produced-from-records/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-is-produced-from-records:backlog:2
+                briefing: briefing:merge-ask-is-produced-from-records:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-11-13T13:41:54.99377Z"
+                decision: approve
+                reason: 'The Captain answered 「一張維持，一張推理降一級，一張模型降低一級，但是 xhigh 推理」 (chat, 2026-11-13), answering 「三張「合併前那一段」的任務要不要進設計，以及實作用什麼強度？ 三張內容同剛才那一題：合併提問摘要自動產生、標成可審查後自動觸發 Codex 審查、驗證者留下的東西能直接過合併檢查。預算各 1 implementation and 2 validation cycles。符合常設授權條件，設計關卡沒踩停止條件時由我代記，合併每張問你。第一張和第三張會動到同一支程式，排先後。」; admits the three tasks with outcome, scope and Budget as seeded, and sets the build worker''s strength per task: one unchanged, one with effort one step lower, one with the model one tier lower at xhigh. Override: recommended two tasks one effort step lower and one unchanged; Captain chose one unchanged, one effort step lower and one model tier lower at xhigh; area: build model and effort.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
