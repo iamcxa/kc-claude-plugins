@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_question_only_records_observed_facts_and_no_manual_summary (test_delivery_gate.ObservedFactsTests.test_question_only_records_observed_facts_and_no_manual_summary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3531, in test_question_only_records_observed_facts_and_no_manual_summary
+    assert_record_contract(self, data)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 40, in assert_record_contract
+    case.assertFalse(set(schema.get("required", [])) - value.keys())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'ci'} is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.252s
+
+FAILED (failures=1)

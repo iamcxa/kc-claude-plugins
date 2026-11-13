@@ -1,0 +1,15 @@
+{
+  "candidate": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "commands": 29,
+  "unittest_cases": 1462,
+  "skipped": 11,
+  "unittest_passed": 1451,
+  "failed_commands": 0,
+  "local_os": "macOS",
+  "hosted_CI": "not run",
+  "cost_per_PR": "not measured",
+  "native_scripts_without_unittest_count": [
+    "test_sd_dispatch",
+    "test_observer_recovery"
+  ]
+}

@@ -1,0 +1,1 @@
+FAIL: references/delivery-record.md: script delivery_gate.py is named without <package>/scripts/

@@ -1,0 +1,8 @@
+{
+  "source_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "path": "mods/pr-merge.md",
+  "sha256": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a",
+  "same_as_prior_retained_bytes": true,
+  "fetch": "gh api with sandbox network access",
+  "exit": 0
+}

@@ -1,0 +1,258 @@
+{
+  "method": "whitespace-delimited str.split() at git object bytes; UTF-8 package files, no generated caches",
+  "revisions": [
+    {
+      "revision": "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "all_tracked_text_words": 219019,
+      "all_markdown_words": 46577,
+      "all_tracked_text_lines": 40513,
+      "changed_files": {
+        "kc-dev-flow-2/extensions/copilot/EXTENSION.md": {
+          "words": 778,
+          "lines": 58,
+          "sha256": "464c5d1cb73c6eca5d3c8c931521b9cf3b84ee7abd33b312f60385dcbe11e303"
+        },
+        "kc-dev-flow-2/references/sd/workflow.md": {
+          "words": 6099,
+          "lines": 636,
+          "sha256": "912c8133df2a838104e49cf0f4599520d31a0e6542f3df9628862d7732d34c7a"
+        },
+        "kc-dev-flow-2/scripts/delivery_gate.py": {
+          "words": 7298,
+          "lines": 1239,
+          "sha256": "bc9f97f228dbd51c40d504f43526787ee2f7432040129bbbe2b64dc9d7dc845f"
+        },
+        "kc-dev-flow-2/scripts/lint-skills.py": {
+          "words": 2569,
+          "lines": 371,
+          "sha256": "443a55da2e7d933796dfbe711a9eb99dbfbc38bf4f61306209914bb9b2dabf17"
+        },
+        "kc-dev-flow-2/scripts/test_delivery_gate.py": {
+          "words": 16707,
+          "lines": 3429,
+          "sha256": "3cc54be60027e538347e9e130aa1ac175b527ef6ab768e2b376f59d73f2f0065"
+        },
+        "kc-dev-flow-2/scripts/test_poc_readme.py": {
+          "words": 646,
+          "lines": 147,
+          "sha256": "d341a970b5d5c1c8fb982d8faecef7bc5911211beedd52baf8ef94176db64caa"
+        },
+        "kc-dev-flow-2/scripts/test_sd_dispatch.py": {
+          "words": 9168,
+          "lines": 1406,
+          "sha256": "5f3067ef66cb00488d8a665a0b2d2cc8bfadc96b9fe823e48f0ecc442c43555f"
+        },
+        "kc-dev-flow-2/skills/observer/SKILL.md": {
+          "words": 1371,
+          "lines": 137,
+          "sha256": "10faa3638ca0b9c38d3017de9f3c225b1338f5ad98b07eee53969d2750fc5578"
+        }
+      }
+    },
+    {
+      "revision": "c9cf0cc3b05b0f32bc980f1682629b33308b8fc6",
+      "all_tracked_text_words": 220464,
+      "all_markdown_words": 46547,
+      "all_tracked_text_lines": 40792,
+      "changed_files": {
+        "kc-dev-flow-2/extensions/copilot/EXTENSION.md": {
+          "words": 778,
+          "lines": 58,
+          "sha256": "464c5d1cb73c6eca5d3c8c931521b9cf3b84ee7abd33b312f60385dcbe11e303"
+        },
+        "kc-dev-flow-2/references/sd/workflow.md": {
+          "words": 6069,
+          "lines": 635,
+          "sha256": "b29ce21d57ff3aa3a8e81aacf4b456419d69f0e8786044ccd4b5b10d5ec09069"
+        },
+        "kc-dev-flow-2/scripts/delivery_gate.py": {
+          "words": 8452,
+          "lines": 1429,
+          "sha256": "b1ba69f26d249795bac97a37f1d2462fff93b17eee12549687943b2c6fa2bf57"
+        },
+        "kc-dev-flow-2/scripts/lint-skills.py": {
+          "words": 2579,
+          "lines": 372,
+          "sha256": "4f8a8ca2a9d7ab3089222c5b9924a366ff1ce8153b3fbd8fb56f41e5582ed7c9"
+        },
+        "kc-dev-flow-2/scripts/test_delivery_gate.py": {
+          "words": 17072,
+          "lines": 3521,
+          "sha256": "f3d3246e213b5b6f0a5b53cae3afe5f3b5581dfc7ab91bb9164f9d9cbc2a4147"
+        },
+        "kc-dev-flow-2/scripts/test_poc_readme.py": {
+          "words": 646,
+          "lines": 147,
+          "sha256": "d341a970b5d5c1c8fb982d8faecef7bc5911211beedd52baf8ef94176db64caa"
+        },
+        "kc-dev-flow-2/scripts/test_sd_dispatch.py": {
+          "words": 9114,
+          "lines": 1403,
+          "sha256": "7281fbe1f063a931ee7f874bd176184f35db94437ad61f06120d81495626681e"
+        },
+        "kc-dev-flow-2/skills/observer/SKILL.md": {
+          "words": 1371,
+          "lines": 137,
+          "sha256": "10faa3638ca0b9c38d3017de9f3c225b1338f5ad98b07eee53969d2750fc5578"
+        }
+      }
+    },
+    {
+      "revision": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+      "all_tracked_text_words": 221445,
+      "all_markdown_words": 47527,
+      "all_tracked_text_lines": 40939,
+      "changed_files": {
+        "kc-dev-flow-2/extensions/copilot/EXTENSION.md": {
+          "words": 614,
+          "lines": 49,
+          "sha256": "e9c405b76affaff5d0989a8915b7a05b94f1c3a5c016fb7cec88ef562c1d6a77"
+        },
+        "kc-dev-flow-2/references/delivery-record.md": {
+          "words": 1373,
+          "lines": 131,
+          "sha256": "52f4c92a4ec0a10679d676eee53583f2f8c76157dc123c887a4ed758051e28ba"
+        },
+        "kc-dev-flow-2/references/sd/workflow.md": {
+          "words": 5982,
+          "lines": 629,
+          "sha256": "e58440ed90b82126aed2aca982d8d1619603860b720ea78a2062db1f82b49863"
+        },
+        "kc-dev-flow-2/scripts/delivery_gate.py": {
+          "words": 8303,
+          "lines": 1416,
+          "sha256": "7acc5a067dcd59ae995e0173eaabb2abb1e7d3069ee1992fa2e2209a4ba8d8e2"
+        },
+        "kc-dev-flow-2/scripts/lint-skills.py": {
+          "words": 2589,
+          "lines": 373,
+          "sha256": "8ccc8e2fced9d50d06098f03d2dfaae3809073b075b5bd838f9194dbf18a2cdf"
+        },
+        "kc-dev-flow-2/scripts/test_delivery_gate.py": {
+          "words": 17357,
+          "lines": 3585,
+          "sha256": "dc7794ebb21a80d3fb87e8a1c2770dbd48aebbe61d062090416fe57946059fda"
+        },
+        "kc-dev-flow-2/scripts/test_poc_readme.py": {
+          "words": 520,
+          "lines": 134,
+          "sha256": "337f3eb5aafb85141fc6c11cd167dc8dc07abaeaa9ead849309aaf72f1bca86f"
+        },
+        "kc-dev-flow-2/scripts/test_sd_dispatch.py": {
+          "words": 9095,
+          "lines": 1401,
+          "sha256": "640edd6b33a56ab59266ff5d7578efe874311fcdf188de5512b91da93f112e12"
+        },
+        "kc-dev-flow-2/skills/observer/SKILL.md": {
+          "words": 1229,
+          "lines": 131,
+          "sha256": "54ccdcf6d7ec25fdad35fd3688d4449fe3555a91b5e1f41e5ea7ce0d1c24e546"
+        }
+      }
+    }
+  ],
+  "from_base": {
+    "files": 9,
+    "added": 569,
+    "removed": 143,
+    "paths": [
+      {
+        "added": "7",
+        "removed": "16",
+        "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md"
+      },
+      {
+        "added": "131",
+        "removed": "0",
+        "path": "kc-dev-flow-2/references/delivery-record.md"
+      },
+      {
+        "added": "10",
+        "removed": "17",
+        "path": "kc-dev-flow-2/references/sd/workflow.md"
+      },
+      {
+        "added": "202",
+        "removed": "25",
+        "path": "kc-dev-flow-2/scripts/delivery_gate.py"
+      },
+      {
+        "added": "2",
+        "removed": "0",
+        "path": "kc-dev-flow-2/scripts/lint-skills.py"
+      },
+      {
+        "added": "160",
+        "removed": "4",
+        "path": "kc-dev-flow-2/scripts/test_delivery_gate.py"
+      },
+      {
+        "added": "45",
+        "removed": "58",
+        "path": "kc-dev-flow-2/scripts/test_poc_readme.py"
+      },
+      {
+        "added": "7",
+        "removed": "12",
+        "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+      },
+      {
+        "added": "5",
+        "removed": "11",
+        "path": "kc-dev-flow-2/skills/observer/SKILL.md"
+      }
+    ]
+  },
+  "from_prior": {
+    "files": 9,
+    "added": 266,
+    "removed": 119,
+    "paths": [
+      {
+        "added": "7",
+        "removed": "16",
+        "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md"
+      },
+      {
+        "added": "131",
+        "removed": "0",
+        "path": "kc-dev-flow-2/references/delivery-record.md"
+      },
+      {
+        "added": "6",
+        "removed": "12",
+        "path": "kc-dev-flow-2/references/sd/workflow.md"
+      },
+      {
+        "added": "2",
+        "removed": "15",
+        "path": "kc-dev-flow-2/scripts/delivery_gate.py"
+      },
+      {
+        "added": "1",
+        "removed": "0",
+        "path": "kc-dev-flow-2/scripts/lint-skills.py"
+      },
+      {
+        "added": "65",
+        "removed": "1",
+        "path": "kc-dev-flow-2/scripts/test_delivery_gate.py"
+      },
+      {
+        "added": "45",
+        "removed": "58",
+        "path": "kc-dev-flow-2/scripts/test_poc_readme.py"
+      },
+      {
+        "added": "4",
+        "removed": "6",
+        "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+      },
+      {
+        "added": "5",
+        "removed": "11",
+        "path": "kc-dev-flow-2/skills/observer/SKILL.md"
+      }
+    ]
+  }
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "name": "role-triggers",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/role_triggers.py",
+      "<state>",
+      "merge-ask-is-produced-from-records"
+    ],
+    "exit": 0,
+    "output": "role-triggers-final.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "output": "lint-final.log"
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "bfc53d82510006b52baf41569c1e25176e99d87a"
+    ],
+    "exit": 0,
+    "output": "adr-lint-final.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "<user>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "<state>/merge-ask-is-produced-from-records.md"
+    ],
+    "exit": 0,
+    "output": "number-guards-final.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/comment_ratio.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "HEAD",
+      "--workflow-dir",
+      "<user>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "comment-ratio-final.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/design_surfaces.py",
+      "check",
+      "<state>/merge-ask-is-produced-from-records.md"
+    ],
+    "exit": 0,
+    "output": "design-surfaces-final.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/doc_impact.py",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "HEAD"
+    ],
+    "exit": 0,
+    "output": "doc-impact-final.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "<product>",
+      "diff",
+      "--check",
+      "bfc53d82510006b52baf41569c1e25176e99d87a",
+      "HEAD"
+    ],
+    "exit": 0,
+    "output": "diff-check-final.log"
+  },
+  {
+    "name": "dispatch-pins",
+    "command": [
+      "python3",
+      "-B",
+      "<scratch>/dispatch_pin_check.py"
+    ],
+    "exit": 0,
+    "output": "dispatch-pins-final.log"
+  }
+]

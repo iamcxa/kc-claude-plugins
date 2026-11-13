@@ -1,0 +1,49 @@
+usage: delivery_gate.py [-h] {check,question,merge-run,steps} ...
+delivery_gate.py: error: unrecognized arguments: --facts-rekord fixture
+Eusage: delivery_gate.py [-h] {check,question,merge-run,steps} ...
+delivery_gate.py: error: unrecognized arguments: --facts-rekord fixture
+E
+======================================================================
+ERROR: test_documented_delivery_commands_use_the_tools_argument_parser (test_delivery_gate.ObservedFactsTests.test_documented_delivery_commands_use_the_tools_argument_parser) (path='delivery-record.md', command='question <task> --text-file <question> --facts-rekord <record>')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3475, in test_documented_delivery_commands_use_the_tools_argument_parser
+    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+                     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/delivery_gate.py", line 1410, in main
+    args = parser.parse_args(argv[:cut])
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2153, in parse_args
+    self.error(msg)
+    ~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2958, in error
+    self.exit(2, fmt % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2940, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+======================================================================
+ERROR: test_documented_delivery_commands_use_the_tools_argument_parser (test_delivery_gate.ObservedFactsTests.test_documented_delivery_commands_use_the_tools_argument_parser) (path='workflow.md', command='question <task> --text-file <question> --facts-rekord <record>')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3475, in test_documented_delivery_commands_use_the_tools_argument_parser
+    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+                     ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/delivery_gate.py", line 1410, in main
+    args = parser.parse_args(argv[:cut])
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2153, in parse_args
+    self.error(msg)
+    ~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2958, in error
+    self.exit(2, fmt % args)
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/argparse.py", line 2940, in exit
+    _sys.exit(status)
+    ~~~~~~~~~^^^^^^^^
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (errors=2)

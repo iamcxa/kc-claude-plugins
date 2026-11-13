@@ -1,0 +1,2 @@
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1726910 bytes)
+Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)

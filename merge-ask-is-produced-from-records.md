@@ -398,3 +398,50 @@ Evidence: evidence/implementation-1-message-2/ (78 files, 145.1 KiB)
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-1 (3210273 bytes)
 Evidence: evidence/implementation-1/ (88 files, 171.2 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Continue the clean local candidate c9cf0cc3b under Captain amendments 1–3, without redoing its saved-observation implementation or original pin deletion.
+  Initial root/branch/clean HEAD verified; fetched origin/main remains bfc53d82510006b52baf41569c1e25176e99d87a. Local candidate de564ef9e2b608d4106d96c56448e22f31a6fc5b; effective Budget is 2 implementation and 2 validation cycles, per amendment 3.
+- DONE: Make the delivery record a boundary contract: one definition of version, fields, writer/readers, reader reliance, repair-push lifecycle and public-content boundary, in one file, saying where and why.
+  references/delivery-record.md owns the contract and embedded JSON Schema beside the package references; passing and held produced records conform, extra/body and invalid/missing fields fail, and private/unknown visibility saves nothing (test_delivery_gate.log; contract-mutations.json).
+- DONE: Replace the workflow, observer and Copilot copies with references, checking each removed sentence and listing each moved rule without losing a unique obligation.
+  rule-moves.json lists the moved preparation/binding/visibility/steps/unread/trigger duties; observer reference/digest/head/clause/time-fallback/judgment duties; Copilot unanswered/configuration/refusal/quota/retry/legacy-output/heading duties. Request eligibility, severity, trigger conditions and disposition ownership remain at their source.
+- DONE: Test produced-record conformance and each documented delivery command through the tool's own argument parser; migrate the POC recipe by behaviour; add no new wording pin.
+  Direct POC suite: 9 passed; delivery suite: 236 passed/1 optional skip. Removing ci from the producer fails schema conformance, and both record-route flag typos produce parser exit 2; the prior recipe extractor produces 6 expected subcase failures (contract-mutations.json; prior-contract-control.json).
+- DONE: Preserve the pin-deletion experiment and its separate PR-text paragraph for the Captain to rule on.
+  c9cf0cc3b's deletion is retained; this dispatch removes two more stale unread-disclosure need entries while retaining the existing extension/trigger pins and adjusted deletion anchors. No new need entry or prose pin was added; native dispatch and its reverse mutations pass (test_sd_dispatch.log).
+- DONE: Rerun AC-6 on the committed candidate, recording command, exit and output path; retain the question-only route and source bindings.
+  criterion-commands.json: two public archive-input replays pass check/question/native prepare with unchanged question/record digests; live public observation saves check=1/question=1, with separate prepare=0 proving transport only (replays.json; live.json). No historical acceptance command or real gate decision is claimed.
+- DONE: Show every named falsifier failing by a mutation run with python3 -B and cleared caches, including passing controls for the dispatched-head join.
+  Restored manual fields fail question-only delivery; local jobs inflate all three inventories; a held ask filename fails the consumer regression; changed dispatch heads hold after control exit 0. Contract-field/command mutations also fail; cache-clear.json, goal-check.json, mutation.json, candidate-mutations.json and contract-mutations.json retain commands/results.
+- DONE: Run suites as CI does: python3 on each file, the declared SPACEDOCK_BIN for native dispatch, and dispatch tests from the product worktree rather than an export.
+  All 29 CI-listed commands exit 0 locally: 1451 unittest cases passed, 11 optional skips, plus passing native dispatch/recovery scripts without unittest totals (ci-tests.json; test-summary.json). Spacedock 0.27.2 and CI-pinned mod commit 4d158a484ec73e184861067f8ed1e20087fdc26a were used; no model was spawned.
+- DONE: Run repository lint-skills.py and installed ADR lint, number guards and comment-ratio checks, and recheck role/design obligations.
+  final-checks.json records every exit 0 at de564ef9e; ADR lint uses base bfc53d825, no ADR added/changed or number reserved. Comments: 0/388 added code lines, 0.0%, maximum 5%. Workflow budget has the matching additional -87 cut; no raise is needed.
+- DONE: Aim for removal and report files, added/removed lines and package word counts before and after, without claiming an unmeasured gain.
+  counts.json: 9 product files, +569/-143 lines from base (+266/-119 from c9cf0cc3b); workflow 6099→5982 words; all package Markdown 46577→47527, all tracked package text 219019→221445. Net removal was not achieved: the contract/schema and behavioral checks outweigh the deleted copies. Total lifecycle reading/time gains were not measured.
+- DONE: Review the affected-document list and existing contracts; stop for a new consumer, ADR or budget raise rather than broadening scope.
+  doc-impact-dispositions.json covers all 20 listed documents; legacy/adopter/historical rulings remain unchanged under the task amendments. No new consumer beyond the already-known paths was found; merge audit retains its filename/PR/head seam. Exactly the nine authorized product paths changed; no versions or CI definitions changed.
+- DONE: Commit locally, prepare the scoped Conventional Commit PR text in implementation/pr.md and preserve shared-state ownership.
+  Product branch spacedock-ensign/merge-ask-is-produced-from-records is clean at de564ef9e; no product/state push or PR. GitHub branch query is empty (pr-status.json). State report/evidence/PR text are committed by named task paths only; no stash or remote/config write.
+- DONE: Keep temporary work under the assigned scratch root, retain public/count-only evidence and close the owned root.
+  89 retained files/138.7 KiB, verified manifest and normalized personal paths; no copied task/report/PR/reviewer bodies, private repository evidence or secrets. Required close exited 0 (implementation/close-2.txt). Native suites also use and clean the CLI's own fixed transport/derived-fixture paths; no claim is made that those vendor paths were relocated.
+- SKIPPED: FO pushes, opens the Draft PR, runs RoboRev and reads hosted CI; do not request review, comment, mark ready or merge.
+  No PR opened: no push grant. RoboRev not run: FO owns it because the Codex sandbox cannot reach its daemon. Hosted CI not run; CI cost per PR was not measured.
+
+### Summary
+
+This complete report supersedes both earlier implementation reports. The authorized boundary contract, consumer deduplication, schema/parser checks and POC migration are delivered locally at de564ef9e; the prior integrated-consumer hold is resolved, while independent validation and publication remain FO-owned.
+
+Start: 2026-11-14 00:12:09 Asia/Taipei; implementation/check/cleanup end: 00:42:10. Time source: clock.curr_time UTC observations +08:00. State commit is subsequent close-out, not a gate or stage transition.
+
+Not provable now: green live delivery, authenticated historical reviewer truth, every conditional reviewer/waiver/disposition path, full moved-trunk lifecycle, downstream adopter/private-record compatibility, installed adoption, hosted CI or RoboRev, general secret classification, rendered diagrams and total reading/speed gains. Pending record-route observations hold; legacy intentional not-read exceptions retain the text route. Reported verdicts/digests do not authenticate execution.
+
+Exact scratch close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1726910 bytes)
+Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
+```

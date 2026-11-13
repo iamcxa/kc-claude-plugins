@@ -1,0 +1,10 @@
+Scratch removed: /private<scratch>/tmp9poyy4fx/dev2/scratch-7e63b11bb0124b10be6ffb7f366c94be-c21e618c5e3dd668/task/validation-1 (124 bytes)
+Evidence: evidence/validation-1/ (0 files, 0.0 KiB)
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+...................................................................................................................................
+----------------------------------------------------------------------
+Ran 163 tests in 93.743s
+
+OK

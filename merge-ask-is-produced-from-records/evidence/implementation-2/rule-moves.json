@@ -1,0 +1,55 @@
+{
+  "checked_before_deletion": true,
+  "moves": [
+    {
+      "source": "references/sd/workflow.md",
+      "rules": [
+        "FO authors question/unobservable judgments, not factual summary",
+        "check/question recipe; nonzero holds; unchanged committed summary/reference",
+        "public-only observations; private legacy route",
+        "delivery record names Captain-step source",
+        "unread reviewer disclosure and Captain decision",
+        "conditional trigger judgment and untriggered reviewer exemption"
+      ],
+      "destination": "references/delivery-record.md: Producer and preparation; Readers and limits"
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rules": [
+        "merge-head question selects context ask reference at committed revision",
+        "reference digest/head comparison and id/time/head evidence",
+        "missing reference follows event-time requirement",
+        "pre-reference time fallback; absent/later observations are cannot-tell",
+        "legacy 200-character cleaned clause comparisons",
+        "FO sufficiency/necessity judgment reporting"
+      ],
+      "destination": "references/delivery-record.md: Readers and limits; Legacy text route"
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rules": [
+        "after deliberately unrepeated push name unread status and last reviewed head",
+        "requested unanswered review holds merge ask",
+        "configuration-error reporting",
+        "non-review answer is no round, never clean, no wait",
+        "no re-request until Captain says quota restored; offer retry",
+        "legacy saved stdout/refusal quote/answer identity/retry text",
+        "legacy round heading quote and observer clean-reading comparison"
+      ],
+      "destination": "references/delivery-record.md: Readers and limits; Legacy text route"
+    },
+    {
+      "source": "scripts/delivery_gate.py help",
+      "rules": [
+        "record format/ownership/recipe/visibility descriptions"
+      ],
+      "destination": "references/delivery-record.md (help points here; legacy help retained)"
+    }
+  ],
+  "retained_in_source": [
+    "second-reviewer trigger conditions",
+    "Copilot request eligibility, clean-reading criteria and severity",
+    "FO step execution and finding dispositions"
+  ],
+  "new_consumer": "none beyond the already-known paths; release-acceptance and validation references are generic sufficiency rules, dispatch fixtures are historical text, merge audit retains PR/head filename boundary"
+}

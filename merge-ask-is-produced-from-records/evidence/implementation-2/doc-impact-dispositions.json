@@ -1,0 +1,184 @@
+[
+  {
+    "doc": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Budget decreases by the measured workflow cut; no raise requested."
+  },
+  {
+    "doc": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Worker collaboration and early-return rules unchanged."
+  },
+  {
+    "doc": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Legacy optional summary location/combined-text behavior retained; the opt-in record route implements Captain amendment 1."
+  },
+  {
+    "doc": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "No model/role roster changes."
+  },
+  {
+    "doc": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Legacy round-line hold retained; the authorized record route observes saved verdict identities."
+  },
+  {
+    "doc": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Worker/FO permission ownership unchanged."
+  },
+  {
+    "doc": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Bound merge question/grant checks retained in both routes."
+  },
+  {
+    "doc": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Finding dispositions and third-round policy unchanged; only obsolete delivery disclosure pins were removed."
+  },
+  {
+    "doc": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Legacy clauses remain compatible; record-route binding is defined in the new contract."
+  },
+  {
+    "doc": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Legacy computed disclosures unchanged; record-route question immutability follows the approved design, not a general disclosure-rule rewrite."
+  },
+  {
+    "doc": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Moved-trunk test join and question-only not-run reason retained."
+  },
+  {
+    "doc": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Timeline/accounting behavior unchanged."
+  },
+  {
+    "doc": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/delivery_gate.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Legacy scope disclosures unchanged; no edit to the shared scanner."
+  },
+  {
+    "doc": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Ideation probe/dispatch rules unchanged."
+  },
+  {
+    "doc": "docs/dev2-poc/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Adopted workflows and their publication/adoption are outside this package-only delivery; no automatic refresh."
+  },
+  {
+    "doc": "docs/dev2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "Adopted workflows and their publication/adoption are outside this package-only delivery; no automatic refresh."
+  },
+  {
+    "doc": "kc-dev-flow-2/README.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "No changed claim: existing package/tool entrypoints and adoption/maintenance practices remain valid; the workflow points to the new contract."
+  },
+  {
+    "doc": "kc-dev-flow-2/references/sd/adoption.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "No changed claim: existing package/tool entrypoints and adoption/maintenance practices remain valid; the workflow points to the new contract."
+  },
+  {
+    "doc": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "No changed claim: existing package/tool entrypoints and adoption/maintenance practices remain valid; the workflow points to the new contract."
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py"
+    ],
+    "disposition": "unaffected",
+    "reason": "No changed claim: existing package/tool entrypoints and adoption/maintenance practices remain valid; the workflow points to the new contract."
+  }
+]

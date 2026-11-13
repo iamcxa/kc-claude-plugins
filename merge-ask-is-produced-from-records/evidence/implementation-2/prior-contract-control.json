@@ -1,0 +1,9 @@
+{
+  "prior_candidate": "c9cf0cc3b05b0f32bc980f1682629b33308b8fc6",
+  "contract_file_absent_exit": 128,
+  "old_recipe_tests": 1,
+  "old_recipe_failures": 6,
+  "old_recipe_errors": 0,
+  "current_recipe": "test_poc_readme.py direct-file entrypoint in ci-tests.json",
+  "limit": "Prior extractor code exercised against current record-route workflow; not a full checkout or whole-suite comparison."
+}

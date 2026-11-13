@@ -1,0 +1,114 @@
+{
+  "candidate": "de564ef9e2b608d4106d96c56448e22f31a6fc5b",
+  "criterion": "AC-6 plus Captain amendment 2",
+  "commands": [
+    {
+      "name": "archived replays",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/round2_probe.py",
+        "replay"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PROBE_RUN": "verified-"
+      },
+      "exit": 0,
+      "output": "replay-final.log"
+    },
+    {
+      "name": "round inventories",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/round2_probe.py",
+        "rounds"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "output": "rounds-final.log"
+    },
+    {
+      "name": "live public observation",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/round2_probe.py",
+        "live"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PROBE_RUN": "final-"
+      },
+      "exit": 0,
+      "output": "live-final.log"
+    },
+    {
+      "name": "base/round control",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/goal_and_mutation.py"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "output": "goal-and-mutation-final.log"
+    },
+    {
+      "name": "summary/held/head mutations",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/candidate_mutations.py"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "output": "candidate-mutations-final.log"
+    },
+    {
+      "name": "contract/CLI mutations",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/contract_mutations.py"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "output": "contract-mutations-final.log"
+    },
+    {
+      "name": "prior contract/recipe control",
+      "command": [
+        "python3",
+        "-B",
+        "<scratch>/prior_contract_control.py"
+      ],
+      "environment": {
+        "TMPDIR": "<scratch>",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "output": "prior-contract-control.log"
+    }
+  ],
+  "notes": [
+    "Live check/question hold with exit 1; harness exit 0 verifies that expected hold. Native prepare is separately transport-only.",
+    "Base control restores original question bytes before dispatch-head mutations; each binding has a passing control before its changed-head refusal.",
+    "Mutations are in-memory source/document changes in fresh python3 -B processes; caches were cleared."
+  ]
+}

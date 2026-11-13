@@ -1,0 +1,65 @@
+FFFFFF
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='valid', summary='External rounds: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 69, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='valid', summary='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 69, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='valid', summary='External rounds: -1\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 69, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='unreadable', summary='External rounds: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 69, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes) (mode='bad-config', summary='External rounds: 0\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 69, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes (prior_poc.DeriveTests.test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 72, in test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes
+    self.assertEqual(names, ["backlog", "implementation", "validation", "done"])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product>/kc-dev-flow-2/scripts/test_poc_readme.py", line 22, in recipe
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=6)
