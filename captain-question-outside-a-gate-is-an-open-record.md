@@ -74,6 +74,8 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-14: amendment 1 replaces AC-6 only to add one owner flag to the approved README sentence (39 to 41 words); it withdraws nothing the Captain approved, and the build change is one wording commit, 3d65ebd7a.
+
 ## Design
 
 Blind read 1 dispositions: 35 points, 31 changed the contract (one in part), 4 declined; the reader reported 28 because it grouped several under one bullet (the duplicate-key bullet holds four, the never-needed list six); the list is in the task folder. Contract: [contract-draft.md](captain-question-outside-a-gate-is-an-open-record/contract-draft.md), revision 2 (state commit `0153c4af2`); revision 1 (`2b9480601`) went to a blind reader in another repository, and [blind-read/dispositions.md](captain-question-outside-a-gate-is-an-open-record/blind-read/dispositions.md) records each of its points.
