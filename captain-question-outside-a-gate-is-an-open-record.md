@@ -186,7 +186,7 @@ Recommended order: budget-form first (it is in validation and owns the `task_tim
 
 **AC-5** (if D2 A) `--open --gates` lists each unresolved gate attempt once, with waiting since never later than its resolution or now. Evidence: test over the replay clone; base: the `index.json` add time gives 23 of 34 negative (`gate-since-addtime.out`), the first naming commit 0 of 34 (`gate-since-pickaxe.out`); falsifier: the add-time method fails the test.
 
-**AC-9** (Amended by Captain, amendment 1.) The README ask sentence is the approved candidate with `--by "<session>"` added to its ask command, 41 words, and `lint-skills.py` passes with one budget step carrying the Captain's quoted words and moment `startup`. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py`; falsifier: the sentence without the step fails the word-count check.
+**AC-9** (Amended by Captain, amendment 1.) The README ask sentence is the approved candidate 補上 `--by "<session>"`，啟動字數 41, and `lint-skills.py` passes with one budget step carrying the Captain's quoted words and moment `startup`. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py`; falsifier: the sentence without the step fails the word-count check.
 
 **AC-7** The new ADR passes the ADR linter with its reserved number and names `task_timeline.py` and `design_surfaces.py` under Protects. Evidence: `python3 -B kc-dev-flow-2/scripts/adr_lint.py <ADR>`.
 
