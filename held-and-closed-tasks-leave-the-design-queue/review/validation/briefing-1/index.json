@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1",
+  "question": "決定：合併 #856（你擱置或關閉的任務，在我開工和閒置時會被列成一行事實，不再看起來像等著處理的工作）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；合併後我要替目前 15 張擱置中的任務各補一段「擱置」紀錄並引用你當時的話，補完前這一行不會列出它們；提示用 33 個字，上限 35；在沒有遠端的環境重播那條指令會以代碼 2 結束，原因在主線既有的暫存來源檢查，主線也一樣；它經過多輪修正、四筆修正案和三次驗證；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c8a8343249fe861381e5a995005ac3cfc3446b4b/held-and-closed-tasks-leave-the-design-queue.md",
+      "rev": "sha256:f324cd41e61f6666560609b3bb4288fa726ebeab3344d9afb8f57516a5627bc0",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of held-and-closed-tasks-leave-the-design-queue, PR #856, route experiment of 2026-11-12, Cycle 2.\nSufficiency: a task carrying a Held section is named in one fact line at startup and idle and is not proposed as waiting work, within the word bound of Captain amendment 4 (validation-3 report, Astra, 2026-11-13, PASSED at 5859c3ccd; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: docs/adr/0081-held-and-closed-tasks-are-named-at-startup-and-idle.md, kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py change against the PR's base (gh pr view 856 file list, FO read 2026-11-13; judged in the validation-3 report, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-3/captain-acceptance.sh\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 856 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: origin/main is 46e9d0ed4, which this PR's branch already contains, so no merge-result run is owed (git merge-base, FO run 2026-11-13).\nExternal rounds: 3.\nExternal round sources: RoboRev clean on 455846c6d (FO run 2026-11-12); RoboRev clean on 5859c3ccd, evidence=roborev:1824 (FO run 2026-11-13); Codex code review of 5859c3ccd completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6844239189@5859c3ccd).\nSecond reviewer: Copilot because the PR changes what FO is told to act on at startup and idle, a workflow rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5886512311\nCopilot retry: available when the Captain confirms quota is back.\nCI: seven checks on 5859c3ccd finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 3. Round 1 REJECTED at 455846c6d, round 2 PASSED at 455846c6d, round 3 PASSED at 5859c3ccd with one Deferred risk finding.\nCaptain amendments: 5.\nFO declines F1 Deferred risk at 5859c3ccd: the replay without a remote exits 2 on main and on the candidate alike (validation-3/originless-comparison.json records both; the real workflow entrance exits 0).\nNot done yet: the Held sections of the held tasks, FO's step after merge."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/c8a8343249fe861381e5a995005ac3cfc3446b4b/held-and-closed-tasks-leave-the-design-queue/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:64b3f431b4484f497c33b3b1fb65337ad16f4b5bf177d4956db76400729138be"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/c8a8343249fe861381e5a995005ac3cfc3446b4b/held-and-closed-tasks-leave-the-design-queue/review/copilot-not-run.txt",
+      "mediaType": "text/plain",
+      "rev": "sha256:818bb9a807381a726dc98fa2e07a71a66bb2d8b172df2908d2c913bbdbb3c733"
+    }
+  ]
+}

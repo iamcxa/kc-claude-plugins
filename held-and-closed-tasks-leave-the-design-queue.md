@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:held-and-closed-tasks-leave-the-design-queue:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:held-and-closed-tasks-leave-the-design-queue-validation-1
+              briefing:
+                id: briefing:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1
+                digest: sha256:a9613c57cee7d82b46b9935170b8b25a052a068df830109f4370237228305191
+                room-ref: ./held-and-closed-tasks-leave-the-design-queue/review/validation/briefing-1
 started: 2026-11-12T05:16:56Z
 worktree: .worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue
 pr: iamcxa/kc-claude-plugins#856
