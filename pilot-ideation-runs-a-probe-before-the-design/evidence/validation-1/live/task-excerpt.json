@@ -1,0 +1,5 @@
+{
+  "original_sha256": "fce904b487dd980c0ac82025cee27e0e3a127ec6f4d51da6b35e34617cf5f0a1",
+  "omitted_lines": 55,
+  "reason": "Historical seed contains adopter identifiers; public subject-authored output is retained at original line numbers."
+}

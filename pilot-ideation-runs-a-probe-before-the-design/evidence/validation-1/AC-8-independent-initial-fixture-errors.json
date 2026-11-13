@@ -1,0 +1,28 @@
+[
+  {
+    "arm": "positive",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/live/wf/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation-replay/ideation-probe.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/candidate/kc-dev-flow-2",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/independent-live-positive",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/evidence/AC-8-positive",
+      "absent"
+    ],
+    "exit": 1
+  },
+  {
+    "arm": "negative",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/live/wf/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation-replay/ideation-probe.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/mutant-live/kc-dev-flow-2",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/independent-live-negative",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/evidence/AC-8-negative",
+      "absent"
+    ],
+    "exit": 1
+  }
+]

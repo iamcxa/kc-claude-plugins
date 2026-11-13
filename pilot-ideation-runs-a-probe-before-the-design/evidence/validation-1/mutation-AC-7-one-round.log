@@ -1,0 +1,15 @@
+task: pr-watch-tasks-foreign-worktree
+  backlog: 2026-11-12T17:01:54Z -> 2026-11-12T17:01:58Z  0.1 min (before gate 0.0, Captain wait 0.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T17:01:54Z, closed 2026-11-12T17:01:58Z, approve
+  ideation: 2026-11-12T17:03:02Z -> 2026-11-12T17:25:39Z  22.6 min (before gate 22.4, Captain wait 0.1, after gate 0.1); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T17:25:28Z, closed 2026-11-12T17:25:31Z, approve
+  implementation: 2026-11-12T17:25:39Z -> 2026-11-12T17:51:12Z  25.6 min (before gate 25.6, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+  validation: 2026-11-12T17:51:12Z -> 2026-11-13T00:29:37Z  398.4 min (before gate 92.1, Captain wait 299.9, after gate 6.4); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T19:23:19Z, closed 2026-11-13T00:23:10Z, approve
+  done: 2026-11-13T00:29:37Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+AC-7 expected two dispatches and one repeat; actual: 1 0

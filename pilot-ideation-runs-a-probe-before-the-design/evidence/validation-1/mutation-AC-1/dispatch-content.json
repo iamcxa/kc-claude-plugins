@@ -1,0 +1,22 @@
+[
+  {
+    "name": "pr-watch-tasks-foreign-worktree-candidate.worker-sees.txt",
+    "sha256": "61d3d0e70a4545abffb5d0d7b915682c128b7ef9a4d2701eccc68a74094afeb5",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "pr-watch-tasks-foreign-worktree-control.worker-sees.txt",
+    "sha256": "3b2df277201c9996c116183de6b5c092594335efd0efafc37d010a6dea529145",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "new-work-checks-what-exists-first-control.worker-sees.txt",
+    "sha256": "c41da9c050a6b3449a465b6917a1de551499a4f3fa524580c0488fa2beda2060",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "new-work-checks-what-exists-first-candidate.worker-sees.txt",
+    "sha256": "f00226d4163e6db11d4805ca71108708f7c412b09e5d22d76a738a48b7447a5b",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  }
+]

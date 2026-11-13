@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "-B",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/mutant-live/kc-dev-flow-2/scripts/pr_watch.py",
+    "--state",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/independent-live-negative/watch.json",
+    "tasks",
+    "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/independent-live-negative/workflow"
+  ],
+  "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/independent-live-negative",
+  "exit": 2,
+  "output": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/evidence/AC-8-negative/absent.stdout.txt",
+  "checks": {
+    "exit_zero": false,
+    "exact_output": false,
+    "no_next": false,
+    "no_watch_created": true,
+    "task_unchanged": true
+  },
+  "package_sha256": "59e297b5cc97fbabcf870be8e2ed616531aaee62c9f38329bc93e4cc5dd0bf93"
+}

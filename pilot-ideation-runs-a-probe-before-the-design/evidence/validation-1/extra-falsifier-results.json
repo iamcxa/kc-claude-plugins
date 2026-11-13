@@ -1,0 +1,41 @@
+[
+  {
+    "name": "mutation-AC-1-base-as-candidate",
+    "exit": 1,
+    "expected_exit": 1,
+    "command": [
+      "bash",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/ideation-1/bin/accept.sh",
+      "AC-1",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/evidence/mutation-AC-1"
+    ],
+    "output": "mutation-AC-1-base-as-candidate.log"
+  },
+  {
+    "name": "mutation-AC-6-lost-team",
+    "exit": 1,
+    "expected_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "-c",
+      "import sys;sys.path.insert(0,'kc-dev-flow-2/scripts');import test_sd_dispatch as t; text=t.TEMPLATE.read_text();t.assert_team(text.replace(t.TEAM_RULE,'- **Team:** omitted'));print('unexpected accepted')"
+    ],
+    "output": "mutation-AC-6-lost-team.log"
+  },
+  {
+    "name": "mutation-AC-7-one-round",
+    "exit": 1,
+    "expected_exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/state-read",
+      "pr-watch-tasks-foreign-worktree"
+    ],
+    "output": "mutation-AC-7-one-round.log",
+    "initial_fixture_error": "mutation-AC-7-bare-fixture-error.log",
+    "assertion": "ideation dispatches == 2 and repeat_dispatches == 1"
+  }
+]

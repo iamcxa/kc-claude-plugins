@@ -1,0 +1,14 @@
+{
+  "command": [
+    "bash",
+    "--noprofile",
+    "--norc",
+    "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design/evidence/validation-1/captain-accept.sh"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 29,
+  "expected": "4 STEP PASS markers; 47 tests OK; 77 ADR files; POC equal; +66; old pattern 1/new 0",
+  "scope": "text/regression checks; does not rerun a model, post-release cleanup, third-dispatch hold or delivery",
+  "earlier_run_elapsed_seconds": 56,
+  "rerun_reason": "Final script removes its empty scratch parent when it created it; exact fresh-shell command rerun after this cleanup change."
+}

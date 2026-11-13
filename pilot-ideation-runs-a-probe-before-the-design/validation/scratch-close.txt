@@ -1,0 +1,2 @@
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1 (absent)
+Evidence: evidence/validation-1/ (107 files, 142.7 KiB)

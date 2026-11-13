@@ -1,0 +1,15 @@
+STEP 1: fetch and verify the exact public candidate
+STEP 1 PASS: f0e00d30ce00542b2895f13173bd41075cc8bfd4
+STEP 2: run package lint, its regression suite, and ADR checks
+77 ADR file(s) checked, 0 legacy
+
+----------------------------------------------------------------------
+Ran 47 tests in 20.313s
+
+OK
+STEP 2 PASS: lint, regression suite, ADR 0084
+STEP 3: verify unchanged POC derivation and the approved word increase
+STEP 3 PASS: POC equal; startup words 6033 -> 6099 (+66)
+STEP 4: expose the original AC-3 false match and check the corrected condition
+STEP 4 PASS: original pattern 1 false match; corrected failure pattern 0
+LIMIT: no UI; this script checks package text and regressions, not another model run, third-dispatch enforcement, post-release cleanup, or delivery.

@@ -367,3 +367,30 @@ The local candidate implements the Pilot-only probe rule, POC proof pointer, pro
 
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1 (33212136 bytes)
 Evidence: evidence/implementation-1/ (69 files, 191.1 KiB)
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #864 head f0e00d30 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at f0e00d30ce00542b2895f13173bd41075cc8bfd4, base 88f86f2749dadb6f4ef0cf9aa089c1827096865b; runnable checks/falsifiers and explicit AC-9 exception are mapped in evidence/validation-1/report.md and criteria.json. Product bytes remain unchanged.
+- FAILED: Judge decisions D1 to D7 as the Captain approved them and Captain amendment 1 against the candidate text, judge AC-3's evidence clause, and run AC-8 through the package dispatch replay with a history-free worker
+  D1-D7/amendment match; original AC-3 exits 1 despite the correct condition (F1). One gpt-6-astra test subject, not a second validator, built/reran its local probe before design but recorded complete command/exit/output ledgers for only 2 of 3 criteria (F2); live/criterion-coverage.json and live-midrun-observation.json.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output
+  Four steps, final fresh-shell exit 0 in 29 seconds: evidence/validation-1/captain-accept.sh, captain-accept.log and captain-accept-result.json; report.md gives the sole acceptance command and limits. Public pinned download works without product checkout or retained scratch.
+- DONE: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; verdict and workflow finding disposition
+  Installed helper with --since 88f86f2749dadb6f4ef0cf9aa089c1827096865b --require 0084 exits 0, 77 ADR files (adr-lint-corrected-fixture.log); initial empty-index setup error retained. F1 Needs decision; F2 Material; four evidence fields for each are in report.md.
+- DONE: Required guard, dispatch, document and falsifier checks
+  Number guards, real-task design surfaces, dispatch records, native dispatch suite and 47 lint tests pass (other-results.json, AC-6/test_sd_dispatch.log, test-lint.log). Comment ratio 1/4 = 25%, below-size exemption (comment-ratio.log); all 11 document dispositions verified (doc-impact.log and report.md). Known-bad controls fail; source and expected behavior stay fixed.
+- SKIPPED: AC-9 post-release implementation branch cleanup and its post-release falsifier
+  Expressly accepted Not provable now; current task probe ref absent (cleanup-observation.json), but no released implementation run is claimed. Third-dispatch hold remains prose and per-round timing remains deferred as approved.
+- DONE: Retain public evidence and close assigned scratch before reporting
+  evidence/validation-1/SHA256SUMS verifies 107 retained evidence files; no private adopter repositories read or logs retained. validation/scratch-close-first.txt records removal; validation/scratch-close.txt records the final close after the self-cleaning acceptance rerun.
+
+### Summary
+
+Verdict: REJECTED. The candidate carries the approved Pilot-only rule and the live worker probes before writing design, but the accepted evidence command remains false-red and the live all-criteria ledger is incomplete. Local success is not approval, merge, release or adoption; CI cost per PR was not measured and no CI trigger changed.
+
+- F1 Needs decision: AC-3's approved unanchored repeats pattern counts lint's success line; its statement and corrected failure-only check pass. Only a Captain amendment can replace the accepted evidence clause.
+- F2 Material: worker AC-3 at evidence/validation-1/live/task.md:156 names source-identity.json without an exact command or recorded exit; the other two ledgers are complete. The isolated seed's Scope-check refusal is caused by removing its historical handwritten trial permission, not by this product candidate; no test-subject output was repaired.
+
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1 (absent)
+Evidence: evidence/validation-1/ (107 files, 142.7 KiB)

@@ -1,0 +1,2 @@
+fact: synthetic has no recorded PR; its worktree is not on this machine.
+next: report synthetic to the Captain: cannot tell whether a chief-engineer or engineering-reviewer call is owed: no task file for synthetic at HEAD in /privat.

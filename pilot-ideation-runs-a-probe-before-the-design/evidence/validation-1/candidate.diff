@@ -1,0 +1,162 @@
+diff --git a/docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md b/docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md
+new file mode 100644
+index 000000000..ed932a986
+--- /dev/null
++++ b/docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md
+@@ -0,0 +1,74 @@
++# 0084. Pilot ideation builds a throwaway probe on a local branch
++
++Date: 2026-11-13
++
++## Status
++
++Accepted
++
++## Context
++
++The Pilot ideation write ban in ADR 0005 required First Officer (FO) scope notes
++to permit a working probe. Two recorded trial dispatches needed 184 words of
++hand-written probe instructions each. A local probe showed the workflow could
++carry those instructions without changing the POC route, but raised FO startup
++reading by 66 words (6033 to 6099). The trial did not measure delivery speed or
++defects. The Captain approved the seven design decisions at the ideation gate
++of pilot-ideation-runs-a-probe-before-the-design.
++
++## Decision
++
++**Words:** 「核准，七項都照建議（建議）」 — Captain, host question dialog,
++ideation gate, 2026-11-13.
++
++**Asked:** 「決定：要不要核准「Pilot 設計階段先做試作」的設計並開始實作？建議核准，七個設計決定都照建議：一、試作是「預期要做，除非設計寫明為什麼不做」；二、試作只能在本機分支，不推送、不部署、不用密鑰、不碰共用環境，做不到的列在「現在無法證明」；三、設計裡記一行試作的分支、基底和最後提交，設計 worker 移除工作目錄、保留分支，實作 worker 做出成品後刪掉分支；四、試作一輪就是一次設計派工，第三次設計派工前我停下來問你，由程式檢查的預算寫法另開任務（你剛才選的分兩步）；五、流程文件增加 66 個字（6033 到 6099）；六、新增一份決策紀錄，只對 Pilot 取代舊紀錄 0005 裡「設計階段不得寫檔」那一條；七、Pilot 的文字指向 POC 既有的那一段規則（43 個字）而不重寫，「擴大方案」這一步留在 Pilot 的文字裡，不改 POC 流程。同意即接受：每次 Pilot 設計派工我少手寫 184 個字，但我每次啟動多讀 66 個字；worker 可以用一句話說明就跳過試作；輪數上限在後續任務做完前只靠我記得；沒有機器證明這會讓交付變快或缺陷變少；有三項驗收條件要等實作或發版後才能驗。」
++
++**Words, Captain amendment 1:** 「可以，要同時加入預算與計時機制，我看目前你 X implementiation + Y valdiation cycle 方式還不錯」 — Captain, chat, 2026-11-13,
++after asking whether Pilot would reuse the POC hypothesis, check and widening loop.
++The gate settled that direction as decisions four and seven; the Captain chose
++「分兩步（建議）」 for the budget follow-up.
++
++**Options considered:**
++- Expect a local probe unless the design says why not; reuse the first paragraph
++  of POC implementation by pointer and keep widening in Pilot (chosen).
++- Merely permit a probe, or require one without an exception; the former leaves
++  the habit optional, the latter forces probes even when the design explains no need.
++- Preserve the blanket ban and hand-write probe instructions in every dispatch.
++- Count one ideation dispatch as one round and have FO hold a third, including
++  design-gate revises; retain the existing stage timing and defer machine-enforced
++  ideation budgets and per-round timing (chosen).
++- Extend the budget grammar and timeline helper now, or use a total-dispatch cap
++  that loses the Captain's preferred implementation/validation split.
++- Raise the workflow budget by 66 words under ADR 0020 (chosen), rather than move
++  the round rule out of the workflow FO reads.
++
++**Recommended:** The seven design decisions as recommended and approved, including
++the two-step budget delivery.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/lint-skills.py` — the approved 66-word workflow budget step
++
++This supersedes only ADR 0005's ideation write-ban clause and its rejection of a
++throwaway ideation worktree for Pilot. Prod's ban, ADR drafting without a number,
++amendment handling and the design gate remain in force. The POC route is unchanged.
++
++Pilot probes use an unpushed local `poc/<slug>` branch, with no deployment,
++credential or shared environment. Run each criterion's evidence command once and
++record command, exit and output path; list unavailable proofs under
++`Not provable now`. The design records branch, base, last commit, hypotheses and
++results. Ideation removes the worktree but keeps the branch; implementation reads
++it and deletes it after committing its candidate. A saved diff in the task folder
++is the portable copy when the next worker cannot read that local branch.
++
++## Consequences
++
++The workflow replaces the blanket ban; its duplicate in ideation principles and
++the lint overlap exception go. FO writes 184 fewer words per trial-style dispatch
++but reads 66 more at startup and resume; the Pilot ideation worker reads 201 more
++than the released text. A worker can skip a probe with a reason. The round hold,
++probe bounds and branch cleanup are instructions, not script enforcement; lint
++checks the budget arithmetic and quote presence, not the quote's authority.
++The existing timeline reports dispatch count and the stage span, not each round's
++own end or result. Live worker behavior and post-release cleanup remain to be
++observed. Reopen if those observations contradict the intended behavior or the
++follow-up cannot express the Captain's approved ideation bound.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index f73a1722c..aa6ab17a1 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -183,8 +183,13 @@ worker authors the PRFAQ and the artifact each recorded surface owes. When
+ as a `Result:` line before dispatching the worker. Missing skill or profile
+ authority requires a hold report rather than a baseline or default-profile
+ substitution.
+-Ideation writes no repository file, branch or commit: the design, the criteria and any
+-ADR draft live in the task file, and a draft carries no ADR number.
++Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design
++says why not; it is never pushed or deployed and uses no credential or shared
++environment. Each criterion's evidence command runs once on it, recording command, exit
++and output path; what cannot run goes under `Not provable now`. A probe round is one
++ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
++repository file, branch or commit. The design, the criteria and any ADR draft live in
++the task file, and a draft carries no ADR number.
+ 
+ - **Outputs:** Current design definition and acceptance criteria with reproducible
+   evidence clauses; unresolved decisions identified for the user.
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 4e7bc09f4..18dcad38b 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -79,11 +79,14 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=25, why="record outside-gate questions when asked and read stage times and counts on demand",
+          captain='「五份都核准（建議）」 (Captain, ideation gate, 2026-11-12), answering the bound question: 「一、計時紀錄：「重做」算同一階段第二次以後的派工；「打斷」算我在關卡以外問你的每一題，由我在問的當下記一筆；工具只報告缺漏、不擋任務；流程說明多 25 個字。」',
+          loaded="startup and resume of the First Officer, and before each outside-gate Captain question"),
++    # see docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md
++    dict(delta=66, why="Pilot ideation carries probe permission, local bounds, criterion proof runs and a third-dispatch hold instead of the blanket write ban",
++         captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
++         loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+ KNOWN_DUPLICATES = {
+-    ("skills/ideation/principles.md", "ideation writes no repository file branch or commit"),
+     # FO reads the workflow copy before presenting the gate; the validation worker reads its own.
+     ("skills/validation/principles.md", "validation runs python3 <package>/scripts/adr_lint.py"),
+     # The workflow copy stays for FO (Delivery authority); workers no longer receive that section.
+diff --git a/kc-dev-flow-2/skills/ideation/principles.md b/kc-dev-flow-2/skills/ideation/principles.md
+index 0a761403c..c277bbc12 100644
+--- a/kc-dev-flow-2/skills/ideation/principles.md
++++ b/kc-dev-flow-2/skills/ideation/principles.md
+@@ -35,8 +35,7 @@ artifact each recorded surface owes, or without a usable `## Acceptance criteria
+ section: the first line that equals that heading in any case once surrounding
+ whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
+ `spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
+-Ideation writes no repository file, branch or commit; the design, the criteria and
+-any ADR draft live in the task file. A design that lands an ADR names the ruling and
++A design that lands an ADR names the ruling and
+ the file's short title, with no ADR number: FO reserves the number when it dispatches
+ implementation. Reconcile material research and feedback
+ into the same definition before handoff. Correct contradictions in depicted or
+diff --git a/kc-dev-flow-2/skills/ideation/profiles/pilot.md b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+index ec4840103..d2b286469 100644
+--- a/kc-dev-flow-2/skills/ideation/profiles/pilot.md
++++ b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+@@ -4,6 +4,14 @@ Define the smallest useful end-to-end slice, who will use it, its real seams,
+ acceptance evidence and explicit non-goals. Identify any new obligation that
+ would require a profile change; leave that decision with the user.
+ 
++## Probe
++
++Build the probe as the first paragraph of [POC implementation](../../implementation/profiles/poc.md)
++builds a proof: falsify the riskiest assumption first; when it holds, widen toward the
++slice and check the next. Work in `.worktrees/poc-<slug>` from the trunk. Under `Probe:`
++in the design, record the branch, base and last commit and each hypothesis with its
++result; remove the worktree before reporting and keep the branch.
++
+ ## Data kept across screens or sign-in
+ 
+ When a `ui` design keeps something a person typed or chose while they move between
+diff --git a/kc-dev-flow-2/skills/implementation/profiles/pilot.md b/kc-dev-flow-2/skills/implementation/profiles/pilot.md
+index 9d918e4c4..3b2ebca69 100644
+--- a/kc-dev-flow-2/skills/implementation/profiles/pilot.md
++++ b/kc-dev-flow-2/skills/implementation/profiles/pilot.md
+@@ -5,3 +5,4 @@ Test owned behavior and exposed failure/retry paths, retaining enough diagnostic
+ for limited use and the next iteration. Document consumer-visible changes where
+ the delivery boundary requires them. Surface added production obligations
+ before expanding implementation.
++Read a branch the design records under `Probe:`; delete it once your candidate is committed.

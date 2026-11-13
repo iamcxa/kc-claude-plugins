@@ -1,0 +1,3 @@
+next: report scratch close-out to the Captain: fatal: not a git repository (or any of the parent directories): .git.
+next: report synthetic to the Captain: fatal: not a git repository (or any of the parent directories): .git.
+next: report synthetic to the Captain: cannot tell whether a chief-engineer or engineering-reviewer call is owed: /private/tmp/dev2/kc-claude-plugins-3042bb224.

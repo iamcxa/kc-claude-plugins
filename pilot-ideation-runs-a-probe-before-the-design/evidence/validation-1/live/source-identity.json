@@ -1,0 +1,8 @@
+{
+  "base": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "existing_fix": "9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58",
+  "probe_branch": "poc/pr-watch-tasks-foreign-worktree-replay",
+  "probe_commit": "318fc7caf416a88a000c7e16f2155b547a7ceb81",
+  "exported_pr_watch_equals_pinned_source": true,
+  "source_changed": false
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "pr-watch-tasks-foreign-worktree-candidate.worker-sees.txt",
+    "sha256": "509df449659a5f3fb2fa35b336f5eadb80ec42b8b26d1420f42689760a2bbdbc",
+    "rule_excerpt": "Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design\nsays why not; it is never pushed or deployed and uses no credential or shared\nenvironment. Each criterion's evidence command runs once on it, recording command, exit\nand output path; what cannot run goes under `Not provable now`. A probe round is one\nideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no\nrepository file, branch or commit. The design, the criteria and any ADR draft live in\nthe task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "pr-watch-tasks-foreign-worktree-control.worker-sees.txt",
+    "sha256": "65683eea81059af51c4e192a6f41a2ead22bbc532a0c27c10715df56ce9ff69d",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "new-work-checks-what-exists-first-control.worker-sees.txt",
+    "sha256": "f07b4d1bead7841faaa557ec48631b93db7a869a0ff2e2c3e5b89e5fac79e3f5",
+    "rule_excerpt": "Ideation writes no repository file, branch or commit: the design, the criteria and any\nADR draft live in the task file, and a draft carries no ADR number."
+  },
+  {
+    "name": "new-work-checks-what-exists-first-candidate.worker-sees.txt",
+    "sha256": "1a4d6d942022c4a7a6b5d1fdcaa0d602935767731d13102fd5b4fe08dcb9bfb5",
+    "rule_excerpt": "Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design\nsays why not; it is never pushed or deployed and uses no credential or shared\nenvironment. Each criterion's evidence command runs once on it, recording command, exit\nand output path; what cannot run goes under `Not provable now`. A probe round is one\nideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no\nrepository file, branch or commit. The design, the criteria and any ADR draft live in\nthe task file, and a draft carries no ADR number."
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "criterion": "worker AC-1",
+    "evidence_file": "live/absent.json",
+    "exact_command": true,
+    "recorded_exit": 0,
+    "output_path": "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/live/wf/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation-replay/absent.stdout.txt",
+    "complete": true
+  },
+  {
+    "criterion": "worker AC-2",
+    "evidence_file": "live/bare.json",
+    "exact_command": true,
+    "recorded_exit": 0,
+    "output_path": "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-1/live/wf/.spacedock-state/pr-watch-tasks-foreign-worktree/ideation-replay/bare.stdout.txt",
+    "complete": true
+  },
+  {
+    "criterion": "worker AC-3",
+    "evidence_file": "live/source-identity.json",
+    "exact_command": false,
+    "recorded_exit": null,
+    "output_path": "live/source-identity.json",
+    "complete": false,
+    "note": "Output file is named by the criterion, but exact command and exit are absent."
+  }
+]

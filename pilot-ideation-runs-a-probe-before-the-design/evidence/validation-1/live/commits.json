@@ -1,0 +1,10 @@
+{
+  "probe_commit": "318fc7caf416a88a000c7e16f2155b547a7ceb81",
+  "probe_base": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "state_report_commit": "961b3351a6f8ce54ab6a290e6eafec4066fea1f0",
+  "probe_time": "2026-11-13T15:43:01+08:00",
+  "report_time": "2026-11-13T15:47:51+08:00",
+  "model": "gpt-6-astra (inherited; history-free collaboration test subject)",
+  "second_validator": false,
+  "code_branch_retained": true
+}

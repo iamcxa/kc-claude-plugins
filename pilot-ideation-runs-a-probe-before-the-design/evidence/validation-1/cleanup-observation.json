@@ -1,0 +1,5 @@
+{
+  "current_task_probe_ref_present": false,
+  "historical_implementation_evidence": "../implementation-1/probe-cleanup.log",
+  "post_release_worker_run": false
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "severity": "medium",
+    "title": "F1 \u2014 Needs decision: AC-3 approved command rejects a correct candidate",
+    "detail": "The original evidence command exits 1 because its unanchored repeats pattern counts the successful no-unlisted-repeat line. The criterion statement passes the corrected failure-only pattern. Only the Captain can amend the accepted evidence clause.",
+    "file": "pilot-ideation-runs-a-probe-before-the-design.md",
+    "line": 292,
+    "fix": "FO asks for an explicit amendment; preserve the original criterion and both outputs."
+  },
+  {
+    "severity": "high",
+    "title": "F2 \u2014 Material: the live worker omits one criterion command and exit",
+    "detail": "The history-free test subject builds and runs a probe before design, but its final third criterion points at source-identity.json, which has no command, exit or output fields; its prose gives only an incomplete git reproduction hint. Two of three final criteria have the required ledger. AC-8 is not fully met.",
+    "file": "pilot-ideation-runs-a-probe-before-the-design/evidence/validation-1/live/task.md",
+    "line": 156,
+    "fix": "Return through the workflow finding disposition; retain this observed run and do not silently fill its missing ledger."
+  }
+]

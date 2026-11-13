@@ -1,0 +1,38 @@
+{
+  "method": "Python str.split; exact before and after bytes are identical because no product change is proposed. Counts cover this task contribution, not every dynamic provider result.",
+  "mod_words": 48,
+  "absent_fact_words": 13,
+  "moments": [
+    {
+      "moment": "startup",
+      "before": 61,
+      "after": 61,
+      "scope": "complete kc-dev-flow-2 mod plus synthetic absent-task output"
+    },
+    {
+      "moment": "idle on open PR",
+      "before": 61,
+      "after": 61,
+      "scope": "complete kc-dev-flow-2 mod plus synthetic absent-task output"
+    },
+    {
+      "moment": "idle on merged PR",
+      "before": 61,
+      "after": 61,
+      "scope": "complete kc-dev-flow-2 mod plus synthetic absent-task output"
+    },
+    {
+      "moment": "after archive",
+      "before": 0,
+      "after": 0,
+      "scope": "no new passage or output from this task"
+    },
+    {
+      "moment": "merge ask",
+      "before": 0,
+      "after": 0,
+      "scope": "no new passage or output from this task"
+    }
+  ],
+  "whole_lifecycle_total": "unavailable: live provider and adopter inputs prohibited; no reduction claimed"
+}
