@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-surfaces-task-dir-crash:validation:attempt-1:revision-1",
+  "question": "決定：合併 #860（設計檢查指令在任務檔旁有同名資料夾時不再當掉，會改讀旁邊的任務檔）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；找不到任務檔時的結束代碼從 1 變成 2（用法錯誤），驗證者確認套件內讀這個代碼的呼叫端行為不變；只有 Codex 審過，第二審查者未觸發；合併後的結果我跑過 28 項測試指令、零失敗。 Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:design-surfaces-task-dir-crash:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4708beac2ed9586efaad255b3661f10aa7d78e6b/design-surfaces-task-dir-crash.md",
+      "rev": "sha256:163ed6ef6d2619f032cdd139d11f8d29932606b9a454894e6f69aac17cd95469",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of design-surfaces-task-dir-crash, PR #860, route trial of 2026-11-13.\nSufficiency: with a same-named directory beside the task file, the suffixless check command reads the sibling task file in both modes and matches the explicit-file run; an unresolved argument is a usage error with no traceback (validation report, Astra, 2026-11-13, PASSED at ef9aaffcb; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: kc-dev-flow-2/scripts/design_surfaces.py and kc-dev-flow-2/scripts/test_design_surfaces.py change against the PR's base (gh pr view 860 file list, FO read 2026-11-13; judged in the validation report, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/validation/cycle-1/acceptance.sh /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-design-surfaces-task-dir-crash\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 860 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: main moved to 9bdc9f730 when PR #858 merged; git merge-tree of that main with this head gives tree bc1141797 with no conflict, and FO ran the 28 commands of the kc-dev-flow-2 tests workflow on that tree, each exit 0 (/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/design-surfaces-task-dir-crash/captain-steps/3-output.log, FO run 2026-11-13).\nExternal rounds: 1.\nExternal round sources: Codex code review of ef9aaffcb completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6832190961@ef9aaffcb).\nSecond reviewer: not triggered.\nRoboRev: clean on ef9aaffcb, evidence=roborev:1808 (FO run 2026-11-13).\nCI: six checks on ef9aaffcb finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 1. PASSED at ef9aaffcb with no finding.\nCaptain amendments: 0."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:design-surfaces-task-dir-crash:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/4708beac2ed9586efaad255b3661f10aa7d78e6b/design-surfaces-task-dir-crash/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:96eb638ad4a8416aefb924bec7abb26bde2d1a586b16276c1858c1fedb29ac2c"
+    }
+  ]
+}

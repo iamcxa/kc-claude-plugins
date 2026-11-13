@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:design-surfaces-task-dir-crash:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:design-surfaces-task-dir-crash-validation-1
+              briefing:
+                id: briefing:design-surfaces-task-dir-crash:validation:attempt-1:revision-1
+                digest: sha256:9a461f373e9b9aa9c732ab66355fdd53a01cb3f972bee8c6da48f51a53b06c66
+                room-ref: ./design-surfaces-task-dir-crash/review/validation/briefing-1
 started: 2026-11-12T17:02:31Z
 worktree: .worktrees/spacedock-ensign-design-surfaces-task-dir-crash
 pr: iamcxa/kc-claude-plugins#860
