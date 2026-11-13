@@ -1,0 +1,23 @@
+{
+  "evidence_commit": "076897f6a2d7cf01e4a24f6dcebf0e19d331734b",
+  "removed": [
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md",
+      "removed": true,
+      "absent": true
+    },
+    {
+      "path": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/impl-held-merge-main-m77rxdga",
+      "removed": true,
+      "absent": true
+    }
+  ],
+  "retained": [
+    {
+      "path": "/tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md",
+      "reason": "original explicit PR-text handoff exception; FO removes after use"
+    }
+  ],
+  "other_scratch_touched": false,
+  "private_sources": 0
+}

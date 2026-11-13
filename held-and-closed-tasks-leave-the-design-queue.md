@@ -577,3 +577,40 @@ validation-2/review.md retains the initial sandbox network failures and sparse-e
 ### Summary
 
 This complete report supersedes earlier implementation reports for the current merge-up dispatch: work stops because four conflicting files lie outside the approved design, as the dispatch explicitly requires. No new merged candidate or fresh acceptance pass exists; FO must resolve the scope boundary before conflict resolution and full revalidation can resume. Round start: 2026-11-13 12:08:50 Asia/Taipei, from clock.curr_time UTC plus 08:00; exact end time is in the completion message. No /tmp scratch was created or removed in this round (exact-path removal list: none).
+
+## Stage Report: implementation
+
+- DONE: One Draft PR implements the approved design, D1 and D2, and Captain amendment 1; only the design's files; Held body edits belong to FO
+  The existing PR #856 receives local merge candidate 5859c3ccd25a86c79df3b36cafdda9762bd8142e, not pushed. Relative to main only pr_watch.py, test_pr_watch.py and ADR 0081 differ; the original 210 additions / 4 deletions remain exact. No live Held file is edited.
+- DONE: ADR 0081 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  The decision record remains byte-identical to 455846c6d, with the accepted ideation question; installed 0.39.1 adr_lint.py --since 46e9d0ed4bb86889022457adcdf656965dc97e73 --require 0081 exits 0. doc-impact.json names only this updated record.
+- DONE: Every acceptance criterion's named evidence command and each falsifier are rerun with python3 -B and isolated mutation caches
+  recheck-results.json has 33 passing predicates/expected exits: AC-1/2 select the frozen ten and exclude them from scheduling; AC-4 builds a held dispatch; AC-5 refuses all three unforced closes (first two explicitly not-applicable); AC-6 finds the real successor and AC-7 verifies seven quotes. AC-3-output.log passes the clean legacy full-state replay with no ten names; row/quote/successor/output/exit-observation mutations reject.
+- DONE: NP-1 and NP-2 through the merged candidate and meaningful source mutations
+  The actual workflow tasks entrance exits 0 and names all fifteen current native holds exactly once. Missing/duplicate names, missing/unverified/fenced/stale quotes, empty results and query failures are exercised; all five source mutations plus removal of this task's change fail the held tests. Snapshot source bytes are restored; watcher-pytest.xml separately records 163 passes.
+- DONE: Captain amendment 4 word bound at one held task, the current count and a larger fabricated count
+  words/measurements.json measures one 17/21, current fifteen 33/35 and fabricated hundred spanning all five configured stages 120/120. Fresh-process over-bound cases 22/21, 36/35 and 121/120 exit 1 (output-falsifiers.json); done rows are fabricated formatter input, not native terminal holds. Frozen state has fourteen holds; current state gained one ideation hold, with all original ten still present.
+- DONE: Repository skill lint, installed ADR lint, number guards and comment ratio; design surfaces and retained-document impact
+  All exit 0 on 5859c3ccd; number-guards-fresh.log uses refreshed public refs after retaining the initial stale-fetch warning. Base is 46e9d0ed4bb86889022457adcdf656965dc97e73; comment ratio is 0.7% against 5%. No retained document beyond ADR 0081 needs a change; CI configuration is unchanged relative to main and cost per PR is not measured.
+- DONE: Verify FO's reading that this task is the single commit 455846c6d above 77e240d46, three files and 210 added lines, before resolving
+  own-change-stat.txt confirms three files, 210 additions and four deletions; git rev-list --count is one. source-identity.json proves the merged delta's entire ordered added/removed-line list equals that original task delta.
+- DONE: Take origin/main whole for dispatch_stage.py, scratch.py and their two tests
+  All four files are byte-identical to 46e9d0ed4, with hashes in source-identity.json. This resolves the old base PR's content/add-add conflicts without carrying its superseded implementation forward.
+- DONE: Keep main's watcher content and reapply only this task's hunks; say how each landed
+  hunk-resolutions.json records all nine unchanged hunks: script docstring, imports, three held helpers and tasks wiring; test stub, fixture, environment, held cases and dual diagnostics. Eight match full context; the import hunk trims only context beside main's new workflow_extensions import, which remains. No original added/removed line changes.
+- DONE: After the merge commit, git diff origin/main...HEAD --stat shows only the task's three files; rerun every acceptance command and the full package test list
+  Merge 5859c3ccd has parents 455846c6d and 46e9d0ed4. Both tree and three-dot diffs are exactly the two watcher files plus ADR 0081. full-suite-summary.json records 30/30 commands exit 0, all 29 test files covered: 1,461 unittest passes, ten skips, and both custom native integration commands pass; the extra scratch test file is included beyond CI's list.
+- SKIPPED: Ten optional/environment-dependent cases in the complete package run
+  Actual logs record four design historical-corpus skips, four release-acceptance journey-dependency skips, one delivery-history skip and one laws-corpus skip. They are not passed cases; no private corpus or unrelated package dependency is acquired to fill them. The native dispatch/observer/scratch checks are exercised and pass.
+- DONE: Captain amendment 5 stands: one implementation and three validation cycles; amendments 1–4 unchanged
+  The resumed 0.39.1 role guard exits 0, spent implementation 1 / validation 2; Pilot remains recorded. This is the same implementation follow-up, with independent review and validation-3 still FO-owned; rejection there stops the task.
+- DONE: Append a complete superseding report; commit locally and report candidate SHA; no push, rebase, force push or repository config write
+  This report follows status --read total_lines=579 and changes no frontmatter. Product candidate is 5859c3ccd25a86c79df3b36cafdda9762bd8142e; evidence is committed locally as 076897f6a2d7cf01e4a24f6dcebf0e19d331734b. Only this task's state paths are committed; prepared-pr.md and the /tmp handoff file contain the updated main base, bound and actual suite counts.
+- DONE: Commit evidence before exact-path cleanup and list what was removed
+  After verifying evidence commit 076897f6a and its SHA256SUMS, removed /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/impl-held-merge-main-m77rxdga and /tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md; cleanup.json verifies both absent. Kept /tmp/impl-held-and-closed-tasks-leave-the-design-queue-pr.md per the original explicit FO handoff exception; no other scratch is touched.
+- SKIPPED: NP-4 live Held body changes, NP-5 upstream plain status, publication, RoboRev, independent review, hosted CI and delivery
+  FO owns these steps; the fourteen-task Held projection preserves frontmatter. No forced archive, live Held edit, push or external message is made. The literal origin-less merged CLI retains the known base scratch-origin diagnostic (exit 2), while its fourteen-name fact is exact and the actual workflow entrance exits 0; this limit is retained in README.md, not hidden by a parent-code repair.
+
+### Summary
+
+This complete report supersedes every earlier implementation report, including the scope-stop report: continuation 4 authorizes the four main-side resolutions, and the merged candidate retains exactly the original task delta on current main. All named evidence commands and the full package list were rerun; counts and the ten skipped cases above are actual results, not a hosted CI or validation verdict. Start: 2026-11-13 12:14:39 Asia/Taipei, sourced from clock.curr_time UTC plus 08:00; end time is recorded in the completion message. FO still owns push, independent review, validation-3, live Held body edits and delivery.
