@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-11-13T06:44:05Z
 worktree: .worktrees/spacedock-ensign-pilot-ideation-runs-a-probe-before-the-design
+pr: iamcxa/kc-claude-plugins#864
 ---
 
 ## Scope
