@@ -76,6 +76,10 @@ Release review: not needed: workflow maintenance, on no journey map.
 
 Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-14: amendment 1 replaces AC-6 only to add one owner flag to the approved README sentence (39 to 41 words); it withdraws nothing the Captain approved, and the build change is one wording commit, 3d65ebd7a.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-14): validation-1 on #870 head 3d65ebd7a recommended REJECTED with three Material findings (kind code): F1 the plain open list crashes on a question row (KeyError question; the JSON row lacks the question field contract section 8 names); F2 four new tests call the Spacedock binary before the hosted test job installs it, run 43475968096 is red; F3 the AC-2 fixture's fifth question carries an answer dated 2026-11-05 and several truncated question texts. FO authorises all three repairs to the implementation worker within the eight product files; the cohort stays the fourteen questions of 2026-11-13; validation-2 rechecks; a second rejection stops the task. FO error: validation was dispatched before hosted CI on the Draft PR was read.
+
 ## Design
 
 Blind read 1 dispositions: 35 points, 31 changed the contract (one in part), 4 declined; the reader reported 28 because it grouped several under one bullet (the duplicate-key bullet holds four, the never-needed list six); the list is in the task folder. Contract: [contract-draft.md](captain-question-outside-a-gate-is-an-open-record/contract-draft.md), revision 2 (state commit `0153c4af2`); revision 1 (`2b9480601`) went to a blind reader in another repository, and [blind-read/dispositions.md](captain-question-outside-a-gate-is-an-open-record/blind-read/dispositions.md) records each of its points.
