@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:budget-form-counts-ideation-rounds-and-times-each-round:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:budget-form-counts-ideation-rounds-and-times-each-round-validation-1
+              briefing:
+                id: briefing:budget-form-counts-ideation-rounds-and-times-each-round:validation:attempt-1:revision-1
+                digest: sha256:963d389f255da4bf6a9af6814bf59b561138a6f0eaedb12bc317d2442c48abeb
+                room-ref: ./budget-form-counts-ideation-rounds-and-times-each-round/review/validation/briefing-1
 started: 2026-11-13T09:54:58Z
 worktree: .worktrees/spacedock-ensign-budget-form-counts-ideation-rounds-and-times-each-round
 pr: iamcxa/kc-claude-plugins#868
