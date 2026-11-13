@@ -615,3 +615,34 @@ This complete report supersedes earlier implementation reports for the current m
 ### Summary
 
 This complete report supersedes every earlier implementation report, including the scope-stop report: continuation 4 authorizes the four main-side resolutions, and the merged candidate retains exactly the original task delta on current main. All named evidence commands and the full package list were rerun; counts and the ten skipped cases above are actual results, not a hosted CI or validation verdict. Start: 2026-11-13 12:14:39 Asia/Taipei, sourced from clock.curr_time UTC plus 08:00; end time is recorded in the completion message. FO still owns push, independent review, validation-3, live Held body edits and delivery.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #856 head 5859c3cc against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Cycle 3 recommends PASSED at 5859c3ccd25a86c79df3b36cafdda9762bd8142e; validation-3/review.md maps AC-1–7 and NP-1–5 to fresh evidence, falsifiers and explicit limits. No new rejecting finding; this is not gate or delivery approval.
+- DONE: Recheck after Feedback Cycle 2, allowed by Captain amendment 5 (third and last validation cycle of the Budget): the head changed from 455846c6d to 5859c3ccd by one merge of origin/main after the base PR 854 was squash-merged; the PR now targets main. Judge that the merge left exactly this task's change (docs/adr/0081 and the watcher script and its test) against main, that the four files PR 854 owns equal main's, and that main's own watcher changes (PRs 858, 861, 854) still behave; rerun every acceptance criterion on this head, including the word bound of Captain amendment 4 at the current count of held tasks. Captain amendments 1 to 4 stay in scope
+  validation-3/source-identity.json proves the original three-file delta, 210 additions/four deletions, and four main-identical files against 46e9d0ed4bb86889022457adcdf656965dc97e73; main-regressions.json joins five preserved main behaviors to watcher.xml. Amendments 1–5 and the recorded reviewer/role prerequisites are satisfied.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  validation-3/captain-acceptance.sh has four steps and ran unchanged from /tmp in fresh /bin/bash --noprofile --norc, without retention overrides: captain-acceptance-exact.log exits 0. It derives the state checkout, needs no product worktree or removed scratch; installed ADR lint --since 46e9d0ed4bb86889022457adcdf656965dc97e73 --require 0081 exits 0.
+- DONE: Native acceptance criteria and source falsifiers
+  validation-3/resolved-recheck-results.json records 33 passing observations; legacy output names none of the original ten, held dispatch builds, three unforced close routes refuse, a historical successor exists and seven quotes match. Five source mutations plus removal of the change fail held tests; output-falsifiers.json rejects missing/duplicate names, an inserted baseline name and over-bound words.
+- DONE: Current held output and Captain amendment 4
+  validation-3/candidate-live-network.log exits 0 and names all fifteen current holds once; words/measurements.json measures one 17/21, current 33/35 and fabricated hundred 120/120. captain-acceptance-exact.log independently covers 125 across all five stages at 145/145; every one-word-over-bound case rejects. held-state-stability.json confirms fifteen at both reads.
+- DONE: Complete package coverage and inherited main behavior
+  validation-3/full-suite-summary.json accounts for all 30 commands and 29 test files: 1,461 unittest passes, ten optional skips, plus two custom native integration commands pass. full-suite-resolved.json joins the original 26-command prefix to corrected-environment reruns and four independent suffix commands; the duplicate invalid-environment runner was stopped with exit 143, not claimed green.
+- DONE: Related tests and mandatory package checks
+  validation-3/watcher.xml records 163 passes. package-checks.json, number-guards.log and role-triggers.log pass; comment ratio is 0.7% against 5%. doc-impact.log names only updated ADR 0081. The current loaded 0.40.0 package and specifically required installed 0.39.1 ADR command are distinguished.
+- DONE: Preserve public evidence, commit before exact-path cleanup, and leave product bytes untouched
+  Primary evidence commit 4321a2630eeac3457666b4c2c459ab44a5f0049c was pushed before cleanup; validation-3/cleanup.json lists five exact removed/absent owned paths. restored-source-hashes.json and the clean final worktree bind the unchanged candidate; no product worktree was created/removed, private repository read, PR changed or held-task body edited.
+- SKIPPED: Optional historical/dependency cases, live Held body edits, upstream plain status and delivery
+  validation-3/full-suite-summary.json retains ten skips (four design-history, four release-dependency, one delivery-history, one laws corpus). NP-4 live edits are the First Officer's post-merge step; NP-5 stays upstream. Hosted required-check completeness, RoboRev, gate approval, merge, release and adoption are not this verdict.
+
+### Summary
+
+PASSED recommendation for 5859c3ccd25a86c79df3b36cafdda9762bd8142e after independent exercise of the accepted package behavior and exact merge delta. validation-3/review.md retains the origin-less base/candidate exit-2 limit and every setup correction: candidate real-workflow exit 0 and unchanged-assertion reruns establish the scoped result; no single clean full-suite invocation is claimed.
+The primary evidence is public and committed before cleanup; only this task's paths are changed. CI configuration is unchanged and cost per PR was not measured. Start: 2026-11-13 12:47:21 Asia/Taipei, clock.curr_time UTC plus 08:00; completion time is in the final reply.
+
+### Findings
+
+No new Material, Needs decision or Polish finding. The inherited origin-less fixture issue remains the bounded Deferred risk described in validation-3/review.md; live state work and semantic labels are not claimed completed.

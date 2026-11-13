@@ -1,0 +1,32 @@
+{
+  "after_evidence_commit": "4321a2630eeac3457666b4c2c459ab44a5f0049c",
+  "paths": [
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch",
+      "removed": true,
+      "kind": "owned scratch root"
+    },
+    {
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306",
+      "removed": true,
+      "kind": "owned scratch root"
+    },
+    {
+      "path": "/tmp/validation3-fixtures-20261113-1259",
+      "removed": true,
+      "kind": "owned scratch root"
+    },
+    {
+      "path": "/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md",
+      "removed": true,
+      "kind": "owned generated dispatch"
+    },
+    {
+      "path": "/tmp/captain-acceptance-v3.jZUdLP",
+      "removed": true,
+      "kind": "exact acceptance automatic cleanup after primary evidence commit"
+    }
+  ],
+  "all_absent": true,
+  "product_worktrees_created_or_removed": 0
+}

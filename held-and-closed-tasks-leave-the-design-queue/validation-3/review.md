@@ -46,7 +46,7 @@ Run this one command in a fresh shell. It derives its state-checkout location fr
 /bin/bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/held-and-closed-tasks-leave-the-design-queue/validation-3/captain-acceptance.sh
 ```
 
-Expected observations: the full candidate SHA; `NATIVE INPUTS 15`; eleven tests pass; ADR lint exits 0; ONE 17/21, CURRENT 33/35 and LARGER 145/145 pass with three rejected counterexamples; final `PASS: exact candidate held behavior, ADR and amendment-4 counts`. `captain-acceptance-rerun.log` records the successful fresh-shell execution with only scratch/output retention variables supplied so evidence can be committed before cleanup. Ordinary execution cleans its own temporary directory. This small script does not run the complete package suite, edit live Held tasks, decide labels, validate all hosted required checks or approve delivery.
+Expected observations: the full candidate SHA; `NATIVE INPUTS 15`; eleven tests pass; ADR lint exits 0; ONE 17/21, CURRENT 33/35 and LARGER 145/145 pass with three rejected counterexamples; final `PASS: exact candidate held behavior, ADR and amendment-4 counts`. `captain-acceptance-exact.log` records the exact command above, run successfully from /tmp after the primary evidence commit, with no retention overrides. The earlier retained run is also preserved in `captain-acceptance-rerun.log`. Ordinary execution cleans its own temporary directory. This small script does not run the complete package suite, edit live Held tasks, decide labels, validate all hosted required checks or approve delivery.
 
 ## Limits and dispositions
 
@@ -61,3 +61,15 @@ Initial failures are retained: missing PyYAML in the default interpreter; native
 `full-suite-summary.json` and `full-suite-resolved.json` account for all 30 declared commands, including all 29 test files: 1,471 unittest cases comprise 1,461 passes and ten optional skips; both custom native integration commands pass. The ten skips are four design-history cases, four release-acceptance dependency cases, one delivery-history case and one laws corpus case. No private corpus was acquired.
 
 The initial runner completed 26 commands with six failing modules in the unsuitable nested fixture environment. Each affected assertion has passing unchanged-source rerun evidence; the dispatch-record module also has its native case rerun separately so that optional skip is filled. The already-covered duplicate native suffix of the original runner was terminated, exit 143, rather than waited out; the four suffix commands are covered by independent successful runs. This is complete, non-duplicated command/case coverage, not a claim that one unmodified full-suite invocation exited 0. The coverage manifest retains both original exits and replacement evidence.
+
+## Committed evidence and cleanup
+
+Primary evidence was committed and pushed as `4321a2630eeac3457666b4c2c459ab44a5f0049c` before cleanup. `cleanup.json` verifies the following exact owned paths absent:
+
+- `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue/.validation3-scratch`
+- `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/validation3-held-20261113-1306`
+- `/tmp/validation3-fixtures-20261113-1259`
+- `/tmp/spacedock-dispatch/spacedock-ensign-adoption-asks-which-extensions-ideation.md`
+- `/tmp/captain-acceptance-v3.jZUdLP`
+
+The product worktree is clean at the candidate; only this task report/evidence remains for the final state commit. No held-task body or frontmatter changed.
