@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.41.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.40.0...kc-dev-flow-2-v0.41.0) (2026-11-13)
+
+
+### Features
+
+* **kc-dev-flow-2:** archive dispatch evidence and remove scratch ([#854](https://github.com/iamcxa/kc-claude-plugins/issues/854)) ([46e9d0e](https://github.com/iamcxa/kc-claude-plugins/commit/46e9d0ed4bb86889022457adcdf656965dc97e73))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** distinguish held tasks at startup and idle ([#856](https://github.com/iamcxa/kc-claude-plugins/issues/856)) ([bf0c1a2](https://github.com/iamcxa/kc-claude-plugins/commit/bf0c1a21c9f1e980ed6cf477af75e87bdbf5f116))
+
 ## [0.40.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.39.1...kc-dev-flow-2-v0.40.0) (2026-11-13)
 
 
