@@ -72,6 +72,13 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-13, chat
+Captain: 「#866 擱著不合併；接下來的 Pilot 設計逐張量測有沒有漏記，五張內出現兩次以上再做結構化紀錄」 (chat, 2026-11-13), after his 「退一步想一下，這真的是最好的做法嗎？解釋一下為什麼，還有為何有問題」 (host question dialog, 2026-11-13)
+Asked: 「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」
+Supersedes: none
+
 ## Design
 
 ### PRFAQ
@@ -320,3 +327,7 @@ Both findings are real. This report completes only the implementation-1-message-
 ### Summary
 
 This complete report supersedes the immediately preceding investigation report, correcting its evidence-filename reference; conclusions are unchanged. Both findings are real. This report completes only the implementation-1-message-2 investigation, not a repair or renewed delivery approval: candidate 9dd03d805 is unchanged, finding 1 needs recognition-contract disposition and finding 2 has an unapplied tested proposal awaiting separate FO authorization.
+
+## Held
+
+Reopen when: 五張內出現兩次以上再做結構化紀錄
