@@ -1,0 +1,23 @@
+{
+  "start": "2026-11-13 22:18:59 Asia/Taipei",
+  "time_source": "clock.curr_time 2026-11-13 14:18:59 UTC +08:00",
+  "branch": "poc/merge-ask-is-produced-from-records",
+  "initial_base": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "integrated_main": "bfc53d82510006b52baf41569c1e25176e99d87a",
+  "last_commit": "cb480964b2ade3e122d2b60bd42717474171b794",
+  "source_hashes": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "0671755b1c8432dd94fc448aee75401ea4a2e3b5a34ecc273c19900fb57e9934",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "06d3e7b3f36bbd45268174e637b8d05c8b9000b6223c0d734fa0d8487cc5a7e6",
+    "kc-dev-flow-2/references/sd/workflow.md": "de15a5c432532ad335a2ed4ea89b62469a1fa6c82027b727b1997a76b4e114de",
+    "kc-dev-flow-2/scripts/lint-skills.py": "4f8a8ca2a9d7ab3089222c5b9924a366ff1ce8153b3fbd8fb56f41e5582ed7c9"
+  },
+  "scope": [
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/lint-skills.py"
+  ],
+  "spacedock": "0.27.2 CLI, 0.28.0 skill",
+  "package_version": "0.41.0",
+  "limits": "Probe, not implementation. Two offline positives use package gh doubles; live is unmocked/held and direct native prepare is protocol-only. No remote PR mutation or product push."
+}

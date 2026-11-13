@@ -1,0 +1,26 @@
+[
+  {
+    "name": "test_delivery_gate.ConfirmationTests.test_dropping_the_check_changes_exactly_the_missing_clause_cases",
+    "status": "passed"
+  },
+  {
+    "name": "test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause",
+    "status": "passed"
+  },
+  {
+    "name": "test_delivery_gate.RecordTests.test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught",
+    "status": "passed"
+  },
+  {
+    "name": "test_delivery_gate.ObservedFactsTests.test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit",
+    "status": "passed"
+  },
+  {
+    "name": "test_delivery_gate.ObservedFactsTests.test_question_only_records_observed_facts_and_no_manual_summary",
+    "status": "passed"
+  },
+  {
+    "name": "test_delivery_gate.ObservedFactsTests.test_recorded_local_jobs_do_not_inflate_three_real_round_counts",
+    "status": "passed"
+  }
+]

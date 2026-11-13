@@ -1,0 +1,34 @@
+[
+  {
+    "file": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "before_words": 7298,
+    "after_words": 8193,
+    "before_lines": 1239,
+    "after_lines": 1394,
+    "sha256": "0671755b1c8432dd94fc448aee75401ea4a2e3b5a34ecc273c19900fb57e9934"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "before_words": 16707,
+    "after_words": 16948,
+    "before_lines": 3429,
+    "after_lines": 3492,
+    "sha256": "06d3e7b3f36bbd45268174e637b8d05c8b9000b6223c0d734fa0d8487cc5a7e6"
+  },
+  {
+    "file": "kc-dev-flow-2/references/sd/workflow.md",
+    "before_words": 6099,
+    "after_words": 6069,
+    "before_lines": 636,
+    "after_lines": 635,
+    "sha256": "de15a5c432532ad335a2ed4ea89b62469a1fa6c82027b727b1997a76b4e114de"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/lint-skills.py",
+    "before_words": 2569,
+    "after_words": 2579,
+    "before_lines": 371,
+    "after_lines": 372,
+    "sha256": "4f8a8ca2a9d7ab3089222c5b9924a366ff1ce8153b3fbd8fb56f41e5582ed7c9"
+  }
+]

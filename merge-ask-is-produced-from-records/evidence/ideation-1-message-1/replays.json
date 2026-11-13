@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "task": "design-surfaces-task-dir-crash",
+      "head": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+      "check_exit": 0,
+      "question_unchanged": true,
+      "validation": {
+        "dispatch": "validation-1.md",
+        "report_sha256": "2279a17f061ea76e58a9343c1c5fd1d251189810e242319e050a958063bba151",
+        "rounds": 1,
+        "verdict": "PASSED"
+      },
+      "question_exit": 0,
+      "prepare_exit": 0,
+      "bound_summary_sha256": "25e95d2144606de6bcdabcf4e3fc09cdf23a6862ad641ca2bd9417417f2a32c6",
+      "record_sha256": "25e95d2144606de6bcdabcf4e3fc09cdf23a6862ad641ca2bd9417417f2a32c6",
+      "reference_count": 1
+    },
+    {
+      "task": "held-and-closed-tasks-leave-the-design-queue",
+      "head": "5859c3ccd25a86c79df3b36cafdda9762bd8142e",
+      "check_exit": 0,
+      "question_unchanged": true,
+      "validation": {
+        "dispatch": "validation-3.md",
+        "report_sha256": "5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376",
+        "rounds": 3,
+        "verdict": "PASSED"
+      },
+      "question_exit": 0,
+      "prepare_exit": 0,
+      "bound_summary_sha256": "04c5a029cec5ef5e5633c8c2551beb90b5b499ef8143825372add74ddf7a9880",
+      "record_sha256": "04c5a029cec5ef5e5633c8c2551beb90b5b499ef8143825372add74ddf7a9880",
+      "reference_count": 1
+    }
+  ],
+  "limit": "Public archived task/report inputs; package gh test doubles and controlled reviewer/role observations. Native gate prepare executed in isolated local repositories, no real gate or approval."
+}

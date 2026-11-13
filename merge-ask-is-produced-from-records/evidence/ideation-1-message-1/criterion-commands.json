@@ -1,0 +1,97 @@
+[
+  {
+    "criterion": "AC-6",
+    "part": "question-only record and native binding",
+    "command": [
+      "python3",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/round2_probe.py",
+      "replay"
+    ],
+    "environment": {
+      "PROBE_RUN": "publish-",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0,
+    "output": "replays.json",
+    "limit": "controlled GitHub/reviewer/role observations; actual native gates in disposable repos"
+  },
+  {
+    "criterion": "AC-6",
+    "part": "three historical round counts",
+    "command": [
+      "python3",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/round2_probe.py",
+      "rounds"
+    ],
+    "environment": {
+      "PROBE_RUN": "",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0,
+    "output": "rounds.json",
+    "limit": "FO-recorded remote identities; not authenticated historical API data"
+  },
+  {
+    "criterion": "AC-6",
+    "part": "live public observations",
+    "command": [
+      "python3",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/round2_probe.py",
+      "live"
+    ],
+    "environment": {
+      "PROBE_RUN": "publish-",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "exit": 0,
+    "output": "live.json",
+    "limit": "underlying check/question exit 1; native prepare only a deliberately separate transport experiment"
+  },
+  {
+    "criterion": "AC-6",
+    "part": "base failure and reverse count mutation",
+    "command": [
+      "python3",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/goal_and_mutation.py"
+    ],
+    "environment": {
+      "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/test-tmp"
+    },
+    "exit": 0,
+    "output": [
+      "goal-check.json",
+      "mutation.json"
+    ]
+  },
+  {
+    "criterion": "AC-6",
+    "part": "final six relevant tests",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "test_delivery_gate.ConfirmationTests.test_dropping_the_check_changes_exactly_the_missing_clause_cases",
+      "test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause",
+      "test_delivery_gate.RecordTests.test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught",
+      "test_delivery_gate.ObservedFactsTests"
+    ],
+    "environment": {
+      "TMPDIR": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/test-tmp"
+    },
+    "exit": 0,
+    "output": [
+      "tests.json",
+      "final-tests.log"
+    ]
+  },
+  {
+    "criterion": "AC-6",
+    "part": "package lint and exact word budget",
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "output": "lint-final.log"
+  }
+]

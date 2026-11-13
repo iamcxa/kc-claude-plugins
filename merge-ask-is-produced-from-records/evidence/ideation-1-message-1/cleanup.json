@@ -1,0 +1,9 @@
+{
+  "probe_worktree_removed": true,
+  "branch_retained": "poc/merge-ask-is-produced-from-records",
+  "last_commit": "cb480964b2ade3e122d2b60bd42717474171b794",
+  "product_push": false,
+  "pr_mutation": false,
+  "gate_approval": false,
+  "native_gate_fixtures": "only under owned scratch; removed at close"
+}

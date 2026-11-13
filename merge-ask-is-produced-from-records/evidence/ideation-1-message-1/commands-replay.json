@@ -1,0 +1,42 @@
+[
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Deliver the observed candidate? Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree, unless he says he merges or holds.\n",
+      "--artifact",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/1.md\",\n    \"sha256\": \"479203fc57c7708e8b0c27f75ce2655b7b5b3c598a133b2921fd02de09305d1b\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#860\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"1431541373fa224fefab4bbf75d6a62d14d543425988eabe5ac58691002f8f73\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6832190961@ef9aaffcb\",\n      \"exit\": 0,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T14:44:46Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-1.md\",\n    \"report_sha256\": \"2279a17f061ea76e58a9343c1c5fd1d251189810e242319e050a958063bba151\",\n    \"rounds\": 1,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-design-surfaces-task-dir-crash/workflow"
+    ],
+    "exit": 0,
+    "output": "publish-replay-complete-design-surfaces-task-dir-crash/prepare.log"
+  },
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Deliver the observed candidate? Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree, unless he says he merges or holds.\n",
+      "--artifact",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/1.md\",\n    \"sha256\": \"b19a52e4f9bd5ddd92175783b68fb57bef5753728b81a3ac7b3dadd799ec6147\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#856\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"14a2b4392d5a2874db525c0ae911b13bb5878917bf3bf6e31516c1e1389454d2\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6844239189@5859c3ccd\",\n      \"exit\": 0,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T14:44:47Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-3.md\",\n    \"report_sha256\": \"5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376\",\n    \"rounds\": 3,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow"
+    ],
+    "exit": 0,
+    "output": "publish-replay-complete-held-and-closed-tasks-leave-the-design-queue/prepare.log"
+  }
+]

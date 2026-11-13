@@ -1,0 +1,6 @@
+{
+  "persistent_temp_and_checkouts": "assigned dispatch scratch only",
+  "verification_deviation": "Two focused verifier/mutation invocations used auto-cleaned Python default TemporaryDirectory; all contexts exited and removed those directories. Cited final six-test run explicitly sets TMPDIR to the owned scratch root.",
+  "repository_scope": "four permitted source files; upstream-only documentation integrated separately",
+  "gh": "read-only calls to the public repository; no PR comment, edit or review request"
+}

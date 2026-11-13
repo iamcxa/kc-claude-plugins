@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit (test_delivery_gate.ObservedFactsTests.test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3469, in test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit
+    self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: [PosixPath('/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpitf_t3e1/task/merge/ask-1.json')] is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.263s
+
+FAILED (failures=1)

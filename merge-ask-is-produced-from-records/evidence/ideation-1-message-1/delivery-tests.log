@@ -1,0 +1,39 @@
+.................................................F..........................................................s.................................................................F.F.......................................................
+======================================================================
+FAIL: test_dropping_the_check_changes_exactly_the_missing_clause_cases (test_delivery_gate.ConfirmationTests.test_dropping_the_check_changes_exactly_the_missing_clause_cases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1385, in test_dropping_the_check_changes_exactly_the_missing_clause_cases
+    module = variant_of("    for label in unstated_confirmations(gate_text):", "    for label in []:")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 441, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError:     for label in unstated_confirmations(gate_text):
+
+======================================================================
+FAIL: test_the_merge_time_check_does_not_judge_the_hold_out_clause (test_delivery_gate.QuestionTests.test_the_merge_time_check_does_not_judge_the_hold_out_clause)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2717, in test_the_merge_time_check_does_not_judge_the_hold_out_clause
+    gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 441, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: found, wanted = text_problems(task_text, gate_text)
+
+======================================================================
+FAIL: test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught (test_delivery_gate.RecordTests.test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 1090, in test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught
+    module = variant_of("    emit(*problems, *holds)\n", "    emit(*problems, *holds)\n    write_record(task, {})\n")
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-merge-ask-is-produced-from-records/kc-dev-flow-2/scripts/test_delivery_gate.py", line 441, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError:     emit(*problems, *holds)
+
+
+----------------------------------------------------------------------
+Ran 232 tests in 162.132s
+
+FAILED (failures=3, skipped=1)

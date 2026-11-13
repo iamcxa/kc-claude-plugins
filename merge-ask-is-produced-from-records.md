@@ -88,111 +88,116 @@ Superseded text:
 
 ## Design
 
-### Recommendation and source boundary
+### Outcome and PRFAQ
 
-Return one decision to the Captain before implementation: permit automatic saving of the facts the existing delivery check and configured readers already obtain, rather than treating the historical hand-written summaries as independent generation inputs. The probe overturned the premise that all required first-ask facts already have a complete, common saved producer contract. The current stop condition is **not met**: nine passing readback controls are not nine independently generated first asks. Do not record a delegated design approval on a claim that the probe passed that outcome.
+**Recommendation:** use the Captain's replacement outcome. Remove the First Officer's (FO's) factual-summary obligation; extend the existing delivery record and bind its JSON directly. FO writes the question, declined findings with reasons, accepted limits and other judgments the tool cannot observe. No prose generator, summary template, additional workflow stage or new service is proposed.
 
-The seed names seven deliveries; the 2026-11-13 dispatch explicitly supplies nine. This design uses those nine public package deliveries, PRs 852, 853, 854, 855, 856, 858, 859, 860 and 861. PR 864 is the tenth contemporary delivery, which introduced probe permission and is excluded from this replay corpus. Scope, budget, original Captain words, task frontmatter and other tasks are unchanged; the evidence interpretation below needs the Captain's decision rather than a silent criterion amendment.
+**What is removed?** On the new record route, FO does not type the candidate, CI totals, reviewer evidence/outcome lines, external round count, validation verdict/rounds, Captain-step record pointer or merge-result description. The record takes their place. The checker no longer requires FO-written Sufficiency/Necessity labels, External rounds, second-reviewer outcome sentences, Copilot refusal quote/retry boilerplate or a Captain steps summary line on that route. Sufficiency and necessity remain FO's judgments in the question; removing field-presence tests does not make the tool decide them.
 
-### PRFAQ
+**Which observations already existed?** The base check queries PR/head/CI/workflow runs/required checks, changed files and trunk, and reads validation dispatches and merge-result records. It did not independently read a validation verdict or remote review verdicts: it checked FO's supplied reviewer strings. The probe reads existing configured review adapters and the latest saved validation report, then records their observed/reported status. Local RoboRev results unavailable to those reads stay `not-observed`; FO may supply that unobservable fact in the question. A report's PASSED word is a reported verdict, not independent certification by the checker.
 
-**Proposition (after approval and implementation).** The First Officer (FO) writes the merge question, including the goal-sufficiency and minimum-necessity judgments. One invocation of the existing delivery check collects its already-needed observations, writes a source-linked factual summary and checks that summary with the question. FO binds that output unchanged into the existing gate; no copying of commit identifiers, review identifiers or check totals is required.
+**What does the gate carry?** The exact saved JSON bytes become the artifact summary, with the same file as `--reference`; the task/report remains the artifact. `gate prepare` accepts this directly. There is no new human-readable summary to author. FO reads the record and writes only the decision and unobservable judgments. The gate still grants only what its exact question says, and a passing record grants no merge authority.
 
-- **What remains a judgment?** Whether the candidate meets the goal, whether every changed path is needed, whether to decline a finding, and what the Captain is asked to authorize. These belong in the FO-written question or existing disposition record. The renderer quotes the latest independent report; it never infers approval from a passing test, CI, a ready PR or a stored verdict.
-- **Why not reuse `ask-N.json` alone?** Its confirmation clauses are capped at 200 characters, its changed-path points are display-capped, and it does not preserve the CI/run/required-check observations. All nine ask records lack that complete snapshot contract. Six tasks do have partial CI snapshots at the final candidate elsewhere; one also has a saved watcher observation of its final Codex review. Reuse those observations where their identity and provenance are usable; do not call them a complete event-time source set.
-- **Why not extract the old Briefing's summary?** That reproduces FO's already-written prose and its mistakes. The offline control passes the real `check()` function nine times with synthetic green provider facts; three of those accepted summaries include local RoboRev jobs in `External rounds`. This is a concrete false assurance, not an automatic-generation result.
-- **Which reviews count?** Preserve the workflow's remote-review verdict rule and each extension's outcome rules. Deduplicate eligible observations by provider, PR, candidate and evidence identity; a local RoboRev job, Copilot quota refusal, security-only pass, running state or unrecognized response is not a round. A qualifying review on an earlier head remains historical evidence of the delivery, with its head attached; it is not a clean review of the new head. Missing observations mean unknown, not zero. The historical FO source lines imply 4→2 for PR 854 and 3→1 for each of PRs 856 and 861 after removing local RoboRev entries; the raw remote outputs were not independently authenticated here.
-- **What happens when facts or required decisions are missing?** No successful ask is printed or gate prepared. Return the existing failure exit and the specific missing source, or use an existing expressly permitted not-run declaration in the FO question. Never synthesize a clean review, waive a finding, execute acceptance commands or request a review to make the summary pass.
-- **Does this save time?** Not measured. The task log's historical estimates remain reported observations, not a causal result of this probe.
+**What does not change?** CI/readiness/head/trunk checks, special-role checks, finding-disposition ownership, protected merge-result omissions, the exact bound merge grant, and the existing guarded merge ceremony remain. The old text route remains compatibility behavior for existing adopters; its summary checks are not silently migrated. No PR comment/edit/review request, ready transition, acceptance-command execution, deployment, release, adoption or CI change belongs to this task.
 
-### Chain checked, in dependency order
+### What round 1 showed
 
-1. **Spacedock**, the workflow runtime: installed skill package 0.28.0, actual CLI 0.27.2. Its own `fo-gate-lifecycle`, `present-gate` and `gate prepare --help` show that preparation accepts supplied question/summary text and fingerprints referenced committed files. It supplies the binding, not a package delivery-summary producer. No native preparation or approval was exercised.
-2. **kc-dev-flow-2**, this workflow package: fetched `origin/main` is `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff` (PR 864); its manifest is still 0.41.0. Read `delivery_gate.py`'s `check`, `question`, `matching_delivery_record`, count/source disclosures, `merge_result_problem` and Captain-steps reader; the validation principles; the workflow recipe; and the Codex, Copilot and RoboRev extensions' own contracts. They already collect/check most live facts, but no summary-producing command or complete saved input contract was found. `pr_watch` records latest observations, not a complete immutable review history.
-3. **Sibling adopters**, read only: three repositories were readable; two tracked delivery helpers were read, both expose check/question and neither exposes a summary command; 21 tracked workflow README paths were counted, not treated as 21 active workflows. Private source bytes, identifiers, titles, rulings, logs and hashes are not archived. Evidence is counts only in `evidence/ideation-1/adopter-*.json`.
+The nine public deliveries do not have a complete common historical input record; six have partial final-head CI snapshots and one has a saved final-head watcher review observation. Copying the old hand-written summary passed nine text controls but was circular, and three accepted counts included local RoboRev jobs. Those findings justified the Captain's removal decision; reconstructing nine historical summaries is no longer this task's outcome. Round-one evidence and its stage report remain unchanged.
 
-Two bounded searches support the capability finding: the package's command/function and extension entry points; then the nine task folders' asks, saved structured snapshots, reader/watch observations and Briefings. Manual FO summaries and compatibility callers are real consumers, not evidence that a new first-ask producer exists. Excluded: authenticated live provider reads, private task contents, dormant untracked scripts and dynamic host behavior. This design extends the existing check; it does not replace Spacedock, the review adapters, the gate or the merge mechanism.
+### Record contract and ownership
 
-Accepted governing decisions read at the pinned source: ADRs 0004 (external-review rounds), 0020 (workflow word budget), 0044 (optional summary input), 0051 (round-count presence), 0054 (FO records exercised Captain steps), 0062 (the exact bound question controls its grant), 0071 (delivery record bound before preparation), 0072 (automatic count disclosure), 0078 (moved-trunk merge-result evidence), and 0084 (local Pilot probe). Their bytes/status are recorded in `evidence/ideation-1/adr-provenance.json`. The task's only Override concerns build model/effort, not these contracts. A future accepted producer change warrants an ADR draft titled “The delivery check produces its factual summary”; no ADR number is reserved or invented in ideation.
+The existing `delivery_gate.py check --record-facts` writes `delivery-facts/v1` (the saved observation format) under the task's `merge/` folder. A passing observation uses `ask-N.json`; a held observation uses `observation-N.json`. Both share one increasing number sequence. This distinction is required by the existing merge audit, which treats `merge/ask-N.json` with PR/head as a successful ask; a held fact record must not create that false audit evidence.
 
-### Probe
+The writer is the delivery check. Readers are its `question --facts-record` path, FO, Spacedock's normal summary/reference binding, and later human/observer review. The merge audit retains its existing successful-ask filename and PR/head contract; it is not modified. No observer, adapter, skill or native runtime source change is required by the probe.
 
-Probe: branch `poc/merge-ask-is-produced-from-records`; base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; last commit `9cf3499dd0af60bb16861428860cad3f4cf3b05e`; portable copy `evidence/ideation-1/probe.patch`. The worktree is removed before completion and the local branch is retained, without a product push, PR, deployment, model call or credential use.
+The saved fields are:
 
-- **Hypothesis: the nine saved inputs already suffice for an independent first-ask summary. Overturned.** `audit/audit.json` finds zero complete common record-contract inputs. `snapshot-scan.json` and `review-identity-scan.json` qualify that conclusion: partial source evidence exists and should be reused, but eight tasks lack the final remote identity outside the hand-written control and none has the whole uniform producer contract. This is a bounded completeness finding, not a claim that every fact is absent from every file.
-- **Hypothesis: a green historical replay proves the proposed automation. Falsified.** `replay/readback.json` has nine passing calls to the actual checker, using the already-written summary and explicitly synthetic provider readiness, paths, ancestor trunk and role-call result. Those controls preserve the question bytes, join the same head and clauses, and reject nine stale-head and nine missing-round counterexamples. They establish text compatibility only, not generation or live delivery eligibility.
-- **Hypothesis: the current checker verifies the truth of the review count. Falsified on three real cases.** The same control accepts three local-job-inclusive counts. The adapters' own documented local/remote distinction supplies the falsifier; no new imaginary input forms were tested.
-- **Hypothesis: the recipe need not grow. Supported for a concrete static proposal.** The saved recipe is 80→52 whitespace words, workflow 6099→6071. End-to-end output reading and elapsed time remain unmeasured.
+- `schema`, `tool_version`, `time`, `public`, `pr`, `head`: format/tool identity, observation time and public PR identity.
+- `candidate`: the dispatched candidate that equals the observed public PR head; unrelated dispatched identifiers are not copied.
+- `pr_state`, `ci`, `workflow_runs`, `required_checks`: observed readiness and allowlisted statuses/identifiers. No PR body, title, diff, reviewer prose or log is stored.
+- `trunk`, `merge_result`: observed trunk position/head and the existing matching result-record name, the allowed not-run marker, or no owed result.
+- `validation`: latest dispatch name, count of numbered validation dispatches, latest report digest and its candidate-bound reported PASSED/REJECTED value; absent/unrecognized evidence stays `not-observed`.
+- `reviewers`: configured reviewer, observed head, adapter exit/outcome, evidence identity and PR/local scope. Copilot `answered` is not silently renamed clean; a local job or non-verdict has no eligible remote-round identity.
+- `external_rounds`, `round_scope`: the count and its explicit coverage of saved observations, not a reconstruction of unobserved history.
+- `captain_steps`: existing record's relative path, digest and candidate-match observation. Its actual execution remains the existing FO duty, not a claim inferred from a hash.
+- `question_sha256`, `role_calls`, `result`: unchanged-question binding, role-reader exit, and result exit/problem/unreadable counts. Human declines, reasons, risk acceptance and the question text are not machine-authored or copied into the record.
 
-The first native task read without an explicit workflow directory exited 1; the corrected read with `--workflow-dir` exited 0. Initial audit output and its correction are both retained: the corrected scanner includes saved watcher tokens and non-Briefing review files instead of assuming only `evidence=` tokens could be useful. `criterion-commands.json` records the actual command, exit and output per criterion; probe success and product acceptance are distinguished.
+The new route verifies public repository visibility before saving; private/unknown visibility is refused. Raw private repository content is outside this contract and is not archived by this stage. This bounds the pilot to public inputs; private adopters keep their current route pending their own authorized design, rather than receiving an implicit rollout.
 
-### Proposed smallest integrated change, conditional on the decision
+`question --facts-record` accepts the newest observation only when the current dispatch, question digest, validation report and Captain-step record still match. A nonzero check remains a delivery hold. After a repair push, FO reruns the check with the newly dispatched candidate and question; it writes a new observation and preserves earlier records. An old successful ask cannot stand in for the new head or a later held observation.
 
-Add optional `--summary-file` to `delivery_gate.py check`; retain existing callers and exit conventions. Use the existing live PR/head/check/run/file/trunk queries and configured review adapters as the producers. Save only the normalized observations needed by the summary into the existing `merge/ask-N.json` envelope, with candidate, observed time, source identity/digest, reader outcome and summary/question digests. Do not archive raw provider payloads or PR bodies. A public evidence destination must not receive private-source identifiers or logs; this probe used public cases only, and does not establish a general public-evidence classifier.
+### One round-count rule
 
-The input join must be explicit: latest validation dispatch Candidate; Spacedock-parsed latest exact validation report and its source digest; PR facts at that head; eligible remote review observations with their original heads and identities; existing Captain-step record; current trunk plus its matching merge-result record or the permitted FO-written not-run declaration. Reuse source observations with proven bindings; a prose mention or a local-job number is not automatically a remote verdict. Persist observations as the existing adapters are read, so a mutable summary comment cannot erase a previously observed round. The exact capture seam and completeness on repairs must be exercised before choosing its production contract; the current probe did not implement it.
+Count each distinct `(reviewer, head, evidence identity)` once across this task's saved PR-scope verdict observations (`clean`, `answered`, `findings`). Exclude local scope, refusals, security-only/running/unrecognized responses and missing identities. Repeat reads do not add rounds; a new observed verdict/head does. The pilot is one delivery PR, and the count does not claim to include reviews the check never observed.
 
-Render factual lines and a bounded quoted validation result with source pointers. Take Sufficiency, Necessity, finding dispositions and the authorization from the question/existing task records, without rewriting or shortening them. Run the existing delivery and separate-summary question checks; route computed source/count disclosures into the generated summary, preserving the question bytes. On failure, leave an explicitly unbound draft and diagnostics, not an eligible ask; on success, save the delivery record and print the existing state-commit/reference preparation steps. The saved summary is the exact text FO binds. Generation alone grants no gate or merge authority.
+On the three real problematic inventories, the rule changes PR 854 from 4 to 2, PR 856 from 3 to 1, and PR 861 from 3 to 1. These inputs use the original FO-recorded remote identities as replay fixtures; they do not authenticate historical provider truth. Reintroducing local-job counting fails all three cases. The existing adapters remain the outcome authority; FO still classifies and disposes findings under the workflow's existing rules.
 
-No acceptance-script execution, PR ready transition, review request/comment, recurring watch, worker dispatch, merge, release, adoption, new dependency, CI change or repository-setting change belongs here. The sibling validator-command task owns command transport; this task consumes its record rather than introducing another script runner. Budget remains one implementation and two validation cycles in one package PR; if the capture seam cannot fit that budget, return to FO before implementing another mechanism.
+### Flow
 
 ```mermaid
 flowchart TD
-  F[FO writes one merge question and its judgments] --> C[Existing delivery check reads candidate and source records]
-  C --> G{Complete facts bound to the candidate?}
-  G -->|no| H[Stop and report missing sources; no gate]
-  G -->|yes| S[Tool saves observations and renders factual summary]
-  S --> V[Existing delivery and separate-summary question checks]
-  V --> P{Both checks pass?}
-  P -->|no| H
-  P -->|yes| B[FO commits and binds unchanged question, summary and record]
-  B --> K[Captain answers the exact bound question]
-  K --> A{Explicit delivery authority?}
-  A -->|no or hold| H
-  A -->|yes| M[FO uses the existing guarded merge ceremony]
+  F[FO writes question and unobservable judgments] --> C[Check observes public PR and saved task evidence]
+  C --> R[Tool saves structured observation]
+  R --> H{Check passed?}
+  H -->|no| X[Held observation; no delivery gate]
+  H -->|yes| Q[Question checker joins newest record and unchanged question]
+  Q --> J{Bindings still match?}
+  J -->|no| X
+  J -->|yes| B[FO commits and binds JSON unchanged as summary and reference]
+  B --> K[Captain answers exact bound question]
+  K --> M[Existing authority and merge ceremony]
 ```
 
-Actors, order and stops were checked against the prose. Mermaid rendering was not executed; no rendered-layout claim is made. No new UI or schema surface is proposed: the already-recorded `Surfaces: none` remains authoritative. Additional durable observation fields are nevertheless a stored-data change and are identified in Round 1.
+The positive local probes exercised actors C through B and compared the bound summary digest with the record. The live negative case exercised C through X. A separate direct native prepare of that held record tested JSON transport only; it bypassed the delivery preflight and is not a passing route. Mermaid source/prose agreement was checked; rendered layout remains unverified.
 
-### Words FO reads at each moment
+### Probe, actual evidence and limits
 
-`evidence/ideation-1/words.json`, `reading/words.json` and `output-words.json` use whitespace splitting on identical base inputs and a saved, unimplemented recipe proposal. Startup/resume's known workflow-plus-mod text is 6147→6119 words; open-PR idle, merged-PR idle and after-archive mod text is 48→48 each; merge-ask recipe text is 80→52. The workflow itself is 6099→6071 and its budget step would decrease by 28 in the same implementation.
+Probe: `poc/merge-ask-is-produced-from-records`; initial source base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; integrated current main `bfc53d825` (PR 867, one Codex extension documentation line); last commit is recorded in `evidence/ideation-1-message-1/provenance.json`. The round-two patch changes only the four permitted files; the old round-one probe is retained in local branch history. The worktree is removed before reporting and the branch/portable patch retained.
 
-These are known static components, not complete lifecycle totals. Both arms still owe the same startup/idle hook outputs, PR watcher state, merge hook, learning/observer output and applicable loaded extension passages. Their live dynamic totals were not measured. The nine actual control-check stdout lengths are saved individually; no new first-ask success output exists to compare with them. Therefore neither a total per-moment reading reduction nor a delivery-speed improvement is established. Validation must recount every due passage and output on the implemented route rather than subtracting one file size.
+- Two real archived task/report/dispatch inputs, PRs 860 and 856, pass through the package's own GitHub test double and controlled reviewer/role observations. Both check and question exits are 0; native local gate preparation exits 0; question bytes are unchanged and the bound JSON digest equals the record. Actual validation dispatch counts are 1 and 3. No old summary is supplied to those checks. Running the base check on the same question-only inputs holds with exit 1 for the missing manual fields.
+- A live read-only run against public PR 865 writes its actual observed record, with check exit 1 and question exit 1. It records pending review evidence and missing local Captain-step evidence instead of claiming readiness. Direct native preparation in an isolated fixture accepts the JSON, but this is an explicitly separate binding experiment, not a successful live delivery preflight. No real PR/gate decision or mutation was performed.
+- The three real round inventories produce 2/1/1 and deduplicate repeated observations. A reverse mutation restoring local-job eligibility is detected. A second probe found the merge audit's filename contract; a reverse mutation writing a held observation as `ask-N.json` is detected by the new consumer regression.
+- The initial 232-test delivery run had three source-mutation anchor failures and one optional skip. Their anchors were repaired without removing the mutations. The final six changed/regression checks pass, as does package lint. No final single clean full delivery-suite or whole-package run is claimed; the probe is not an implementation validation.
+- Two focused verifier/mutation invocations used Python's auto-cleaned default temporary directory. Their contexts exited and removed those directories; the cited final six-test run explicitly sets `TMPDIR` to the assigned scratch. All retained temporary files and local repositories are under that scratch, and no unrelated repository file was changed.
+
+### Removed instructions and measured size
+
+The workflow replaces its two manual delivery-summary paragraphs with the record/check/reference route, removes the manually supplied Captain-step summary pointer and round-count instruction, and puts FO declines and unobservable trigger judgments in the question. The new checker route removes the corresponding text-presence requirements; the existing text path remains compatibility behavior. Trigger/disposition semantics remain owned by the existing workflow, not inferred from record formatting. The probe does not establish every conditional second-reviewer path or downstream adopter/observer behavior.
+
+At the measured bytes, workflow text is **6099→6069 words, 636→635 lines**, with a matching **−30** lint-budget step. The two sampled hand-written factual summaries shrink **239→0** and **329→0** authored words; each is replaced by an actual **148-word, 78-line JSON record**, rather than 15/18 prose lines. The record is more structured and less readable, the cost already stated in amendment 1. Final source counts and hashes, including checker/test growth, are in `counts.json`; removal of an authoring obligation is not a claim that the checker source shrank.
+
+Known startup/resume workflow-plus-mod text is **6147→6117** words; open-PR idle, merged-PR idle and after-archive mod text remains **48→48** each. Complete dynamic hook, watcher, learning/observer and preparation output totals were not measured in both arms. Merge-ask prose/record sizes above are measured, but full per-moment reading reduction and delivery-speed improvement are not established. No CI definition changed; cost per PR was not measured.
 
 ### Worth questions
 
-- **Factual summary production:** serves the Captain's admitted merge-summary outcome. Without it, FO keeps retyping already-observed facts. The premise that an existing producer already does it would make this task unnecessary; the command/adapter and three-adopter checks did not find one.
-- **Automatic source saving:** serves the same outcome without silently copying a prior FO summary or inventing counts. Without it, the nine-case corpus provides a circular success control rather than independent producer proof. The cheap source-completeness probe overturned the “already saved in a common form” premise; accepting that additional work is the decision below.
-- **Question ownership and unchanged checks:** serves the task's explicit FO-written-question boundary and existing Captain authorization. Without it, tool output could accidentally author the grant or turn readiness into authority. Hash preservation and stale-head/count controls exercise this boundary; full native binding remains a later proof.
-- **No additional outcomes:** no new review trigger, message sender, generic report schema, scheduler or reading-speed target is recommended. They serve no additional accepted Captain words in this task.
+- **Remove the manual factual summary:** serves the Captain's exact amendment. Without it, FO still recopies observations. The cheap disproof would be a question-only base check already passing and saving the facts; both real replay controls hold on base.
+- **Save the existing check's observations:** serves “把查到的事實存成紀錄.” Without it, removing the summary loses inspectable evidence. The native digest comparisons and held-record regression check that the record, not a new prose artifact, is the source.
+- **Keep unobservable judgments FO-written:** serves “我只寫問題和工具查不到的事.” Without it, the tool would invent dispositions or acceptance. Question hashes remain unchanged; the live unknown states remain unknown/held. No new generator, service, source schema beyond this bounded record, scheduler or independent goal is retained.
 
-### One decision for the Captain
+### Decisions and batch overlap
 
-**Recommendation:** allow the existing check/readers to save their observations automatically in this same bounded change, keep the nine historical cases as explicitly labeled compatibility/counterexample evidence, and require independent first-ask generation at a candidate with complete captured inputs before claiming the outcome. Do not accept the old summary as its own generation oracle. FO should ask this as one evidence/scope decision, identifying that the exact historical event-time source set cannot be reconstructed from the currently saved records.
+No replacement outcome decision remains open: amendment 1 settled it. FO still owns design-gate routing, any implementation dispatch and any new scope/ADR-file authorization; this probe creates no numbered ADR or fifth production file. Production completeness, private-adopter support and a green live delivery are not assumed from this result.
 
-**What gets worse:** the change adds durable observation ownership and a completeness rule across repairs; historical nine-case evidence alone can no longer close acceptance. It may need a fresh eligible delivery to finish the proof. There is no current authority to fetch credential-backed historical provider data, reconstruct unavailable mutable comments, change the stop condition, or begin implementation. If the Captain retains a strict record-only historical requirement, recommend holding the task for the missing original producer evidence rather than publishing a copying tool or requesting factual hand-entry from FO.
+The four proposed files are `kc-dev-flow-2/scripts/delivery_gate.py`, `kc-dev-flow-2/scripts/test_delivery_gate.py`, `kc-dev-flow-2/references/sd/workflow.md` and `kc-dev-flow-2/scripts/lint-skills.py`.
 
-### Batch overlap
+- `merge-ask-is-produced-from-records` owns those four paths. `validator-commands-fit-the-delivery-check` shares the checker/test and the Captain-step join; integrate it after this task as already ordered, preserving the record route rather than restoring summary fields.
+- `ready-pr-gets-a-codex-code-review-without-fo-noticing` owns watcher/adapter-reference work, not these four paths. Its PR 867 is now main and was integrated; no review request is issued by this probe.
+- `comment-check-reaches-delivery-gate` directly overlaps the checker/test; preserve its result/hold behavior during implementation. `adoption-asks-which-extensions` and `adr-required-statement` overlap workflow/lint and require a fresh budget recount when integrated.
+- `adr-silent-undo-probe`, `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `ops-inbox-r1-setup-and-isolation` and `pr-review-lite-value-pilot`: no exact four-file overlap found in the round-one checked definitions; they are not edited. The runtime and package/adopter chain check from round one is reused; the changed native binding seam was exercised now against actual Spacedock 0.27.2, and current main's own Codex documentation was reread.
 
-Proposed production files, all conditional: `kc-dev-flow-2/scripts/delivery_gate.py` (producer/render/check seam); `kc-dev-flow-2/scripts/test_delivery_gate.py` (the nine public cases and reproduced failures); `kc-dev-flow-2/references/sd/workflow.md` (replace the two delivery paragraphs); `kc-dev-flow-2/scripts/lint-skills.py` (minus-28 workflow budget step); and one FO-reserved `docs/adr/<reserved>-the-delivery-check-produces-its-factual-summary.md`. Any additional extension-reader source change needs its exact seam and overlap reported to FO before coding.
-
-- `merge-ask-is-produced-from-records`: owns the five files above and generated-summary input contract.
-- `ready-pr-gets-a-codex-code-review-without-fo-noticing`: current design names `pr_watch.py`, its test and the Codex extension reference. No current exact-file overlap; the Codex outcome/evidence identity is a shared contract, and capture must not trigger or duplicate that task's review request.
-- `validator-commands-fit-the-delivery-check`: current seed has no design file list yet. Its accepted stop shares the Captain-steps reader in `delivery_gate.py` and the delivery check tests; do not invent a settled seam before its worker returns. The dispatch already orders the two tasks in sequence.
-- `adoption-asks-which-extensions`: shared workflow and lint files; its dispatch-record extension-window logic is separate. Recount/rebase the workflow after whichever lands first.
-- `adr-required-statement`: shared workflow and potentially its budget test; ADR drafting/index conventions also need coordination. Its ledger/ADR-lint implementation is separate.
-- `adr-silent-undo-probe`: no exact proposed-file overlap found; keep its experiment/report separate.
-- `comment-check-reaches-delivery-gate`: direct overlap in `delivery_gate.py` and `test_delivery_gate.py`; preserve its comment-check result and hold behavior when refactoring the checker. It also names `lint-skills.py` in its record.
-- `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `ops-inbox-r1-setup-and-isolation`, `pr-review-lite-value-pilot`: their current public task definitions were read; no exact proposed-file overlap found. The ops task owns its separate reserved ADR, not this task's unnumbered draft; do not reuse a number.
-
-Recommended order: FO settles the source/evidence decision first; establish the validator-command task's returned seam; implement this summary producer before the validator-command integration as the batch dispatch requires; serialize direct checker changes with `comment-check-reaches-delivery-gate`, then recount the workflow/lint step after any adoption or ADR-ledger change. The ready-review task may proceed separately only while its reader contract remains compatible. Evidence: `evidence/ideation-1/overlap.json`; this is ordering advice, not permission to edit another task or message its session.
+Recommended order: FO reviews this removal design, then dispatches within the four-file budget; sequence its checker integration with the validator-command task and the comment-check task, and recount the workflow budget after any concurrent workflow change. No other session was messaged.
 
 ## Acceptance criteria
 
-Each evidence command was run on the probe or reused from the same actual execution, with command, exit, output and provenance in `evidence/ideation-1/criterion-commands.json`. Exit 0 from a diagnostic is not a pass of the product criterion. The original historical stop remains unmet and may be changed only by the Captain's decision above.
+**AC-6** Amended by Captain, amendment 1. 合併檢查把查到的事實存成紀錄，拿掉 FO 手寫摘要的要求；我只寫問題和工具查不到的事。
 
-**AC-6** Amended by Captain, amendment 1. 合併檢查把查到的事實存成紀錄，拿掉 FO 手寫摘要的要求；我只寫問題和工具查不到的事。 Evidence: to be written and run on a probe in the next ideation round, with command, exit and output path.
+Verified by: the second-round `round2_probe.py replay`, `rounds`, and `live` commands, the question-only base comparison and the two reverse mutations, with command/exit/output/provenance in `evidence/ideation-1-message-1/criterion-commands.json`. Two real archive inputs pass check/question/native preparation without a manual summary; the live public query saves a held observation and its delivery question stays held. JSON is bound unchanged and questions retain their hashes. The final six relevant tests and lint pass. Falsifiers: restoring the old required summary fields makes the two question-only cases fail; counting local RoboRev jobs inflates the three real inventories; naming a held observation `ask-N.json` creates false merge-audit evidence; replacing the dispatched head makes the prior binding fail. These are observed corpus/probe failures, not invented input forms.
+
+## Not provable now
+
+- **AC-6:** a green live delivery preflight was not observed. PR 865's recorded review evidence was pending, and the isolated observation task has no real Captain-step execution record; check/question hold. The direct native JSON binding experiment is not claimed as that passing route.
+- **AC-6:** final full-suite/whole-package validation, every conditional second-reviewer trigger/waiver and finding disposition, full moved-trunk lifecycle, downstream observer/adopter compatibility, private-repository use, deployed adoption, complete dynamic reading and elapsed-time improvement remain future validation obligations. The existing local report/step records are observations, not authenticated execution proof.
+- **AC-6:** Mermaid rendered layout and a general private-content/secret classifier were not tested. The record uses a public-repository gate and allowlisted fields; raw private content is not part of this probe.
 
 ## Stage Report: ideation
 
@@ -235,3 +240,43 @@ Evidence: evidence/ideation-1/ (41 files, 140.0 KiB)
 ### Round 1
 
 Start: 2026-11-13 21:43:38 Asia/Taipei; probe/design end: 2026-11-13 22:01:16 Asia/Taipei. Time source: clock.curr_time UTC observations +08:00. Base: 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff; probe: 9cf3499dd0af60bb16861428860cad3f4cf3b05e. Fired: premise overturned; a decision only the Captain can make (evidence/scope and the historical stop); a boundary between source readers and a complete durable summary input with no current contract; stored data touched by the proposed capture. None: production data or credentials used, broad exposure, migration, unattended recurring operation, support/release/rollback duty accepted, screen touched, implementation outside the named files or budget. State publication is subsequent close-out, not a stage transition.
+
+
+## Stage Report: ideation
+
+- DONE: Ideation round 2 under Captain amendment 1 replaces the outcome; design it as a removal rather than a generator.
+  Replaced Design in place and kept a short What round 1 showed section; protected-section.json verifies the Captain amendment and frontmatter unchanged. AC-6 is the active outcome; the superseded criteria and prior report remain historical.
+- DONE: Say which factual summary lines are saved, which unobservable judgments stay FO-written, what the gate carries, and which workflow words/checker rules are removed, with word and line counts.
+  The exact JSON record replaces authored factual prose; FO retains the question/declines/accepted limits. Workflow 6099→6069 words and 636→635 lines; sampled authored summaries 239/329→0 words, replaced by 148-word, 78-line records. counts.json records actual four-file growth too.
+- DONE: State the structured record fields, writer/readers, repair-push behavior and public-content boundary.
+  Design defines the delivery-facts/v1 fields, latest-record/head/question/report/step joins, successful ask versus held observation filenames, public visibility and allowlisted fields; no raw body/title/diff/reviewer prose or private adopter payload is archived.
+- DONE: Count external review rounds from saved verdicts by one rule and show the three recorded discrepancies.
+  rounds.json gives PR 854: 4→2, PR 856: 3→1 and PR 861: 3→1, with duplicate reads unchanged. Restoring local-job eligibility fails all three; historical input identities are FO-recorded fixtures, not authenticated old API truth.
+- DONE: Probe at least two of the nine recorded deliveries through the package's own test doubles and one live read-only public PR run, including record writes and native gate binding with only an FO question.
+  PRs 860/856 check=0, question=0, native prepare=0 and unchanged question/record-summary hashes; the actual dispatch counts are 1/3. Live PR 865 check=1/question=1 saves a held observation; direct native prepare=0 proves JSON transport only and is explicitly not a valid delivery preflight.
+- DONE: Every criterion's evidence command runs once with command, exit and output path; unavailable proof is named under Not provable now.
+  AC-6 has replay/live/count/base/mutation/test/lint entries in criterion-commands.json with provenance and the underlying live hold. A green live delivery, full final validation, conditional reviewer paths, private adoption, dynamic reading and Mermaid rendering are not claimed.
+- DONE: Add tests only for failures the corpus or probe shows; keep the change inside the four permitted files.
+  Question-only base controls hold twice; count and held-ask filename mutations are detected. Final six relevant tests and lint pass. The initial 232-test run's three mutation-anchor failures and optional skip are preserved; repaired anchors are rerun, not deleted, and no final whole-suite pass is asserted.
+- DONE: Check the chain and batch overlaps; preserve sibling ownership.
+  Round-one native/package/adopter audit reused; actual Spacedock 0.27.2 binding exercised. Main's PR 867 documentation-only change was integrated; the round-two patch changes only delivery_gate.py, its test, workflow text and lint budget. Shared checker/step and workflow seams are named; no peer/session message or other task edit.
+- DONE: Retain evidence, remove the local probe worktree and scratch, keep the branch, and commit only this task's state paths.
+  Branch cb480964b retained and clean worktree removed; 54 round-two evidence files pass the packaged retention helper. Message close aliases the base evidence folder, so the packaged evidence function separately verified the round-two folder. State commit/push follows this report.
+- SKIPPED: Claim a green live delivery, execute product acceptance, begin implementation, alter a real PR/gate or deploy.
+  The approved task remains Pilot ideation. The public live reads were authorized and read-only; pending evidence remains a hold. Two auto-cleaned default-temp verifier invocations and the corrected final TMPDIR confinement are disclosed in boundary-note.json.
+
+### Summary
+
+The revised design removes factual summary authoring and binds the delivery check's structured record directly, as amendment 1 requires. Two real archive replays pass the complete local record/question/native-binding path; the live observation correctly holds delivery, and the separate held-record native binding is not presented as a passing preflight. Recommend FO's design-gate review within the four-file budget, with the named future validation limits; implementation has not begun.
+
+Scratch close and round-two retention output:
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1 (3339934 bytes)
+Evidence: evidence/ideation-1/ (41 files, 140.0 KiB)
+Evidence: evidence/ideation-1-message-1/ (54 files, 108.4 KiB)
+```
+
+### Round 2
+
+Start: 2026-11-13 22:18:59 Asia/Taipei; probe/design end: 2026-11-13 22:54:43 Asia/Taipei. Time source: clock.curr_time UTC observations +08:00. Initial base: 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff; integrated main: bfc53d825; probe: cb480964b2ade3e122d2b60bd42717474171b794. Fired: stored observation data, already approved by amendment 1; existing-auth read-only public GitHub calls, expressly permitted by this dispatch; temporary-placement deviation in two auto-cleaned verifier runs, recorded and corrected for cited final tests. None: a newly overturned premise, a new Captain-only outcome/trade-off, an undefined component contract left in the proposed route, production-data/credential provisioning, broad exposure, migration, unattended operation, support/release/rollback duty, screen change, fifth product file or budget expansion. The live eligible route and broader validation remain Not provable now under AC-6, not silently passed. This is the second design round; a third requires returning to the Captain.

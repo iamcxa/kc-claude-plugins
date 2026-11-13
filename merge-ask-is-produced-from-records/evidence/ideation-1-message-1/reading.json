@@ -1,0 +1,50 @@
+{
+  "per_case": [
+    {
+      "task": "design-surfaces-task-dir-crash",
+      "manual_summary_before_words": 239,
+      "manual_summary_after_words": 0,
+      "gate_summary_before_lines": 15,
+      "record_after_words": 148,
+      "record_after_lines": 78
+    },
+    {
+      "task": "held-and-closed-tasks-leave-the-design-queue",
+      "manual_summary_before_words": 329,
+      "manual_summary_after_words": 0,
+      "gate_summary_before_lines": 18,
+      "record_after_words": 148,
+      "record_after_lines": 78
+    }
+  ],
+  "moments": [
+    {
+      "moment": "startup/resume",
+      "before_known": 6147,
+      "after_known": 6117,
+      "note": "workflow plus unchanged 48-word mod; dynamic startup output unmeasured"
+    },
+    {
+      "moment": "idle with open PR",
+      "before_known": 48,
+      "after_known": 48,
+      "note": "unchanged mod; actual watcher output unmeasured"
+    },
+    {
+      "moment": "idle with merged PR",
+      "before_known": 48,
+      "after_known": 48,
+      "note": "unchanged mod; actual merged/learn output unmeasured"
+    },
+    {
+      "moment": "after archive",
+      "before_known": 48,
+      "after_known": 48,
+      "note": "unchanged mod; learning and observer output unmeasured"
+    },
+    {
+      "moment": "merge ask",
+      "note": "per-case original manual prose and actual JSON measured above; complete moment includes unmeasured base outputs, so no total-reading or speed reduction claimed"
+    }
+  ]
+}

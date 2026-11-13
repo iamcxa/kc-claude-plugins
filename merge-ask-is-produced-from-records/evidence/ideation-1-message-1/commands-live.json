@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Inspect the public PR observations and their limitations?\n",
+      "--artifact",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-live-complete-state/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"6c177946971a6a1d0adbd373616f9233cb609388\"\n  ],\n  \"captain_steps\": null,\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SKIPPED\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 0,\n  \"head\": \"6c177946971a6a1d0adbd373616f9233cb609388\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#865\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1\",\n  \"required_checks\": [\n    {\n      \"bucket\": \"pass\"\n    },\n    {\n      \"bucket\": \"pass\"\n    }\n  ],\n  \"result\": {\n    \"exit\": 1,\n    \"problems\": 2,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": null,\n      \"exit\": 4,\n      \"head\": \"6c177946971a6a1d0adbd373616f9233cb609388\",\n      \"outcome\": \"pending\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 4,\n      \"head\": \"6c177946971a6a1d0adbd373616f9233cb609388\",\n      \"outcome\": \"pending\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"6c177946971a6a1d0adbd373616f9233cb609388\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"time\": \"2026-11-13T14:45:04Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"6c177946971a6a1d0adbd373616f9233cb609388\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bfc53d82510006b52baf41569c1e25176e99d87a\"\n  },\n  \"validation\": {\n    \"dispatch\": \"validation-1.md\",\n    \"report_sha256\": \"b102613f332ae377168e551561f35ffc83b519d5b01549120fef5d1c6d455863\",\n    \"rounds\": 1,\n    \"verdict\": \"not-observed\"\n  },\n  \"workflow_runs\": [\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43442236572,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43442236128,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43442236654,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43442236116,\n      \"status\": \"completed\"\n    }\n  ]\n}\n",
+      "--reference",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-live-complete-state/workflow/.spacedock-state/task/merge/observation-1.json",
+      "--workflow-dir",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-live-complete-state/workflow"
+    ],
+    "exit": 0,
+    "output": "publish-live-complete-state/prepare.log"
+  }
+]

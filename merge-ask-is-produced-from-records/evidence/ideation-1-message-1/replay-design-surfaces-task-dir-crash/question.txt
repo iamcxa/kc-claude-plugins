@@ -1,0 +1,1 @@
+Deliver the observed candidate? Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree, unless he says he merges or holds.

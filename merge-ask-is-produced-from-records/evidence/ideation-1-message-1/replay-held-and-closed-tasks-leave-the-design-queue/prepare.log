@@ -1,0 +1,4 @@
+room=/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/ideation-1/publish-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/review/validation/briefing-1
+briefing=briefing:task:validation:attempt-1:revision-1
+digest=sha256:1f31287c2a3f49df2156d0b17ba9d72e5afb97f9b2b28b04090174ef33d73f46
+state=open

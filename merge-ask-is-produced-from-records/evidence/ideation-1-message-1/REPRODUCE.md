@@ -1,0 +1,11 @@
+# Round-two bounded removal probe
+
+Start from source bfc53d825 (full commit in provenance.json), apply probe.patch in an owned throwaway worktree, and place round2_probe.py plus goal_and_mutation.py in the assigned scratch root. Set the harness WT and STATE constants to that worktree and the pinned public task-state checkout. This declares the machine-specific inputs rather than depending on hidden local files. Python 3, Git, the packaged delivery test doubles and Spacedock CLI 0.27.2 are needed; the live mode also needs already-authorized read-only gh access to this public repository.
+
+Run the commands in criterion-commands.json. Use a new PROBE_RUN prefix for repeat native fixtures, and set TMPDIR to the owned scratch/test-tmp directory before every verifier or mutation run. The source itself changes only the four named files. No test or harness requests a PR review, posts a comment, edits a PR, changes git configuration or records a real gate approval.
+
+Replay uses the actual archived task bodies and dispatch/Captain-step records for the two named cases, with the package gh double and controlled review/role observations. No original factual summary is passed to the checker. Native preparation binds exact JSON bytes and records their digest. The live mode has a local synthetic inspection task: its unmocked GitHub observations are real, but a nonzero check/question still blocks delivery. Calling native prepare directly on its held record demonstrates JSON transport only; it is not a valid delivery preflight.
+
+The initial 232-test run is preserved, including three obsolete source-mutation anchor failures and one optional skip. Their anchors were repaired and the final six relevant checks passed; no final complete-suite pass is asserted. The default-temporary-directory deviation and its cleanup are recorded in boundary-note.json. There is no hidden production credential, service, model call or private adopter payload in the evidence.
+
+Remove the owned scratch/worktree after retaining evidence, keep the local probe branch for the implementation worker, and use the original task's accepted gate/dispatch process before implementation. Future private-adopter use, conditional review triggers and full lifecycle/delivery validation are not established by this probe.
