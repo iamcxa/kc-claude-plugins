@@ -53,6 +53,17 @@ gates:
                 id: briefing:pilot-ideation-runs-a-probe-before-the-design:validation:attempt-1:revision-1
                 digest: sha256:b3c26d0050fade120bb46f2a095c4575a94a90a3dcbd6257c18d724c44f52ada
                 room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pilot-ideation-runs-a-probe-before-the-design:validation:1
+                briefing: briefing:pilot-ideation-runs-a-probe-before-the-design:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-13T09:27:15.853193Z"
+                decision: approve
+                reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #864（Pilot 的設計階段預期先在本機分支做一個不推送的拋棄式試作，每條驗收條件當場跑一次並記下指令、結束代碼和輸出位置，跑不了的列在「現在無法證明」；設計關卡照舊由你決定）嗎？建議合併。同意即接受：要等發版和各 repo 同步後才生效；流程文件多 66 個字；「每條都要記」只寫在文字裡，沒有程式檢查，第一次驗證時一個測試 worker 三條漏記一條，改了一句措辭後第二次驗證另一個測試 worker 四條全記，這不能證明是措辭改好的，也不保證以後都會照做，顧問建議另開任務讓檢查程式去擋；試作最多兩輪的上限只靠我記得，程式檢查在已開的後續任務；「實作 worker 做完會刪掉試作分支」要發版後才能驗；它經過一次退回、兩筆修正案和兩次驗證；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 45d5ebb9d24665c0904aca5412123a7224d056cc, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-13T06:44:05Z
 worktree: .worktrees/spacedock-ensign-pilot-ideation-runs-a-probe-before-the-design
 pr: iamcxa/kc-claude-plugins#864
