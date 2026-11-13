@@ -3,7 +3,7 @@ title: A task the Captain held or closed at a gate no longer looks like work wai
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #856（你擱置或關閉的任務，在我開工和閒置時會被列成一行事實，不再看起來像等著處理的工作）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；合併後我要替目前 15 張擱置中的任務各補一段「擱置」紀錄並引用你當時的話，補完前這一行不會列出它們；提示用 33 個字，上限 35；在沒有遠端的環境重播那條指令會以代碼 2 結束，原因在主線既有的暫存來源檢查，主線也一樣；它經過多輪修正、四筆修正案和三次驗證；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge. Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T05:16:56Z
 worktree: .worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue
 pr: pr-merge:856
+verdict: PASSED
+completed: 2026-11-13T06:16:29Z
+archived: 2026-11-13T06:16:30Z
 ---
 
 ## Scope
