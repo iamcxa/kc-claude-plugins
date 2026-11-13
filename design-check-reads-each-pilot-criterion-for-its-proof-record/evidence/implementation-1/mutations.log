@@ -9,3 +9,5 @@ all-stages 1 True
 all-profiles 1 True
 no-approval-exemption 1 True
 no-check-task-call 1 True
+no-status-comments 1 True
+no-profile-comments 1 True

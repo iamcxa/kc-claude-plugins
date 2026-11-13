@@ -64,5 +64,17 @@
     "exit": 1,
     "killed": true,
     "output": "mutant-no-check-task-call.log"
+  },
+  {
+    "name": "no-status-comments",
+    "exit": 1,
+    "killed": true,
+    "output": "mutant-no-status-comments.log"
+  },
+  {
+    "name": "no-profile-comments",
+    "exit": 1,
+    "killed": true,
+    "output": "mutant-no-profile-comments.log"
   }
 ]

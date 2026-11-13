@@ -1,6 +1,6 @@
 {
   "cwd": "<worktree>",
-  "candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+  "candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
   "commands": [
     {
       "name": "cases",
@@ -25,7 +25,7 @@
       "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_design_surfaces.py",
       "exit": 0,
       "output": "test_design_surfaces.log",
-      "tests": 244,
+      "tests": 248,
       "skipped": 4
     },
     {
@@ -63,7 +63,7 @@
       "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/mutations.py <worktree> <scratch>",
       "exit": 0,
       "output": "mutations.json",
-      "killed": 11
+      "killed": 13
     },
     {
       "name": "corpus",
@@ -106,6 +106,26 @@
       "command": "python3 -B <package>/scripts/design_surfaces.py check <task>.md",
       "exit": 0,
       "output": "design-check.log"
+    },
+    {
+      "name": "compatibility",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/compatibility.py <worktree> <scratch>",
+      "exit": 0,
+      "output": "compatibility.json",
+      "method": "frozen base/candidate main(argv), both check modes on every snapshot task"
+    },
+    {
+      "name": "older consumers",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B <scratch>/older_consumers.py <worktree> <scratch>",
+      "exit": 0,
+      "output": "older-consumers.json"
+    },
+    {
+      "name": "401fc60e5 regressions",
+      "command": "TMPDIR=<scratch>/tmp PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s <scratch>/first-candidate-regression/kc-dev-flow-2/scripts -p test_design_surfaces.py -k trailing_",
+      "exit": 1,
+      "output": "first-candidate-regression.log",
+      "expected": "two new field tests fail in six subcases on the old checker"
     }
   ]
 }

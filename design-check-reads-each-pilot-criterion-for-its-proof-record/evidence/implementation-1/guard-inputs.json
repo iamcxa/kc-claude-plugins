@@ -1,0 +1,58 @@
+{
+  "candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
+  "inputs": [
+    {
+      "input": "mode",
+      "accepts": "check; check --seed returns before this guard",
+      "test": "test_seed_admission_does_not_owe_a_proof_record"
+    },
+    {
+      "input": "frontmatter",
+      "accepts": "existing FRONTMATTER boundary at file start; --- delimiters; read_text normalizes CRLF",
+      "limit": "BOM, leading blank text and general YAML document forms are not parsed"
+    },
+    {
+      "input": "profile",
+      "accepts": "top-level exact profile key; literal pilot, 'pilot' or double-quoted pilot; optional horizontal spaces and whitespace-separated trailing # comment",
+      "rejects": "poc/prod; literal # inside the value; different case",
+      "test": "test_trailing_profile_comment_does_not_bypass_the_proof_check"
+    },
+    {
+      "input": "status",
+      "accepts": "top-level exact status key; literal ideation, 'ideation' or double-quoted ideation; optional horizontal spaces and whitespace-separated trailing # comment",
+      "rejects": "other stages; literal # inside the value; different case",
+      "test": "test_trailing_status_comment_does_not_bypass_the_proof_check"
+    },
+    {
+      "input": "approval stage",
+      "accepts": "decision_ledger.gate_entries canonical SD-written stage: ideation under gates",
+      "limit": "the existing reader does not unquote or strip comments from stage values"
+    },
+    {
+      "input": "approval record kind",
+      "accepts": "a resolution: mapping with no inline value, reached by the existing gates walker",
+      "limit": "withdrawal is not an approval; commented resolution mapping or flow-style mapping is not recognized"
+    },
+    {
+      "input": "approval decision",
+      "accepts": "approve, single-quoted approve or JSON double-quoted approve via decision_ledger.scalar/unquote",
+      "limit": "a trailing comment on the decision value is not stripped",
+      "test": "test_approval_reader_accepts_canonical_stage_and_quoted_decisions"
+    },
+    {
+      "input": "approval selection",
+      "accepts": "any recorded ideation approval exempts the task",
+      "not_read": [
+        "approval time",
+        "actor",
+        "application state",
+        "latest withdrawal",
+        "started date",
+        "Probe marker",
+        "task title",
+        "body approval prose"
+      ]
+    }
+  ],
+  "boundary": "The guard recognizes the listed scalar forms and canonical SD gate records; it is not a general YAML parser or an approval authenticator."
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "field": "status",
+    "initial_candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+    "initial_exit": 0,
+    "candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
+    "corrected_exit": 1
+  },
+  {
+    "field": "profile",
+    "initial_candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+    "initial_exit": 0,
+    "candidate": "9dd03d805d11c0c833699b1247fd11d99a74d52f",
+    "corrected_exit": 1
+  }
+]

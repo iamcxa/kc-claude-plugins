@@ -1,0 +1,12 @@
+{
+  "left_after_suite": 1,
+  "removed": [
+    {
+      "root": "dispatch-code-ac775785860fb15b",
+      "files": 4,
+      "removed": true,
+      "ownership": "every fixture scope-notes names the assigned candidate package"
+    }
+  ],
+  "remaining": 0
+}

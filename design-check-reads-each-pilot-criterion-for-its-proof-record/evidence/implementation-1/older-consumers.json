@@ -1,0 +1,47 @@
+[
+  {
+    "consumer": "Prod security review",
+    "plain_errors": [
+      "task.md: a prod task needs a 'Security review:' line naming the saved report"
+    ],
+    "comment_errors": [],
+    "verdict_changed": true,
+    "product_changed": false
+  },
+  {
+    "consumer": "UI design review",
+    "plain_errors": [
+      "task.md: a ui task needs a 'Design review:' line naming the saved report"
+    ],
+    "comment_errors": [],
+    "verdict_changed": true,
+    "product_changed": false
+  },
+  {
+    "consumer": "UI built-screen review",
+    "plain_errors": [
+      "task.md: 'design/validation-1.yaml' is not a design_review report: 0 'design_review:' lines at column 0, expected exactly 1",
+      "task.md: 'design/validation-1.yaml' has 0 'findings:' lines, expected exactly 1"
+    ],
+    "comment_errors": [],
+    "verdict_changed": true,
+    "product_changed": false
+  },
+  {
+    "consumer": "scope_hold",
+    "plain_verdict": "hold",
+    "comment_verdict": "not run",
+    "verdict_changed": true,
+    "product_changed": false
+  },
+  {
+    "consumer": "main gate-question note",
+    "plain_exit": 0,
+    "comment_exit": 0,
+    "plain_ask_form": true,
+    "comment_ask_form": false,
+    "verdict_changed": false,
+    "output_changed": true,
+    "product_changed": false
+  }
+]

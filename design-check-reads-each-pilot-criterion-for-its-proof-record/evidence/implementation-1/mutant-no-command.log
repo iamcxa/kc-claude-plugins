@@ -1,4 +1,4 @@
-.FFF....F.
+..FFF.......F.
 ======================================================================
 FAIL: test_each_record_field_is_required (test_design_surfaces.PilotProofTests.test_each_record_field_is_required) (field='command')
 ----------------------------------------------------------------------
@@ -36,6 +36,6 @@ Traceback (most recent call last):
 AssertionError: 'Pilot criterion AC-3 has no command, exit' not found in "task.md: Pilot criterion AC-3 has no exit in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.076s
+Ran 14 tests in 0.055s
 
 FAILED (failures=4)

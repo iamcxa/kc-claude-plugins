@@ -210,3 +210,58 @@ Files this design changes: `kc-dev-flow-2/scripts/design_surfaces.py`, `kc-dev-f
 ### Summary
 
 The probe adds a Pilot-ideation-only proof-record rule to the existing design check, and replays the two trial designs exactly as the Stop condition asks. No new required line is needed; the separator is mostly an `exit <n>` token read outside the Falsifier. Approved designs are exempt by stage and by their ideation approval. The observer needs a 5-word extension to its current-schema sentence. Implementation repairs fixtures in three test files. The Captain decides D1: whether the 23 unapproved Pilot designs now in ideation must add records at their next check.
+
+
+## Stage Report: implementation
+
+- DONE: Build the approved Pilot design, decisions D1 and D2, in the five named files; no version, workflow, word-budget or ADR changes.
+  Base 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff; initial candidate 401fc60e5c69e6e9458f9c15f31b4527af417911; corrected candidate 9dd03d805d11c0c833699b1247fd11d99a74d52f on spacedock-ensign/design-check-reads-each-pilot-criterion-for-its-proof-record; probe branch deleted. Reused the approved chain audit and existing checker/decision ledger (provenance.json).
+- DONE: AC-1 — the incomplete trial design is refused for AC-3 only, and the complete one passes.
+  cases.py exit 0; run1/run2 exits 1/0; baseline exits 0/0. Commands, exits and outputs: evidence/implementation-1/commands.json and cases.json; removing the exit check fails mutant-no-exit.log.
+- DONE: AC-2 — Falsifier-only records, missing fields and bare or inline unprovable entries are refused; a named reason under its heading passes.
+  cases.py and the 248-test design suite exit 0; falsifier-counts, bare-id-reason, no-heading-boundary and inline-unprovable mutants each exit 1 (mutations.json). A canonical exit token in the falsifier makes the strip mutation exercise acceptance, not just a changed message.
+- DONE: AC-3 — exercise available corpora, profile/stage/approval exemptions and both checker modes on the corrected candidate.
+  corpus.py and compatibility.py exit 0: 501 snapshot tasks, 0 unexpected changes; additional proof diagnostics 12/7/2, exit changes 1/0/0; seed mode unchanged; 0 new proof refusal on approved/archive tasks. all-stages, all-profiles and no-approval-exemption mutants exit 1. The frozen-source harness invokes main(argv); its unfinished predecessor is not evidence.
+- SKIPPED: AC-3 — reproduce the original fourth corpus and uniquely identify the original 113-file source.
+  Previous Pilot counts 236/113/98/137; available counts 236/113/99. Two supplied sources match 113, one drifted from 98 to 99, none matches 137. Not archived (private): source mapping, inputs or per-file logs; reproduce with an adopter state archive and corpus.py as evidence/implementation-1/README.md describes.
+- DONE: AC-4 — repair fixture records and pass both design-check suites.
+  test_design_surfaces: 248 tests, 4 skipped; test_sd_dispatch with CLI 0.27.2/plugin 0.28.0: exit 0. Removing check_task's proof call fails mutant-no-check-task-call.log. Exact commands/exits: commands.json.
+- DONE: AC-5 — preserve workflow words and rerun the other named suites.
+  lint-skills.py exit 0, 6099/6099 words; dispatch records 136 tests (1 skipped), laws 85 (1 skipped), dispatch stage 52 (none skipped), all exit 0. A 6100-word mutation fails lint. Observer grows 1371 to 1376 words; workflow bytes are unchanged.
+- DONE: Correct the design's AC-5 Not provable now premise.
+  The retained base extract log omitted SPACEDOCK_BIN (FileNotFoundError: None); /tmp extracts also triggered the scratch-note boundary. SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_dispatch_stage.py now passes all 52 tests from the assigned worktree (test_dispatch_stage.log). Hosted CI remains unrun.
+- SKIPPED: AC-6 and its post-release observer falsifier.
+  Not provable now: the first real archive after release is needed to observe the agent classifying a historical proof-record refusal. The sentence is updated; its actual use is not claimed.
+- DONE: Run each executable falsifier with python3 -B and cache-free copies.
+  13 guard mutations and the workflow-word mutation are caught; every guard mutant exits 1 with a test failure, not an error (mutations.json; word-budget-mutation.json). Planned clauses remain a documented recognition limit.
+- DONE: Run repository lint-skills.py, installed adr_lint.py and number_guards.py check.
+  All exit 0 on 9dd03d805; 77 ADR files, 0 legacy; no number-guard findings after a permitted fresh fetch. Logs: lint-skills.log, adr-lint.log, number-guards.log. No ADR added/changed or number reserved.
+- DONE: Run comment_ratio.py within its maximum.
+  201 code lines, 0 comment lines, 0.0%, maximum 5% met; exit 0 (comment-ratio.log).
+- DONE: Run doc_impact.py and disposition every listed document.
+  docs/adr/0041-seed-admission-enforces-required-fields.md — unaffected: seed admission returns before the proof rule.
+  docs/adr/0057-rewritten-criteria-are-compared-with-the-captains-words.md — unaffected: added_words and its evidence boundary are unchanged.
+  docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md — unaffected: review wording pins are unchanged.
+  docs/adr/0076-a-journey-workflows-new-seed-records-its-story-or-none.md — unaffected: story admission/comparison is unchanged.
+  docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md — unaffected: cycle parsing, Worth questions and hold authority are unchanged.
+  kc-dev-flow-2/README.md — unaffected: its described check/CLI coverage and limitations still hold.
+  kc-dev-flow-2/references/sd/adoption.md — unaffected: synthetic graph/handoff checks and delivery limits are unchanged.
+  learning.md — unaffected: retained whole; parser-consumer and both-mode corpus practices applied. doc-impact.log and document-impact.json record the review.
+- DONE: Repair both new-guard scalar fields under implementation-1-message-1, including FO's confirming answer covering profile and status.
+  status/profile comment CLI cases change 0 to 1; two new tests fail in six subcases on the exact 401fc60e5 checker and pass now (first-candidate-regression.log, comment-repair.json). status-comment-repro.log is retained. guard-inputs.json lists mode/frontmatter, profile/status forms, resolution/stage/decision and any-approval selection; canonical gate-reader limits are explicit.
+- DONE: List every older consumer of the shared status pattern without changing it.
+  scope_hold, Prod security, UI design and UI built-screen review verdicts change under commented status; main's gate-question note changes output but not exit. Five findings with locations and repros: findings.json, older-consumers.json. The older patterns/callers remain untouched.
+- DONE: Keep sibling fixture edits minimal and record their overlap.
+  The budget sibling meets test_dispatch_stage.py::test_worth_requirement_uses_native_stage_for_yaml_status_values (one record string) and test_sd_dispatch.py's criteria-parity parity() writer (two lines); no shared product-code change.
+- DONE: State CI cost per PR.
+  Not measured; no CI trigger/configuration change. No runtime speed or hosted CI claim.
+- SKIPPED: Product push, opening the one Draft PR, RoboRev, hosted CI, ready and merge.
+  Delegated to FO; no PR opened: no product push grant. Conventional scoped title/body prepared in implementation/pr.md. The local commits and these tests are not publication or validation approval.
+- DONE: Archive public evidence, preserve counts only for private inputs, and close scratch.
+  Initial/final suite runs each left one owned synthetic root (4 files): dispatch-code-7c7e0c6171edf976 and dispatch-code-ac775785860fb15b; exact-path removal left 0. Cleanup JSON records ownership checks; other dispatch roots were not touched.
+  Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/design-check-reads-each-pilot-criterion-for-its-proof-record/implementation-1 (88289654 bytes)
+  Evidence: evidence/implementation-1/ (73 files, 143.3 KiB)
+
+### Summary
+
+This complete report and corrected candidate 9dd03d805 supersede the interim 401fc60e5 handoff facts and preliminary evidence. The new guard is implemented within the approved scope; original-corpus coverage, canonical approval-record syntax, the five unchanged-consumer findings, delegated publication/review/CI and post-release observer behavior remain explicitly bounded.

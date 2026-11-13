@@ -1,4 +1,4 @@
-.........F
+.............F
 ======================================================================
 FAIL: test_unprovable_heading_requires_a_named_reason (test_design_surfaces.PilotProofTests.test_unprovable_heading_requires_a_named_reason) (extra='### Not provable now\n### Notes\n- AC-1: provider is unavailable offline.')
 ----------------------------------------------------------------------
@@ -9,6 +9,6 @@ Traceback (most recent call last):
 AssertionError: 0 != 1
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.037s
+Ran 14 tests in 0.048s
 
 FAILED (failures=1)

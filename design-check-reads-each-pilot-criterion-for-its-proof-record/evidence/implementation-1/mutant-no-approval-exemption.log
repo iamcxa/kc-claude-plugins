@@ -1,4 +1,58 @@
-....F.....
+FFF....F........
+======================================================================
+FAIL: test_approval_reader_accepts_canonical_stage_and_quoted_decisions (test_design_surfaces.PilotProofTests.test_approval_reader_accepts_canonical_stage_and_quoted_decisions) (decision='approve')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-approval-exemption/kc-dev-flow-2/scripts/test_design_surfaces.py", line 340, in test_approval_reader_accepts_canonical_stage_and_quoted_decisions
+    self.assertEqual(self.check("**AC-1** Read the design.", gates=gates), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[179 chars]ing"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_approval_reader_accepts_canonical_stage_and_quoted_decisions (test_design_surfaces.PilotProofTests.test_approval_reader_accepts_canonical_stage_and_quoted_decisions) (decision="'approve'")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-approval-exemption/kc-dev-flow-2/scripts/test_design_surfaces.py", line 340, in test_approval_reader_accepts_canonical_stage_and_quoted_decisions
+    self.assertEqual(self.check("**AC-1** Read the design.", gates=gates), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[179 chars]ing"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
+======================================================================
+FAIL: test_approval_reader_accepts_canonical_stage_and_quoted_decisions (test_design_surfaces.PilotProofTests.test_approval_reader_accepts_canonical_stage_and_quoted_decisions) (decision='"approve"')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/no-approval-exemption/kc-dev-flow-2/scripts/test_design_surfaces.py", line 340, in test_approval_reader_accepts_canonical_stage_and_quoted_decisions
+    self.assertEqual(self.check("**AC-1** Read the design.", gates=gates), [])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ["task.md: Pilot criterion AC-1 has no com[179 chars]ing"] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+"task.md: Pilot criterion AC-1 has no command, exit, output path in its proof record (command, observed exit <n>, output path; Falsifier text does not count) and is not named with a reason under a 'Not provable now' heading"
+
++ []
+- ['task.md: Pilot criterion AC-1 has no command, exit, output path in its proof '
+-  'record (command, observed exit <n>, output path; Falsifier text does not '
+-  "count) and is not named with a reason under a 'Not provable now' heading"]
+
 ======================================================================
 FAIL: test_ideation_approval_exempts_a_design_still_in_ideation (test_design_surfaces.PilotProofTests.test_ideation_approval_exempts_a_design_still_in_ideation)
 ----------------------------------------------------------------------
@@ -18,6 +72,6 @@ First extra element 0:
 -  "count) and is not named with a reason under a 'Not provable now' heading"]
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.031s
+Ran 14 tests in 0.043s
 
-FAILED (failures=1)
+FAILED (failures=4)

@@ -1,4 +1,4 @@
-..F.......
+...F..........
 ======================================================================
 FAIL: test_falsifier_cannot_supply_a_record (test_design_surfaces.PilotProofTests.test_falsifier_cannot_supply_a_record)
 ----------------------------------------------------------------------
@@ -9,6 +9,6 @@ Traceback (most recent call last):
 AssertionError: 0 != 1 : []
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.034s
+Ran 14 tests in 0.046s
 
 FAILED (failures=1)

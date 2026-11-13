@@ -1,0 +1,47 @@
+[
+  {
+    "severity": "high",
+    "title": "Prod security review still uses the older scalar matcher",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1264,
+    "detail": "Valid commented status changes the verdict",
+    "fix": "Unchanged per FO repair boundary; follow-up disposition belongs to FO",
+    "evidence": "older-consumers.json"
+  },
+  {
+    "severity": "medium",
+    "title": "UI design review still uses the older scalar matcher",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1268,
+    "detail": "Valid commented status changes the verdict",
+    "fix": "Unchanged per FO repair boundary; follow-up disposition belongs to FO",
+    "evidence": "older-consumers.json"
+  },
+  {
+    "severity": "medium",
+    "title": "UI built-screen review still uses the older scalar matcher",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1273,
+    "detail": "Valid commented status changes the verdict",
+    "fix": "Unchanged per FO repair boundary; follow-up disposition belongs to FO",
+    "evidence": "older-consumers.json"
+  },
+  {
+    "severity": "medium",
+    "title": "scope_hold still uses the older scalar matcher",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1003,
+    "detail": "Valid commented status changes the verdict",
+    "fix": "Unchanged per FO repair boundary; follow-up disposition belongs to FO",
+    "evidence": "older-consumers.json"
+  },
+  {
+    "severity": "low",
+    "title": "main gate-question note still uses the older scalar matcher",
+    "file": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1309,
+    "detail": "Exit stays 0, but the gate-question note is omitted",
+    "fix": "Unchanged per FO repair boundary; follow-up disposition belongs to FO",
+    "evidence": "older-consumers.json"
+  }
+]

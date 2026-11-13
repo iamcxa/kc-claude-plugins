@@ -11,10 +11,12 @@ mutants=[
 ("no-heading-boundary", 'if inside and head and len(head.group(1)) <= level:', 'if False:'),
 ("inline-unprovable", 'unprovable = unprovable_entries(lines)',
  'unprovable = AC_ID.findall(" ".join(lines)) if any("Not provable now" in line for line in lines) else {}'),
-("all-stages", '(profile.group(1), status.group(1)) == ("pilot", "ideation")', 'profile.group(1) == "pilot"'),
-("all-profiles", '(profile.group(1), status.group(1)) == ("pilot", "ideation")', 'status.group(1) == "ideation"'),
+("all-stages", '(("profile", "pilot"), ("status", "ideation"))', '(("profile", "pilot"),)'),
+("all-profiles", '(("profile", "pilot"), ("status", "ideation"))', '(("status", "ideation"),)'),
 ("no-approval-exemption", 'and not design_approved(text):', ':'),
 ("no-check-task-call", 'for key, missing in proof_gaps(lines):', 'for key, missing in []:'),
+("no-status-comments", 'if front and pilot_ideation(front.group(1))', 'if front and FM_STATUS.search(front.group(1)) and pilot_ideation(front.group(1))'),
+("no-profile-comments", 'if front and pilot_ideation(front.group(1))', 'if front and FM_PROFILE.search(front.group(1)) and pilot_ideation(front.group(1))'),
 ]
 results=[]
 for name,old,new in mutants:

@@ -1,0 +1,29 @@
+{
+  "base": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "candidate": "401fc60e5c69e6e9458f9c15f31b4527af417911",
+  "branch": "spacedock-ensign/design-check-reads-each-pilot-criterion-for-its-proof-record",
+  "tree": "90ffaaf0711212c82062866ae39eb2490d34241a",
+  "changed_files": [
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "kc-dev-flow-2/skills/observer/SKILL.md"
+  ],
+  "probe_deleted": true,
+  "python": "3.11.14",
+  "spacedock_cli": "0.27.2",
+  "spacedock_plugin": "0.28.0",
+  "workflow_words": 6099,
+  "observer_words": 1376,
+  "workflow_unchanged": true,
+  "ci_cost_per_pr": "not measured; no CI configuration change",
+  "blob_ids": {
+    "kc-dev-flow-2/scripts/design_surfaces.py": "487650bf31487fb242720d52f1c22ee488e3778b",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py": "ceebc757a8643adc0f117d45049e8bcf8df5e7fd",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "ebe650ce68d0f0cb3b700788e753243bd339e7a1",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "b359b0fe2db6e4a009dad99ec0009d0969b10f21",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "2c768c8eca182299f9f175d334f80482be327296"
+  },
+  "tested_commands_match_candidate": true
+}

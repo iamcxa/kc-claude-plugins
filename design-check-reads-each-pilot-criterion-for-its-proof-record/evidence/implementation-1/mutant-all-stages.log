@@ -1,4 +1,26 @@
-.....FFF....
+......FFFFF......
+======================================================================
+FAIL: test_literal_hash_values_are_not_the_pilot_ideation_scalars (test_design_surfaces.PilotProofTests.test_literal_hash_values_are_not_the_pilot_ideation_scalars) (profile='pilot', stage='ideation#review')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-stages/kc-dev-flow-2/scripts/test_design_surfaces.py", line 333, in test_literal_hash_values_are_not_the_pilot_ideation_scalars
+    self.assertFalse(any("Pilot criterion" in error for error in
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         self.check("**AC-1** Read the design.", profile=profile, stage=stage)))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_literal_hash_values_are_not_the_pilot_ideation_scalars (test_design_surfaces.PilotProofTests.test_literal_hash_values_are_not_the_pilot_ideation_scalars) (profile='pilot', stage='"ideation#review"')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mutants/all-stages/kc-dev-flow-2/scripts/test_design_surfaces.py", line 333, in test_literal_hash_values_are_not_the_pilot_ideation_scalars
+    self.assertFalse(any("Pilot criterion" in error for error in
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         self.check("**AC-1** Read the design.", profile=profile, stage=stage)))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
 ======================================================================
 FAIL: test_only_pilot_ideation_owes_records (test_design_surfaces.PilotProofTests.test_only_pilot_ideation_owes_records) (profile='pilot', stage='implementation')
 ----------------------------------------------------------------------
@@ -27,6 +49,6 @@ Traceback (most recent call last):
 AssertionError: True is not false
 
 ----------------------------------------------------------------------
-Ran 10 tests in 0.034s
+Ran 14 tests in 0.049s
 
-FAILED (failures=3)
+FAILED (failures=5)
