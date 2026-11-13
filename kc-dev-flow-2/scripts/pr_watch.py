@@ -621,12 +621,14 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             snaps[ref] = now
             out += [facts(ref, now)] + next_for(ref, now)
         elif now["state"] == "MERGED" and "learn" in listed:
-            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
+            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
+                                   "--readme", str(workflow / "README.md")],
                                   capture_output=True, text=True)
             if done.returncode:
                 out += [f"next: keep {slug} out of pr-merge's scan in this pass.", *done.stdout.splitlines()]
             else:
-                check = f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug}"
+                check = (f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug} "
+                         f"--readme {shlex.quote(str(workflow / 'README.md'))}")
                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
                         "after pr-merge: do each next: line it prints."]
     for slug in live:

@@ -35,6 +35,8 @@ class ObserverCheckTest(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.state = Path(self.tmp.name) / "state"
         self.state.mkdir()
+        self.readme = self.state.parent / "README.md"
+        self.readme.write_text("---\nentity-type: task\nextensions: [learn]\n---\n")
         git(self.state, "init", "-b", "main")
         (self.state / SLUG).mkdir()
         (self.state / f"{SLUG}.md").write_text("---\ntitle: t\npr: pr-merge:7\n---\nbody\n")
@@ -94,6 +96,53 @@ class ObserverCheckTest(unittest.TestCase):
         verbs = [line.split()[1] for line in out.splitlines()[1:]]
         self.assertEqual(code, 1, out)
         self.assertEqual(verbs, ["dispatch", "save", "run", "run", "tell", "run", "send"], out)
+
+    def test_archived_miss_and_report_print_no_learn_steps_without_the_extension(self):
+        self.archive()
+        for field in ("", "extensions: []\n", "extensions: [peers]\n"):
+            self.readme.write_text(f"---\nentity-type: task\n{field}---\nlearn in the body is not selection\n")
+            for reported in (False, True):
+                with self.subTest(field=field, reported=reported):
+                    if reported:
+                        self.write_report("ok\n", archived=True)
+                        self.commit("report")
+                    else:
+                        report = self.state / "_archive" / SLUG / "observer.md"
+                        if report.exists():
+                            report.unlink()
+                            self.commit("without report")
+                    code, out = check(self.state, SLUG)
+                    self.assertEqual(code, 0 if reported else 1, out)
+                    self.assertNotIn("kc-dev-flow-2:learn", out)
+                    self.assertNotIn("learn's notice", out)
+
+    def test_the_shared_extension_parser_handles_quoted_commented_and_block_lists(self):
+        self.archive()
+        for field in ("extensions: ['learn'] # chosen\n", 'extensions:\n  - "learn" # chosen\n'):
+            self.readme.write_text(f"---\nentity-type: task\n{field}---\n")
+            code, out = check(self.state, SLUG)
+            self.assertEqual(code, 1, out)
+            self.assertIn("kc-dev-flow-2:learn", out)
+
+    def test_an_explicit_readme_overrides_discovery_for_a_detached_state_checkout(self):
+        self.archive()
+        other = self.state.parent / "chosen.md"
+        other.write_text("---\nentity-type: task\nextensions: []\n---\n")
+        code, out = check(self.state, SLUG, "--readme", other)
+        self.assertEqual(code, 1, out)
+        self.assertNotIn("kc-dev-flow-2:learn", out)
+
+    def test_an_archived_check_holds_when_selection_cannot_be_read(self):
+        self.archive()
+        self.readme.unlink()
+        code, out = check(self.state, SLUG)
+        self.assertEqual(code, 2, out)
+        self.assertIn("supply --readme FILE", out)
+        for text in ("no frontmatter", "---\nentity-type: task\nextensions: [learn\n---\n"):
+            self.readme.write_text(text)
+            code, out = check(self.state, SLUG, "--readme", self.readme)
+            self.assertEqual(code, 2, out)
+            self.assertNotIn("next:", out)
 
     def test_a_committed_report_passes_before_the_archive_and_the_commit_before_it_failed(self):
         self.write_report("ok | rule: x\n")
@@ -238,6 +287,7 @@ class RecoveryCommandQuotingTest(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         state = Path(tmp.name) / "my state dir"
         (state / "_archive" / SLUG).mkdir(parents=True)
+        (state.parent / "README.md").write_text("---\nentity-type: task\nextensions: [learn]\n---\n")
         git(state, "init", "-b", "main")
         (state / "_archive" / f"{SLUG}.md").write_text("---\ntitle: t\n---\n")
         git(state, "add", "-A")

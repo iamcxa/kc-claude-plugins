@@ -140,7 +140,8 @@ def l1_observer_before_sentinel(ctx):
             if not sentinel_at(ctx.state, commit, new) or (status != "A" and sentinel_at(ctx.state, f"{commit}^", old)):
                 continue
             judged += 1
-            code, lines = run_check("observer_check.py", str(ctx.state), task[1], "--rev", commit)
+            code, lines = run_check("observer_check.py", str(ctx.state), task[1], "--rev", commit,
+                                    "--readme", str(ctx.readme))
             if code == 1:
                 if not re.match(r"observer report (?:not committed|blank): ", lines[0] if lines else ""):
                     raise Cannot(f"observer_check.py exited 1 with output this runner does not parse: {lines[:1]}")

@@ -1284,17 +1284,33 @@ class TasksTests(unittest.TestCase):
 
     def test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after(self):
         self.readme("learn")
+        detached = self.root / "detached-state"
+        self.state.rename(detached)
+        self.state = detached
+        readme = self.workflow / "README.md"
+        readme.write_text(readme.read_text().replace("state: .spacedock-state", f"state: {self.state}"))
         self.task("some-task", pr="o/r#7")
         self.report("some-task")
         code, lines = self.tasks({"pr view 7": view("MERGED")})
         self.assertEqual(code, 0, lines)
         self.assertEqual(lines[0], "next: let pr-merge record some-task.")
         self.assertEqual(len(lines), 3, lines)
-        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task`\.$")
+        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task --readme \S+README\.md`\.$")
         self.assertEqual(lines[2], "after pr-merge: do each next: line it prints.")
         command = lines[1].split("`")[1].split()
         done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
         self.assertEqual(done.returncode, 0, done.stdout)
+        (self.state / "_archive").mkdir()
+        self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
+        self.git(self.state, "mv", "some-task", "_archive/some-task")
+        self.git(self.state, "commit", "-qm", "archive")
+        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout)
+        self.assertIn("kc-dev-flow-2:learn", done.stdout)
+        self.readme("")
+        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout)
+        self.assertNotIn("kc-dev-flow-2:learn", done.stdout)
 
     def test_without_learn_listed_a_merged_pr_prints_no_observer_line(self):
         self.readme("roborev, codex")

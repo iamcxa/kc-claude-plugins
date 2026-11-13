@@ -51,7 +51,7 @@ class Repo:
 def sandbox(base, omit=(), override=None):
     pkg = Path(base) / "pkg"
     (pkg / "scripts").mkdir(parents=True)
-    for name in ("laws_check.py", "decision_ledger.py", "observer_check.py", "dispatch_records.py", "design_surfaces.py"):
+    for name in ("laws_check.py", "decision_ledger.py", "workflow_extensions.py", "observer_check.py", "dispatch_records.py", "design_surfaces.py"):
         if name not in omit:
             shutil.copy(SCRIPTS / name, pkg / "scripts" / name)
     for name, text in (override or {}).items():
