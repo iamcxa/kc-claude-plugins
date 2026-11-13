@@ -56,6 +56,10 @@ gates:
                 id: briefing:observer-check-learn-only-when-listed:validation:attempt-1:revision-1
                 digest: sha256:3cbe92ff2420a4375e17562d370a39cc6cc9398fa4eefe327eb5bc9aebbcf5b6
                 room-ref: ./observer-check-learn-only-when-listed/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-13T02:06:22.077745Z"
+                reason: FO attached the older delivery check record (ask-1) where the newest is ask-2; same question, re-prepared with the newest record before the Captain saw it.
 started: 2026-11-12T17:02:57Z
 worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
 pr: iamcxa/kc-claude-plugins#861
