@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ready-pr-gets-a-codex-code-review-without-fo-noticing:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ready-pr-gets-a-codex-code-review-without-fo-noticing-ideation-1
+              briefing:
+                id: briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:ideation:attempt-1:revision-1
+                digest: sha256:31428e7ecfa05b9845b7e7a134c85127dfb0418dca07483f2e1bbce2f2377dec
+                room-ref: ./ready-pr-gets-a-codex-code-review-without-fo-noticing/review/ideation/briefing-1
 started: 2026-11-13T13:42:51Z
 ---
 

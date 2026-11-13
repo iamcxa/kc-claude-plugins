@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:ideation:attempt-1:revision-1",
+  "question": "「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。",
+  "artifacts": [
+    {
+      "id": "artifact:ready-pr-gets-a-codex-code-review-without-fo-noticing:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/de2429a47673be930cd8de7aacc8af3773db20da/ready-pr-gets-a-codex-code-review-without-fo-noticing.md",
+      "rev": "sha256:48f70bbe502a7cf42d0a1aa6024a33b07fc757ff85ce8cdc94333f691f8d160c",
+      "mediaType": "text/markdown",
+      "summary": "Ideation round 1 by gpt-6.1-terra xhigh, 6 minutes, held by the worker: its probe showed exactly-once delivery cannot be had after a lost response, the promised replay snapshots do not exist, and an automatic PR comment is an unattended outward write. design_surfaces.py check exit 0 after Captain amendment 1 (FO run 2026-11-13). Captain amendment 1 withdraws the automation and criteria AC-1 to AC-4 and replaces them with AC-5: one sentence in the Codex extension's text. Nothing else is built."
+    }
+  ]
+}
