@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:captain-question-outside-a-gate-is-an-open-record:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:captain-question-outside-a-gate-is-an-open-record-backlog-1
+              briefing:
+                id: briefing:captain-question-outside-a-gate-is-an-open-record:backlog:attempt-1:revision-1
+                digest: sha256:1583608f505a10767ffa143043566d134b15b2fe009e1dc6cf84abe55fb7bcd9
+                room-ref: ./captain-question-outside-a-gate-is-an-open-record/review/backlog/briefing-1
 ---
 
 ## Scope
