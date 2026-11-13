@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:observer-check-learn-only-when-listed:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:observer-check-learn-only-when-listed-validation-1
+              briefing:
+                id: briefing:observer-check-learn-only-when-listed:validation:attempt-1:revision-1
+                digest: sha256:3cbe92ff2420a4375e17562d370a39cc6cc9398fa4eefe327eb5bc9aebbcf5b6
+                room-ref: ./observer-check-learn-only-when-listed/review/validation/briefing-1
 started: 2026-11-12T17:02:57Z
 worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
 pr: iamcxa/kc-claude-plugins#861
