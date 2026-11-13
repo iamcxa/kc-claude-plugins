@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-11-13T16:37:26Z
+worktree: .worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record
 ---
 
 ## Scope
