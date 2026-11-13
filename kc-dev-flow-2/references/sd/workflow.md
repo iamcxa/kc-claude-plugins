@@ -256,7 +256,7 @@ not completion.
 
 ## Captain steps
 
-Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>"`; `python3 <package>/scripts/task_timeline.py <state> <task>` prints each stage's times and counts.
+Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>" --holds <task|acceptance|nothing> --by "<session>"` and records each later showing, answer or withdrawal with the command it prints; `python3 <package>/scripts/task_timeline.py <state> --open` lists what waits on him.
 
 Before asking the Captain to run or look at anything (an acceptance script, a
 command, a link, a sign-in, a file of steps), FO runs each step as written, in a
