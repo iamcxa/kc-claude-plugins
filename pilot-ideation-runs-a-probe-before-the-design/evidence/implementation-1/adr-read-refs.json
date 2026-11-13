@@ -1,0 +1,50 @@
+[
+  {
+    "path": "docs/adr/0005-a-captain-amendment-is-recorded-by-fo-and-moved-by-the-next-worker.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "124927b2ac20e1f21e8d20c905735bf33bc0d6b7c9d544fc4ac8caa76b3da03d",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "a49b4da2665730f648334a0a8465bde6df3c779e9b0c42b3e61510cc96185afb",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "f6df5148db4ac5ae1f1e32861afa9e040f8b620d3362a79a43ef239ffaf41d83",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "9a25ffb41b4d49b94bfdd68b581be9789ae9867231345f36f6e11dcd62d7be58",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "d31f3ac3b93c14d2c6bc4dbbbf87ed95349b192fceda00c736a8e1332e3252c6",
+    "status": "## Context"
+  },
+  {
+    "path": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "commit": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+    "sha256": "b87f129fdac8c5c52b1773ac88083051315b7dfa15e150d3bbbeef154bce6972",
+    "status": "## Context"
+  }
+]

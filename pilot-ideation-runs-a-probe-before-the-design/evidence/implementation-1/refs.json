@@ -1,0 +1,11 @@
+{
+  "start": "2026-11-13T15:13:59+08:00",
+  "time_source": "clock.curr_time: 2026-11-13 07:13:59 UTC",
+  "base": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "candidate": "f0e00d30ce00542b2895f13173bd41075cc8bfd4",
+  "branch": "spacedock-ensign/pilot-ideation-runs-a-probe-before-the-design",
+  "probe": "70f701063292a5c20bfa891214c4c9280b70342e",
+  "spacedock_binary": "/Users/kent/.local/bin/spacedock",
+  "spacedock_version": "0.27.2",
+  "spacedock_plugin_root": "/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3"
+}

@@ -1,0 +1,8 @@
+fatal: not a tree object: f0e00d30ce00e832499be13d4eb7525d05e8e3b7
+/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/tmp/tmp.ZNcVP83eJb/kc-dev-flow-2/scripts/lint-skills.py': [Errno 2] No such file or directory
+lint exit 2
+grep: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/tmp/tmp.ZNcVP83eJb/kc-dev-flow-2/skills/ideation/principles.md: No such file or directory
+grep: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/tmp/tmp.ZNcVP83eJb/kc-dev-flow-2/scripts/lint-skills.py: No such file or directory
+principles.md ban lines: ; KNOWN_DUPLICATES ban entries: 
+/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/Resources/Python.app/Contents/MacOS/Python: can't open file '/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1/tmp/tmp.ZNcVP83eJb/kc-dev-flow-2/scripts/lint-skills.py': [Errno 2] No such file or directory
+repeat findings: 0

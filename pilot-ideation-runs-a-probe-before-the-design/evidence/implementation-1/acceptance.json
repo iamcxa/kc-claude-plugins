@@ -1,0 +1,60 @@
+[
+  {
+    "name": "AC-1",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-1.log"
+  },
+  {
+    "name": "AC-2",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-2.log"
+  },
+  {
+    "name": "AC-3",
+    "status": "failed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-3.log"
+  },
+  {
+    "name": "AC-4",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-4.log"
+  },
+  {
+    "name": "AC-5",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-5.log"
+  },
+  {
+    "name": "AC-6",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-6.log"
+  },
+  {
+    "name": "AC-7",
+    "status": "passed",
+    "detail": "Original approved command; output and exact environment in accept-results.json",
+    "evidence": "AC-7.log"
+  },
+  {
+    "name": "AC-3 corrected harness",
+    "status": "passed",
+    "detail": "Deviation, not an amendment: grep -c \"^FAIL:.*repeats\" counts diagnostics instead of the success message. Validation and Captain decide whether the evidence clause changes.",
+    "evidence": "AC-3-corrected.log"
+  },
+  {
+    "name": "AC-8 live ideation worker",
+    "status": "untested",
+    "detail": "Not provable now; validation owns the live candidate worker run."
+  },
+  {
+    "name": "AC-9 post-release cleanup",
+    "status": "untested",
+    "detail": "Not provable now; this dispatch deleted its own probe branch but does not establish future released worker behavior."
+  }
+]
