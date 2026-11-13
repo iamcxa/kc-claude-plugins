@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:design-check-reads-each-pilot-criterion-for-its-proof-record:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:design-check-reads-each-pilot-criterion-for-its-proof-record-ideation-1
+              briefing:
+                id: briefing:design-check-reads-each-pilot-criterion-for-its-proof-record:ideation:attempt-1:revision-1
+                digest: sha256:55e31545abf73a1350eb8ef6857a72f9ad7f9c8f33c91085096e3ad1bbc04c84
+                room-ref: ./design-check-reads-each-pilot-criterion-for-its-proof-record/review/ideation/briefing-1
 started: 2026-11-13T09:54:53Z
 ---
 
