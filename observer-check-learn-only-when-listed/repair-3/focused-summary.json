@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "file": "focused.log",
+      "total": 23,
+      "passed": 23,
+      "skipped": 0
+    },
+    {
+      "file": "pr-watch.log",
+      "total": 137,
+      "passed": 137,
+      "skipped": 0
+    },
+    {
+      "file": "laws.log",
+      "total": 85,
+      "passed": 84,
+      "skipped": 1
+    }
+  ],
+  "total": 245,
+  "passed": 244,
+  "skipped": 1
+}

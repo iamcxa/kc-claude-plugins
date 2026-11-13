@@ -1,0 +1,8 @@
+observer report not committed: _archive/t/observer.md at HEAD.
+next: dispatch kc-dev-flow-2:observer over both path pairs, t.md and t/, then _archive/t.md and _archive/t/.
+next: save its report unedited as _archive/t/observer.md.
+next: run `git -C /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp99bskkio/mismatch add _archive/t/observer.md && git -C /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp99bskkio/mismatch commit -m "<message>" -- _archive/t/observer.md`.
+next: run `spacedock state commit t --workflow-dir <workflow dir>`.
+next: tell the Captain the observer ran after the archive.
+next: run kc-dev-flow-2:learn for t.
+next: send learn's notice, then the observer report unedited, in one message; answer none of its findings.

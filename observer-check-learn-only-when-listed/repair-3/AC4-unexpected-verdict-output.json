@@ -1,0 +1,15 @@
+{
+  "corpora": [
+    {
+      "archived_tasks": 82,
+      "identical": 70,
+      "different": 12,
+      "base_exit_0": 12,
+      "base_exit_1": 70,
+      "base_exit_2": 0,
+      "probe_exit_0": 12,
+      "probe_exit_1": 70,
+      "probe_exit_2": 0
+    }
+  ]
+}

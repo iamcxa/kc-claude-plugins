@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words (__main__.TasksTests.test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words) (field='extensions:\n  - "learn" # chosen')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-repair3-scratch/mutations/round3-restore-watcher-parser/kc-dev-flow-2/scripts/test_pr_watch.py", line 1336, in test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words
+    self.assertEqual(any("observer report not committed:" in line for line in lines), enabled, lines)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False != True : []
+
+======================================================================
+FAIL: test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words (__main__.TasksTests.test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words) (field='extensions: [peers] # learn is not selected')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-observer-check-learn-only-when-listed/.context/observer-learn-repair3-scratch/mutations/round3-restore-watcher-parser/kc-dev-flow-2/scripts/test_pr_watch.py", line 1336, in test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words
+    self.assertEqual(any("observer report not committed:" in line for line in lines), enabled, lines)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True != False : ["next: keep some-task out of pr-merge's scan in this pass.", 'observer report not committed: some-task/observer.md at HEAD.', 'next: dispatch kc-dev-flow-2:observer with only the state checkout, some-task and the workflow README.', 'next: save its report unedited as some-task/observer.md.', 'next: if it cannot be dispatched, save the one line `observer not run: <reason>` there instead.', 'next: run `spacedock state commit some-task --workflow-dir <workflow dir>`.', 'next: run the idle hooks again.']
+
+----------------------------------------------------------------------
+Ran 1 test in 1.422s
+
+FAILED (failures=2)

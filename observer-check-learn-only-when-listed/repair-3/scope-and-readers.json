@@ -1,0 +1,46 @@
+{
+  "prior_candidate": "17eccdda05fde54e6dff66f4989787864219ef43",
+  "candidate": "97fe3d6ff9f9afe220b463c71ac428e380fc4dc5",
+  "source_base": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+  "changed_from_source_base": [
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/observer_check.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py",
+    "kc-dev-flow-2/scripts/test_observer_check.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "changed_by_repair": [
+    "kc-dev-flow-2/scripts/laws_check.py",
+    "kc-dev-flow-2/scripts/pr_watch.py",
+    "kc-dev-flow-2/scripts/test_laws_check.py",
+    "kc-dev-flow-2/scripts/test_pr_watch.py"
+  ],
+  "extension_readers": [
+    {
+      "file": "kc-dev-flow-2/scripts/laws_check.py",
+      "result": "readme_extensions wrapper delegates to workflow_extensions.readme_extensions; keeps Cannot diagnostics and dependency guards"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/observer_check.py",
+      "result": "learn_enabled already used workflow_extensions.readme_extensions; unchanged by repair"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/pr_watch.py",
+      "result": "tasks now calls workflow_extensions.readme_extensions instead of tokenizing frontmatter text"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+      "result": "fixture writers only; new CLI regression checks L1 enabled and disabled forms"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+      "result": "fixture writers and behavior assertions only; no competing parser; unchanged by repair"
+    },
+    {
+      "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+      "result": "fixture writers and behavior assertions only; new watcher-selection regression"
+    }
+  ],
+  "generic_frontmatter_note": "pr_watch.front_text still copies the raw extensions field, but that field is no longer consumed to select extensions. Other frontmatter fields are outside this repair."
+}
