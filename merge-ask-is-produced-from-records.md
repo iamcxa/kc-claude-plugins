@@ -106,6 +106,12 @@ Captain: 「合併檢查存紀錄那張做成邊界合約：交付紀錄定義�
 Asked: 「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」
 Supersedes: none
 
+### Amendment 3 — 2026-11-14, chat
+Captain: 「給第二次實作派工：合併檢查存紀錄那張預算改成 2 implementation and 2 validation cycles」 (chat, 2026-11-14)
+Asked: 「要不要給這張第二次實作派工？ 同意即接受：合併檢查存紀錄那張的預算從 1 implementation and 2 validation cycles 改成 2 implementation and 2 validation cycles，我派一個新的實作 worker 從現有成品接著做邊界合約。變差的是：新 worker 要花時間讀懂前面的設計和成品，我估 15 到 20 分鐘，這是估計；而且這張今晚做完的機會更低了。」
+Supersedes: none
+Budget: 2 implementation and 2 validation cycles
+
 ## Not provable now
 
 - **AC-1:** independent generation for the nine event-time deliveries; complete compatible source captures do not currently exist in a common contract. Authenticated historical provider fetches and new real delivery observations were outside the probe grant.
