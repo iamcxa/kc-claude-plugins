@@ -1113,7 +1113,7 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, 'commit', '-qm', 'test: dispatch')
 
     def scratch_root(self, slug, record):
-        root = watch.scratch.BASE / 'r' / slug / record
+        root = watch.scratch.BASE / watch.scratch.repository(self.repo, self.state) / slug / record
         root.mkdir(parents=True, exist_ok=True)
         return root
 
@@ -1140,6 +1140,11 @@ class TasksTests(unittest.TestCase):
 
     def test_merged_scratch_prompt_precedes_merge_record(self):
         self.readme('learn')
+        detached = self.root / 'detached-state'
+        self.state.rename(detached)
+        self.state = detached
+        readme = self.workflow / 'README.md'
+        readme.write_text(readme.read_text().replace('state: .spacedock-state', f'state: {self.state}'))
         self.task('merged', pr='o/r#7', worktree=False)
         self.report('merged')
         self.scratch_dispatch('merged', 'validation-1')
@@ -1148,6 +1153,15 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 0, lines)
         close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
         self.assertLess(close, lines.index('next: let pr-merge record merged.'))
+        observer = next(line.split('`')[1] for line in lines if line.startswith('after pr-merge: run '))
+        self.assertIn(f'--readme {readme.resolve()}', observer)
+        done = subprocess.run(observer.split(), capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        readme.write_text(readme.read_text().replace('extensions: [learn]', 'extensions: []'))
+        code, lines = self.tasks({}, look=lambda *a, **k: snap(state='MERGED'))
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(any('scripts/scratch.py close ' in line for line in lines), lines)
+        self.assertFalse(any('observer_check.py' in line or 'let pr-merge' in line for line in lines), lines)
 
     def test_post_archive_removal_record_preserves_learn_and_observer_results(self):
         self.readme('learn')
@@ -1447,22 +1461,56 @@ class TasksTests(unittest.TestCase):
 
     def test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after(self):
         self.readme("learn")
+        detached = self.root / "detached-state"
+        self.state.rename(detached)
+        self.state = detached
+        readme = self.workflow / "README.md"
+        readme.write_text(readme.read_text().replace("state: .spacedock-state", f"state: {self.state}"))
         self.task("some-task", pr="o/r#7")
         self.report("some-task")
         code, lines = self.tasks({"pr view 7": view("MERGED")})
         self.assertEqual(code, 0, lines)
         self.assertEqual(lines[0], "next: let pr-merge record some-task.")
         self.assertEqual(len(lines), 3, lines)
-        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task`\.$")
+        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task --readme \S+README\.md`\.$")
         self.assertEqual(lines[2], "after pr-merge: do each next: line it prints.")
         command = lines[1].split("`")[1].split()
         done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
         self.assertEqual(done.returncode, 0, done.stdout)
+        (self.state / "_archive").mkdir()
+        self.git(self.state, "mv", "some-task.md", "_archive/some-task.md")
+        self.git(self.state, "mv", "some-task", "_archive/some-task")
+        self.git(self.state, "commit", "-qm", "archive")
+        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout)
+        self.assertIn("kc-dev-flow-2:learn", done.stdout)
+        self.readme("")
+        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout)
+        self.assertNotIn("kc-dev-flow-2:learn", done.stdout)
 
     def test_without_learn_listed_a_merged_pr_prints_no_observer_line(self):
         self.readme("roborev, codex")
         self.task("some-task", pr="o/r#7")
         self.assertEqual(self.tasks({"pr view 7": view("MERGED")}), (0, []))
+
+    def test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words(self):
+        self.readme("")
+        path = self.workflow / "README.md"
+        template = path.read_text()
+        self.task("some-task", pr="o/r#7")
+        fields = (
+            ('extensions:\n  - "learn" # chosen', True),
+            ("extensions: ['learn'] # chosen", True),
+            ("extensions: [peers] # learn is not selected", False),
+            ("extensions:\n  - 'peers' # learn is not selected", False),
+        )
+        for field, enabled in fields:
+            with self.subTest(field=field):
+                path.write_text(template.replace("extensions: []", field))
+                code, lines = self.tasks({"pr view 7": view("MERGED")})
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(any("observer report not committed:" in line for line in lines), enabled, lines)
 
     def test_peers_and_the_journey_extensions_add_no_line_while_a_pr_is_open(self):
         self.task("some-task", pr="o/r#7")
@@ -1601,13 +1649,15 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(list(self.watched()), ["o/r#7"])
         self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green", lines)
 
-    def test_an_empty_pr_whose_worktree_is_gone_says_to_record_it_and_one_with_no_worktree_field_stays_silent(self):
+    def test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent(self):
         self.readme("roborev")
         self.task("gone")
         shutil.rmtree(self.repo / ".worktrees/gone")
         self.task("bare", worktree=False)
         code, lines = self.tasks({})
-        self.assertEqual((code, lines), (0, ["next: record gone's PR with status --set gone pr=<owner/repo>#<N>; its worktree is not on this machine."]))
+        self.assertEqual((code, lines), (0, ["fact: gone has no recorded PR; its worktree is not on this machine."]))
+        self.assertFalse(any(line.startswith("next:") for line in lines))
+        self.assertFalse(self.watch.exists())
 
     def test_a_sentinel_and_a_task_without_a_pr_or_worktree_print_nothing(self):
         self.readme("learn")

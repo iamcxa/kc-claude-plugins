@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.40.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.39.1...kc-dev-flow-2-v0.40.0) (2026-11-13)
+
+
+### Features
+
+* **kc-dev-flow-2:** check the existing chain before new work ([#859](https://github.com/iamcxa/kc-claude-plugins/issues/859)) ([c8d6dd4](https://github.com/iamcxa/kc-claude-plugins/commit/c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694))
+* **kc-dev-flow-2:** report task stage times and recorded interruptions ([#852](https://github.com/iamcxa/kc-claude-plugins/issues/852)) ([8125e6d](https://github.com/iamcxa/kc-claude-plugins/commit/8125e6d516d32abbf79c6772de10cde2c20900a8))
+* **kc-dev-flow-2:** test the merge result before a moved-trunk ask ([#853](https://github.com/iamcxa/kc-claude-plugins/issues/853)) ([e63a284](https://github.com/iamcxa/kc-claude-plugins/commit/e63a284e39cd242364ce386efd04cd7bc21bd817))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** honor learn selection after task archive ([#861](https://github.com/iamcxa/kc-claude-plugins/issues/861)) ([629180e](https://github.com/iamcxa/kc-claude-plugins/commit/629180e576a8b7dafd6d9bf12202f7d66958bd6e))
+* **kc-dev-flow-2:** mark unchecked existing-item effect claims ([#855](https://github.com/iamcxa/kc-claude-plugins/issues/855)) ([cd6cfab](https://github.com/iamcxa/kc-claude-plugins/commit/cd6cfab86a56190effbba2743bc43c0d0dd0977c))
+* **kc-dev-flow-2:** report absent task worktrees as facts ([#858](https://github.com/iamcxa/kc-claude-plugins/issues/858)) ([9bdc9f7](https://github.com/iamcxa/kc-claude-plugins/commit/9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58))
+
 ## [0.39.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.39.0...kc-dev-flow-2-v0.39.1) (2026-11-11)
 
 

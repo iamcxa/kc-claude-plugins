@@ -61,6 +61,9 @@ elif a[:2] == ["pr", "checks"]:
 elif a[0] == "api" and "actions/runs" in " ".join(a):
     runs = os.path.join(d, "runs.json")
     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
+elif a[0] == "api" and "/compare/" in " ".join(a):
+    cmp = os.path.join(d, "compare.json")
+    print(open(cmp).read() if os.path.exists(cmp) else '{{"status": "ahead", "base_commit": {{"sha": "{"b" * 40}"}}}}')
 elif a[0] == "api" and "/contents/" in " ".join(a):
     adr = os.path.join(d, "adr.txt")
     at = os.path.join(d, "adr-" + " ".join(a).split("?ref=")[1].split()[0] + ".txt")
@@ -664,10 +667,183 @@ class SettledChecksTests(unittest.TestCase):
             "api --paginate repos/o/r/pulls/9/files",
             f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
             "pr checks 9 --repo o/r --required --json name,bucket",
+            f"api repos/o/r/compare/main...{HEAD40}",
         ]
         for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
             with self.subTest(label):
                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+
+
+
+class MergeResultTests(unittest.TestCase):
+    TRUNK = "b" * 40
+    COMMAND = "python3 -B suite.py"
+
+    def check(self, status="diverged", result=None, text="", command=COMMAND, **kwargs):
+        def setup(d):
+            stub = Path(d, "stub")
+            stub.mkdir(exist_ok=True)
+            (stub / "compare.json").write_text(json.dumps(dict(status=status, base_commit=dict(sha=self.TRUNK))))
+            if result is not None:
+                folder = Path(d, "task/merge")
+                folder.mkdir(parents=True, exist_ok=True)
+                (folder / "result-1.json").write_text(json.dumps({**dict(head=HEAD40, trunk=self.TRUNK, command=self.COMMAND, tree="a" * 40, exit=0), **result}))
+        return run_check(text=text, setup=setup, readme_body="extensions: [roborev, codex]\n" +
+                         (f"merge-test: {command}\n" if command else ""), **kwargs)
+
+    def test_moved_trunk_without_run_holds(self):
+        done = self.check()
+        self.assertEqual(done.code, 1, done.out)
+        self.assertIn("no merge-result run", done.out)
+        self.assertIn("README `merge-test:` command", done.out)
+        self.assertFalse(done.written)
+
+    def test_matching_passing_run_passes_and_records_point(self):
+        done = self.check(result={})
+        self.assertEqual(done.code, 0, done.out)
+        self.assertIn("point: merge-result:", done.out)
+        self.assertIn("exit 0 on", done.out)
+        self.assertEqual(done.written["ask-1.json"]["merge_result"], "result-1.json")
+
+    def test_another_trunk_head_or_command_cannot_satisfy(self):
+        for key, value in (("trunk", "c" * 40), ("head", S2), ("command", "true")):
+            with self.subTest(key=key):
+                self.assertEqual(self.check(result={key: value}).code, 1)
+        self.assertEqual(self.check(command=None, result={}).code, 1)
+
+    def test_failing_run_holds_and_names_exit(self):
+        done = self.check(result={"exit": 1})
+        self.assertEqual(done.code, 1, done.out)
+        self.assertIn("exited '1'", done.out)
+        self.assertEqual(self.check(result={"exit": 1}, text="Merge result: not run: explanation\n").code, 1)
+
+    def test_not_run_line_passes_and_is_saved(self):
+        done = self.check(text="Merge result: not run: the tests are unavailable.\n", command=None)
+        self.assertEqual(done.code, 0, done.out)
+        self.assertEqual(done.written["ask-1.json"]["merge_result"], "not run")
+        for text in ("acceptance was not rerun on the merged result", "Merge result: not run:",
+                     "```\nMerge result: not run: example\n```\n"):
+            self.assertEqual(self.check(text=text).code, 1)
+
+    def test_ancestor_trunk_adds_no_requirement_or_point(self):
+        for status in ("ahead", "identical"):
+            done = self.check(status=status)
+            self.assertEqual(done.code, 0, done.out)
+            self.assertNotIn("point: merge-result", done.out)
+            self.assertIsNone(done.written["ask-1.json"]["merge_result"])
+        self.assertEqual(self.check(status="behind").code, 1)
+        self.assertEqual(self.check(status="unknown").code, 2)
+
+    def test_merge_point_uses_existing_cap(self):
+        done = self.check(result={}, files=tuple(f"hooks/{n}.py" for n in range(16)))
+        points = [line for line in done.lines if line.startswith("point:") and not line.startswith("point: more:")]
+        self.assertEqual(done.code, 0, done.out)
+        self.assertEqual(len(points), gate.MAX_POINTS)
+        self.assertTrue(points[0].startswith("point: merge-result:"))
+
+
+class MergeRunTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.repo = self.root / "repo"
+        self.repo.mkdir()
+        self.git("init", "-q")
+        (self.repo / "base").write_text("base\n")
+        self.commit()
+        base = self.git("rev-parse", "HEAD")
+        (self.repo / "trunk").write_text("trunk\n")
+        self.commit()
+        self.trunk = self.git("rev-parse", "HEAD")
+        self.git("checkout", "-qb", "candidate", base)
+        (self.repo / "head").write_text("head\n")
+        self.commit()
+        self.head = self.git("rev-parse", "HEAD")
+        self.task = self.root / "task.md"
+        self.task.write_text(TASK)
+        self.scratch = self.root / "scratch"
+        self.scratch.mkdir()
+        readme(self.root)
+        (self.root / "README.md").write_text((self.root / "README.md").read_text().replace(
+            "trunk: main", "merge-test: bash -c 'test -f head && test -f trunk && pwd'\ntrunk: main"))
+
+    def git(self, *args):
+        return subprocess.run(["git", "-C", str(self.repo), "-c", "user.name=fixture", "-c", "user.email=fixture@invalid", *args],
+                              capture_output=True, text=True, check=True).stdout.strip()
+
+    def commit(self):
+        self.git("add", "-A")
+        self.git("commit", "-qm", "fixture")
+
+    def run_merge(self, command=None):
+        argv = ["merge-run", str(self.task), "--pr", "o/r#9", "--head", self.head,
+                "--trunk", self.trunk, "--repo-dir", str(self.repo), "--workflow-dir", str(self.root), "--"]
+        if command is None:
+            command = ["bash", "-c", "test -f head && test -f trunk && pwd"]
+        out = io.StringIO()
+        with mock.patch.object(gate.tempfile, "tempdir", str(self.scratch)), contextlib.redirect_stdout(out):
+            code = gate.main(argv + command)
+        return code, out.getvalue()
+
+    def test_runs_the_merged_tree_and_removes_scratch(self):
+        with mock.patch.object(gate.subprocess, "run", wraps=subprocess.run) as run:
+            code, out = self.run_merge()
+        self.assertEqual(code, 0, out)
+        self.assertFalse(any("fetch" in call.args[0] for call in run.call_args_list))
+        rec = json.loads((self.root / "task/merge/result-1.json").read_text())
+        self.assertEqual(rec["tree"], self.git("merge-tree", "--write-tree", self.trunk, self.head))
+        self.assertEqual(rec["command"], "bash -c 'test -f head && test -f trunk && pwd'")
+        self.assertEqual(rec["exit"], 0)
+        self.assertEqual(list(self.scratch.iterdir()), [])
+        logged = (self.root / "task/merge/result-1.log").read_text().strip()
+        self.assertFalse(Path(logged).exists())
+        self.assertFalse((self.repo / "trunk").exists())
+
+    def test_missing_or_mismatched_command_is_exit_2(self):
+        for command in ([], ["true"]):
+            code, out = self.run_merge(command)
+            self.assertEqual(code, 2, out)
+            self.assertFalse((self.root / "task/merge").exists())
+
+    def test_test_failure_records_exit_and_cleans_scratch(self):
+        readme(self.root, "merge-test: bash -c 'exit 7'\n")
+        code, out = self.run_merge(["bash", "-c", "exit 7"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(json.loads((self.root / "task/merge/result-1.json").read_text())["exit"], 7)
+        self.assertEqual(list(self.scratch.iterdir()), [])
+
+    def test_conflict_holds_with_exit_2_without_a_run_record(self):
+        self.git("checkout", "-q", self.trunk)
+        (self.repo / "base").write_text("trunk change\n")
+        self.commit()
+        self.trunk = self.git("rev-parse", "HEAD")
+        self.git("checkout", "-q", self.head)
+        (self.repo / "base").write_text("head change\n")
+        self.commit()
+        self.head = self.git("rev-parse", "HEAD")
+        code, out = self.run_merge()
+        self.assertEqual(code, 2, out)
+        self.assertIn("merge-tree exited 1", out)
+        self.assertFalse((self.root / "task/merge").exists())
+        self.assertEqual(list(self.scratch.iterdir()), [])
+
+    def test_missing_object_fetches_trunk_and_pull_head(self):
+        remote = self.root / "remote.git"
+        self.git("init", "--bare", "-q", str(remote))
+        self.git("remote", "add", "origin", str(remote))
+        self.git("push", "-q", "origin", f"{self.trunk}:refs/heads/main", f"{self.head}:refs/pull/9/head")
+        empty = self.root / "empty"
+        empty.mkdir()
+        self.repo = empty
+        self.git("init", "-q")
+        self.git("remote", "add", "origin", str(remote))
+        with mock.patch.object(gate.subprocess, "run", wraps=subprocess.run) as run:
+            code, out = self.run_merge()
+        self.assertEqual(code, 0, out)
+        fetches = [call.args[0] for call in run.call_args_list if "fetch" in call.args[0]]
+        self.assertEqual(len(fetches), 1)
+        self.assertEqual(fetches[0][-3:], ["origin", "main", "refs/pull/9/head"])
 
 
 class RequiredChecksTests(unittest.TestCase):
@@ -1324,7 +1500,7 @@ class FoWriteRuleTests(unittest.TestCase):
         pointed = run_check(text="Deferred risk, a thing (kept as is).")
         self.assertIn("class: docs-only (verdict ask)", pointed.lines)
         self.assertEqual(sorted(docs.written["ask-1.json"]), sorted(never.written["ask-1.json"]))
-        self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
+        self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "merge_result", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
         always = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls} (verdict ask)"')
         never_tag = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls}"')
         self.assertNotIn("class: docs-only", run_variant(always).lines)
@@ -2323,6 +2499,16 @@ class DeliveryCheckBeforeQuestionTests(unittest.TestCase):
         self.save(sufficiency=gate.clean(value)[:199])
         self.assert_held()
 
+    def test_not_run_line_must_be_in_the_question_itself(self):
+        self.save(merge_result="not run")
+        self.summary.write_text(self.summary.read_text() + "\nMerge result: not run: no environment available.\n")
+        done = self.run_question()
+        self.assertEqual(done.returncode, 1, done.stdout)
+        self.assertIn("question itself needs Merge result", done.stdout)
+        self.message.write_text(self.message.read_text() + "\nMerge result: not run: no environment available.\n")
+        done = self.run_question()
+        self.assertEqual(done.returncode, 0, done.stdout)
+
     def test_no_merge_question_needs_no_delivery_record(self):
         self.message.write_text("Approve this candidate?")
         done = self.run_question()
@@ -3132,6 +3318,110 @@ class CountDisclosureTests(unittest.TestCase):
         self.assertEqual(result.code, 2, result.out)
         self.assertIn("cannot write count disclosure", result.out)
         self.assertFalse(result.written)
+
+
+class ScopeDisclosureTests(unittest.TestCase):
+    ask = QuestionTests.ask
+    CASES = ("已經開好的舊任務不會被要求補標。", "升級後，還沒過設計關卡的舊設計會被擋下。")
+
+    def test_recorded_false_claim_shapes_reach_question_and_summary_without_hold(self):
+        for claim in self.CASES:
+            for summary in (None, claim):
+                saved = {}
+                code, out = self.ask(claim, summary=summary, saved=saved, cli=True)
+                self.assertEqual(code, 0, out)
+                self.assertIn(claim[:-1] + gate.SCOPE_MARK + "。", saved["text"])
+                if summary:
+                    self.assertIn(gate.SCOPE_MARK, saved["summary"])
+                self.assertIn("marked scope:", out)
+
+    def test_check_marks_ask_and_copies_pr_body_claim_to_the_ask(self):
+        for text, body in ((self.CASES[0], ""), ("", self.CASES[1])):
+            result = run_check(text=text, facts={"body": body})
+            self.assertEqual(result.code, 0, result.out)
+            self.assertIn(gate.SCOPE_MARK, result.text)
+            self.assertIn((text or body)[:-1], result.text)
+            self.assertIn("scope claims: 0 cited, 1 marked", result.out)
+        held = run_check(text=self.CASES[0], facts={"isDraft": True})
+        self.assertEqual(held.code, 1)
+        self.assertIn(gate.SCOPE_MARK, held.text)
+
+    def test_check_repeating_a_pr_body_count_does_not_duplicate_its_disclosures(self):
+        body = "Existing tasks are not affected: 2 tasks."
+        first = run_check(facts={"body": body})
+        second = run_check(text=first.text, facts={"body": body}, clauses=False, rounds="")
+        self.assertEqual((first.code, second.code), (0, 0))
+        self.assertEqual(first.text, second.text)
+        self.assertIn("Unchecked counts: 1\n", second.text)
+        self.assertIn("scope claims: 0 cited, 1 marked", second.out)
+
+    def test_citation_must_resolve_to_a_file_inside_the_task_folder(self):
+        with tempfile.TemporaryDirectory() as d:
+            folder = Path(d, "task")
+            folder.mkdir()
+            (folder / "run.json").write_text("{}")
+            (Path(d) / "outside.json").write_text("{}")
+            (folder / "escape.json").symlink_to(Path(d) / "outside.json")
+            (folder / "directory.json").mkdir()
+            for name, expected in (("run.json", True), ("task/run.json", True),
+                                   (str(folder / "run.json"), True), ("missing.json", False),
+                                   ("../outside.json", False), ("escape.json", False), ("directory.json", False)):
+                with self.subTest(name=name):
+                    rows = gate.scope_claims(folder, "Existing tasks are not affected (" + name + ").")
+                    self.assertEqual(len(rows), 1)
+                    self.assertEqual(rows[0][2], expected)
+
+    def test_cited_marked_controls_and_fences_need_no_new_mark(self):
+        for claim in ("New tasks can proceed.", self.CASES[0][:-1] + "（未驗證）。",
+                      "Existing tasks are not affected (unverified).", "Existing tasks are not affected (run.json)."):
+            saved = {}
+            code, out = self.ask(claim, cards={"run.json": "{}"}, saved=saved)
+            self.assertEqual(code, 0, out)
+            self.assertNotIn(gate.SCOPE_MARK, saved["text"])
+        code, out = self.ask("New tasks can proceed.")
+        self.assertNotIn("scope claims:", out)
+        self.assertEqual(gate.scope_claims(Path("/nonexistent"), "```text\n" + self.CASES[0] + "\n```\n~~~text\n" + self.CASES[1] + "\n~~~\n"), [])
+
+    def test_chinese_enumerations_and_sentence_marks_are_idempotent(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d, "ask.txt")
+            text = "一、" + self.CASES[0] + "二、" + self.CASES[1] + "\n"
+            extra = "Existing tasks are not affected."
+            with contextlib.redirect_stdout(io.StringIO()):
+                first, = gate.scope_disclosure(Path(d), [(path, text)], extra)
+                second, = gate.scope_disclosure(Path(d), [(path, first)], extra)
+            self.assertEqual(first, second)
+            self.assertEqual(path.read_text(), first)
+            self.assertEqual(first.count(gate.SCOPE_MARK), 3)
+
+    def test_chinese_counts_share_the_split_and_check_saved_numbers(self):
+        saved = {}
+        code, out = self.ask("一、15個檢查（run.txt）。二、2張任務；三、3次執行？四、4項記錄。",
+                             cards={"run.txt": "15個"}, saved=saved)
+        self.assertEqual(code, 0, out)
+        self.assertIn("counts: 1 checked, 3 unchecked", out)
+        self.assertIn("Unchecked counts: 3\n", saved["text"])
+
+    def test_scope_write_failure_uses_existing_input_error_exit(self):
+        write = Path.write_text
+        def unwritable(path, text, *args, **kwargs):
+            if path.name == "gate.txt" and gate.SCOPE_MARK in text:
+                raise PermissionError("read-only ask")
+            return write(path, text, *args, **kwargs)
+        with mock.patch.object(Path, "write_text", unwritable):
+            result = run_check(text=self.CASES[0])
+        self.assertEqual(result.code, 2)
+        self.assertFalse(result.written)
+
+    def test_english_only_and_unchecked_citation_mutations_lose_the_warning(self):
+        for old, new, claim in (("EXISTING.search(sentence)", "re.search(r'\\bexisting\\b', sentence, re.I)", self.CASES[0]),
+                                ("and path.is_file():", "and True:", "Existing tasks are not affected (missing.json).")):
+            mutant = variant_of(old, new)
+            normal, changed = {}, {}
+            self.assertEqual(self.ask(claim, saved=normal)[0], 0)
+            self.assertEqual(self.ask(claim, saved=changed, module=mutant)[0], 0)
+            self.assertIn(gate.SCOPE_MARK, normal["text"])
+            self.assertNotIn(gate.SCOPE_MARK, changed["text"])
 
 
 if __name__ == "__main__":

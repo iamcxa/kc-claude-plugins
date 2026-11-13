@@ -35,6 +35,7 @@ other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
 the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
 README cannot be read, or an input is unusable. Every problem is printed.
+When trunk is not an ancestor of the head, check requires a passing merge-result run matching README `merge-test:`, or a `Merge result: not run: <reason>` line.
 A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
 (no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
 adds one problem line and its `next:` lines, exit 2 holds with its message.
@@ -62,6 +63,9 @@ They list count sentences without a task-folder file holding their numbers, then
 Unchecked counts: N into the summary (legacy question: question file; check: ask text).
 Check scans the PR body too. The disclosure is automatic and never holds a count;
 an unreadable or unwritable input still exits 2.
+Both commands mark uncited existing-item effect claims with （未對過紀錄） in
+the submitted files; uncited PR-body sentences are copied into the ask with the
+mark. Citations must resolve to existing task-folder files. This adds no hold.
 
 Usage: delivery_gate.py steps <record> --text-file <message>
 Reads Captain step observations without executing commands. Missing observations, unmatched steps,
@@ -74,20 +78,26 @@ Report-only Markdown files contribute fenced commands; missing-path checks cover
 Prose asks, inline code, fences inside a > quote, fences starting on a list-marker line,
 and 4-space indented code blocks stay undetected. An unclosed fence in a named Markdown
 file becomes one large required step, through the end of the file.
+
+Usage: delivery_gate.py merge-run <task> --pr owner/repo#N [--workflow-dir <dir>] -- <command>
+Runs the README `merge-test:` command on an archived merge tree and saves result-N.json and its log beside the task. Missing commit objects are fetched; conflicts exit 2. The temporary tree is removed after the run.
 """
 import argparse
 import datetime
 import json
 import re
+import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 from role_triggers import outside_fences
-from count_tokens import count_sentences, numbers, prose_lines
+from count_tokens import count_sentences, numbers, prose_lines, sentences
 import decision_ledger
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
@@ -125,6 +135,7 @@ ASK = "next: merge this head if the approved question named the merge and he did
 # see docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md
 ASK_UNQUOTED = "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering 「…」`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time."
 ASK_FORM = "next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`."
+MERGE_NOT_RUN = re.compile(r"^Merge result:[ \t]+not run:[ \t]*\S.*$", re.M)
 CLAIM_SOURCE = "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
 
 
@@ -319,7 +330,7 @@ def readme_front(path):
             break
         if m := re.match(r"^([\w-]+):[ \t]*(.*?)[ \t]*$", line):
             key, value = m.groups()
-            scalars[key] = value.strip("'\"")
+            scalars[key] = value[1:-1] if len(value) > 1 and value[0] == value[-1] and value[0] in "'\"" else value
             if value.startswith("["):
                 lists[key] = [v.strip().strip("'\"") for v in value.strip("[]").split(",") if v.strip()]
         elif key and (m := re.match(r"^[ \t]+-[ \t]+(.*?)[ \t]*$", line)):
@@ -424,8 +435,8 @@ def commit_date(path):
     return datetime.datetime.fromtimestamp(path.stat().st_mtime, datetime.timezone.utc).strftime("%Y-%m-%d")
 
 
-def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, root):
-    found = []
+def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, root, merge_result=None):
+    found = [("merge-result", merge_result[1])] if merge_result else []
     reports = "\n".join(VALIDATION_SECTION.findall(task_text))
     prose = reports + "\n" + gate_text
     found += [("deferred", l) for l in prose.split("\n") if DEFERRED.search(l)]
@@ -444,7 +455,7 @@ def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, r
     if root and (root / "release-please-config.json").exists() and not CONVENTIONAL.match(facts["title"]):
         found.append(("title", facts["title"]))
     found += [("second-reviewer", r) for r in dict.fromkeys(m.lower() for m in SECOND_REVIEWER.findall(gate_text))]
-    lines = [f"point: {kind}: {tok(value)}" for kind, value in found]
+    lines = [f"point: {kind}: {clean(value)}" if kind == "merge-result" else f"point: {kind}: {tok(value)}" for kind, value in found]
     return lines[:MAX_POINTS] + ([f"point: more: {len(lines) - MAX_POINTS} not shown"] if len(lines) > MAX_POINTS else [])
 
 
@@ -531,6 +542,98 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
     return problems, nexts
 
 
+def trunk_position(repo, trunk, head):
+    data = json.loads(gh("api", f"repos/{repo}/compare/{trunk}...{head}"))
+    if data["status"] not in ("ahead", "identical", "diverged", "behind") or not re.fullmatch(r"[0-9a-f]{40}", str(data["base_commit"]["sha"])):
+        raise ValueError("unusable trunk comparison")
+    return data["status"], str(data["base_commit"]["sha"]).lower()
+
+
+def merge_results(task):
+    found = []
+    for path in (task_folder(task) / "merge").glob("result-*.json"):
+        if (m := re.fullmatch(r"result-(\d+)\.json", path.name)):
+            found.append((int(m.group(1)), path))
+    return [(path, json.loads(path.read_text())) for _, path in sorted(found)]
+
+
+def merge_result_problem(task, gate_text, head, status, trunk_sha, command):
+    if status in ("ahead", "identical"):
+        return None, None
+    # see docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md
+    matching = [(p, r) for p, r in merge_results(task) if r.get("head") == head and r.get("trunk") == trunk_sha
+                and command and r.get("command") == command]
+    if matching:
+        path, rec = matching[-1]
+        if rec.get("exit") == 0:
+            return None, (path.name, f"{tok(command, words=12, chars=120)} exit 0 on {tok(rec.get('tree', '')[:12], words=1, chars=14)} ({path.name})")
+        return (f"the merge-result run {path.name} on trunk {trunk_sha[:12]} exited {tok(rec.get('exit'), words=1, chars=12)}",
+                None)
+    if MERGE_NOT_RUN.search("\n".join(outside_fences(gate_text))):
+        return None, ("not run", "not run (the ask says so)")
+    return (f"the trunk moved since this head ({status}, trunk {trunk_sha[:12]}) and no merge-result run is recorded at this head and trunk",
+            None)
+
+
+def merge_run(args):
+    task = Path(args.task)
+    if task.is_dir():
+        task = task / "index.md"
+    pr = PR.match(args.pr)
+    if not pr or not args.run:
+        emit("merge-run needs --pr owner/repo#N and a command after --")
+        return 2
+    repo, number = pr.groups()
+    try:
+        workflow_dir, scalars, _ = find_readme(task, args.workflow_dir)
+        command = scalars.get("merge-test", "")
+        if not command or shlex.split(command) != args.run:
+            raise ValueError("command must match workflow README merge-test:")
+        trunk = scalars.get("trunk") or "main"
+        head = (args.head or run_gh(repo, number)).lower()
+        trunk_sha = (args.trunk or trunk_position(repo, trunk, head)[1]).lower()
+        if not all(re.fullmatch(r"[0-9a-f]{40}", ref) for ref in (head, trunk_sha)):
+            raise ValueError("head and trunk must be full commit ids")
+        git_dir = args.repo_dir or str(repo_root(workflow_dir))
+        if any(subprocess.run(["git", "-C", git_dir, "cat-file", "-e", ref + "^{commit}"], capture_output=True).returncode
+               for ref in (trunk_sha, head)):
+            subprocess.run(["git", "-C", git_dir, "fetch", "-q", "origin", trunk, f"refs/pull/{number}/head"],
+                           capture_output=True, check=True, timeout=300)
+        merged = subprocess.run(["git", "-C", git_dir, "merge-tree", "--write-tree", trunk_sha, head], capture_output=True, text=True, timeout=300)
+    except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+        emit(f"cannot prepare the merge result: {error}")
+        return 2
+    if merged.returncode:
+        emit(f"cannot prepare the merge result: merge-tree exited {merged.returncode}", merged.stdout, merged.stderr)
+        return 2
+    tree = merged.stdout.split()[0] if merged.stdout.split() else ""
+    folder = task_folder(task) / "merge"
+    folder.mkdir(parents=True, exist_ok=True)
+    taken = [int(m.group(1)) for p in folder.glob("result-*.json") if (m := re.fullmatch(r"result-(\d+)\.json", p.name))]
+    n = max(taken, default=0) + 1
+    log = folder / f"result-{n}.log"
+    rec = {"pr": args.pr, "head": head, "trunk": trunk_sha, "tree": tree, "command": command}
+    start = utcnow()
+    scratch = Path(tempfile.mkdtemp(prefix="merge-result-"))
+    try:
+        archive = subprocess.run(["git", "-C", git_dir, "archive", tree], capture_output=True, check=True, timeout=300)
+        subprocess.run(["tar", "-x", "-C", str(scratch)], input=archive.stdout, check=True, capture_output=True)
+        with log.open("w") as out:
+            done = subprocess.run(args.run, cwd=scratch, stdout=out, stderr=subprocess.STDOUT)
+        rec.update(exit=done.returncode)
+    except (OSError, subprocess.SubprocessError) as error:
+        emit(f"cannot run the merge-result command: {error}")
+        return 2
+    finally:
+        shutil.rmtree(scratch)
+    rec.update(seconds=round((utcnow() - start).total_seconds(), 1), time=utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), log=log.name)
+    path = folder / f"result-{n}.json"
+    path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
+    emit(f"merge result {tree[:12]} of {head[:12]} onto trunk {trunk_sha[:12]}: {rec['command']} exit {rec['exit']} in {rec['seconds']}s",
+         f"record: {task_folder(task).name}/merge/{path.name}")
+    return 0 if rec["exit"] == 0 else 1
+
+
 def check(args):
     emit(CLAIM_SOURCE)
     task, text_file = Path(args.task), Path(args.text_file)
@@ -577,6 +680,7 @@ def check(args):
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
     facts = files = runs = required = None
+    merge_result = None
     try:
         facts, files = pr_facts(repo, number), pr_files(repo, number)
         runs = pr_runs(repo, str(facts["headRefOid"]).lower())
@@ -584,7 +688,11 @@ def check(args):
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
     try:
-        gate_text = count_disclosure(task_folder(task), gate_text + "\n" + ((facts or {}).get("body") or ""), text_file, gate_text)
+        body = (facts or {}).get("body") or ""
+        copies = scope_pr_copies(task_folder(task), body)
+        count_text = "\n".join(line for line in gate_text.splitlines() if line not in copies)
+        gate_text = count_disclosure(task_folder(task), count_text + "\n" + body, text_file, gate_text)
+        gate_text, = scope_disclosure(task_folder(task), [(text_file, gate_text)], body)
     except (OSError, UnicodeDecodeError) as error:
         emit(f"cannot write count disclosure: {error}")
         return 2
@@ -611,6 +719,17 @@ def check(args):
         if scalars.get("trunk") and facts.get("baseRefName") != scalars["trunk"]:
             problems.append(f"the PR base {tok(facts.get('baseRefName'), words=1, chars=60)} is not the trunk {tok(scalars['trunk'], words=1, chars=60)}")
             nexts.append("next: hold the ask; the PR does not target the trunk, tell the Captain.")
+        if scalars.get("trunk") and head and full.startswith(head):
+            try:
+                status, trunk_sha = trunk_position(repo, scalars["trunk"], full)
+                why, merge_result = merge_result_problem(task, gate_text, full, status, trunk_sha, scalars.get("merge-test"))
+            except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+                holds.append(f"cannot compare the trunk with {full[:12]}: {error}")
+            else:
+                if why:
+                    problems.append(why)
+                    nexts.append(f"next: hold the ask; run `delivery_gate.py merge-run <task> --pr {args.pr} -- <test command>` on the merge result, "
+                                 "using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.")
         if len(files) != facts.get("changedFiles"):
             problems.append(f"the changed-file list has {len(files)} files but the PR reports {tok(facts.get('changedFiles'), words=1, chars=12)}")
             nexts.append("next: hold the ask; the changed-file list is incomplete, tell the Captain.")
@@ -698,7 +817,7 @@ def check(args):
     front = re.match(r"---\n(.*?)\n---", task_text, re.S)
     profile_prod = bool(front and (m := FM_PROFILE.search(front.group(1))) and m.group(1) == "prod")
     cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
-    points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
+    points = points_for(task_text, gate_text, record, never, facts, profile_prod, root, merge_result)
     verdict = "merge" if not points and cls != "never" else "ask"
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
@@ -722,7 +841,8 @@ def check(args):
     ask = ASK if pending or captain and decision_ledger.quotes_bound_question(
         max(captain, key=lambda r: r["at"] or "")) else ASK_UNQUOTED
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": ask, **({"siblings": sibling_notes} if sibling_notes else {}),
+                                "points": points, "next": ask, "merge_result": merge_result[0] if merge_result else None,
+                                **({"siblings": sibling_notes} if sibling_notes else {}),
                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
                                 "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
     emit(f"record: {task_folder(task).name}/merge/{saved.name}", ask)
@@ -812,6 +932,69 @@ def count_problems(folder, text):
         else:
             unchecked.append(sentence)
     return checked, unchecked
+
+
+EXISTING = re.compile(r"舊任務|舊設計|舊的|已經開好|已開好|已開的|既有|已經過了|過了設計關卡|已核准的|進行中的|"
+                      r"\balready[- ]filed\b|\bexisting\b|\bfiled before\b|\bpast (?:ideation|the gate)\b", re.I)
+EFFECT = re.compile(r"不會|不再|只有|只會|只在|擋|要求|補寫|補標|不受|影響|\brefus|\bblock|\bnot\b|\bonly\b", re.I)
+SCOPE_MARK = "（未對過紀錄）"
+MARKED = re.compile(r"未驗證|未對過紀錄|\bunverified\b", re.I)
+SAVED_FILE = re.compile(r"(?<![\w/.-])((?:/?[\w.-]+/)*[\w.-]+\.(?:json|log|md|txt|jsonl|csv|out))\b")
+
+
+def scope_claims(folder, text):
+    rows = []
+    for index, line in prose_lines(text):
+        for sentence in sentences(line):
+            if not (EXISTING.search(sentence) and EFFECT.search(sentence)):
+                continue
+            cited = False
+            for value in SAVED_FILE.findall(sentence):
+                path = named_file(folder, value).resolve()
+                if path.is_relative_to(folder.resolve()) and path.is_file():
+                    cited = True
+                    break
+            rows.append((index, sentence, cited, bool(MARKED.search(sentence))))
+    return rows
+
+
+def mark_scope(sentence):
+    end = re.search(r"[。；;？?.]+$", sentence)
+    point = end.start() if end else len(sentence)
+    return sentence[:point] + SCOPE_MARK + sentence[point:]
+
+
+def scope_pr_copies(folder, text):
+    return {"PR body: " + (sentence if marked else mark_scope(sentence))
+            for _, sentence, cited, marked in scope_claims(folder, text) if not cited}
+
+
+def scope_disclosure(folder, sources, extra=""):
+    # see docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md
+    results, claims = [], []
+    copies = scope_pr_copies(folder, extra)
+    for destination, text in sources:
+        rows = scope_claims(folder, text)
+        lines = text.splitlines(keepends=True)
+        claims.extend(row for row in rows if lines[row[0]].rstrip("\r\n") not in copies)
+        for index, sentence, cited, marked in rows:
+            if not cited and not marked:
+                lines[index] = lines[index].replace(sentence, mark_scope(sentence), 1)
+        results.append("".join(lines))
+    external = scope_claims(folder, extra)
+    claims.extend(external)
+    for _, sentence, cited, marked in external:
+        if not cited:
+            disclosed = sentence if marked else mark_scope(sentence)
+            if disclosed not in results[0]:
+                results[0] = results[0].rstrip("\n") + "\nPR body: " + disclosed + "\n"
+    if claims:
+        emit(f"scope claims: {sum(row[2] for row in claims)} cited, {sum(not row[2] for row in claims)} marked",
+             *("marked scope: " + " ".join(sentence.split()[:12]) for _, sentence, cited, _ in claims if not cited))
+    for (destination, text), result in zip(sources, results):
+        if result != text:
+            destination.write_text(result)
+    return results
 
 
 def count_disclosure(folder, text, destination, declared):
@@ -974,10 +1157,12 @@ def question(args):
         reviewer_text = None
         if args.summary_file is not None:
             summary = Path(args.summary_file).read_text()
+            gate_text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text), (Path(args.summary_file), summary)])
             summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
             reviewer_text = "\n".join(outside_fences(summary))
             gate_text += "\n" + summary
         else:
+            gate_text, = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text)])
             gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
         found, wanted = reviewer_problems(task, task_text,
                                          gate_text if reviewer_text is None else reviewer_text, second, extensions)
@@ -1001,6 +1186,9 @@ def question(args):
         if delivery_record is None:
             problems.append("the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses")
             nexts.append("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.")
+        elif json.loads(delivery_record.read_text()).get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
+            problems.append("the question itself needs Merge result: not run: <reason>")
+            nexts.append("next: hold preparation; put the merge-result not-run line in the question the Captain reads.")
     if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
         problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
         nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
@@ -1030,11 +1218,21 @@ def main(argv=None):
     ask.add_argument("--text-file", required=True)
     ask.add_argument("--workflow-dir")
     ask.add_argument("--summary-file")
+    run_merge = commands.add_parser("merge-run")
+    run_merge.add_argument("task")
+    run_merge.add_argument("--pr", required=True)
+    run_merge.add_argument("--head")
+    run_merge.add_argument("--trunk")
+    run_merge.add_argument("--repo-dir")
+    run_merge.add_argument("--workflow-dir")
     run_steps = commands.add_parser("steps")
     run_steps.add_argument("record")
     run_steps.add_argument("--text-file", required=True)
-    args = parser.parse_args(argv)
-    return {"question": question, "check": check, "steps": steps}[args.command](args)
+    argv = list(sys.argv[1:] if argv is None else argv)
+    cut = argv.index("--") if "--" in argv else len(argv)
+    args = parser.parse_args(argv[:cut])
+    args.run = argv[cut + 1:]
+    return {"question": question, "check": check, "steps": steps, "merge-run": merge_run}[args.command](args)
 
 
 if __name__ == "__main__":

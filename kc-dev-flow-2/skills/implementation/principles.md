@@ -50,6 +50,18 @@ worker writes the record into the candidate and names the ADR numbers it added o
 changed in its report.
 
 
+## Before new work
+
+Before designing or coding a task, check what already exists in its own
+repository, the upstream packages/frameworks it depends on, relevant sibling
+projects and third-party tools it will use. Read a tool's own docs or source;
+a sibling's usage is not its contract. Include in-force ADRs governing the files
+or behavior, naming them or writing `none`. In the existing design or report,
+state what you checked, what you found, any inaccessible sources, and whether
+the proposed work uses, extends, changes or replaces it. Reuse a completed check;
+recheck changed scope or facts. POC does this before coding, without ideation
+or another gate.
+
 ## Existing-code capability check
 
 Apply only when existing-code work adds, replaces or removes a capability or

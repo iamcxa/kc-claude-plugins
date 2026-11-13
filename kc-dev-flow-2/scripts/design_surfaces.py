@@ -1231,6 +1231,10 @@ def main(argv=None):
     check.add_argument("task")
     args = parser.parse_args(argv)
     path = Path(args.task)
+    if not path.is_file() and path.name and (path.is_dir() or not path.suffix):
+        path = path.parent / (path.name + ".md")
+    if not path.is_file():
+        parser.error(f"task file not found: {path}; pass a task file or its suffixless name")
     notes = []
     errors = check_task(path, seed=args.seed, notes=notes)
     verdict, why = ("clean", "") if args.seed else scope_hold(path)

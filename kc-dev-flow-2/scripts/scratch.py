@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime, timezone
 import gzip
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
@@ -22,12 +23,24 @@ def git(repo, *args):
                           text=True, check=True).stdout.strip()
 
 
-def repository(repo):
+def identity(repo, state):
     url = git(repo, 'remote', 'get-url', 'origin').rstrip('/')
     name = re.split(r'[/\\:]', url)[-1].removesuffix('.git')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', name):
         raise ValueError('origin has no usable repository name')
-    return name
+    common = Path(git(repo, 'rev-parse', '--git-common-dir'))
+    common = (common if common.is_absolute() else Path(repo) / common).resolve()
+    digest = hashlib.sha256(json.dumps([url, str(common), str(state.resolve())]).encode()).hexdigest()
+    return name, digest
+
+
+def repository(repo, state):
+    name, digest = identity(repo, state)
+    return name + '-' + digest[:16]
+
+
+def state_of(folder):
+    return folder.parent.parent if folder.parent.name == '_archive' else folder.parent
 
 
 def dispatch_name(record):
@@ -36,10 +49,38 @@ def dispatch_name(record):
     return re.sub(r'-message-[1-9][0-9]*$', '', record)
 
 
-def root_for(repo, slug, record):
+def root_for(repo, folder, record):
+    folder = Path(folder)
+    slug = folder.name
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', slug):
         raise ValueError('invalid task folder name')
-    return BASE / repository(repo) / slug / dispatch_name(record)
+    return BASE / repository(repo, state_of(folder)) / slug / dispatch_name(record)
+
+
+def owner_for(repo, folder, record):
+    return dict(repository=identity(repo, state_of(folder))[1], task=folder.name, record=dispatch_name(record))
+
+
+def check_owner(root, owner):
+    marker = root / '.owner.json'
+    safe_path(root)
+    safe_path(marker)
+    if not root.is_dir() or not marker.is_file() or json.loads(marker.read_text()) != owner:
+        raise ValueError(f'scratch ownership missing or differs: {root}')
+
+
+def claim_root(repo, folder, record):
+    root = root_for(repo, folder, record)
+    safe_path(root)
+    owner = owner_for(repo, folder, record)
+    try:
+        root.mkdir(parents=True)
+    except FileExistsError:
+        check_owner(root, owner)
+    else:
+        with (root / '.owner.json').open('x') as output:
+            json.dump(owner, output, sort_keys=True)
+    return root
 
 
 def safe_path(path):
@@ -48,8 +89,10 @@ def safe_path(path):
 
 
 def notes_for(repo, folder, record, notes, package):
-    root = root_for(repo, folder.name, record)
+    root = root_for(repo, folder, record)
     safe_path(root)
+    if root.exists():
+        check_owner(root, owner_for(repo, folder, record))
     for raw in re.findall(r'(?<![\w/])/(?:private/)?tmp/[^\s`\'"<>()\[\]{};,]+', notes):
         path = Path(os.path.abspath(raw.rstrip('.')))
         if str(path).startswith('/tmp/'):
@@ -59,10 +102,11 @@ def notes_for(repo, folder, record, notes, package):
     command = shlex.join(['python3', str(package / 'scripts/scratch.py'), 'close', str(folder), record])
     # see docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md
     return (notes + '\nScratch: ' + str(root).replace(str(BASE.parent), '/tmp', 1) + '\n'
-            "Put every file or checkout you create outside the task worktree and the state checkout under that folder. "
-            f"Copy what your report cites into evidence/{record}/ in the task folder, and nothing that holds a secret or "
-            "a person's data: for that, write `Not archived (private): <what>; reproduce: <command>`. "
-            f"Before your report, run `{command}` and paste the lines it prints.\n")
+            "Put files and checkouts outside the task worktree or state checkout under that folder. "
+            f"Copy cited evidence into evidence/{record}/ in the task folder. "
+            "Never archive private repository evidence, secrets or personal data; instead write "
+            "`Not archived (private): <what>; reproduce: <command>`. "
+            f"Before reporting, run `{command}` and paste its output.\n")
 
 
 def evidence(folder, record):
@@ -77,7 +121,7 @@ def evidence(folder, record):
     manifest = target / 'SHA256SUMS'
     safe_path(manifest)
     previous = dict(line.split('  ', 1)[::-1] for line in manifest.read_text().splitlines()) if manifest.exists() else {}
-    sums = []
+    sums, compress = [], []
     for path in (p for p in paths if p.is_file()):
         name = path.relative_to(target).as_posix()
         compressed = name.endswith('.gz') and name[:-3] in previous and not path.with_suffix('').exists()
@@ -91,10 +135,14 @@ def evidence(folder, record):
             destination = path.with_name(path.name + '.gz')
             if destination.exists():
                 raise ValueError(f'evidence compression would overwrite {destination}')
-            destination.write_bytes(gzip.compress(data, mtime=0))
-            path.unlink()
+            compress.append(path)
     target.mkdir(parents=True, exist_ok=True)
     manifest.write_text(''.join(sums))
+    for path in compress:
+        destination = path.with_name(path.name + '.gz')
+        with destination.open('xb') as output:
+            output.write(gzip.compress(path.read_bytes(), mtime=0))
+        path.unlink()
     size = sum(p.stat().st_size for p in target.rglob('*') if p.is_file())
     if size > 1024 * 1024:
         raise ValueError('evidence exceeds 1 MiB after compression; trim or record a reproduce command')
@@ -109,8 +157,10 @@ def close(folder, record):
     safe_path(source)
     if not source.is_file():
         raise ValueError(f'dispatch record missing: {source}')
-    root = root_for(folder, folder.name, name)
+    root = root_for(folder, folder, name)
     safe_path(root)
+    if root.exists():
+        check_owner(root, owner_for(folder, folder, name))
     stated = re.findall(r'^Scratch: (.+)$', source.read_text(), re.M)
     if stated and (len(stated) != 1 or Path(stated[0]).resolve() != root):
         raise ValueError('record scratch root differs from the derived path')
