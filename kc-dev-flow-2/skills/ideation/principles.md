@@ -35,8 +35,7 @@ artifact each recorded surface owes, or without a usable `## Acceptance criteria
 section: the first line that equals that heading in any case once surrounding
 whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
 `spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
-Ideation writes no repository file, branch or commit; the design, the criteria and
-any ADR draft live in the task file. A design that lands an ADR names the ruling and
+A design that lands an ADR names the ruling and
 the file's short title, with no ADR number: FO reserves the number when it dispatches
 implementation. Reconcile material research and feedback
 into the same definition before handoff. Correct contradictions in depicted or
