@@ -63,17 +63,11 @@ For seed-field failures or `design needs '### Worth questions'` on historical co
 Call it a historical violation only if the event-time README required the same form;
 without that README, report `can't tell`.
 
-For each validation briefing whose question names `--match-head-commit <sha>`, find a `context` Reference
-whose `uri` ends `/merge/ask-<N>.json`. Read its `git-root://state/<commit>/<path>` with
-`git -C STATE show <commit>:<path>`: report "FO runs `python3 <package>/scripts/delivery_gate.py check` before the merge ask"
-as `ok` when its `shasum -a 256` equals `rev` (after `sha256:`), `head` starts with `<sha>`, and `sufficiency` and
-`necessity` equal the first 200 cleaned characters of the briefing question-plus-summary clauses (as `delivery_gate.clean` and `clause` read them).
-Quote the Reference id, `time` and `head`; a failed comparison is `violation`. With no Reference, report `violation`
-when RULES at the briefing commit say `gate prepare` takes `--reference <check record>`.
-Otherwise keep the older time comparison: read the highest-numbered ask file at that head whose `time` is not after
-the commit that added the briefing; report `ok`, quoting `time` and `head`. When all files are later, report `can't tell`,
-quoting the earliest `time` and briefing commit time; with no file, report `can't tell`. Report "FO confirms both goal sufficiency and minimal necessity"
-from the same file: `ok` quoting `sufficiency` and `necessity`; `can't tell` when it holds neither key, which predates that check.
+For validation briefings naming a merge head, apply the
+[delivery record contract](../../references/delivery-record.md)'s reader rules,
+including its legacy branch. Read each `git-root://state/<commit>/<path>` with
+`git -C STATE show <commit>:<path>`. Judge event-time obligations against RULES;
+missing state is not proof of chat or shell activity.
 
 Run `python3 <package>/scripts/merge_audit.py STATE TASK --from FROM --rev TO`
 without a pipe. Save its own exit status immediately, before any display command,

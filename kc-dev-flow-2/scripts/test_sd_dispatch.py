@@ -270,10 +270,9 @@ FIXES = {
     "extensions-core": dict(
         need=("This README's frontmatter `extensions:` lists the ones this repository uses",
               "an unlisted extension is not probed and adds nothing",
-              "never counts as a clean result",
-              "A merge ask names each listed reviewer that was not read"),
+              "never counts as a clean result"),
         old=(),
-        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?the Captain decides\. ", ""),)),
+        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?counts as a clean result\. ", ""),)),
     "codex-round": dict(
         file="extensions/codex/EXTENSION.md",
         need=("FO reads each round with `python3 <package>/extensions/codex/codex_review.py <owner/repo> <pr>`",
@@ -301,10 +300,9 @@ FIXES = {
         old=(),
         swaps=((r" Before each worker dispatch FO runs `python3 <package>/scripts/package_version\.py <this README>`;.*?the session runs the newer one\.", ""),)),
     "second-reviewer": dict(
-        need=("frontmatter `second-reviewer:` names the one that joins only when a trigger holds",
-              "an untriggered second reviewer is not named as unread"),
+        need=("frontmatter `second-reviewer:` names the one that joins only when a trigger holds",),
         old=(),
-        swaps=((r" Where two remote reviewers are listed, frontmatter `second-reviewer:`.*?is not named as unread\.", ""),)),
+        swaps=((r" Where two remote reviewers are listed, frontmatter `second-reviewer:`.*?or the Captain asks\.", ""),)),
     "precedent": dict(
         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
               "an ADR on one of them is never a `Precedent:` line",

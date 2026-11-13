@@ -237,8 +237,7 @@ repair is dispatched under the lane in Stages.
   and limits, and the user's pending delivery decision. For a `ui` task FO runs
   `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
   output. Before the gate, FO runs the stage's minimal acceptance script under
-  Captain steps; the delivery record names that record, and
-  returns an output that differs from the script through feedback.
+  Captain steps and returns an output that differs from the script through feedback.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
   approval replace neither condition; approval is not merge. When a POC report
@@ -559,11 +558,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-For public PRs, FO writes the question and unobservable judgments, then runs
-`python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question> --record-facts`.
-Nonzero holds delivery. Run `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question> --facts-record <check record>`;
-bind that record's JSON unchanged as the gate summary and `--reference`. FO writes no factual summary.
-Private PRs use legacy text commands.
+For delivery preparation and reviewer disclosures, FO follows
+`<package>/references/delivery-record.md`, the shared record contract.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
@@ -580,13 +576,11 @@ frontmatter `extensions:` lists the ones this repository uses; an unlisted exten
 not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
 worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
 FO step FO reads the result as the file says. A listed extension that cannot run, or that FO does not request because a ruling says not to, is
-reported as `<name> not run: <reason>` in the stage report or gate summary, and never
-counts as a clean result. A merge ask names each listed reviewer that was not read, and
-the Captain decides. Where two remote reviewers are listed, frontmatter `second-reviewer:`
+reported as `<name> not run: <reason>` in the stage report, and never
+counts as a clean result. Where two remote reviewers are listed, frontmatter `second-reviewer:`
 names the one that joins only when a trigger holds: the task's `Surfaces:` include `db`,
 its profile is `prod`, a dispatch said its design is hard to reverse, the change touches authority,
-approval, merge or review rules, or the Captain asks. FO records an unobservable trigger judgment in the question; the delivery record carries the reviewer outcome, and an
-untriggered second reviewer is not named as unread.
+approval, merge or review rules, or the Captain asks. Delivery disclosures follow the record contract.
 
 ## Workflow State
 

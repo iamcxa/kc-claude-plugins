@@ -4,6 +4,7 @@ import io
 import json
 import os
 import re
+import shlex
 from pathlib import Path
 import stat
 import subprocess
@@ -20,6 +21,41 @@ spec.loader.exec_module(gate)
 
 HEAD40 = "40c714a6" + "0" * 32
 S1, S2 = HEAD40, "7679ab7a" + "1" * 32
+CONTRACT = Path(__file__).resolve().parents[1] / "references/delivery-record.md"
+
+
+def assert_record_contract(case, value, schema=None):
+    schema = schema if schema is not None else json.loads(re.search(r"```json\n(.*?)\n```", CONTRACT.read_text(), re.S)[1])
+    case.assertFalse(schema.keys() - {"$schema", "type", "additionalProperties", "required", "properties", "items",
+                                     "const", "enum", "pattern", "minimum", "description"})
+    types = {"object": dict, "array": list, "string": str, "integer": int, "boolean": bool, "null": type(None)}
+    if "type" in schema:
+        allowed = schema["type"] if isinstance(schema["type"], list) else [schema["type"]]
+        case.assertIn(type(value), [types[name] for name in allowed])
+    if "const" in schema:
+        case.assertEqual((type(value), value), (type(schema["const"]), schema["const"]))
+    if "enum" in schema:
+        case.assertIn((type(value), value), [(type(v), v) for v in schema["enum"]])
+    if isinstance(value, dict):
+        case.assertFalse(set(schema.get("required", [])) - value.keys())
+        if schema.get("additionalProperties") is False:
+            case.assertFalse(value.keys() - schema["properties"].keys())
+        for key, item in value.items():
+            assert_record_contract(case, item, schema["properties"][key])
+    if isinstance(value, list):
+        for item in value:
+            assert_record_contract(case, item, schema["items"])
+    if isinstance(value, str) and "pattern" in schema:
+        case.assertRegex(value, schema["pattern"])
+    if type(value) is int and "minimum" in schema:
+        case.assertGreaterEqual(value, schema["minimum"])
+
+
+def delivery_commands(source):
+    root = CONTRACT.parents[1]
+    for path in set(re.findall(r"<package>/([\w/.-]+\.md)", source)):
+        source += "\n" + (root / path).read_text()
+    return re.findall(r"`python3 <package>/scripts/delivery_gate\.py ([^`]+)`", source)
 
 
 def record(*heads, body="## Checklist\n\n- one\n"):
@@ -3428,6 +3464,27 @@ class ScopeDisclosureTests(unittest.TestCase):
 
 
 class ObservedFactsTests(unittest.TestCase):
+    def test_documented_delivery_commands_use_the_tools_argument_parser(self):
+        root = CONTRACT.parents[1]
+        for path in (CONTRACT, root / "references/sd/workflow.md", root / "skills/observer/SKILL.md",
+                     root / "extensions/copilot/EXTENSION.md"):
+            for command in delivery_commands(path.read_text()):
+                with self.subTest(path=path.name, command=command), contextlib.ExitStack() as stack:
+                    for handler in ("check", "question", "steps", "merge_run"):
+                        stack.enter_context(mock.patch.object(gate, handler, return_value=0))
+                    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+
+    def test_private_or_unknown_visibility_saves_no_record(self):
+        for visibility in ({"isPrivate": True}, {}):
+            with self.subTest(visibility=visibility), tempfile.TemporaryDirectory() as d:
+                task, question = Path(d, "task.md"), Path(d, "question")
+                task.write_text(TASK)
+                question.write_text("Review this candidate.\n")
+                readme(Path(d))
+                with mock.patch.object(gate, "gh", return_value=json.dumps(visibility)), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"]), 2)
+                self.assertFalse(list((gate.task_folder(task) / "merge").glob("*.json")))
+
     def test_record_route_checks_steps_not_just_candidate_header(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
@@ -3471,6 +3528,11 @@ class ObservedFactsTests(unittest.TestCase):
             self.assertEqual(code, 0)
             path = next((gate.task_folder(task) / "merge").glob("ask-*.json"))
             data = json.loads(path.read_text())
+            assert_record_contract(self, data)
+            for broken in ({k: v for k, v in data.items() if k != "ci"}, data | {"body": "repository content"},
+                           data | {"external_rounds": "two"}, data | {"validation": data["validation"] | {"rounds": -1}}):
+                with self.assertRaises(AssertionError):
+                    assert_record_contract(self, broken)
             self.assertEqual(data["validation"]["verdict"], "PASSED")
             self.assertEqual(data["validation"]["rounds"], 1)
             self.assertEqual(data["head"], HEAD40)
@@ -3498,7 +3560,9 @@ class ObservedFactsTests(unittest.TestCase):
             self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
             held = list((gate.task_folder(task) / "merge").glob("observation-*.json"))
             self.assertEqual(len(held), 1)
-            self.assertEqual(json.loads(held[0].read_text())["result"]["exit"], 1)
+            data = json.loads(held[0].read_text())
+            assert_record_contract(self, data)
+            self.assertEqual(data["result"]["exit"], 1)
 
     def test_recorded_local_jobs_do_not_inflate_three_real_round_counts(self):
         for pr, declared, ids in ((854, 4, ["review:5873421269", "summary:6821181686@c429ab181"]),

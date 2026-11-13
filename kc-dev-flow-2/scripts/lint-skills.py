@@ -84,6 +84,7 @@ WORKFLOW_BUDGET_STEPS = [
          captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
          loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
     dict(delta=-30, why="the delivery record replaces FO hand-written factual summary fields"),
+    dict(delta=-87, why="delivery preparation and reviewer disclosures share the delivery-record contract"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

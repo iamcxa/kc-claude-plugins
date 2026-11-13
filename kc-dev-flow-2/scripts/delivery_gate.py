@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
 """Check what FO is about to ask the Captain to merge.
 
-Opt-in record route: check TASK --pr owner/repo#N --text-file QUESTION --record-facts
-saves a public, allowlisted delivery-facts/v1 record in TASK/merge/: ask-N.json
-on success, observation-N.json on hold. question TASK --text-file QUESTION --facts-record RECORD
-checks that record without hand-written factual summary fields. Bind its JSON
-unchanged as the gate summary and reference. A nonzero check holds delivery.
-The text-based routes documented below remain legacy compatibility behavior.
+Record route: see references/delivery-record.md for the format, recipe and reader
+obligations. The text-based routes below remain legacy compatibility behavior.
 
 Usage: delivery_gate.py check <task file or task folder> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--sibling-pr <owner/repo>#<N>]... [--workflow-dir <dir>]
-
-With --record-facts, public repositories use delivery-facts/v1 instead of authored summary fields.
-The check saves allowlisted observations, reported validation and distinct saved PR verdict counts;
-held checks use observation-N.json, passing checks ask-N.json. FO writes the question, dispositions
-and unobservable judgments. A conditional second reviewer may be declared not triggered in that
-question, except for prod/db. No reviewer prose is saved and a reported verdict certifies no execution.
-Use question --facts-record <record> to join the newest record to the dispatched head, unchanged
-question and current validation/Captain-step sources, then bind its JSON as summary and reference.
-Private/unknown visibility holds without saving. Without these options, the legacy rules below apply.
 
 A task is `<slug>.md` or `<slug>/index.md`; a folder argument means its `index.md`. Records are read and saved in the task's own folder `<slug>/`.
 
