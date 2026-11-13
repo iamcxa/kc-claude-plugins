@@ -464,3 +464,23 @@ This complete implementation report supersedes earlier implementation-stage repo
 
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1 (160400986 bytes)
 Evidence: evidence/implementation-1/ (197 files, 596.9 KiB)
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #864 head 45d5ebb9 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 45d5ebb9d24665c0904aca5412123a7224d056cc; every current criterion is judged, all approved runnable commands/negative controls rerun, AC-9 kept as accepted post-release unverified. See evidence/validation-2/report.md, criteria.json and check-results.json; no new Material or Needs decision finding.
+- DONE: Recheck after Feedback Cycle 1 under Captain amendment 2 (second and last validation cycle of the Budget): the head changed from f0e00d30c to 45d5ebb9d by one reworded sentence in kc-dev-flow-2/references/sd/workflow.md, total still 6099 words. AC-3 is superseded by AC-10 (same statement, evidence command corrected by the Captain). Judge the reworded sentence against decisions D1 to D7 and rerun every approved evidence command unchanged. Run AC-8 again with one new history-free test subject reading a native ideation dispatch built from this head, with no FO-written probe line and no corrective coaching: observe whether it builds a probe before its design and writes command, exit and output path beside every one of its criteria, provenance-style ones included; report fields present for N of M criteria, and AC-8 passes only when N equals M; name the subject's model and say it is a test subject. Before you remove any scratch, copy the exact dispatch, checklist, scope notes and fetched stage definition the subject read into this task's evidence folder (validation-1 kept only their hashes and the cause of its finding could not be established). One observation plus at most one retry if your own setup is unusable; report an unusable setup as not established, do not try a third time. You may rely on validation-1's passed checks for what the head change cannot affect after saying which, and rerun the rest
+  D1-D7 and amendment 2 hold; exactly one history-free gpt-6-astra xhigh test subject built a probe before design and supplied command/exit/output for 4/4 criteria, provenance included (criterion-coverage.json, live-output/task.md). No retry or coaching; exact dispatch/checklist/scope/fetched-stage/outer-prompt bytes retained in live-inputs/ and verified before cleanup. The subject gate refusal is the disclosed seed-scope fixture consequence.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step captain-accept.sh ran unchanged in fresh Bash, exit 0; observed output in captain-accept.log. Installed ADR lint --since 88f86f2749dadb6f4ef0cf9aa089c1827096865b --require 0084 exits 0 (77 ADR files); 47 lint tests, native dispatch suite and required guards pass. Wrong-output and other criterion controls fail as expected; exact commands and limits in report.md.
+- SKIPPED: AC-9 post-release implementation-worker branch cleanup.
+  Explicitly accepted future obligation; neither the prior local deletion nor unchanged profile text proves released-worker behavior. No post-release run or falsifier claimed.
+- DONE: Preserve exact subject inputs and public evidence, then close the assigned scratch folder.
+  evidence/validation-2/SHA256SUMS covers retained evidence; validation-2-scratch-close.txt records the exact close output. Private adopter repositories inspected: 0.
+
+### Summary
+
+Cycle 2, the last validation cycle under the unchanged Budget, recommends PASSED on 45d5ebb9d24665c0904aca5412123a7224d056cc. Prior F1 is settled by amended AC-10; prior F2 is not reproduced in this 4/4 observation, with no claim of cross-model reliability or causal improvement. Product worktree remains clean at the candidate; FO/Captain retain gate, review, delivery and the post-release obligation, and CI cost per PR was not measured (no CI trigger changed).
+
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2 (749319709 bytes)
+Evidence: evidence/validation-2/ (195 files, 491.4 KiB)

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys;sys.path.insert(0,'kc-dev-flow-2/scripts');import test_sd_dispatch as t; text=t.TEMPLATE.read_text();t.assert_team(text.replace(t.TEAM_RULE,'- **Team:** omitted'));print('unexpected accepted')
+                                                                                                                    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/candidate/kc-dev-flow-2/scripts/test_sd_dispatch.py", line 50, in assert_team
+    assert [" ".join(clause.split()) for clause in clauses] == [" ".join(TEAM_RULE.split())], "complete Team rule missing or duplicated"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: complete Team rule missing or duplicated

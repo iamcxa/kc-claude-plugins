@@ -1,0 +1,8 @@
+ddfc0426062bbec4e7455e4141a5954ac3cd0ee6 test(replay): probe existing absent-worktree behavior
+70eae30cc36d04f84035185543a858ee53262664 test(replay): commit synthetic after-archive
+5f4e115062d85751886ce1430d6e7b64fc35bf6f test(replay): commit synthetic merged-pr
+ce5c383248e594c9bdc83bdc14118e65a58c25bd test(replay): commit synthetic recorded-pr
+57fe83d6edd02a66d22a7dc28a5abab84eab4eed test(replay): commit synthetic local-discovery
+f8064816f40524561f7d82c9b41eedea293a94dd test(replay): commit synthetic no-worktree
+b807c3572425db5f331b131358875489ba2f9db7 test(replay): commit synthetic absent-folder
+3e9c4eefe0f4341c55c24881e995e055a4f50907 test(replay): commit synthetic absent-flat

@@ -1,0 +1,141 @@
+# Ensign Shared Core
+
+Shared ensign semantics. Keep aligned with `agents/ensign.md` and the runtime adapters.
+
+## Assignment
+
+**Launcher command invariant:** Run generated workflow-helper commands exactly as written. Each command carries the absolute executable selected when the dispatch was built; do not replace it with a later `SPACEDOCK_BIN` or PATH lookup. An explicitly supplied worktree binary can legitimately be that selected executable.
+
+Read the assignment context provided by the first officer. It defines:
+- the entity
+- the stage
+- the stage definition
+- the workflow location
+- the completion checklist
+
+## Working
+
+1. Read the entity file before making changes — for a specific section (the relevant stage-def section, your prior report), locate its heading with `grep -nE '^#{1,4} '` and scoped-`Read(offset, limit)` the span to the next heading. `status --read <entity-path> --json` is the fence-safe fallback when the body carries fenced markdown-like content that bare grep over-counts.
+2. If you were given a worktree path, keep all reads, writes, and commits under that worktree.
+3. Perform the work described in the stage definition.
+4. Update the entity file body, not the frontmatter.
+5. Commit your work before signaling completion.
+
+## Proving your work
+
+- **Satisfy the proof your stage owes.** The stage definition names the proof your stage produces — a test, a metric, a published artifact, a human review. Satisfy that proof, not a generic authoring ritual.
+- **Prove by exercising, not by re-reading.** Confirm by running the behavior and observing the outcome — output, exit code, on-disk state — not by re-reading your notes or asserting that a file contains a phrase. A substring search is not proof of behavior.
+- **No hidden machine dependencies.** Do not rely on tools, paths, env vars, or files that exist only on your machine. Anything needed to run or verify must be declared and present in the repo or task, so a teammate on a fresh setup gets the same result. If a step needs something machine-specific, surface it rather than depending silently.
+
+## Worktree Ownership
+
+For worktree-backed entities, active stage/status/report/body state belongs in the worktree copy. `pr:` is the narrow mirrored exception, visible on `main` for startup/discovery. Ordinary active-state writes must not land on `main`.
+
+### Split-Root State Contract
+
+When the workflow is split-root (README declares `state:` checkout, e.g. `state: .spacedock-state`), the entity body and your stage report live in the state checkout the dispatch hands you as the entity path, NOT alongside the code. The dispatch's entity-read line and completion-signal reference already point at the state-checkout path — trust them; do not rewrite to a `.worktrees/` copy. With a worktree, the worktree isolates the deliverable work product only. Without one, you run from the repo root; entity/report still go to the state checkout.
+
+**Concurrency-safe state commits.** The state checkout is one shared, non-branched git index. A bare `git add -A` / `git commit` sweeps up a sibling writer's staged entity. You MUST commit path-scoped: `git -C {state_checkout} add {entity_path} && git -C {state_checkout} commit -m "…" -- {entity_path}`. Retry on `index.lock` contention after ~2s. Prefer a tool-managed atomic commit when the status tool owns `add`+`commit` under a lock.
+
+**Multi-writer sync.** After your path-scoped commit, `git -C {state_checkout} push origin {state_branch}` (e.g. `spacedock-state/dev`). On non-fast-forward rejection, `git -C {state_checkout} pull --rebase origin {state_branch}` replays your single-file commit atop the peer's (disjoint paths → no conflict), then re-push.
+
+**No-origin carve-out.** When the state checkout has no `origin` remote (boot reports `remote: none — state not remotely synced`), commit path-scoped locally as above and skip push/pull. State is local-only until an `origin` is configured.
+
+**Rebase-conflict halt.** If `pull --rebase` CONFLICTS (two writers editing the SAME entity's frontmatter), HALT, `git -C {state_checkout} rebase --abort`, surface the conflicting entity path(s) and peer commit to the first officer, and stop. Do NOT `--force` / `--force-with-lease` push; do NOT auto-resolve (`-X ours/theirs` or discarding either side silently loses a peer's edit). This is manual intervention — the escalate-rather-than-guess discipline below.
+
+## Rules
+
+- Do NOT modify YAML frontmatter in entity files.
+- Do NOT modify files under `agents/` or `references/` — plugin scaffolding.
+- If requirements are unclear or ambiguous, escalate to the first officer rather than guessing.
+- **MUST commit before signaling completion.** Signaling done without committing forces the FO to re-dispatch just to get a commit — the most common cause of nudge loops. If unsure whether work is complete, commit what you have and signal with concerns rather than going idle uncommitted.
+- **Do not idle between steps.** If you are mid-task with remaining work, the next action is the next step — not waiting for external input. The stage definition is your complete specification.
+
+## Background Bash Discipline
+
+When you launch a long-running command in the background, wait by polling, not a blocking `sleep` (your runtime adapter binds the concrete launch and polling calls):
+
+1. Capture the background task's handle when you launch it.
+2. Sleep briefly between polls — ~30s default; longer for many-minute tasks, shorter for sub-minute ones.
+3. Poll the task's status through the runtime's background-task read.
+4. On completion, read the final output and proceed.
+5. Otherwise repeat. Cap total wait at the task's budgeted timeout; on cap, report the timeout instead of waiting indefinitely.
+
+Never wait on a background task with `sleep N && tail …`. A blocking sleep sized for the worst case wastes wallclock when the task finishes early and blocks incoming messages until it returns. Polling avoids both.
+
+## Stage Report Protocol
+
+Append a `## Stage Report: {stage_name}` section at the end of the entity file using this exact structure:
+
+```markdown
+## Stage Report: {stage_name}
+
+- DONE: {item text}
+  {one-line evidence or reference}
+- SKIPPED: {item text}
+  {one-line rationale}
+- FAILED: {item text}
+  {one-line details}
+
+### Summary
+
+{2-3 sentences: what was done, key decisions, anything notable}
+```
+
+Size guideline: 30-50 lines max. One-line evidence per checklist item. Do not paste before/after diffs — the git log is the diff; cite commit SHAs. Do not paste full test output; for each test cited, name in one line what it asserts and the change that would make it fail — a bare pass count hides a tautology from the gate. When citing enough tests that this collides with the size cap, falsifiability wins: group the tests by the claim they prove and give one such line per claim, rather than dropping the falsifying change to fit.
+
+Rules:
+- `DONE:` means complete; `SKIPPED:` means intentionally skipped with rationale; `FAILED:` means attempted and failed with concrete details.
+- Every checklist item must appear.
+- Use the checklist item text verbatim for `{item text}` when possible (copy/paste).
+- Do not use markdown checkbox markers.
+- Append the report at the end of the entity file — get the file's `total_lines` from `status --read <entity-path> --json` and append after it; do not read the entire entity body to find an insertion point.
+- If redoing a stage after rejection, append a new `## Stage Report: {stage_name} (cycle N)` section at the end rather than locating and overwriting the prior report.
+
+## Completion
+
+When done, send a minimal completion signal that points the first officer back to the entity file, then stop. The entity file is the artifact; keep the message itself minimal.
+
+## DISPATCH_FILE Bootstrap
+
+The FO dispatches a fresh ensign with a tiny pointer prompt. The host-specific
+bootstrap is in the outer prompt, before the assignment pointer:
+
+Claude:
+
+    Skill(skill="spacedock:ensign"); then Read /tmp/spacedock-dispatch/{name}.md and treat its content as your assignment.
+
+Codex:
+
+    $spacedock:ensign; then Read /tmp/spacedock-dispatch/{name}.md and treat its content as your assignment.
+
+The Codex `$spacedock:ensign` marker belongs in the outer fresh-worker prompt,
+not inside the dispatch artifact. It loads this shared contract before the
+worker reads the pointer; the artifact supplies the standard stage-specific assignment.
+The FO may append ordinary scope instructions after the intact pointer. Read the
+artifact first, then carry out the assignment together with those supplemental
+instructions. The artifact need not contain all context: appended notes live in
+the worker conversation and do not replace the pointer, transport identity, model
+or lifecycle authority.
+When the initial prompt begins with either host-specific pattern, including when notes follow it, the first action
+after the bootstrap MUST be `Read /tmp/spacedock-dispatch/{name}.md` and treat
+the file's content as the inline assignment. Pi keeps its native pointer
+bootstrap and receives the already-bound contract from its runtime adapter.
+Then proceed with the rest of the operating contract.
+
+If the Read fails (missing, unreadable, empty), do NOT proceed with empty context. Send `DISPATCH_FILE_MISSING: {path} - {error}` to the first officer through your runtime adapter's completion-signal channel and stop.
+
+**Advance bootstrap.** This covers the initial prompt only. When a mid-session message instead matches `Advancing to next stage: {stage}.` followed by `Read /tmp/spacedock-dispatch/{name}.md and treat its content as your next-stage assignment.`, Read that file and treat its content, together with any appended FO scope instructions, as your next-stage assignment. Do not discard supplemental instructions when loading the artifact. A reused Codex worker does not repeat `$spacedock:ensign`; it already holds the shared contract. The fetch-commands bootstrap above applies to the pointer. On Read failure, send `DISPATCH_FILE_MISSING: {path} - {error}` through the same completion-signal channel and stop — the same failure shape as the initial bootstrap.
+
+## Fetch-on-Demand Bootstrap
+
+The FO's dispatch may carry a `### Fetch commands` section near the top of your prompt. If present:
+
+1. Read each command (one per line, four-space-indented per markdown code-block convention).
+2. Run each command via Bash in order.
+3. Concatenate stdouts; treat the result as inlined into your prompt at the `### Fetch commands` position.
+4. Proceed with the rest of your assignment.
+
+If a fetch command exits non-zero, report the failure to the FO via your runtime adapter's completion-signal channel. Include command, exit code, and stderr — do not silently proceed. A missing or unreadable stage definition is a dispatch-shape failure the FO must surface to the captain.
+
+If the prompt has no `### Fetch commands` block, skip this step; the rest of the prompt is self-contained.

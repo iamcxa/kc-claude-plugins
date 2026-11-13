@@ -1,0 +1,11 @@
+{
+  "role": "test subject, not a second validator",
+  "task": "/root/ideation_test_subject",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "history": "fork_turns=none",
+  "runs": 1,
+  "retries": 0,
+  "corrective_followups": 0,
+  "source": "Paseo get_agent_status(3176ea66-f8dd-4d9c-b182-bc28cf8b0cda) runtimeInfo model/effort; collaboration spawn inherited defaults with no override"
+}

@@ -1,0 +1,2 @@
+STEP 1: fetch and verify the exact public candidate
+fatal: unable to access 'https://github.com/iamcxa/kc-claude-plugins.git/': Could not resolve host: github.com

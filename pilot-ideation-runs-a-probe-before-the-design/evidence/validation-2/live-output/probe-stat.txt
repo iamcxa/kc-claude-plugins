@@ -1,0 +1,43 @@
+ .replay-fixtures/absent-flat/answers.json          |   1 +
+ .replay-fixtures/absent-flat/bin/gh                |   9 ++
+ .replay-fixtures/absent-flat/bin/spacedock         |   5 +
+ .replay-fixtures/absent-flat/wf/README.md          |   8 +
+ .replay-fixtures/absent-flat/wf/absent-flat.md     |   8 +
+ .replay-fixtures/absent-folder/answers.json        |   1 +
+ .replay-fixtures/absent-folder/bin/gh              |   9 ++
+ .replay-fixtures/absent-folder/bin/spacedock       |   5 +
+ .replay-fixtures/absent-folder/wf/README.md        |   8 +
+ .../absent-folder/wf/absent-folder/index.md        |   8 +
+ .replay-fixtures/after-archive/answers.json        |   1 +
+ .replay-fixtures/after-archive/bin/gh              |   9 ++
+ .replay-fixtures/after-archive/bin/spacedock       |   5 +
+ .replay-fixtures/after-archive/wf/README.md        |   8 +
+ .replay-fixtures/local-discovery/answers.json      |   1 +
+ .replay-fixtures/local-discovery/bin/gh            |   9 ++
+ .replay-fixtures/local-discovery/bin/spacedock     |   5 +
+ .replay-fixtures/local-discovery/calls.jsonl       |   4 +
+ .replay-fixtures/local-discovery/watch.json        |  20 +++
+ .replay-fixtures/local-discovery/watch.json.lock   |   0
+ .replay-fixtures/local-discovery/wf/README.md      |   8 +
+ .replay-fixtures/local-discovery/wf/local.md       |   8 +
+ .replay-fixtures/merged-pr/answers.json            |   1 +
+ .replay-fixtures/merged-pr/bin/gh                  |   9 ++
+ .replay-fixtures/merged-pr/bin/spacedock           |   5 +
+ .replay-fixtures/merged-pr/calls.jsonl             |   1 +
+ .replay-fixtures/merged-pr/wf/README.md            |   8 +
+ .replay-fixtures/merged-pr/wf/merged.md            |   8 +
+ .replay-fixtures/no-worktree/answers.json          |   1 +
+ .replay-fixtures/no-worktree/bin/gh                |   9 ++
+ .replay-fixtures/no-worktree/bin/spacedock         |   5 +
+ .replay-fixtures/no-worktree/wf/README.md          |   8 +
+ .replay-fixtures/no-worktree/wf/bare.md            |   7 +
+ .replay-fixtures/recorded-pr/answers.json          |   1 +
+ .replay-fixtures/recorded-pr/bin/gh                |   9 ++
+ .replay-fixtures/recorded-pr/bin/spacedock         |   5 +
+ .replay-fixtures/recorded-pr/calls.jsonl           |   2 +
+ .replay-fixtures/recorded-pr/watch.json            |  20 +++
+ .replay-fixtures/recorded-pr/watch.json.lock       |   0
+ .replay-fixtures/recorded-pr/wf/README.md          |   8 +
+ .replay-fixtures/recorded-pr/wf/known.md           |   8 +
+ .replay/pr_watch_probe.py                          | 168 +++++++++++++++++++++
+ 42 files changed, 423 insertions(+)

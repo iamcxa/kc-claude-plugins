@@ -1,0 +1,46 @@
+{
+  "total": 4,
+  "complete": 4,
+  "criteria": [
+    {
+      "criterion": "AC-1",
+      "provenance": false,
+      "command": true,
+      "exit": true,
+      "output_path": true,
+      "output_exists": true,
+      "source": "live-output/task.md",
+      "common_runner_context": "Probe section provides environment, base and runner; each criterion names its mode"
+    },
+    {
+      "criterion": "AC-2",
+      "provenance": false,
+      "command": true,
+      "exit": true,
+      "output_path": true,
+      "output_exists": true,
+      "source": "live-output/task.md",
+      "common_runner_context": "Probe section provides environment, base and runner; each criterion names its mode"
+    },
+    {
+      "criterion": "AC-3",
+      "provenance": true,
+      "command": true,
+      "exit": true,
+      "output_path": true,
+      "output_exists": true,
+      "source": "live-output/task.md",
+      "common_runner_context": "Probe section provides environment, base and runner; each criterion names its mode"
+    },
+    {
+      "criterion": "AC-4",
+      "provenance": false,
+      "command": true,
+      "exit": true,
+      "output_path": true,
+      "output_exists": true,
+      "source": "live-output/task.md",
+      "common_runner_context": "Probe section provides environment, base and runner; each criterion names its mode"
+    }
+  ]
+}

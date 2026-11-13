@@ -1,0 +1,12 @@
+docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md	updated	kc-dev-flow-2/scripts/lint-skills.py
+docs/dev2-poc/README.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/dev2/README.md	review	kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/skills/maintain-flow/SKILL.md	review	kc-dev-flow-2/scripts/lint-skills.py
+learning.md	review	kc-dev-flow-2/scripts/lint-skills.py
+11 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

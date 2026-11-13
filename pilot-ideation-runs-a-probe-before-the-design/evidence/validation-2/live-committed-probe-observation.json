@@ -1,0 +1,9 @@
+{
+  "observed_at": "2026-11-13T08:50:38.233515+00:00",
+  "time_source": "Python datetime.now(timezone.utc)",
+  "design_present": false,
+  "refs": [
+    "refs/heads/poc/pr-watch-tasks-foreign-worktree fea415791256e5048bd3df11bb3ffe4490c3d927",
+    "refs/heads/poc/pr-watch-tasks-foreign-worktree-replay2 70eae30cc36d04f84035185543a858ee53262664"
+  ]
+}

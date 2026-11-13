@@ -1,0 +1,344 @@
+# Dev-flow 2
+
+A development workflow run by Spacedock. It provides a thin start/resume entry,
+profile principles, stage skills, advisory roles (Chief Engineer, Engineering
+Reviewer), a read-only Observer, optional extensions, read-only routing lint, and an adoptable
+Spacedock workflow with a POC adaptation. A kc-dev-flow project is not migrated
+automatically. Learning runs when invoked by hand or, in a repository that lists the
+`learn` extension, by FO when it archives a task; there is no custom runtime loader,
+installed hook, background launcher or automatic adoption.
+
+## Controlled trial
+
+Releases are published to this marketplace as `kc-dev-flow-2-vX.Y.Z` tags with
+Claude Code and Codex manifests. A reviewed checkout can still be used for a
+controlled local trial. For Claude Code, launch
+from the intended project with the checkout's absolute package path:
+
+```sh
+claude --plugin-dir /absolute/path/to/kc-claude-plugins/kc-dev-flow-2
+```
+
+Then invoke `/kc-dev-flow-2:dev`. This is a local package trial, not a published
+marketplace release.
+
+For Codex, the marketplace path below is the reviewed **repository root**, not
+its `kc-dev-flow-2` subdirectory. Preserve an existing installation; install and
+remove only when this trial owns that local plugin change:
+
+```sh
+codex -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  plugin add kc-dev-flow-2@kc-claude-plugins
+
+codex -C /absolute/path/to/project \
+  -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  -c 'plugins.kc-dev-flow-2@kc-claude-plugins.enabled=true'
+
+# After the trial, remove the plugin installed for this trial.
+codex -c 'marketplaces.kc-claude-plugins.source_type="local"' \
+  -c 'marketplaces.kc-claude-plugins.source="/absolute/path/to/kc-claude-plugins"' \
+  plugin remove kc-dev-flow-2@kc-claude-plugins
+```
+
+In the fresh Codex session, request `kc-dev-flow-2:dev` by its exact name. The
+commands use per-invocation marketplace overrides; plugin installation itself
+persists locally until removed. Bare `/dev`, entry execution and role behavior
+remain unproven. Earlier installation/discovery checks found seven skills before
+the Engineering Reviewer rename; see [validation scope](VALIDATION.md) for the
+historical evidence and its limits.
+
+Spacedock's plugin and CLI are required for orchestration. A project must have an
+explicitly selected variant/profile and an approved workflow before
+stage work. Follow the [SD adoption reference](references/sd/adoption.md) through
+SD commission/refit; invoking the entry does not rewrite a project workflow.
+
+## Entry
+
+Use [`kc-dev-flow-2:dev`](skills/dev/SKILL.md) to start or resume work. It resolves
+the explicit project/workflow/task and approved selection, then hands orchestration
+to `spacedock:first-officer`. Stage skills keep their own profile routes; the entry
+does not migrate existing work or duplicate SD's control loop. Claude plugin skills
+use `/kc-dev-flow-2:dev`, not a bare `/dev`; Codex shorthand resolution remains
+unverified. Earlier six-skill model reads and later seven-skill discovery do not
+prove the new entry executes correctly.
+
+If this package is not yet installed, follow [Controlled trial](#controlled-trial)
+for the exact Claude and Codex install commands. If the project has no adopted
+Spacedock workflow, follow the [SD adoption reference](references/sd/adoption.md)
+directly; the entry only detects and reports that gap, it does not install or
+adopt on its own.
+
+## Framework
+
+The First Officer (FO) recommends a profile, records the user's selection and
+variant `kc-dev-flow-2` in the work item, aligns the outcome, and orchestrates.
+Spacedock (SD) retains stage state, dispatch, reports, gates, feedback and recovery.
+A stage skill defines how its selected profile performs work; it does not
+advance state, create authority or substitute for an approval.
+
+| Profile | Intended SD route |
+| --- | --- |
+| [poc](references/profiles/poc.md) | backlog -> implementation -> validation -> done |
+| [pilot](references/profiles/pilot.md) | backlog -> ideation -> implementation -> validation -> done |
+| [prod](references/profiles/prod.md) | backlog -> ideation -> implementation -> validation -> done |
+
+Backlog is initial and gated; ideation is gated where present; validation is gated
+and fresh, with feedback to implementation; done is terminal. Backlog and done
+are state boundaries, not worker stages. SD follows ordered stages, so POC uses
+a separate four-stage workflow while Pilot/Prod share the five-stage definition.
+Only adopt the needed route. Profile remains a user choice on each task and
+selects skill rules, not graph transitions. FO holds a profile/graph mismatch;
+that check is an instruction, not a new runtime enforcement mechanism.
+POC skips ideation and currently uses independent validation. A POC whose proof
+creates state or a seam that must outlive the session records `boundary-crossed:`,
+and FO returns that choice to the user at the validation gate. Direct POC
+eligibility and special Production recovery are **not implemented or proven**.
+
+## Authority and loading
+
+User authority, approved project AGENTS.md conventions and SD contracts constrain
+this framework. Within those boundaries, selected profile principles take
+precedence over stage practices, which take precedence over conditional project
+learning. If an approved requirement conflicts with the selected profile, return
+the affected decision to the user; do not silently change profiles or scope.
+
+Each stage SKILL.md owns its sole declared profile routing table. The FO resolves
+the recorded variant/profile before dispatch. A dispatched or reused worker
+invokes that variant's exact skill and reads the matching shared profile first,
+then stage principles, its stage-specific profile reference, and applicable
+adopted project learning. A short final profile reminder is enough; do not load
+all profiles or repeat the entire shared rules. Unknown selections, missing
+inputs/references or unresolved authority conflicts require a hold report.
+These are skill instructions, not mechanically unskippable runtime gates.
+
+Engineering Reviewer provides independent technical assurance; CE (Chief Engineer)
+advises the next smallest integrated delivery step. Their agents and skills retain
+the existing role boundaries and model table row. Neither is a routine gate,
+and POC defaults to no consultation. Observer reads FO's writes to one task's
+state against the workflow rules; its agent declares Sonnet, and it reports without
+repairing. The design director reviews a ui task's pictures and screenshots and
+rules on each decline the author or validator proposes; its agent declares Sonnet, and
+it advises and holds no gate. Exact `kc-dev-flow-2:` references prevent
+declared links from accidentally selecting the baseline; actual host resolution
+still needs a separate behavioral test.
+
+## Design and delivery
+
+FO leads direction and requests research only when it can change a decision;
+workers author the bounded deliverable. For a route that includes ideation,
+use a PRFAQ with Mermaid whose actors, order, branches and approval boundaries
+match the prose. FO's recorded `Surfaces:` line picks the owed artifact: a `ui`
+preview, a `db` schema, or `none` for PRFAQ/Mermaid alone;
+`scripts/design_surfaces.py check --seed` checks seed fields and the FO record before a new task is
+admitted; its default mode checks the markers, the artifacts, a usable
+`## Acceptance criteria` section and any `## Captain amendments` before the gate.
+A change the Captain makes after accepting a design is recorded there and applied
+by the next worker, as [workflow](references/sd/workflow.md) states.
+A task that belongs to a release on a journey map triggers one whole-journey review
+of that release before its tasks are split; [workflow](references/sd/workflow.md)
+gives the signals and the single checkpoint.
+Write material corrections back to the same definition before user approval.
+Implementation follows approved scope; validation checks the exact result and
+returns repairs through the supported feedback route. POC must not gain
+an ideation stage or extra design gate through this convention; its boundary
+crossing is a report marker, not a design gate.
+
+When work changes retained documents or behavior they describe, stage skills load
+one [document reference](references/retained-documents.md) for affected claims,
+unique content and rendered diagram agreement. Validation also checks whether
+its decisive checks can catch relevant errors, reusing existing counterexamples.
+These conditional practices add no mandatory architecture file or global audit.
+
+FO also owns landing a ruling that outlives the task, written by the implementation
+worker and checked at validation — see [workflow](references/sd/workflow.md)'s
+Decision records. A capability a user will get, named in conversation and
+deferred, belongs on the product's journey map instead.
+
+The [workflow source](references/sd/workflow.md) defines limited FO design
+corrections and nonblocking dispositions. Template adoption grants no editing
+permission; approved decisions and worker evidence remain protected.
+
+Continuous stage-pin sealing and its kernel loader are intentionally omitted.
+Git history and SD records do not prove which content was used at a historical
+stage entry. This package does not fix the baseline's skipped-pin bug or
+claim equivalent tamper detection.
+
+## Extensions
+
+Optional tools join as extensions in [`extensions/`](extensions/), each described by its
+`EXTENSION.md`. An adopter lists the ones it uses under `extensions:` in its workflow
+README frontmatter; an unlisted extension is not probed and changes nothing. The
+workflow's `## Extensions` section is the rule FO follows. The template lists the `required`
+rows; the install ask in [`adoption.md`](references/sd/adoption.md) offers the rest, and
+`scripts/lint-skills.py` checks that the `required` rows and the template line agree.
+
+| Extension | Tier | Joins | Adds |
+| --- | --- | --- | --- |
+| [codex](extensions/codex/EXTENSION.md) | recommended | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
+| [roborev](extensions/roborev/EXTENSION.md) | recommended | implementation, before the report | a local roborev review of the committed changes |
+| [peers](extensions/peers/EXTENSION.md) | required | FO, before opening a task or exchanging peer facts | selects the peer transport, permits confirmed Paseo asks and replies without paseo listing, searches existing work and checks facts within existing authority |
+| [paseo](extensions/paseo/EXTENSION.md) | optional, requires peers | FO, before a listed Paseo worker dispatch | selects its worker publication and local-review handoff; peers owns peer asks and replies |
+| [copilot](extensions/copilot/EXTENSION.md) | optional | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
+| [learn](extensions/learn/EXTENSION.md) | required | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
+| [journey-map](extensions/journey-map/EXTENSION.md) | recommended | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
+| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | recommended, with journey-map | the idle look prompts unclaimed walks; an acceptance task runs from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
+| [fo-feedback](extensions/fo-feedback/EXTENSION.md) | optional, requires peers | interviewing maintainer, at attended resume and named batch close | gathers operator experience every three completed batches beside independent observer findings |
+
+## Learning loop
+
+Optional [operator feedback](extensions/fo-feedback/EXTENSION.md) records failures,
+workarounds and useful events; findings follow the existing backlog and Captain decisions.
+
+The loop runs on three lines. Project learning: `learn` evaluates one closed task and
+may propose a root learning.md rule as a Draft PR. Package improvement: the
+[observer](skills/observer/SKILL.md) reads what FO wrote into one task's state
+against the workflow rules, at archive and when a maintainer reads an adopter's first
+task after a release, and a rule broken in two tasks becomes a package change under
+`maintain-flow`. Deciding for the Captain: `scripts/decision_ledger.py` derives every
+gate ruling from the task files SD already writes, and FO decides only within the
+delegation ladder of [ADR 0011](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md);
+[ADR 0009](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0009-self-improvement-is-a-three-position-switch-unlocked-by-change-class.md)
+keeps package self-improvement manual.
+
+Use [`kc-dev-flow-2:learn`](skills/learn/SKILL.md) for one explicitly named closed
+task. FO verifies committed SD archive state and the original repository-qualified
+merged GitHub PR through existing read interfaces, then delegates independent
+evaluation. Missing or contradictory evidence holds learning without reopening
+the development task. This is skill-led verification; the Python helper still
+records supplied facts and does not authenticate SD or GitHub.
+
+Use [`kc-dev-flow-2:evaluate-learning`](skills/evaluate-learning/SKILL.md) for a
+bounded independent assessment of explicitly supplied task evidence. Its three
+outcomes are add, no-change and remove; a rewrite combines remove/add. Entries
+contain Applicability, Practice and Evidence. One task supports one case; reading
+a rule or green tests alone does not prove improvement. No applicable case is
+not grounds for deletion, and unknown attribution stays unknown. Fixed project
+rules require separate user-approved adoption into AGENTS.md; no auto-promotion,
+scores or maturity system is introduced.
+
+The skill documents the strict evidence-pack and evaluation JSON formats and
+commands for `scripts/learning.py`. This stdlib helper records eligibility from
+caller-supplied closure/merge facts; it does **not** verify SD or GitHub truth.
+It stores one atomic record under the Git common directory's
+`kc-dev-flow-2/learning/`, shared by linked worktrees in the same clone. An opaque
+claim token binds completion to its pending attempt. Invalid results leave that
+claim repairable; duplicate triggers observe it rather than launch another job.
+A store-wide lock also serializes new claims against each other: while one job's
+directory has a torn or missing record, its evaluation is pending, or its
+completed proposal has no settled delivery (merged, closed, or explicitly
+released), a `claim` for any other job in the same store is refused, naming the
+blocking job. Re-claiming the same job is unaffected. A proposal the Captain
+declines to deliver needs an explicit `release`; no CLI command removes or
+rewrites `release.json`, so a release cannot be undone. A closed delivery
+cannot be released; a released job whose delivery was missing or confirmed
+absent can still later be observed `open` (a PR turns up that the release
+believed did not exist) — that observation blocks again, because a release
+stops a job from blocking, it does not stop the provider from reporting new
+facts about it.
+A completed record contains both evaluation and local proposal; no-change has no
+proposal. No recorder command writes learning.md, AGENTS.md or workflow state.
+
+Pending ownership is not process liveness. Torn/missing records are uncertain;
+recovery requires a current record digest and an explicit caller attestation
+that the prior owner stopped. It preserves prior bytes and revokes the old token.
+Completed results cannot be replaced through this CLI. POSIX file locking and
+atomic replacement cover cooperating callers on local filesystems, not separate
+clones, distributed locks or protection from a process with the same file access.
+
+A changed result can be materialized by an author in an owned isolated worktree,
+changing only root learning.md. The evaluated integration commit/learning blob
+must still match before publication. User commit and delivery authority remain
+required; a no-change result creates no branch or PR. A job-derived branch/body
+marker supports all-state PR lookup. Reuse a fully matching existing PR; conflicting
+or unknown provider evidence holds rather than sending another one.
+
+The recorder keeps delivery ownership/observations in a separate atomic sidecar,
+leaving completed evaluation bytes immutable. It binds the reviewed result, repo,
+branch, candidate and learning blobs, plus exact PR title/body. Claiming records
+uncertainty before remote effects; existing claims grant no automatic resend.
+FO uses existing Git/gh commands to publish a Draft PR and record observed state.
+A failed response does not prove the send failed. Explicit stopped-owner recovery
+requires a current digest and successful provider reconciliation; unknown stays
+held, matched PRs are reused and merged observations cannot regress through the
+CLI. These are local consistency checks over caller-attested provider facts.
+
+On `dev` or `learn` invocation, `learning.py notices` exposes unread results,
+including no-change, pending and uncertain states. FO acknowledges a snapshot
+only after presenting it; a changed digest remains unread. `notices --all` also
+makes acknowledged jobs available for explicit inspection/recovery. Read-only
+queries create no learning directory when none exists. Context injection alone
+is not notification, and a crash before acknowledgement can repeat a notice.
+
+A receipt or PR is not an active practice. Subsequent work reads the currently
+adopted integration version of learning.md, after its separately authorized
+review/merge path. A recorded merge does not prove a practice improves future
+work. Harness hooks, automatic polling/background launch, issue reporting and
+cross-clone deduplication remain future work; the notice step is not an every-host
+SessionStart guarantee. See the learn skill for the fixed CLI plan/observation
+schemas, provider checks, recovery and exact delivery authority boundaries.
+
+## Maintenance and evidence
+
+These are source-repository maintenance commands, not standalone installed-plugin
+commands. They depend on the repository-level `scripts/skill-frontmatter-lint.sh`
+and its dependencies. Run from a complete checkout's repository root:
+
+```sh
+python3 kc-dev-flow-2/scripts/lint-skills.py
+python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
+```
+
+Every other test file is listed in `.github/workflows/kc-dev-flow-2-tests.yml`, which
+CI runs on each change to this package; run the same commands from there.
+[`kc-dev-flow-2:maintain-flow`](skills/maintain-flow/SKILL.md) holds the rules for
+changing the package: the workflow word budget, behaviour replay and observing adopters.
+
+Lint reuses `scripts/skill-frontmatter-lint.sh` scoped to this tree and checks
+declared route coverage, applicability values, exact paths, required principles
+and skill namespaces, and that every package script named in `skills/` and
+`references/` is written `<package>/scripts/NAME` and that a skill using `<package>`
+carries a `Package root:` line. It does not parse rule prose or prove route-following,
+unknown-profile refusal, gate execution or cross-host parity.
+The [Agent Skills specification](https://agentskills.io/specification) defines
+frontmatter and directory conventions; complete format validation is a separate
+authoring check, not a claim made by this CLI.
+
+The [adoption reference](references/sd/adoption.md) uses SD commission/refit,
+split-root state, code worktrees and the activated SD package's unmodified
+`pr-merge` mod. The mod is installed into the adopting workflow, not vendored here.
+The workflow's delivery rules preserve project Draft PR, CI and manual merge
+requirements and restrict unapproved fallback; those are FO instructions, not new
+mechanical controls. Adoption checks actual `merge: pr-merge` hook discovery before
+activation: SD can finalize locally when no hook or blocking record exists.
+
+The CLI test copies the workflow source into disposable code/state repositories.
+It checks six stage/host handoffs, stage-definition fetches, PRFAQ/Mermaid gate
+context, the `## Dispatch facts` section, finding disposition and delivery authority,
+that scope notes naming the package root reach the dispatch file ahead of the checklist,
+and that a report ending `- FAILED: none.` is refused by SD and named by its
+checklist read, and that a correction without a Summary is refused until a complete report follows. Both route graphs across three profiles exercise synthetic gate
+successors and stamped implementation / validation worktree reuse. Fresh validation is declared configuration, not an
+executed independent worker. Copied canonical hook discovery and merge-guard
+arming pass; the missing-hook control demonstrates local finalization's limit.
+Existing wrong-stage, removed-stage, AC-scanner and host-marker controls remain.
+`--keep` retains successful repos and raw evidence; failure evidence is retained
+by default. Synthetic approvals and local archive controls are test inputs,
+not real user acceptance, hook execution or remote delivery. No prompt is sent
+to a model. A real project still needs approved configuration and observed merge.
+
+For an authorized native Claude trial, remove foreign markers for that process
+only: `env -u CODEX_THREAD_ID -u PI_CODING_AGENT_DIR claude <approved arguments>`.
+Use the exact isolated repository as cwd, name its workflow explicitly in the FO
+assignment, and retain `--workflow-dir` on SD commands. Do not change the parent
+environment or add a wrapper. The model-free marker check is not a rerun of the
+native trial, and a failed stamped dispatch must not be assumed mutation-free.
+Before a future live run, verify the selected SD plugin and executable versions;
+an updated skill cache alone does not establish a comparable runtime.
+At ideation, retain user gate approval while proposing routine implementation
+details within accepted scope; escalate material changes rather than every detail.
+
+Future comparisons must include host behavior, retained route exceptions and
+learning/review costs as well as removed files. This slice runs no model
+experiment and carries forward none of the earlier experiment's time budget.

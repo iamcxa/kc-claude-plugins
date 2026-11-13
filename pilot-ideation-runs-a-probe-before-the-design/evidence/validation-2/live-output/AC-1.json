@@ -1,0 +1,14 @@
+{
+  "absent-flat": {
+    "observed": [
+      "fact: absent-flat has no recorded PR; its worktree is not on this machine."
+    ],
+    "reverse_mutation_rejected": true
+  },
+  "absent-folder": {
+    "observed": [
+      "fact: absent-folder has no recorded PR; its worktree is not on this machine."
+    ],
+    "reverse_mutation_rejected": true
+  }
+}

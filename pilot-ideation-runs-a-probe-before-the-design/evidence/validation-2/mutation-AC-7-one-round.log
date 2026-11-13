@@ -1,0 +1,15 @@
+task: pr-watch-tasks-foreign-worktree
+  backlog: 2026-11-12T17:01:54Z -> 2026-11-12T17:01:58Z  0.1 min (before gate 0.0, Captain wait 0.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T17:01:54Z, closed 2026-11-12T17:01:58Z, approve
+  ideation: 2026-11-12T17:03:02Z -> 2026-11-12T17:25:39Z  22.6 min (before gate 22.4, Captain wait 0.1, after gate 0.1); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T17:25:28Z, closed 2026-11-12T17:25:31Z, approve
+  implementation: 2026-11-12T17:25:39Z -> 2026-11-12T17:51:12Z  25.6 min (before gate 25.6, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+  validation: 2026-11-12T17:51:12Z -> 2026-11-13T00:29:37Z  398.4 min (before gate 92.1, Captain wait 299.9, after gate 6.4); dispatches 1, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-12T19:23:19Z, closed 2026-11-13T00:23:10Z, approve
+  done: 2026-11-13T00:29:37Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+[{"stage": "backlog", "start": "2026-11-12T17:01:54Z", "end": "2026-11-12T17:01:58Z", "elapsed_min": 0.1, "before_gate_min": 0.0, "captain_wait_min": 0.1, "after_gate_min": 0.0, "dispatches": 0, "repeat_dispatches": 0, "dispatch_records": 0, "gate_attempts": [{"attempt": 1, "opened": "2026-11-12T17:01:54Z", "closed": "2026-11-12T17:01:58Z", "outcome": "approve"}], "asks": [], "asks_outside_gate": null}, {"stage": "ideation", "start": "2026-11-12T17:03:02Z", "end": "2026-11-12T17:25:39Z", "elapsed_min": 22.6, "before_gate_min": 22.4, "captain_wait_min": 0.1, "after_gate_min": 0.1, "dispatches": 1, "repeat_dispatches": 0, "dispatch_records": 1, "gate_attempts": [{"attempt": 1, "opened": "2026-11-12T17:25:28Z", "closed": "2026-11-12T17:25:31Z", "outcome": "approve"}], "asks": [], "asks_outside_gate": null}, {"stage": "implementation", "start": "2026-11-12T17:25:39Z", "end": "2026-11-12T17:51:12Z", "elapsed_min": 25.6, "before_gate_min": 25.6, "captain_wait_min": 0, "after_gate_min": 0.0, "dispatches": 1, "repeat_dispatches": 0, "dispatch_records": 1, "gate_attempts": [], "asks": [], "asks_outside_gate": null}, {"stage": "validation", "start": "2026-11-12T17:51:12Z", "end": "2026-11-13T00:29:37Z", "elapsed_min": 398.4, "before_gate_min": 92.1, "captain_wait_min": 299.9, "after_gate_min": 6.4, "dispatches": 1, "repeat_dispatches": 0, "dispatch_records": 1, "gate_attempts": [{"attempt": 1, "opened": "2026-11-12T19:23:19Z", "closed": "2026-11-13T00:23:10Z", "outcome": "approve"}], "asks": [], "asks_outside_gate": null}]

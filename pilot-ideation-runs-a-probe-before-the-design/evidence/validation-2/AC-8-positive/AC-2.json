@@ -1,0 +1,17 @@
+{
+  "no-worktree": [],
+  "local-discovery": [
+    "next: run `spacedock status --workflow-dir /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay-fixtures/local-discovery/wf --set local pr=fixture/repo#7`.",
+    "next: run `spacedock state commit local --workflow-dir /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay-fixtures/local-discovery/wf`.",
+    "fact: fixture/repo#7 OPEN draft=True checks=green",
+    "next: mark fixture/repo#7 ready if Delivery authority allows.",
+    "next: run `python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/package/kc-dev-flow-2/scripts/pr_watch.py --state /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay-fixtures/local-discovery/watch.json wait` in the background, unless one is running.",
+    "next: when it exits, do the next: lines it prints."
+  ],
+  "recorded-pr": [
+    "fact: fixture/repo#7 OPEN draft=True checks=green",
+    "next: mark fixture/repo#7 ready if Delivery authority allows.",
+    "next: run `python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/package/kc-dev-flow-2/scripts/pr_watch.py --state /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay-fixtures/recorded-pr/watch.json wait` in the background, unless one is running.",
+    "next: when it exits, do the next: lines it prints."
+  ]
+}

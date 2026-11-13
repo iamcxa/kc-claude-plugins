@@ -1,0 +1,91 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+      "--require",
+      "0084",
+      "--root",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/candidate"
+    ],
+    "exit": 0,
+    "output": "adr-lint.log"
+  },
+  {
+    "name": "number-guards",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/candidate",
+      "--base",
+      "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+      "--head",
+      "45d5ebb9d24665c0904aca5412123a7224d056cc",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design.md"
+    ],
+    "exit": 0,
+    "output": "number-guards.log"
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+      "45d5ebb9d24665c0904aca5412123a7224d056cc",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "comment-ratio.log"
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design"
+    ],
+    "exit": 0,
+    "output": "dispatch-records.log"
+  },
+  {
+    "name": "design-surfaces",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/pilot-ideation-runs-a-probe-before-the-design.md"
+    ],
+    "exit": 0,
+    "output": "design-surfaces.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+      "45d5ebb9d24665c0904aca5412123a7224d056cc",
+      "--repo",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/candidate"
+    ],
+    "exit": 0,
+    "output": "doc-impact.log"
+  }
+]

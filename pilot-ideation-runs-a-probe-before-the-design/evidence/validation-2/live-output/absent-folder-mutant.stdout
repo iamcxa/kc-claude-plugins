@@ -1,0 +1,1 @@
+next: record absent-folder's PR with status --set absent-folder pr=<owner/repo>#<N>; its worktree is not on this machine.

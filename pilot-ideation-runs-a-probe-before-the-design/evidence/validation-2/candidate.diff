@@ -1,0 +1,82 @@
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index f73a1722c..4521b06e1 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -183,8 +183,13 @@ worker authors the PRFAQ and the artifact each recorded surface owes. When
+ as a `Result:` line before dispatching the worker. Missing skill or profile
+ authority requires a hold report rather than a baseline or default-profile
+ substitution.
+-Ideation writes no repository file, branch or commit: the design, the criteria and any
+-ADR draft live in the task file, and a draft carries no ADR number.
++Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the design
++says why not; it is never pushed or deployed and uses no credential or shared
++environment. Every criterion's evidence command runs once on it, recording command, exit and output path
++per criterion, provenance included; unrunnable: `Not provable now`. A probe round is one
++ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
++repository file, branch or commit. The design, the criteria and any ADR draft live in
++the task file, and a draft carries no ADR number.
+ 
+ - **Outputs:** Current design definition and acceptance criteria with reproducible
+   evidence clauses; unresolved decisions identified for the user.
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 4e7bc09f4..18dcad38b 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -79,11 +79,14 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=25, why="record outside-gate questions when asked and read stage times and counts on demand",
+          captain='「五份都核准（建議）」 (Captain, ideation gate, 2026-11-12), answering the bound question: 「一、計時紀錄：「重做」算同一階段第二次以後的派工；「打斷」算我在關卡以外問你的每一題，由我在問的當下記一筆；工具只報告缺漏、不擋任務；流程說明多 25 個字。」',
+          loaded="startup and resume of the First Officer, and before each outside-gate Captain question"),
++    # see docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md
++    dict(delta=66, why="Pilot ideation carries probe permission, local bounds, criterion proof runs and a third-dispatch hold instead of the blanket write ban",
++         captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
++         loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+ KNOWN_DUPLICATES = {
+-    ("skills/ideation/principles.md", "ideation writes no repository file branch or commit"),
+     # FO reads the workflow copy before presenting the gate; the validation worker reads its own.
+     ("skills/validation/principles.md", "validation runs python3 <package>/scripts/adr_lint.py"),
+     # The workflow copy stays for FO (Delivery authority); workers no longer receive that section.
+diff --git a/kc-dev-flow-2/skills/ideation/principles.md b/kc-dev-flow-2/skills/ideation/principles.md
+index 0a761403c..c277bbc12 100644
+--- a/kc-dev-flow-2/skills/ideation/principles.md
++++ b/kc-dev-flow-2/skills/ideation/principles.md
+@@ -35,8 +35,7 @@ artifact each recorded surface owes, or without a usable `## Acceptance criteria
+ section: the first line that equals that heading in any case once surrounding
+ whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
+ `spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
+-Ideation writes no repository file, branch or commit; the design, the criteria and
+-any ADR draft live in the task file. A design that lands an ADR names the ruling and
++A design that lands an ADR names the ruling and
+ the file's short title, with no ADR number: FO reserves the number when it dispatches
+ implementation. Reconcile material research and feedback
+ into the same definition before handoff. Correct contradictions in depicted or
+diff --git a/kc-dev-flow-2/skills/ideation/profiles/pilot.md b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+index ec4840103..d2b286469 100644
+--- a/kc-dev-flow-2/skills/ideation/profiles/pilot.md
++++ b/kc-dev-flow-2/skills/ideation/profiles/pilot.md
+@@ -4,6 +4,14 @@ Define the smallest useful end-to-end slice, who will use it, its real seams,
+ acceptance evidence and explicit non-goals. Identify any new obligation that
+ would require a profile change; leave that decision with the user.
+ 
++## Probe
++
++Build the probe as the first paragraph of [POC implementation](../../implementation/profiles/poc.md)
++builds a proof: falsify the riskiest assumption first; when it holds, widen toward the
++slice and check the next. Work in `.worktrees/poc-<slug>` from the trunk. Under `Probe:`
++in the design, record the branch, base and last commit and each hypothesis with its
++result; remove the worktree before reporting and keep the branch.
++
+ ## Data kept across screens or sign-in
+ 
+ When a `ui` design keeps something a person typed or chose while they move between
+diff --git a/kc-dev-flow-2/skills/implementation/profiles/pilot.md b/kc-dev-flow-2/skills/implementation/profiles/pilot.md
+index 9d918e4c4..3b2ebca69 100644
+--- a/kc-dev-flow-2/skills/implementation/profiles/pilot.md
++++ b/kc-dev-flow-2/skills/implementation/profiles/pilot.md
+@@ -5,3 +5,4 @@ Test owned behavior and exposed failure/retry paths, retaining enough diagnostic
+ for limited use and the next iteration. Document consumer-visible changes where
+ the delivery boundary requires them. Surface added production obligations
+ before expanding implementation.
++Read a branch the design records under `Probe:`; delete it once your candidate is committed.

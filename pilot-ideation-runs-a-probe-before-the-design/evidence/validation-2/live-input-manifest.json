@@ -1,0 +1,112 @@
+[
+  {
+    "path": "checklist.txt",
+    "sha256": "94508bdcfa6324406c56a727606d7b26e1164203e311212c500947da5e0197d7",
+    "bytes": 1108
+  },
+  {
+    "path": "dispatch.md",
+    "sha256": "b38898682bbabfdada3c55ad25c79304ced7bdd100bba7c1f6c66f3b3ed035d8",
+    "bytes": 6966
+  },
+  {
+    "path": "outer-prompt.txt",
+    "sha256": "03ef7a9bae9cb839f6574dd01d3b0ced12990b0b78d83a51e8c6d24af059c1de",
+    "bytes": 1685
+  },
+  {
+    "path": "package/README.md",
+    "sha256": "b51c728b460ac8618426fd6ddad67a19bf4a07c1841128730cb3706312a82f30",
+    "bytes": 23100
+  },
+  {
+    "path": "package/references/profiles/pilot.md",
+    "sha256": "5fd70bc98acfef5bc3ad08ee27e8d1f760b1e81b7ec19e9fbd55718f7f77e10a",
+    "bytes": 950
+  },
+  {
+    "path": "package/references/sd/workflow.md",
+    "sha256": "912c8133df2a838104e49cf0f4599520d31a0e6542f3df9628862d7732d34c7a",
+    "bytes": 41157
+  },
+  {
+    "path": "package/skills/ideation/SKILL.md",
+    "sha256": "46bd0772651a9de924ea928bab5bb977153f6f705adb0963af642e4e82487db8",
+    "bytes": 2484
+  },
+  {
+    "path": "package/skills/ideation/design-review.md",
+    "sha256": "2e08f50d03baaf2dcb61b0497c3b4e9ba4098f1fe2f12a6ce23971c771be8094",
+    "bytes": 3329
+  },
+  {
+    "path": "package/skills/ideation/principles.md",
+    "sha256": "fcdb78da22873401a162342d5f77f5b9833c02be09c0d113538a6ee8d0ce7726",
+    "bytes": 4297
+  },
+  {
+    "path": "package/skills/ideation/profiles/pilot.md",
+    "sha256": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3",
+    "bytes": 1207
+  },
+  {
+    "path": "package/skills/ideation/profiles/poc.md",
+    "sha256": "d8e421e3f5f4f382448d24c8f8df47aa458191b258c0dc3d7e82a452e09c0206",
+    "bytes": 261
+  },
+  {
+    "path": "package/skills/ideation/profiles/prod.md",
+    "sha256": "10ff5019d5750d24917171ff8b886c45deb0340141b795c836b15dd404e765d6",
+    "bytes": 4038
+  },
+  {
+    "path": "package/skills/implementation/principles.md",
+    "sha256": "03f168d23bf0951380301442b471a0997c622127fd0f5a5b7d5d8e440f2fb63d",
+    "bytes": 5393
+  },
+  {
+    "path": "package/skills/implementation/profiles/poc.md",
+    "sha256": "d64d68a2c77d58caf880628c92965f0b7851d81093c57f204352f63918e7fee5",
+    "bytes": 642
+  },
+  {
+    "path": "product-context/AGENTS.md",
+    "sha256": "031df20ce00ec2e9ff51f1a240b5dc8568c2a74c9deebb6f51bc08e98079bdb2",
+    "bytes": 249
+  },
+  {
+    "path": "product-context/learning.md",
+    "sha256": "423f29338a379ed181fdeea378970d3df7f5e38f68300e0c93862ac2a8226e12",
+    "bytes": 27997
+  },
+  {
+    "path": "scope.txt",
+    "sha256": "f9e22c63d5ca4d094d7087f8588aa4ed9f1ea50c8f1eff841e169eceb9ff2dad",
+    "bytes": 2476
+  },
+  {
+    "path": "spacedock/skills/ensign/SKILL.md",
+    "sha256": "f20f496405dc474c91e4af7ba46b50485301b902113ad69a258c3c17e46b0974",
+    "bytes": 578
+  },
+  {
+    "path": "spacedock/skills/ensign/references/codex-ensign-runtime.md",
+    "sha256": "30a874fbd165d649ca6fc82ea909f220126297264c56d779681a44802d9e7ee1",
+    "bytes": 2333
+  },
+  {
+    "path": "spacedock/skills/ensign/references/ensign-shared-core.md",
+    "sha256": "fd4a57bd25de408cae20a108bbc2380f4afc515280906ce54f864fc35c042667",
+    "bytes": 11006
+  },
+  {
+    "path": "stage-def.txt",
+    "sha256": "df1abb1794b41fbbeb31434c3cbb783929e6c4686b6257b783eb3361be6c3700",
+    "bytes": 4697
+  },
+  {
+    "path": "task-before.md",
+    "sha256": "ad788c66a9b167ec0b56bc977ed5a7f625bd19a8b977b6ad0357da50e9b4120d",
+    "bytes": 4041
+  }
+]

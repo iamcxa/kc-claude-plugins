@@ -1,0 +1,7 @@
+worktree /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/code.git
+bare
+
+worktree /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/live/code
+HEAD 88f86f2749dadb6f4ef0cf9aa089c1827096865b
+detached
+

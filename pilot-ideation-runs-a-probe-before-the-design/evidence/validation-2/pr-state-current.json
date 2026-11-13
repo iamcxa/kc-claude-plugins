@@ -1,0 +1,14 @@
+{
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/864",
+  "number": 864,
+  "state": "open",
+  "merged": false,
+  "draft": false,
+  "base_sha": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "head_sha": "45d5ebb9d24665c0904aca5412123a7224d056cc",
+  "updated_at": "2026-11-13T08:37:38Z",
+  "merged_at": null,
+  "changed_files": 6,
+  "additions": 95,
+  "deletions": 5
+}

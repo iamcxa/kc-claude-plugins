@@ -1,0 +1,83 @@
+[
+  {
+    "arm": "positive",
+    "criterion": "AC-1",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py",
+      "AC-1"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "AC-8-positive-AC-1.log"
+  },
+  {
+    "arm": "positive",
+    "criterion": "AC-2",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py",
+      "AC-2"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "AC-8-positive-AC-2.log"
+  },
+  {
+    "arm": "positive",
+    "criterion": "AC-3",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py",
+      "AC-3"
+    ],
+    "exit": 1,
+    "expected_exit": 0,
+    "output": "AC-8-positive-AC-3-initial-origin-ref.log",
+    "classification": "setup error: cloned refs/heads/main differs from pinned origin/main"
+  },
+  {
+    "arm": "negative",
+    "criterion": "AC-1",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-negative/code/.replay/pr_watch_probe.py",
+      "AC-1"
+    ],
+    "exit": 1,
+    "expected_exit": 1,
+    "output": "AC-8-negative-AC-1.log"
+  },
+  {
+    "arm": "positive",
+    "criterion": "AC-3",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py",
+      "AC-3"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "AC-8-positive-AC-3.log",
+    "setup": "origin/main pinned to subject base"
+  },
+  {
+    "arm": "positive",
+    "criterion": "AC-4",
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py",
+      "AC-4"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "output": "AC-8-positive-AC-4.log",
+    "setup": "origin/main pinned to subject base"
+  }
+]

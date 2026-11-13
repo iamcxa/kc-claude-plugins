@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-negative/code/.replay/pr_watch_probe.py", line 108, in <module>
+    assert lines == expected and not row["provider_calls"] and not row["watch_exists"], row
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'command': ['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-negative/code/.replay/pr_watch_probe.py', '--invoke', '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-negative/code/.replay-fixtures/absent-flat'], 'exit': 0, 'stdout': 'absent-flat.stdout', 'stderr': 'absent-flat.stderr', 'input_unchanged': True, 'provider_calls': [], 'watch_exists': False}

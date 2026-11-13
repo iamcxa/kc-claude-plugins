@@ -1,0 +1,27 @@
+[
+  {
+    "path": "kc-dev-flow-2/skills/ideation/SKILL.md",
+    "unchanged_since_validation_1": true,
+    "sha256": "46bd0772651a9de924ea928bab5bb977153f6f705adb0963af642e4e82487db8"
+  },
+  {
+    "path": "kc-dev-flow-2/skills/ideation/principles.md",
+    "unchanged_since_validation_1": true,
+    "sha256": "fcdb78da22873401a162342d5f77f5b9833c02be09c0d113538a6ee8d0ce7726"
+  },
+  {
+    "path": "kc-dev-flow-2/skills/ideation/profiles/pilot.md",
+    "unchanged_since_validation_1": true,
+    "sha256": "ef0ca54df016464d8f726dc252c4f8def1afb5941a73b87befd92c355f41e9a3"
+  },
+  {
+    "path": "kc-dev-flow-2/skills/implementation/profiles/pilot.md",
+    "unchanged_since_validation_1": true,
+    "sha256": "761f90b3d60f5a2de8b952a0f3b98a3d54e4efeae2e32bcc2cae7ae7882fb04c"
+  },
+  {
+    "path": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+    "unchanged_since_validation_1": true,
+    "sha256": "a01aca770e3feefe567c042d41b4d8c615b9361e9b83c7831900a5f864b337c4"
+  }
+]

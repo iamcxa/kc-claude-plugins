@@ -1,0 +1,9 @@
+{
+  "base": "88f86f2749dadb6f4ef0cf9aa089c1827096865b",
+  "package_source_sha256": "3bbef070429e27ee7db054f2ef920fe6ae535172981e1737afd0b843b570db04",
+  "product_diff": "empty",
+  "regression": "present, not run",
+  "suites": "not run",
+  "private_adopters_available": 0,
+  "private_adopters_unavailable": 3
+}

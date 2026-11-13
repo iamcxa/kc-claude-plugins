@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/AC-8-rerun-positive/code/.replay/pr_watch_probe.py", line 141, in <module>
+    assert source == pinned
+           ^^^^^^^^^^^^^^^^
+AssertionError

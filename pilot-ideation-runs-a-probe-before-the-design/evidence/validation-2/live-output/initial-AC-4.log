@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/validation-2/live/code/.worktrees/poc-pr-watch-tasks-foreign-worktree-replay2/.replay/pr_watch_probe.py", line 153, in <module>
+    assert (PACKAGE / relative).read_text() == git("show", base + ":kc-dev-flow-2/" + relative) + "\n"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

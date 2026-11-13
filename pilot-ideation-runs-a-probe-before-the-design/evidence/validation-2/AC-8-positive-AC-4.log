@@ -1,0 +1,35 @@
+{
+  "criterion": "AC-4",
+  "passed": true,
+  "result": {
+    "startup": {
+      "before": 6094,
+      "after": 6094,
+      "delta": 0,
+      "reader_set": "full workflow + lifecycle mod + synthetic tasks output"
+    },
+    "idle-open": {
+      "before": 6135,
+      "after": 6135,
+      "delta": 0,
+      "reader_set": "full workflow + lifecycle mod + synthetic tasks output"
+    },
+    "idle-merged": {
+      "before": 6081,
+      "after": 6081,
+      "delta": 0,
+      "reader_set": "full workflow + lifecycle mod + synthetic tasks output"
+    },
+    "after-archive": {
+      "before": 6081,
+      "after": 6081,
+      "delta": 0,
+      "reader_set": "full workflow + lifecycle mod + synthetic tasks output"
+    },
+    "merge-ask": {
+      "before": "Not provable now",
+      "after": "Not provable now",
+      "reason": "no pending approved delivery; source unchanged"
+    }
+  }
+}
