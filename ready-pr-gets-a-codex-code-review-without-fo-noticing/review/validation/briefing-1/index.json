@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1",
+  "question": "決定：合併 #867（Codex 擴充的說明加一句：FO 把 PR 標成可審查時，同時留言請 Codex 審查一次）嗎？建議合併。同意即接受：這是你今天把「自動觸發」改成一句規則的那張，整個 PR 只加一行文字，沒有程式；仍然靠 FO 記得做；偶爾會讓 Codex 對同一版多審一次，成本沒量過；和主線上未發版的 #864 一起等下個版本；Codex 和本機審查都乾淨，Copilot 因額度不足沒有審。 Squash merge with --match-head-commit 1c8a29faf402ef6d7018c298f59bad58d38cfb1d, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.",
+  "artifacts": [
+    {
+      "id": "artifact:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/11d10dd611d317dae25c5d823e2352920faa82c6/ready-pr-gets-a-codex-code-review-without-fo-noticing.md",
+      "rev": "sha256:1c798158146cd81359022568f28261533b90ac20dd7ddb8ca7f0dd3b0e01dfd7",
+      "mediaType": "text/markdown",
+      "summary": "Unchecked counts: 2\nDelivery of ready-pr-gets-a-codex-code-review-without-fo-noticing, PR #867, merge-front batch of 2026-11-13.\nSufficiency: the Codex extension's text says that when FO marks a PR ready it comments a Codex review request once, at the step for marking ready, and removing the sentence fails the check (validation report, Astra, 2026-11-13, PASSED at 1c8a29faf; acceptance script run by FO 2026-11-13, exit 0).\nNecessity: kc-dev-flow-2/extensions/codex/EXTENSION.md changes against the PR's base, one added line (gh pr view 867 file list, FO read 2026-11-13; judged in the validation report, Astra, 2026-11-13).\nAcceptance, run by FO in a fresh shell 2026-11-13, exit 0: bash --noprofile --norc '/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/ready-pr-gets-a-codex-code-review-without-fo-noticing/evidence/validation-1/acceptance.sh'\nCaptain steps: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/ready-pr-gets-a-codex-code-review-without-fo-noticing/captain-steps/1.md\nPR state step, run by FO in a fresh shell 2026-11-13, exit 0: gh pr view 867 --repo iamcxa/kc-claude-plugins --json state,isDraft,headRefOid\nMerge result: origin/main is 6a1eaf837, the commit this PR's branch was cut from, so no merge-result run is owed (git merge-base, FO run 2026-11-13).\nExternal rounds: 2.\nExternal round sources: RoboRev clean on 1c8a29faf, evidence=roborev:1854 (FO run 2026-11-13); Codex code review of 1c8a29faf completed with no finding (codex_review.py, FO run 2026-11-13, evidence=summary:6855361135@1c8a29faf).\nSecond reviewer: Copilot because the PR changes a review step FO follows, a review rule.\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5892435765\nCopilot retry: available when the Captain confirms quota is back.\nCI: six checks on 1c8a29faf finished SUCCESS and one, the docs deploy, was SKIPPED (gh pr view statusCheckRollup, read by FO 2026-11-13).\nValidation rounds: 1. PASSED at 1c8a29faf with no finding; scaled to a one-sentence change (sentence check, removal falsifier, lint, the extension's tests; the full package suite was not rerun).\nCaptain amendments: 1."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/11d10dd611d317dae25c5d823e2352920faa82c6/ready-pr-gets-a-codex-code-review-without-fo-noticing/merge/ask-1.json",
+      "mediaType": "application/json",
+      "rev": "sha256:d5de3d0e6eca70996626d6a8c8d3a1abc8125dd9dd2697735cc4ca4cf98b29b9"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/11d10dd611d317dae25c5d823e2352920faa82c6/ready-pr-gets-a-codex-code-review-without-fo-noticing/review/copilot-not-run.txt",
+      "mediaType": "text/plain",
+      "rev": "sha256:23fb60b9b06501636c30daa634ed92aa75f58d3e46fb2a3fd4036b4f3a786f2c"
+    }
+  ]
+}

@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ready-pr-gets-a-codex-code-review-without-fo-noticing-validation-1
+              briefing:
+                id: briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1
+                digest: sha256:69986d73379c43e6f84d9caeca88d379ed259f016e556f6b9fa7b82504d00b15
+                room-ref: ./ready-pr-gets-a-codex-code-review-without-fo-noticing/review/validation/briefing-1
 started: 2026-11-13T13:42:51Z
 worktree: .worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing
 pr: iamcxa/kc-claude-plugins#867
