@@ -49,7 +49,7 @@ started: 2026-11-13T13:42:51Z
 1 implementation and 2 validation cycles, in one package PR.
 
 ## Stop condition
-- In a replay of the four recorded PR states, the security-only ones get exactly one trigger and none gets two, with no FO step between ready and the trigger.
+- Superseded by Captain amendment 1: the outcome is one sentence in the Codex extension's text; see the amendment.
 
 ## FO alignment
 
@@ -57,7 +57,17 @@ Alignment: not needed before ideation: an observed friction with counts; the mec
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-13: amendment 1 withdraws the automation and its exactly-once condition and replaces them with one sentence of extension text the Captain worded himself; nothing is built that a reviewer could find withdrawn behaviour in.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-13, chat
+Captain: 「「自動觸發 Codex 審查」改成一句規則：FO 標成可審查時同時留言請 Codex 審查一次；原本的自動化和「恰好一次」條件作廢」 (chat, 2026-11-13)
+Asked: 「「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex 審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。」
+Supersedes: Stop condition (no replacement)
+Superseded text:
+
+- In a replay of the four recorded PR states, the security-only ones get exactly one trigger and none gets two, with no FO step between ready and the trigger.
 
 ## Design
 
