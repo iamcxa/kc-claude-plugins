@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-1:revision-1",
+  "question": "決定：要不要讓「合併前那一段」的三張小任務進設計階段？建議要。第一張：合併提問的摘要由任務裡已有的紀錄自動產生，我只寫問你的那一句。第二張：PR 標成可審查後自動觸發一次 Codex 程式碼審查，不用等我發現它只做了安全掃描。第三張：驗證者留下的驗收指令和報告格式，要能直接通過合併檢查，不用我回頭請它改。三張預算都是 1 implementation and 2 validation cycles，各一個套件 PR。同意即接受：三張都符合你今天給的常設授權條件（不碰畫面和資料庫、只動一個元件），所以設計階段的試作沒踩停止條件時由我代記設計關卡、同一個 worker 接著實作，合併仍每張問你；第一張和第三張都會動到合併檢查那支程式，所以我排先後、不並行；這三張要解的是「驗證通過到問你合併」那 85 到 120 分鐘，能省多少要做完才量得到。",
+  "artifacts": [
+    {
+      "id": "artifact:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a146b5ed15d555c40fa10740d54d6669790bd9bc/ready-pr-gets-a-codex-code-review-without-fo-noticing.md",
+      "rev": "sha256:a8988f4c5e1b35bd9cec0b1c8007a341387c9eec52d13f19b321ac3ea2a38ea4",
+      "mediaType": "text/markdown",
+      "summary": "profile pilot, variant kc-dev-flow-2; Budget: 1 implementation and 2 validation cycles, in one package PR; Surfaces none; scope, non-goals and stop condition as seeded in the task file; ideation runs probe-first; the Captain's standing grant of 2026-11-13 applies to the ideation gate when no stop fires; seed check exit 0 (FO run 2026-11-13)."
+    }
+  ]
+}

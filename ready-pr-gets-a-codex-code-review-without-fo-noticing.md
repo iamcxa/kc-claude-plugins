@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ready-pr-gets-a-codex-code-review-without-fo-noticing-backlog-1
+              briefing:
+                id: briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-1:revision-1
+                digest: sha256:86f5ecfa7e4c86ae717d90246f83f5b9d57be182e55d8f8cff001e90558d85fb
+                room-ref: ./ready-pr-gets-a-codex-code-review-without-fo-noticing/review/backlog/briefing-1
 ---
 
 ## Scope
