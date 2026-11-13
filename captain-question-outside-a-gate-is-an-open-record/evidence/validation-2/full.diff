@@ -1,0 +1,1239 @@
+diff --git a/docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md b/docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md
+new file mode 100644
+index 000000000..e539b3ae4
+--- /dev/null
++++ b/docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md
+@@ -0,0 +1,64 @@
++# 0086. A Captain question outside a gate stays open until answered
++
++Date: 2026-11-14
++
++## Status
++
++Accepted
++
++## Context
++
++ADR 0080 recorded interruptions in asks.jsonl but held no open-question state.
++The approved Pilot probe found no records for nine questions asked after that
++rule reached the workflow. Its blind read led to contract revision 2, including
++an explicit approval option, option effects and affected tasks. The Captain
++approved the five design recommendations, reopening the report-only choice for
++missing amendment-question records.
++
++## Decision
++
++**Words:** 「開「待決定事項紀錄」任務，照這個範圍」 — Captain, chat,
++2026-11-13, answering whether to open the question-record task; then
++「核准待決定事項紀錄的設計，五項都照建議」 — Captain, chat,
++2026-11-14, its ideation gate; then 「待決定事項紀錄的說明句補上 --by "<session>"，啟動字數從 39 改成 41」 — Captain, chat,
++2026-11-14, Captain amendment 1.
++
++**Options considered:**
++- D1: first file a proposed task and use its backlog gate when no task is in
++  progress (chosen); a second workflow-wide asks folder or unrecorded questions
++  would create another writing location or omit them.
++- D2: list unresolved native gate attempts beside questions with waits marked
++  at least (chosen), rather than require every reader to merge them.
++- D3: use the state branch as the common record, retaining Review for long
++  questions and recording its resolution id (chosen), rather than publish every
++  question as a briefing.
++- D4: flag three showings without Review in the list (chosen), rather than add
++  startup instructions or postpone the flag.
++- D5: refuse an amendment with an unrecorded quoted question (chosen), allowing
++  a late record with an unknown asking time, rather than keep report-only checks.
++
++**Recommended:** D1 through D5 as the ideation gate recommended and the Captain
++approved.
++
++**Protects:**
++- `kc-dev-flow-2/scripts/task_timeline.py` — question events, open listing and interruption counts
++- `kc-dev-flow-2/scripts/design_surfaces.py` — dated amendment-question omission refusal
++
++The record's format has one home in
++`kc-dev-flow-2/references/captain-question-records.md`. A question remains open
++until its answer or withdrawal is recorded; acted follows an answer once.
++Legacy lines remain readable and do not imply an open state. The omission rule
++starts from the adopted workflow's first commit introducing the ask sentence,
++not from the state checkout's layout or a guessed date. Unavailable history
++skips that rule with a diagnostic. This amends ADR 0080 only for this record and
++its omission refusal; the ask sentence grows from 25 to 41 words at startup,
++with its approved budget step under ADR 0020. Timing and missing-time reporting remain unchanged.
++
++## Consequences
++
++A declined no-task proposal leaves a closed task file. Native gate waits can be
++understated because Spacedock does not stamp prepare time. FO still has to read
++the list and record questions at asking time; the omission check proves only
++that a record exists by the next gate. A live released day, a second blind reader
++and a remote reader remain separate evidence. Reopen if those observations show
++that the contract cannot represent the questions or preserve their ownership.
+diff --git a/kc-dev-flow-2/references/captain-question-records.md b/kc-dev-flow-2/references/captain-question-records.md
+new file mode 100644
+index 000000000..1c5116963
+--- /dev/null
++++ b/kc-dev-flow-2/references/captain-question-records.md
+@@ -0,0 +1,201 @@
++# Contract: Captain question records (`asks.jsonl`, format version 1), revision 2
++
++Format version 1, contract revision 2, 2026-11-14.
++Nothing here is a Spacedock (workflow runtime) format; kc-dev-flow-2 writes it.
++
++## 1. What this is
++
++A dev2 First Officer (FO, the agent that runs a workflow) sometimes asks the
++Captain (the human owner) a question outside a scheduled Spacedock gate. Each such
++question is one **record**. A record is **open** from the moment it is asked until
++the Captain's answer is recorded or the FO withdraws it. Only open records wait on
++the Captain.
++
++A reader can list every open question of a workflow, with who waits, since when and
++what the answer holds, by reading files only.
++
++## 2. Where records live
++
++- The reader knows which project and workflow it reads from the checkout or branch
++  it reads; no line names them. For this workflow the branch is
++  `spacedock-state/dev2` of `iamcxa/kc-claude-plugins`.
++- One file per task, in the task's folder:
++
++  | Task file | Record file |
++  | --- | --- |
++  | `<slug>.md` | `<slug>/asks.jsonl` (the folder may hold nothing else) |
++  | `<slug>/index.md` | `<slug>/asks.jsonl` |
++  | `_archive/<slug>.md` or `_archive/<slug>/index.md` | `_archive/<slug>/asks.jsonl` |
++
++- To enumerate, list the branch's paths (`git ls-tree -r --name-only <ref>`) and
++  keep those matching `^(_archive/)?[^/]+/asks\.jsonl$`. A task archived while a
++  question is open is a writer error; a reader lists it and may report it.
++- A question is filed under the task the FO was working on when it arose, including
++  a question about whether to open a new task. A question raised while no task was
++  in progress is not covered by version 1.
++- Files are append-only: a line once written keeps its content and position. Lines
++  reach the remote branch when the FO pushes its state commit, usually minutes later.
++- An absent file means "no record kept for this task", not "no questions".
++
++## 3. Line format
++
++One JSON object per line, UTF-8. Times are UTC, `YYYY-MM-DDTHH:MM:SSZ`, whole
++seconds. Every version-1 line carries:
++
++| Field | Type | Meaning |
++| --- | --- | --- |
++| `v` | integer | `1`. |
++| `event` | string | `ask`, `reask`, `revise`, `answer`, `acted` or `withdraw`. |
++| `key` | string | `<slug>#<n>`, n = 1, 2, … counting only `ask` lines of this file. Never reused, never renumbered. |
++| `at` | string | When the line was written, from the machine clock. |
++
++**Legacy lines** (kc-dev-flow-2 0.40.0 to 0.41.x) have no `v`:
++`{"at": "...", "asked": "<text>"}`. Each is one question shown at `at`, state
++unknown: list it neither as open nor as answered. It takes no key number.
++
++**Forward compatibility.** Ignore fields this document does not define. Ignore a line
++whose `event` is unknown. A line with `v` greater than 1: show its key's state as
++unknown rather than guess.
++
++### 3.1 `ask`
++
++| Field | Type | Required | Meaning |
++| --- | --- | --- | --- |
++| `asked` | string | yes | The question exactly as shown. |
++| `asked_at` | string or null | yes | When it was shown. Equal to `at` when written at the moment of asking. `null` when written afterwards; never estimated and never corrected later. |
++| `channel` | string | yes | `chat`, `dialog` (the host's question dialog), `review` (a Spacedock Review briefing) or `message` (relayed by another agent). |
++| `by` | string | yes | The asking FO's session name: who waits. |
++| `holds` | string | yes | `task`: no work proceeds on this task until answered. `acceptance`: work continues, but the task cannot pass its next gate or be delivered until answered. `nothing`: work continues; the answer shapes later work only. |
++| `options` | list | no | Each `{"id": "<short id>", "text": "<as shown>", "effect": "<what follows if chosen>"}`; `effect` optional. Absent means an open-ended question. An id keeps its meaning for the life of the key. |
++| `recommend` | string or null | no | An id in `options`, or null. |
++| `grounds` | string | no | FO's reason for the recommendation, as shown. |
++| `approve_means` | string or null | no | The option a plain approval (an approve with no words) selects. Set only when the shown question says so in words; otherwise null. |
++| `tasks` | list of strings | no | Other task slugs the answer applies to. The record exists once; those tasks do not repeat it. |
++| `refs` | list | no | Material to look at: `{"kind": "file" \| "commit" \| "url" \| "command" \| "record", "ref": "<...>", "ready": true \| false}`. A `file` is relative to the task folder; a `record` is a Spacedock id in the same branch. `ready: false`: it does not exist yet. |
++
++This is revision 1 of the question.
++
++### 3.2 `reask` — shown to the Captain again
++
++Fields: `channel`; `briefing` (string or null): the Spacedock Review briefing id when
++this showing published the question there. A reask shows the current revision. Each
++`ask` and `reask` is one showing, so one interruption; no other line is.
++
++### 3.3 `revise` — the question changed while open
++
++Fields: `revision` (previous + 1), `reason` (required), and the complete new value of
++`asked`, `holds`, `options`, `recommend`, `grounds`, `approve_means`, `tasks`,
++`refs`. An optional field left out of a revise is empty in the new revision, not
++carried over. A revise is not a showing: when the FO shows the revised question it
++also writes a `reask`. A revise does not change waiting-since. Earlier revisions stay
++readable in their own lines; revision n is the `ask` (n = 1) or the `revise` with
++`revision: n`.
++
++### 3.4 `answer`
++
++| Field | Type | Required | Meaning |
++| --- | --- | --- | --- |
++| `revision` | integer | yes | The revision current at the latest showing in the channel he answered in. |
++| `words` | string or null | yes | His words verbatim; null when he gave none. |
++| `option` | string or null | yes | The option he chose, read from his words or his button; for an answer without words, that revision's `approve_means`. Null when the question had no options or his words choose none. |
++| `resolution` | string or null | yes | The Spacedock Review resolution id when he answered on Review; otherwise null. |
++| `channel` | string | yes | Where he answered. |
++
++At least one of `words` and `option` is non-null. An answer without words to a
++question with options and a null `approve_means` cannot be written: the FO asks
++him which option. `option` is read against the answered revision's options, so an
++answer to an older revision stays valid; if the FO judges it no longer applies, the
++FO asks a new question (a new key) rather than reopening this one.
++
++### 3.5 `acted`
++
++Field: `what` (string). The FO did what the answer asked.
++
++### 3.6 `withdraw`
++
++Field: `reason` (string). The FO no longer needs the answer.
++
++## 4. State of a question
++
++```
++ask ──► open ──answer──► answered ──acted──► done
++         │ reask, revise
++         └──withdraw──► withdrawn
++```
++
++Fold the lines of one key in file order. Before its `ask`, a key's lines are
++ignored; a second `ask` with the same key is ignored. The first `answer` or
++`withdraw` closes the question and decides its state. After it, the only valid line
++is one `acted`, and only after an `answer`. Every other line after closing is a
++writer error: ignore it and report it.
++
++## 5. What a reader may rely on
++
++| Reader field | How to compute |
++| --- | --- |
++| key | `key`. A new line with the key means the record changed. |
++| question, options, recommendation, grounds, approve_means, holds, refs, tasks | from the current revision. |
++| who waits | `by` of the `ask`. |
++| waiting since | `asked_at` of the `ask`. When null, show unknown; the question was shown no later than the `ask` line's `at`, so the wait is at least `now − at`. Never use a reask, revise or Review time. |
++| interruptions | number of `ask` and `reask` lines. |
++| last shown | the latest `ask` or `reask`: its `at`, `channel` and `briefing`. |
++| state | section 4. Open: waits on the Captain. Answered: waits on the FO. Done and withdrawn: closed. |
++| holds | three values as in 3.1; do not collapse them. |
++
++A reader may not rely on: `grounds`, `effect`, `what` or `reason` being
++machine-readable; a question the FO forgot to record existing at all; questions
++inside Spacedock gates, which are gate records in the task file, not in this file.
++
++## 6. Example
++
++```json
++{"v":1,"event":"ask","key":"demo-task#1","at":"2026-11-13T08:00:05Z","asked_at":"2026-11-13T08:00:05Z","asked":"Open the task with this scope? Approving accepts option yes.","channel":"dialog","by":"dev2 FO","holds":"nothing","options":[{"id":"yes","text":"Open it","effect":"FO files the task in backlog"},{"id":"no","text":"Not now"}],"recommend":"yes","grounds":"Two FOs relayed the same need today.","approve_means":"yes"}
++{"v":1,"event":"reask","key":"demo-task#1","at":"2026-11-13T09:10:00Z","channel":"review","briefing":"briefing:demo-task:ask-1"}
++{"v":1,"event":"answer","key":"demo-task#1","at":"2026-11-13T09:12:30Z","revision":1,"words":null,"option":"yes","resolution":"resolution:review:demo-task:1","channel":"review"}
++{"v":1,"event":"acted","key":"demo-task#1","at":"2026-11-13T09:15:00Z","what":"Filed the task"}
++```
++
++## 7. Not covered by version 1
++
++- A question raised while no task was in progress: FO first files the proposed task
++  with Spacedock new and asks through its backlog gate.
++- Open Spacedock gates. A lister may show them beside these records, read from the
++  task files' `gates:` records; that is not this format.
++
++
++## 8. Commands and gate rows
++
++After `python3 <package>/scripts/task_timeline.py <state> <task>`, use
++`ask "<question>" --by "<session>" --holds <task|acceptance|nothing>`.
++The writer stamps UTC times and prints commands for later showings, answers and
++withdrawals. `--channel` defaults to `chat`; `--late` writes `asked_at: null`.
++`--option id=text[=effect]`, `--ref '{"kind":"file","ref":"design.md","ready":false}'`
++and `--tasks other-task` may accompany an ask or revise; options and refs may repeat.
++Use `--recommend id`, `--grounds "<reason>"`, and `--approve-means id` for the
++recommendation and the stated meaning of approval. Revise takes a key,
++`--revision N --question "<new question>" --holds <value> --reason "<reason>"`,
++and the complete replacement fields. Reask takes a key, `--channel` and optional
++`--briefing`. Answer takes a key, `--channel`, optional `--words`, `--option id`
++and `--resolution`; its revision defaults to that channel's latest showing.
++Acted takes a key and `--what`; withdraw takes a key and `--reason`.
++
++`python3 <package>/scripts/task_timeline.py <state> --open --json` lists open
++questions. Add `--as-of <UTC>` to fold lines written by that instant. The derived
++`question` field is `asked` from the current revision; `waiting_min` is elapsed
++minutes with `waiting_bound: exact` or `at least`. An unknown `waiting_since`
++stays null, with the lower bound measured from `recorded_at`. `publish_review`
++is true after three showings without a Review showing; FO publishes the briefing
++and records a reask. This flag itself publishes nothing.
++
++Add `--gates` to include each unresolved attempt in the task files' Spacedock
++gate records once. Its question comes from the bound briefing, its owner is
++unknown (`by: null`), and its wait is **at least** the time since the first state
++commit naming the briefing id, using the author date; a missing or impossible
++date stays unknown. Gate rows are not written into `asks.jsonl`.
++
++The amendment omission check starts on the author date of the first commit introducing the approved ask sentence in the adopted workflow README, locating that README's repository with git; unavailable history, shallow history or an absent sentence skips this rule with a diagnostic.
++`python3 <package>/scripts/design_surfaces.py check <task>` refuses an amendment
++on or after that date whose `Asked:` question is absent from its task's records
++and records naming the task in `tasks`. A late record restores the count without
++inventing an asking time. Existing timing reports and legacy reading remain in
++force under ADR 0080; only this omission check changes its report-only choice.
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index 39a1dc29a..44be05dbe 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -256,7 +256,7 @@ not completion.
+ 
+ ## Captain steps
+ 
+-Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>"`; `python3 <package>/scripts/task_timeline.py <state> <task>` prints each stage's times and counts.
++Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>" --holds <task|acceptance|nothing> --by "<session>"` and records each later showing, answer or withdrawal with the command it prints; `python3 <package>/scripts/task_timeline.py <state> --open` lists what waits on him.
+ 
+ Before asking the Captain to run or look at anything (an acceptance script, a
+ command, a link, a sign-in, a file of steps), FO runs each step as written, in a
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index c75bfa7a5..551205add 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -1142,6 +1142,86 @@ def check_story_record(path, text, seed):
+     return []
+ 
+ 
++# see docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md
++ASK_SENTENCE = 'Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>" --holds <task|acceptance|nothing> --by "<session>"` and records each later showing, answer or withdrawal with the command it prints; `python3 <package>/scripts/task_timeline.py <state> --open` lists what waits on him.'
++
++
++def question_adoption(path):
++    from dispatch_records import find_readme
++
++    readme = find_readme(path)
++    if readme is None:
++        return None, "no adopted workflow README"
++    readme = readme.resolve()
++    try:
++        repo = Path(subprocess.run(["git", "-C", str(readme.parent), "rev-parse", "--show-toplevel"],
++                                  capture_output=True, text=True, check=True).stdout.strip())
++        shallow = subprocess.run(["git", "-C", str(repo), "rev-parse", "--is-shallow-repository"],
++                                 capture_output=True, text=True, check=True).stdout.strip()
++        if shallow == "true":
++            return None, "shallow workflow history"
++        if ASK_SENTENCE not in readme.read_text():
++            return None, "approved ask sentence absent"
++        relative = readme.relative_to(repo).as_posix()
++        history = subprocess.run(["git", "-C", str(repo), "log", "--reverse", "--format=%H %aI",
++                                  "-S", ASK_SENTENCE, "--", relative], capture_output=True, text=True, check=True)
++        for line in history.stdout.splitlines():
++            sha, date = line.split(" ", 1)
++            text = subprocess.run(["git", "-C", str(repo), "show", f"{sha}:{relative}"],
++                                  capture_output=True, text=True, check=True).stdout
++            if ASK_SENTENCE in text:
++                return date[:10], None
++        return None, "ask sentence has no introducing commit"
++    except (OSError, ValueError, subprocess.CalledProcessError):
++        return None, "workflow git history unavailable"
++
++
++def check_question_records(path, lines, notes):
++    from task_timeline import ask_files, read_asks
++
++    adopted, why = question_adoption(path)
++    if adopted is None:
++        if notes is not None and why != "no adopted workflow README":
++            notes.append(f"{path.name}: question record check not run: {why}")
++        return []
++    entries = [e for e in parse_amendments(lines)[0]
++               if (m := AMENDMENT_DATED.match(e.header)) and m[2] >= adopted]
++    if not entries:
++        return []
++    own = task_folder(path)
++    state = own.parent.parent if own.parent.name == "_archive" else own.parent
++    try:
++        records = []
++        for file in ask_files(state):
++            events = read_asks(file)
++            shared = {e.get("key") for e in events if own.name in (e.get("tasks") or [])}
++            records.extend(e for e in events if file.parent == own or e.get("key") in shared)
++    except (OSError, ValueError) as exc:
++        return [f"{path.name}: cannot read question records: {exc}"]
++    questions = [e["asked"] for e in records if isinstance(e.get("asked"), str)]
++    errors = []
++    for entry in entries:
++        asked = re.search(r"^Asked:[ \t]*(.+)$", entry.prefix, re.M)
++        if not asked or re.fullmatch(r"(?:commit )?[0-9a-f]{7,40}", asked[1].strip()):
++            continue
++        value = asked[1].strip()
++        start, depth, quoted = None, 0, None
++        for i, char in enumerate(value):
++            if char == "「":
++                if depth == 0:
++                    start = i + 1
++                depth += 1
++            elif char == "」" and depth:
++                depth -= 1
++                if depth == 0:
++                    quoted = value[start:i]
++                    break
++        if (quoted if quoted is not None else value) not in questions:
++            errors.append(f"{path.name}: '{entry.header}' quoted question has no ask record; "
++                          "FO: record it, using --late when the asking time is unknown")
++    return errors
++
++
+ def check_task(path, seed=False, notes=None):
+     errors = []
+     try:
+@@ -1187,6 +1267,7 @@ def check_task(path, seed=False, notes=None):
+     lines = text.split("\n")
+     declared = check_criteria(path.name, lines, errors)
+     check_amendments(path.name, lines, declared, errors, dispatched_amendments(task_folder(path)))
++    errors.extend(check_question_records(path, lines, notes))
+     for title, key in escaped_amendment_lines(lines):
+         errors.append(f"{path.name}: '{title}' {key} line holds a backslash-quote copied from JSON; FO writes his words and the question as they were said")
+     if notes is not None:
+@@ -1245,8 +1326,8 @@ def main(argv=None):
+         print(error)
+     if not errors:
+         print(f"{path.name}: {'seed fields and FO alignment recorded' if args.seed else 'design surfaces presentable'}")
+-        for note in notes:
+-            print(note)
++    for note in notes:
++        print(note)
+     if verdict == "not run":
+         print(f"scope check not run: {why}")
+     if not errors:
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 0481245e5..74f54b9b5 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -84,6 +84,9 @@ WORKFLOW_BUDGET_STEPS = [
+          captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
+          loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
+     dict(delta=-2, why="role_triggers.py holds a Pilot ideation dispatch past its bound, two by default; the README names the form"),
++    dict(delta=16, why="outside-gate questions carry an owner and stay open until an answer is recorded; the command lists open questions",
++         captain='「核准待決定事項紀錄的設計，五項都照建議」 (Captain, ideation gate, 2026-11-14); amendment 1 「待決定事項紀錄的說明句補上 --by "<session>"，啟動字數從 39 改成 41」 (Captain, chat, 2026-11-14)',
++         loaded="startup"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/task_timeline.py b/kc-dev-flow-2/scripts/task_timeline.py
+index a710c4285..f105cbafc 100644
+--- a/kc-dev-flow-2/scripts/task_timeline.py
++++ b/kc-dev-flow-2/scripts/task_timeline.py
+@@ -1,9 +1,16 @@
+ #!/usr/bin/env python3
+-"""Print one task's per-stage times, dispatch counts and Captain asks; record an ask outside a gate.
++"""Read task times and open Captain questions; append question events.
+ 
+   task_timeline.py <state checkout> <task slug> [--json]   print the timeline
+   task_timeline.py <state checkout> --all                  one summary line over every archived task
+-  task_timeline.py <state checkout> <task slug> ask TEXT   append one ask outside a gate, stamped now (UTC)
++  task_timeline.py <state> <task> ask TEXT --holds task --by SESSION
++  task_timeline.py <state> <task> reask|revise|answer|acted|withdraw KEY [fields]
++  task_timeline.py <state> --open [--gates] [--as-of UTC] [--json]
++
++Question format: references/captain-question-records.md in this package.
++--option id=text[=effect] may repeat on ask/revise; on answer it is the chosen id.
++--ref takes one JSON object with kind, ref and ready; it may repeat.
++--late records an unknown asking time; --as-of filters reads, never stamps writes.
+ 
+ Times come from records written at the time: author dates of the state checkout's commits
+ (`dispatch|advance: <slug> entering <stage>`, the commit adding each dispatch record and each
+@@ -12,19 +19,20 @@ gate room's index.json, `archive <slug>`), the `at` of each gate resolution or w
+ A revise is a dispatch after the first, by highest plain dispatch-record number, including gaps;
+ follow-up messages are excluded. An interruption is an FO question outside a scheduled gate,
+ recorded by `ask` when asked. Gate revise decisions, withdrawals and amendments are separate.
+-Missing records are reported, never a work hold. Before-gate minutes include FO idle, not just
++Missing timing records are reported without a work hold. Before-gate minutes include FO idle, not just
+ agent work. No asks.jsonl means unknown, not zero. `ask` appends locally; FO commits the record.
+ """
+ import argparse
+ import json
+ import re
++import shlex
+ import subprocess
+ import sys
+ from datetime import datetime, timezone
+ from pathlib import Path
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+-from decision_ledger import gate_entries, split_task  # noqa: E402
++from decision_ledger import KEY, gate_entries, question, split_task, unquote  # noqa: E402
+ from role_triggers import STAGE_RECORD  # noqa: E402
+ 
+ ENTERING = re.compile(r"^(?:dispatch|advance): (?P<slug>\S+) entering (?P<stage>\S+)$")
+@@ -162,7 +170,7 @@ def timeline(state, slug):
+             "rounds": rounds,
+         })
+     asks_file = folder(task) / "asks.jsonl"
+-    asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
++    asks = [e for e in read_asks(asks_file) if "v" not in e or (e.get("v") == 1 and e.get("event") in ("ask", "reask"))]
+     unassigned = []
+     for row in out:
+         row["asks"] = []
+@@ -200,29 +208,276 @@ def show(t):
+             print(f"    round {x['round']}: {x['start']} -> {x['end'] or 'running'}  {x['minutes']} min; {x['result']}")
+         print(f"    asks outside a gate: {r['asks_outside_gate'] if r['asks_outside_gate'] is not None else 'not recorded'}")
+         for ask in r["asks"]:
+-            print(f"      {ask['at']}: {ask['asked']}")
++            print(f"      {ask['at']}: {ask.get('asked', 'shown again: ' + ask.get('key', ''))}")
+         for a in r["gate_attempts"]:
+             print(f"    gate attempt {a['attempt']}: opened {a['opened']}, closed {a['closed'] or '-'}, {a['outcome']}")
+     print(f"  done: {t['done'] or '-'}")
+     if t["stages_without_start"]:
+         print("  stages without start: " + ", ".join(t["stages_without_start"]))
+     for ask in t["unassigned_asks"]:
+-        print(f"  ask with no stage start: {ask['at']}: {ask['asked']}")
++        print(f"  ask with no stage start: {ask['at']}: {ask.get('asked', 'shown again: ' + ask.get('key', ''))}")
+     asks = t["asks_outside_gate"]
+     print(f"  asks outside a gate: {'not recorded (no asks.jsonl)' if asks is None else asks}; "
+           f"withdrawn gate attempts: {t['withdrawn_gate_attempts']}; revise decisions: {t['gate_revise_decisions']}; "
+           f"amendments outside a gate: {t['amendments_outside_gate']}")
+ 
+ 
+-# see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+-def record_ask(state, slug, text, clock=None):
++# see docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md
++EVENTS = {"ask", "reask", "revise", "answer", "acted", "withdraw"}
++CHANNELS = {"chat", "dialog", "review", "message"}
++HOLDS = {"task", "acceptance", "nothing"}
++REVISION_FIELDS = {"asked", "holds", "options", "recommend", "grounds", "approve_means", "tasks", "refs"}
++REQUIRED = {"ask": {"asked", "asked_at", "channel", "by", "holds"},
++            "reask": {"channel"}, "revise": {"revision", "reason", "asked", "holds"},
++            "answer": {"revision", "words", "option", "resolution", "channel"},
++            "acted": {"what"}, "withdraw": {"reason"}}
++
++
++def read_asks(path):
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.is_file() else []
++
++
++def ask_files(state):
++    return sorted(p for pattern in ("*/asks.jsonl", "_archive/*/asks.jsonl") for p in state.glob(pattern))
++
++
++def fold_question(events):
++    q, future_key = None, None
++    for e in events:
++        if e.get("v", 0) > 1:
++            future_key = e.get("key")
++            if q:
++                q["state"] = "unknown"
++            continue
++        event = e.get("event")
++        if e.get("v") != 1 or event not in EVENTS:
++            continue
++        if q is None:
++            if event != "ask":
++                continue
++            q = {"kind": "question", "key": e["key"], "revision": 1, "by": e["by"],
++                 "waiting_since": e["asked_at"], "recorded_at": e["at"], "interruptions": 0,
++                 "state": "open", "revisions": {}, "showings": {}, "review_shown": False}
++        elif q["state"] != "open":
++            if event == "acted" and q["state"] == "answered":
++                q["state"] = "done"
++            elif q["state"] != "unknown":
++                print(f"question record {e['key']}: ignored {event} after {q['state']}", file=sys.stderr)
++            continue
++        elif event == "ask":
++            continue
++        if event in ("ask", "revise"):
++            q.update({k: e.get(k) for k in REVISION_FIELDS})
++            q["revision"] = e.get("revision", 1)
++            q["revisions"][q["revision"]] = {k: e.get(k) for k in REVISION_FIELDS}
++        if event in ("ask", "reask"):
++            q["interruptions"] += 1
++            q["last_shown"] = {"at": e["at"], "channel": e["channel"], "briefing": e.get("briefing")}
++            q["showings"][e["channel"]] = q["revision"]
++            q["review_shown"] |= e["channel"] == "review"
++        elif event == "answer":
++            q["state"], q["answer"] = "answered", e
++        elif event == "withdraw":
++            q["state"] = "withdrawn"
++    if future_key is not None:
++        q = {**(q or {"key": future_key}), "state": "unknown"}
++    return q
++
++
++def nonempty(value):
++    return isinstance(value, str) and bool(value.strip())
++
++
++def validate_revision(fields):
++    if not nonempty(fields.get("asked")) or fields.get("holds") not in HOLDS:
++        raise ValueError("question needs nonempty asked and holds task|acceptance|nothing")
++    options = fields.get("options", [])
++    if not isinstance(options, list) or any(not isinstance(o, dict) or not nonempty(o.get("id"))
++            or not nonempty(o.get("text")) or ("effect" in o and not nonempty(o["effect"])) for o in options):
++        raise ValueError("options need id, text and optional effect")
++    ids = [o["id"] for o in options]
++    if len(ids) != len(set(ids)):
++        raise ValueError("option ids must be distinct")
++    for field in ("recommend", "approve_means"):
++        if fields.get(field) is not None and fields[field] not in ids:
++            raise ValueError(f"{field} must name an option")
++    tasks = fields.get("tasks", [])
++    if not isinstance(tasks, list) or not all(nonempty(t) and "/" not in t for t in tasks):
++        raise ValueError("tasks must be task slugs")
++    if "grounds" in fields and not isinstance(fields["grounds"], str):
++        raise ValueError("grounds must be text")
++    refs = fields.get("refs", [])
++    if not isinstance(refs, list) or any(not isinstance(r, dict) or r.get("kind") not in
++            {"file", "commit", "url", "command", "record"} or not nonempty(r.get("ref"))
++            or not isinstance(r.get("ready"), bool) for r in refs):
++        raise ValueError("refs need kind, ref and boolean ready")
++    if any(r["kind"] == "file" and (Path(r["ref"]).is_absolute() or ".." in Path(r["ref"]).parts) for r in refs):
++        raise ValueError("file refs must be relative to the task folder")
++
++
++def write_event(state, slug, event, fields, clock=None):
++    if event not in EVENTS:
++        raise ValueError(f"unknown event {event}")
++    fields = dict(fields)
+     path = folder(find_task(state, slug)) / "asks.jsonl"
++    lines = read_asks(path)
++    at = iso(clock or datetime.now(timezone.utc))
++    if event == "ask":
++        key = f"{path.parent.name}#{1 + sum(e.get('event') == 'ask' for e in lines)}"
++        if fields.get("asked_at") == "now":
++            fields["asked_at"] = at
++        if fields.get("asked_at") not in (None, at):
++            raise ValueError("asked_at must be the write time or null for a late record")
++        if not nonempty(fields.get("by")):
++            command = shlex.join(["python3", str(Path(__file__).resolve()), str(state), slug, "ask",
++                                  str(fields.get("asked", "")), "--holds", str(fields.get("holds") or "task"),
++                                  "--channel", str(fields.get("channel") or "chat"), "--by", "<session>"])
++            raise ValueError("ask needs --by with the FO session name; run: " + command)
++    else:
++        key = fields.pop("key", None)
++        q = fold_question([e for e in lines if e.get("key") == key])
++        if not q:
++            raise ValueError(f"no question {key}")
++        if q["state"] != "open" and not (event == "acted" and q["state"] == "answered"):
++            raise ValueError(f"{key} is {q['state']}; no {event} after closing")
++        if event == "acted" and q["state"] != "answered":
++            raise ValueError("acted needs an answer")
++        if event == "revise" and fields.get("revision") != q["revision"] + 1:
++            raise ValueError("revision must be previous + 1")
++        if event == "answer":
++            channel = fields.get("channel")
++            shown = q["showings"].get(channel)
++            fields.setdefault("revision", shown)
++            if shown is None or fields["revision"] != shown:
++                raise ValueError("answer revision must be the latest showing in its channel")
++            revision = q["revisions"][shown]
++            if any(fields.get(k) is not None and not nonempty(fields[k]) for k in ("words", "option", "resolution")):
++                raise ValueError("words, option and resolution must be nonempty text or null")
++            words = fields.get("words")
++            option = fields.get("option")
++            if not words:
++                if revision.get("options") and not revision.get("approve_means"):
++                    raise ValueError("wordless answer needs approve_means; ask which option")
++                if option is not None and option != revision.get("approve_means"):
++                    raise ValueError("wordless answer must select approve_means")
++                fields["option"] = revision.get("approve_means")
++            if not nonempty(words) and fields.get("option") is None:
++                raise ValueError("answer needs words or option, not resolution alone")
++            if fields.get("option") is not None and fields["option"] not in [o["id"] for o in revision.get("options") or []]:
++                raise ValueError("answer option must belong to its answered revision")
++            if channel == "review" and not nonempty(fields.get("resolution")):
++                raise ValueError("Review answer needs its resolution id")
++            if channel != "review" and fields.get("resolution") is not None:
++                raise ValueError("resolution belongs to a Review answer")
++    if missing := REQUIRED[event] - fields.keys():
++        raise ValueError(f"{event} needs {', '.join(sorted(missing))}")
++    if "channel" in fields and fields["channel"] not in CHANNELS:
++        raise ValueError("channel must be chat|dialog|review|message")
++    if event in ("ask", "revise"):
++        validate_revision(fields)
++    for name in {"revise": ("reason",), "acted": ("what",), "withdraw": ("reason",)}.get(event, ()):
++        if not nonempty(fields.get(name)):
++            raise ValueError(f"{event} needs {name}")
++    entry = {**fields, "v": 1, "event": event, "key": key, "at": at}
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    entry = {"at": iso(clock or datetime.now(timezone.utc)), "asked": text}
+     with path.open("a", encoding="utf-8") as fh:
+         fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
+-    with path.open(encoding="utf-8") as fh:
+-        print(f"recorded ask {sum(1 for _ in fh)} in {path}")
++    return entry
++
++
++def record_ask(state, slug, text, clock=None, **fields):
++    return write_event(state, slug, "ask", {"asked": text, "asked_at": "now", "channel": "chat", **fields}, clock)
++
++
++def questions(state, as_of=None):
++    rows = []
++    for path in ask_files(state):
++        lines = [e for e in read_asks(path) if as_of is None or when(e["at"]) <= as_of]
++        for key in dict.fromkeys(e["key"] for e in lines if "key" in e):
++            q = fold_question([e for e in lines if e.get("key") == key])
++            if q:
++                rows.append({**q, "task": path.parent.name, "archived": "_archive" in path.relative_to(state).parts})
++    return rows
++
++
++def gate_attempts(fm):
++    in_gates, attempt, depth, stage, briefing = False, None, -1, None, False
++    for line in fm or []:
++        m = KEY.match(line)
++        if not m:
++            continue
++        indent = len(m["indent"]) + (2 if line.lstrip().startswith("- ") else 0)
++        key, value = m["key"], m["value"]
++        if attempt and (indent < depth or (key == "id" and indent == depth)):
++            yield attempt
++            attempt = None
++        if indent == 0:
++            in_gates = key == "gates"
++        elif in_gates:
++            if key == "stage":
++                stage = unquote(value or "")
++            elif key == "id" and (value or "").startswith("gate-attempt:"):
++                attempt, depth = {"attempt": value, "stage": stage, "room": None, "key": None}, indent
++                briefing = False
++            elif attempt is not None:
++                if key == "briefing":
++                    briefing = True
++                elif key in ("resolution", "withdrawal"):
++                    attempt["closed"] = key
++                    briefing = False
++                elif key == "id" and briefing:
++                    attempt["key"] = unquote(value or "")
++                elif key == "room-ref":
++                    attempt["room"] = unquote(value or "")
++                elif key == "at" and "closed" in attempt:
++                    attempt["closed_at"] = unquote(value or "")
++    if attempt:
++        yield attempt
++
++
++def gate_rows(state, as_of=None):
++    rows, seen = [], set()
++    for pattern in ("*.md", "*/index.md", "_archive/*.md", "_archive/*/index.md"):
++        for path in sorted(state.glob(pattern)):
++            fm, _ = split_task(path.read_text(encoding="utf-8"))
++            for attempt in gate_attempts(fm):
++                key = attempt["key"]
++                if not key or key in seen:
++                    continue
++                seen.add(key)
++                if "closed" in attempt and (as_of is None or not attempt.get("closed_at") or when(attempt["closed_at"]) <= as_of):
++                    continue
++                run = subprocess.run(["git", "-C", str(state), "log", "--reverse", "--format=%aI", "-S", key],
++                                     capture_output=True, text=True, check=True)
++                dates = run.stdout.splitlines()
++                since = when(dates[0]) if dates else None
++                upper = min(as_of or datetime.now(timezone.utc), when(attempt["closed_at"])) if attempt.get("closed_at") else as_of or datetime.now(timezone.utc)
++                if since and since > upper:
++                    since = None
++                if as_of and (since is None or since > as_of):
++                    continue
++                rows.append({"kind": "gate", "key": key, "attempt": attempt["attempt"], "stage": attempt["stage"],
++                             "task": folder(path).name, "question": question(state, path, attempt["room"]),
++                             "by": None, "state": "open", "waiting_since": iso(since), "recorded_at": iso(since),
++                             "holds": "task", "interruptions": None})
++    return rows
++
++
++def open_rows(state, as_of=None, gates=False):
++    now = as_of or datetime.now(timezone.utc)
++    rows = [q for q in questions(state, as_of) if q["state"] == "open"]
++    if gates:
++        rows += gate_rows(state, as_of)
++    for row in rows:
++        if row["kind"] == "question":
++            row["question"] = row["asked"]
++        since = row["waiting_since"] or row["recorded_at"]
++        row["waiting_min"] = mins(when(since), now) if since else None
++        row["waiting_bound"] = "at least" if row["kind"] == "gate" or row["waiting_since"] is None else "exact"
++        row["publish_review"] = row["kind"] == "question" and row["interruptions"] >= 3 and not row["review_shown"]
++        for private in ("revisions", "showings", "review_shown"):
++            row.pop(private, None)
++    return rows
+ 
+ 
+ # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+@@ -242,26 +497,91 @@ def sweep(state):
+             print(f"stages without start: {row['task']}: {', '.join(row['stages_without_start'])}")
+ 
+ 
++def option_fields(values):
++    options = []
++    for value in values or []:
++        parts = value.split("=", 2)
++        if len(parts) < 2:
++            raise ValueError("option needs id=text[=effect]")
++        options.append({"id": parts[0], "text": parts[1], **({"effect": parts[2]} if len(parts) == 3 else {})})
++    return options
++
++
+ def main(argv=None):
+     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+     ap.add_argument("state", type=Path)
+     ap.add_argument("task", nargs="?")
+-    ap.add_argument("action", nargs="?", choices=["ask"])
+-    ap.add_argument("text", nargs="?")
+-    ap.add_argument("--json", action="store_true")
+-    ap.add_argument("--all", action="store_true")
++    ap.add_argument("action", nargs="?")
++    ap.add_argument("text", nargs="?", help="question for ask; key for other events")
++    for flag in ("json", "all", "open", "gates", "late"):
++        ap.add_argument("--" + flag, action="store_true")
++    ap.add_argument("--as-of")
++    ap.add_argument("--holds", choices=sorted(HOLDS))
++    ap.add_argument("--channel", choices=sorted(CHANNELS), default="chat")
++    for flag in ("by", "recommend", "grounds", "approve-means", "question", "reason", "words", "resolution", "what", "briefing"):
++        ap.add_argument("--" + flag)
++    ap.add_argument("--revision", type=int)
++    ap.add_argument("--tasks", nargs="*", default=[])
++    ap.add_argument("--option", action="append")
++    ap.add_argument("--ref", action="append", default=[])
+     a = ap.parse_args(argv)
+-    if a.all:
+-        sweep(a.state)
+-    elif a.action == "ask":
+-        if not (a.text or "").strip():
+-            ap.error("ask needs the question text")
+-        record_ask(a.state, a.task, a.text)
+-    elif a.task:
+-        t = timeline(a.state, a.task)
+-        print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
+-    else:
+-        ap.error("name a task or pass --all")
++    try:
++        if a.open:
++            rows = open_rows(a.state, when(a.as_of) if a.as_of else None, a.gates)
++            if a.json:
++                print(json.dumps(rows, indent=1, ensure_ascii=False))
++            else:
++                for r in rows:
++                    wait = (f"{r['waiting_bound']} {r['waiting_min']} min" if r['waiting_min'] is not None else "unknown")
++                    if r["waiting_since"] is None:
++                        wait = "unknown; " + wait
++                    print(f"{r['key']} | {r['by'] or 'gate'} | {wait} | {r['holds']} | {r['question']}"
++                          + (" | publish a Review briefing" if r["publish_review"] else ""))
++        elif a.all:
++            sweep(a.state)
++        elif a.action:
++            if a.action == "ask" and not nonempty(a.by):
++                original = list(argv if argv is not None else sys.argv[1:])
++                if "--channel" not in original:
++                    original += ["--channel", "chat"]
++                corrected = shlex.join(["python3", str(Path(__file__).resolve()), *original, "--by", "<session>"])
++                ap.error("ask needs --by with the FO session name; run: " + corrected)
++            fields = {"key": a.text}
++            if a.action in ("ask", "revise"):
++                fields = {"asked": a.text if a.action == "ask" else a.question, "holds": a.holds,
++                          "options": option_fields(a.option), "recommend": a.recommend,
++                          "approve_means": a.approve_means, "tasks": a.tasks, "refs": [json.loads(r) for r in a.ref]}
++                if a.grounds is not None:
++                    fields["grounds"] = a.grounds
++                fields.update({"asked_at": None if a.late else "now", "by": a.by, "channel": a.channel}
++                              if a.action == "ask" else {"key": a.text, "revision": a.revision, "reason": a.reason})
++            elif a.action == "answer":
++                if len(a.option or []) > 1:
++                    raise ValueError("answer selects at most one option")
++                fields.update(words=a.words, option=(a.option or [None])[0], resolution=a.resolution, channel=a.channel)
++                if a.revision is not None:
++                    fields["revision"] = a.revision
++            elif a.action == "reask":
++                fields.update(channel=a.channel, briefing=a.briefing)
++            elif a.action in ("acted", "withdraw"):
++                field = "what" if a.action == "acted" else "reason"
++                fields[field] = getattr(a, field)
++            entry = write_event(a.state, a.task, a.action, fields)
++            print(f"Recorded {a.action} {entry['key']}; commit asks.jsonl to share it.")
++            command = f'python3 {Path(__file__).resolve()} {a.state} {a.task}'
++            if a.action in ("ask", "revise", "reask"):
++                print(f'Next showing: {command} reask {entry["key"]} --channel {a.channel}')
++                print(f'Answer: {command} answer {entry["key"]} --channel {a.channel} --words "<Captain words>"')
++                print(f'Withdraw: {command} withdraw {entry["key"]} --reason "<reason>"')
++            elif a.action == "answer":
++                print(f'Acted: {command} acted {entry["key"]} --what "<action taken>"')
++        elif a.task:
++            t = timeline(a.state, a.task)
++            print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
++        else:
++            ap.error("name a task or pass --all or --open")
++    except (ValueError, OSError, subprocess.CalledProcessError) as exc:
++        ap.error(str(exc))
+     return 0
+ 
+ 
+diff --git a/kc-dev-flow-2/scripts/test_design_surfaces.py b/kc-dev-flow-2/scripts/test_design_surfaces.py
+index 99e0a8a62..21598f504 100644
+--- a/kc-dev-flow-2/scripts/test_design_surfaces.py
++++ b/kc-dev-flow-2/scripts/test_design_surfaces.py
+@@ -2754,5 +2754,103 @@ class AmendmentHistoricalTests(unittest.TestCase):
+         Path(os.environ["DEV2_AMENDMENT_EVIDENCE"], "reading.json").write_text(json.dumps(result, indent=2))
+ 
+ 
++class QuestionRecordTests(unittest.TestCase):
++    def setUp(self):
++        tmp = tempfile.TemporaryDirectory(prefix="question-records-")
++        self.addCleanup(tmp.cleanup)
++        self.root = Path(tmp.name)
++        self.code = self.root / "code"
++        self.code.mkdir()
++        self.git(self.code, "init", "-q")
++        self.workflow = self.code / "docs/workflow"
++        self.workflow.mkdir(parents=True)
++        self.readme = self.workflow / "README.md"
++        self.readme.write_text("---\nentity-type: task\nstate: .state\n---\n")
++        self.commit(self.code, "before adoption", "2026-11-13T00:00:00Z")
++        self.readme.write_text(self.readme.read_text() + ds.ASK_SENTENCE + "\n")
++        self.commit(self.code, "adopt question records", "2026-11-14T10:00:00Z")
++        source = self.root / "state-source"
++        source.mkdir()
++        self.git(source, "init", "-q")
++        (source / "init.txt").write_text("state checkout\n")
++        self.commit(source, "state initial", "2026-11-13T00:00:00Z")
++        self.state = self.workflow / ".state"
++        self.git(source, "worktree", "add", "--detach", str(self.state))
++        self.task = self.state / "demo.md"
++        self.task.write_text("---\ntitle: Demo\nstatus: implementation\n---\n\n## FO alignment\nSurfaces: none\nVisible change: none\n\n## Design\n### Worth questions\nAsked: keep question records; without: omission passes; premise: compare missing and present records.\n\n## Acceptance criteria\n**AC-1**: Verified command.\n\n## Captain amendments\n\n### Amendment 1 — 2026-11-14, chat\nCaptain: 「Yes」\nAsked: 「Proceed with this scope?」\nSupersedes: none\n")
++
++    def git(self, path, *args, env=None):
++        return subprocess.run(["git", "-C", str(path), "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
++                               "-c", "core.hooksPath=/dev/null", *args], env=env, capture_output=True, text=True, check=True).stdout
++
++    def commit(self, path, subject, date):
++        self.git(path, "add", "--all")
++        self.git(path, "commit", "-qm", subject, env={**os.environ, "GIT_AUTHOR_DATE": date, "GIT_COMMITTER_DATE": "2026-11-15T00:00:00Z"})
++
++    def check(self, task=None):
++        return subprocess.run([sys.executable, "-B", str(ROOT / "scripts/design_surfaces.py"), "check", str(task or self.task)],
++                              capture_output=True, text=True)
++
++    def record(self, slug="demo", tasks=None):
++        path = self.state / slug / "asks.jsonl"
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(json.dumps(dict(v=1, event="ask", key=slug + "#1", at="2026-11-14T00:00:00Z",
++                        asked_at=None, asked="Proceed with this scope?", by="test FO", channel="chat", holds="task", tasks=tasks or [])) + "\n")
++
++    def test_missing_record_refuses_and_present_record_passes_in_split_root_worktree(self):
++        self.assertTrue((self.state / ".git").is_file())
++        self.assertEqual(ds.question_adoption(self.task), ("2026-11-14", None))
++        missing = self.check()
++        self.assertEqual(missing.returncode, 1, missing.stdout + missing.stderr)
++        self.assertIn("Amendment 1", missing.stdout)
++        self.assertIn("quoted question has no ask record", missing.stdout)
++        self.record()
++        present = self.check()
++        self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
++
++    def test_shared_record_names_affected_task_and_archived_records_are_read(self):
++        self.record("other", ["demo"])
++        archive = self.state / "_archive"
++        archive.mkdir()
++        (self.state / "other").rename(archive / "other")
++        self.assertEqual(self.check().returncode, 0)
++        self.record("unrelated")
++        (archive / "other/asks.jsonl").unlink()
++        self.assertEqual(self.check().returncode, 1)
++
++    def test_partial_or_recommendation_text_does_not_stand_in_for_the_question(self):
++        self.record()
++        path = self.state / "demo/asks.jsonl"
++        for text in ("Proceed", "Proceed with this scope? Another question"):
++            value = json.loads(path.read_text())
++            value["asked"] = text
++            path.write_text(json.dumps(value) + "\n")
++            self.assertEqual(self.check().returncode, 1)
++
++    def test_pre_adoption_amendment_is_not_newly_refused(self):
++        self.task.write_text(self.task.read_text().replace("2026-11-14, chat", "2026-11-13, chat"))
++        self.assertEqual(self.check().returncode, 0)
++
++    def test_export_absent_sentence_and_shallow_history_skip_once_without_refusal(self):
++        exported = self.root / "export"
++        shutil.copytree(self.workflow, exported, ignore=shutil.ignore_patterns(".git"))
++        run = self.check(exported / ".state/demo.md")
++        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
++        self.assertEqual(run.stdout.count("question record check not run:"), 1)
++        self.readme.write_text("---\nentity-type: task\n---\n")
++        absent = self.check()
++        self.assertEqual(absent.returncode, 0)
++        self.assertIn("approved ask sentence absent", absent.stdout)
++        self.readme.write_text(self.readme.read_text() + ds.ASK_SENTENCE + "\n")
++        shallow = self.root / "shallow"
++        self.git(self.root, "clone", "-q", "--depth", "1", self.code.as_uri(), str(shallow))
++        target = shallow / "docs/workflow/.state/demo.md"
++        target.parent.mkdir()
++        target.write_text(self.task.read_text())
++        run = self.check(target)
++        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
++        self.assertIn("shallow workflow history", run.stdout)
++
++
+ if __name__ == "__main__":
+     unittest.main()
+diff --git a/kc-dev-flow-2/scripts/test_task_timeline.py b/kc-dev-flow-2/scripts/test_task_timeline.py
+index 059d95d5d..e9ab95cc8 100644
+--- a/kc-dev-flow-2/scripts/test_task_timeline.py
++++ b/kc-dev-flow-2/scripts/test_task_timeline.py
+@@ -9,7 +9,7 @@ import subprocess
+ import sys
+ import tempfile
+ import unittest
+-from datetime import datetime, timezone
++from datetime import datetime, timezone, timedelta
+ from unittest.mock import patch
+ 
+ import task_timeline as tt
+@@ -198,7 +198,7 @@ class TimelineTests(unittest.TestCase):
+         self.assertIsNone(tt.timeline(self.state, "demo")["asks_outside_gate"])
+         before = datetime.now(timezone.utc).replace(microsecond=0)
+         for question in ("May I continue?", "要先處理哪件事？"):
+-            run = self.cli("demo", "ask", question)
++            run = self.cli("demo", "ask", question, "--holds", "task", "--by", "test FO")
+             self.assertEqual(run.returncode, 0, run.stderr)
+         path = self.state / "demo/asks.jsonl"
+         saved = path.read_bytes()
+@@ -216,7 +216,7 @@ class TimelineTests(unittest.TestCase):
+         self.dispatch("implementation", 1, 30, entering=True)
+         with contextlib.redirect_stdout(io.StringIO()):
+             for minute in (5, 15, 30):
+-                tt.record_ask(self.state, "demo", f"question {minute}", tt.when(self.stamp(minute)))
++                tt.record_ask(self.state, "demo", f"question {minute}", tt.when(self.stamp(minute)), holds="task", by="test FO")
+         result = tt.timeline(self.state, "demo")
+         self.assertEqual([r["asks_outside_gate"] for r in result["stages"]], [1, 1])
+         self.assertEqual(len(result["unassigned_asks"]), 1)
+@@ -242,5 +242,239 @@ class TimelineTests(unittest.TestCase):
+         self.assertIn("missing or unclosed frontmatter", run.stderr)
+ 
+ 
++    def ask(self, **fields):
++        return tt.write_event(self.state, "demo", "ask", dict(asked="Proceed?", asked_at="now",
++                              channel="chat", by="test FO", holds="acceptance", **fields))
++
++    def event(self, event, key="demo#1", **fields):
++        return tt.write_event(self.state, "demo", event, {"key": key, **fields})
++
++    def test_contract_v2_six_events_and_revision_fields_persist(self):
++        first = self.ask(options=[dict(id="yes", text="Proceed", effect="Start work")], recommend="yes",
++                         approve_means="yes", tasks=["other"], refs=[dict(kind="file", ref="design.md", ready=False)])
++        self.assertEqual((first["key"], first["v"], first["asked_at"]), ("demo#1", 1, first["at"]))
++        self.event("reask", channel="review", briefing="briefing:one")
++        self.event("revise", revision=2, asked="Proceed now?", holds="task", reason="New scope")
++        self.event("answer", channel="review", revision=1, words=None, option=None, resolution="resolution:one")
++        self.event("acted", what="Started work")
++        second = self.ask()
++        self.event("withdraw", key=second["key"], reason="No longer needed")
++        entries = tt.read_asks(self.state / "demo/asks.jsonl")
++        self.assertEqual([e["event"] for e in entries], ["ask", "reask", "revise", "answer", "acted", "ask", "withdraw"])
++        q = tt.fold_question(entries[:5])
++        self.assertEqual((q["state"], q["answer"]["option"], q["interruptions"]), ("done", "yes", 2))
++        self.assertIsNone(q["tasks"])
++        self.assertEqual(q["revisions"][1]["options"][0]["effect"], "Start work")
++        self.assertEqual(q["revisions"][1]["tasks"], ["other"])
++        self.assertEqual(tt.open_rows(self.state), [])
++
++    def test_contract_writer_refuses_unknown_event(self):
++        with self.assertRaisesRegex(ValueError, "unknown event"):
++            tt.write_event(self.state, "demo", "invent", {})
++        self.assertFalse((self.state / "demo/asks.jsonl").exists())
++
++    def test_contract_writer_refuses_every_event_after_closing_except_one_acted(self):
++        for closed in ("answer", "withdraw"):
++            for event in ("reask", "revise", "answer", "withdraw", "acted"):
++                with self.subTest(closed=closed, event=event):
++                    (self.state / "demo/asks.jsonl").unlink(missing_ok=True)
++                    self.ask()
++                    self.event(closed, **(dict(channel="chat", words="yes", option=None, resolution=None)
++                                           if closed == "answer" else dict(reason="Stop")))
++                    if closed == "answer" and event == "acted":
++                        self.event("acted", what="Done")
++                    saved = (self.state / "demo/asks.jsonl").read_bytes()
++                    with self.assertRaisesRegex(ValueError, "after closing"):
++                        self.event(event, channel="chat", revision=1, asked="Again", holds="task",
++                                   reason="Again", words="yes", option=None, resolution=None, what="Done")
++                    self.assertEqual((self.state / "demo/asks.jsonl").read_bytes(), saved)
++
++    def test_contract_writer_refuses_acted_without_answer(self):
++        self.ask()
++        with self.assertRaisesRegex(ValueError, "acted needs an answer"):
++            self.event("acted", what="Done")
++
++    def test_contract_writer_refuses_wordless_answer_without_approve_means(self):
++        self.ask(options=[dict(id="a", text="A")])
++        with self.assertRaisesRegex(ValueError, "wordless answer needs approve_means"):
++            self.event("answer", channel="chat", words=None, option="a", resolution=None)
++
++    def test_contract_writer_refuses_recommendation_outside_options(self):
++        with self.assertRaisesRegex(ValueError, "recommend must name an option"):
++            self.ask(options=[dict(id="a", text="A")], recommend="missing")
++        self.assertFalse((self.state / "demo/asks.jsonl").exists())
++
++    def test_contract_writer_refuses_revision_not_previous_plus_one(self):
++        self.ask()
++        with self.assertRaisesRegex(ValueError, r"revision must be previous \+ 1"):
++            self.event("revise", revision=3, asked="Changed", holds="task", reason="Change")
++
++    def test_contract_writer_refuses_answer_that_does_not_match_last_channel_showing(self):
++        self.ask()
++        self.event("revise", revision=2, asked="Changed", holds="task", reason="Change")
++        with self.assertRaisesRegex(ValueError, "latest showing"):
++            self.event("answer", channel="chat", revision=2, words="Yes", option=None, resolution=None)
++        self.event("answer", channel="chat", revision=1, words="Yes", option=None, resolution=None)
++
++    def test_missing_owner_prints_complete_command_without_writing(self):
++        result = self.cli("demo", "ask", "May I continue?", "--holds", "acceptance", "--recommend", "yes", "--option", "yes=Proceed")
++        self.assertEqual(result.returncode, 2)
++        self.assertIn("--by '<session>'", result.stderr)
++        self.assertIn("'May I continue?' --holds acceptance --recommend yes --option yes=Proceed --channel chat", result.stderr)
++        self.assertFalse((self.state / "demo/asks.jsonl").exists())
++
++    def test_review_escalation_after_three_showings_and_unknown_wait_bound(self):
++        tt.write_event(self.state, "demo", "ask", dict(asked="Proceed?", asked_at=None,
++                       channel="chat", by="test FO", holds="nothing"), tt.when(self.stamp(10)))
++        for minute in (15, 20):
++            tt.write_event(self.state, "demo", "reask", dict(key="demo#1", channel="chat", briefing=None), tt.when(self.stamp(minute)))
++        row = tt.open_rows(self.state, tt.when(self.stamp(30)))[0]
++        self.assertEqual((row["waiting_since"], row["waiting_min"], row["waiting_bound"], row["holds"]), (None, 20, "at least", "nothing"))
++        self.assertTrue(row["publish_review"])
++        tt.write_event(self.state, "demo", "reask", dict(key="demo#1", channel="review", briefing="briefing:one"), tt.when(self.stamp(25)))
++        self.assertFalse(tt.open_rows(self.state, tt.when(self.stamp(30)))[0]["publish_review"])
++
++    def test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json(self):
++        self.dispatch("ideation", 1, 0, entering=True)
++        self.write("demo/asks.jsonl", json.dumps(dict(at=self.stamp(5), asked="Legacy")) + "\n")
++        ask = tt.write_event(self.state, "demo", "ask", dict(asked="New", asked_at="now", channel="chat", by="test FO", holds="task"), tt.when(self.stamp(10)))
++        self.assertEqual(ask["key"], "demo#1")
++        tt.write_event(self.state, "demo", "reask", dict(key=ask["key"], channel="chat", briefing=None), tt.when(self.stamp(20)))
++        tt.write_event(self.state, "demo", "answer", dict(key=ask["key"], channel="chat", words="Yes", option=None, resolution=None), tt.when(self.stamp(30)))
++        result = self.cli("demo", "--json")
++        self.assertEqual(result.returncode, 0, result.stderr)
++        self.assertEqual(json.loads(result.stdout)["asks_outside_gate"], 3)
++        self.assertEqual(self.cli("demo").returncode, 0)
++        self.assertIn("shown again: demo#1", self.cli("demo").stdout)
++        self.assertEqual(tt.open_rows(self.state), [])
++
++    def test_reader_ignores_unknown_and_pre_ask_events_and_does_not_reopen_closed_key(self):
++        first = self.ask()
++        events = [dict(v=1, event="reask", key="demo#1"), first,
++                  dict(v=1, event="future", key="demo#1"), first,
++                  dict(v=1, event="withdraw", key="demo#1", reason="Stop"),
++                  dict(v=1, event="reask", key="demo#1")]
++        self.assertEqual((tt.fold_question(events)["state"], tt.fold_question(events)["interruptions"]), ("withdrawn", 1))
++        future = dict(v=2, event="answer", key="demo#1")
++        for events in ([first, future], [future, first], [future]):
++            self.assertEqual(tt.fold_question(events)["state"], "unknown")
++
++    def test_replayed_fourteen_questions_at_declared_synthetic_times(self):
++        for i, fixture in enumerate(REPLAY_2026_11_13):
++            slug, question, answered = fixture
++            self.assertEqual(datetime.fromisoformat(answered).date().isoformat(), "2026-11-13", slug)
++            (self.state / f"{slug}.md").write_text("---\ntitle: Replay\n---\n")
++            answer_time = tt.when(answered)
++            ask_time = answer_time - timedelta(minutes=10 + i)
++            entry = tt.write_event(self.state, slug, "ask", dict(asked=question, asked_at="now", channel="chat", by="replay FO", holds=("task", "acceptance", "nothing")[i % 3]), ask_time)
++            tt.write_event(self.state, slug, "answer", dict(key=entry["key"], channel="chat", words="Recorded answer", option=None, resolution=None), answer_time)
++        clocks = sorted({tt.when(t) + delta for _, _, t in REPLAY_2026_11_13 for delta in (timedelta(minutes=-30), timedelta(minutes=-5), timedelta(), timedelta(minutes=5))})
++        self.assertEqual(len(REPLAY_2026_11_13), 14)
++        for clock in clocks:
++            expected = {f"{slug}#1": (i, tt.when(t) - timedelta(minutes=10 + i)) for i, (slug, _, t) in enumerate(REPLAY_2026_11_13)
++                        if tt.when(t) - timedelta(minutes=10 + i) <= clock < tt.when(t)}
++            run = self.cli("--open", "--json", "--as-of", tt.iso(clock))
++            self.assertEqual(run.returncode, 0, run.stderr)
++            actual = {r["key"]: r for r in json.loads(run.stdout)}
++            self.assertEqual(set(actual), set(expected), tt.iso(clock))
++            for key, (i, since) in expected.items():
++                self.assertEqual((actual[key]["by"], actual[key]["waiting_since"], actual[key]["waiting_min"], actual[key]["interruptions"], actual[key]["state"], actual[key]["holds"]),
++                                 ("replay FO", tt.iso(since), tt.mins(since, clock), 1, "open", ("task", "acceptance", "nothing")[i % 3]))
++
++    def test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text(self):
++        ask = self.cli("demo", "ask", "Proceed?", "--holds", "acceptance", "--by", "test FO")
++        self.assertEqual(ask.returncode, 0, ask.stderr)
++        key = "briefing:demo:ideation:1"
++        self.task.write_text('---\ntitle: Demo\ngates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:demo:1\n          briefing:\n            id: ' + key + '\n            room-ref: demo/review/ideation/briefing-1\n---\n')
++        self.write("demo/review/ideation/briefing-1/index.json", json.dumps(dict(question="Gate question?")))
++        self.commit("prepare native gate", 10)
++        plain = self.cli("--open")
++        self.assertEqual(plain.returncode, 0, plain.stderr)
++        self.assertIn("Proceed?", plain.stdout)
++        for flags in (("--open", "--json"), ("--open", "--gates", "--json")):
++            run = self.cli(*flags)
++            self.assertEqual(run.returncode, 0, run.stderr)
++            rows = json.loads(run.stdout)
++            self.assertEqual({r["kind"]: r["question"] for r in rows},
++                             {"question": "Proceed?", **({"gate": "Gate question?"} if "--gates" in flags else {})})
++        mixed = self.cli("--open", "--gates")
++        self.assertEqual(mixed.returncode, 0, mixed.stderr)
++        self.assertIn("Proceed?", mixed.stdout)
++        self.assertIn("Gate question?", mixed.stdout)
++
++    def test_gate_wait_uses_first_naming_commit_after_archive_moves_room(self):
++        (self.state / "_archive").mkdir()
++        key = "briefing:demo:ideation:1"
++        self.task.write_text('---\ntitle: Demo\ngates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:demo:1\n          briefing:\n            id: ' + key + '\n            room-ref: demo/review/ideation/briefing-1\n---\n')
++        self.write("demo/review/ideation/briefing-1/index.json", json.dumps(dict(question="Proceed?")))
++        self.commit("first names briefing", 10)
++        self.task.write_text(self.task.read_text().replace("---\n", "---\n", 1).replace("\n---\n", '\n          resolution:\n            at: "' + self.stamp(30) + '"\n            decision: approve\n---\n'))
++        self.commit("resolve", 30)
++        self.finish(50)
++        row = tt.open_rows(self.state, tt.when(self.stamp(20)), gates=True)[0]
++        self.assertEqual((row["key"], row["waiting_since"], row["waiting_min"], row["waiting_bound"], row["question"]),
++                         (key, self.stamp(10), 10, "at least", "Proceed?"))
++        self.assertEqual(tt.open_rows(self.state, tt.when(self.stamp(30)), gates=True), [])
++        self.assertEqual(tt.open_rows(self.state, gates=True), [])
++        self.assertEqual(tt.open_rows(self.state, tt.when(self.stamp(5)), gates=True), [])
++
++
++
++# Public 2026-11-13 replay; asking times and replay owner are synthetic in the test.
++REPLAY_2026_11_13 = [('replay-1',
++  '#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 '
++  'worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。',
++  '2026-11-13T10:40:43+08:00'),
++ ('replay-2',
++  '#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。',
++  '2026-11-13T02:22:34+08:00'),
++ ('replay-3',
++  '有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 '
++  '步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。',
++  '2026-11-13T14:49:47+08:00'),
++ ('replay-4',
++  '#864（Pilot '
++  '設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 '
++  'worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 '
++  'worker 跑一次，再不過我就停下來回到你這裡。',
++  '2026-11-13T16:01:58+08:00'),
++ ('replay-5', '要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。', '2026-11-13T14:42:40+08:00'),
++ ('replay-6',
++  '「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex '
++  '審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。',
++  '2026-11-13T21:57:48+08:00'),
++ ('replay-7', '下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。', '2026-11-13T10:24:54+08:00'),
++ ('replay-8',
++  'Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation '
++  'cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。\n'
++  'Chosen option: 這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M '
++  'validation cycles」由程式檢查，並讓時間工具列出每一輪。',
++  '2026-11-13T15:14:02+08:00'),
++ ('replay-9',
++  '要不要開「待決定事項紀錄」這張任務？\n'
++  'Stated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 '
++  'dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。',
++  '2026-11-13T14:45:53+08:00'),
++ ('replay-10',
++  "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 "
++  '留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」',
++  '2026-11-13T20:22:30+08:00'),
++ ('replay-11',
++  '一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦',
++  '2026-11-13T17:51:53+08:00'),
++ ('replay-12',
++  '#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 '
++  '#854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker '
++  '不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。',
++  '2026-11-13T11:45:10+08:00'),
++ ('replay-13',
++  "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost "
++  '「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」',
++  '2026-11-13T22:18:20+08:00'),
++ ('replay-14',
++  "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost "
++  '「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」',
++  '2026-11-13T23:51:21+08:00')]
++
+ if __name__ == "__main__":
+     unittest.main()

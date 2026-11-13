@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "high",
+    "title": "F1: plain open listing crash",
+    "status": "fixed",
+    "detail": "Original README trigger now exits 0; removing mapping recreates KeyError."
+  },
+  {
+    "severity": "high",
+    "title": "F2: pre-install CI dependency failure",
+    "status": "fixed",
+    "detail": "Full missing-binary design suite and hosted unit lane pass; reverting fixture recreates four failures."
+  },
+  {
+    "severity": "high",
+    "title": "F3: historical fixture date and truncated prose",
+    "status": "fixed",
+    "detail": "All fourteen candidate tuples match primary public records and commit dates; wrong-day/truncated controls rejected."
+  }
+]

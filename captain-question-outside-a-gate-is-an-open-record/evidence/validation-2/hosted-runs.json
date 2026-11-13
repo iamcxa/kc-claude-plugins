@@ -1,0 +1,54 @@
+{
+  "workflow_runs": [
+    {
+      "id": 43483914192,
+      "name": "kc-dev-flow release gate",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 1656,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914192/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914192/logs",
+      "workflow_id": 340605043
+    },
+    {
+      "id": 43483914043,
+      "name": "adr-path-check",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 140,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914043/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914043/logs",
+      "workflow_id": 392075364
+    },
+    {
+      "id": 43483914251,
+      "name": "marketplace version parity",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 2342,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914251/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914251/logs",
+      "workflow_id": 286621000
+    },
+    {
+      "id": 43483914425,
+      "name": "docs site",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 219,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914425/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914425/logs",
+      "workflow_id": 405868116
+    },
+    {
+      "id": 43483914184,
+      "name": "kc-dev-flow-2 tests",
+      "status": "completed",
+      "conclusion": "success",
+      "run_number": 780,
+      "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914184/jobs",
+      "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43483914184/logs",
+      "workflow_id": 365763085
+    }
+  ]
+}

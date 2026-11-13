@@ -1,0 +1,19 @@
+F
+======================================================================
+FAIL: test_replayed_fourteen_questions_at_declared_synthetic_times (__main__.TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 365, in test_replayed_fourteen_questions_at_declared_synthetic_times
+    self.assertEqual(datetime.fromisoformat(answered).date().isoformat(), "2026-11-13", slug)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '2026-11-05' != '2026-11-13'
+- 2026-11-05
+?         ^^
++ 2026-11-13
+?         ^^
+ : replay-5
+
+----------------------------------------------------------------------
+Ran 1 test in 0.033s
+
+FAILED (failures=1)

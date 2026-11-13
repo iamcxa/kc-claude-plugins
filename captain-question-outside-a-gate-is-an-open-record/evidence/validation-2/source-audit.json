@@ -1,0 +1,147 @@
+{
+  "count": 14,
+  "records": [
+    {
+      "replay": "replay-1",
+      "commit": "02b9d580fb8fb30c5a7c3eb072d182556024f1b5",
+      "path": "dispatch-close-out-archives-evidence-and-removes-scratch.md",
+      "author_date": "2026-11-13T10:40:43+08:00",
+      "source_sha256": "43cfae92456f970df582fe10ea1ae437be2565cdded2f0678b67357a8f0ff87c",
+      "question_sha256": "5c61f4aca42bed78bc578ea624d29a9106219098d7b577f7a527b18e05765e1d",
+      "question_characters": 124,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-2",
+      "commit": "d33ee20290deaad1183d67acb2f789f313e66c35",
+      "path": "new-work-checks-what-exists-first.md",
+      "author_date": "2026-11-13T02:22:34+08:00",
+      "source_sha256": "50501e8e22cdcbfdbf6e99895c4a43e193090ab866c601931d077abded6031d2",
+      "question_sha256": "ba5d3d20a1fd11f002cdfcbd5ac91c9fd3c9ee961a1df4aca1b00d7fef1e7090",
+      "question_characters": 120,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-3",
+      "commit": "26a64312ed4fab5209ce616ba4ecaa474a07b221",
+      "path": "pilot-ideation-runs-a-probe-before-the-design.md",
+      "author_date": "2026-11-13T14:49:47+08:00",
+      "source_sha256": "7678888528c104a6b6b5da3379e75d0b4f16c78d041e746165c7935b90416925",
+      "question_sha256": "3af172db735fcc4e5f5ac39a643c819435f6e4c720f5e5a929cf03b6bfffea83",
+      "question_characters": 115,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-4",
+      "commit": "1cc34555675ec3523ee8dc9dc8e920d42f1d4cea",
+      "path": "pilot-ideation-runs-a-probe-before-the-design.md",
+      "author_date": "2026-11-13T16:01:58+08:00",
+      "source_sha256": "48095c66835147a2da7e3d8ea7fac5fc9d38245f0736e927944ca8bef00d9e3d",
+      "question_sha256": "69b9e3b759343c9ab26e6559df64fcf9f2d7c35d6797fa1224c1d8d84d4910a0",
+      "question_characters": 294,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-5",
+      "commit": "3bf964c4746c0b2022d8ffb36da051722bac61e9",
+      "path": "pilot-ideation-runs-a-probe-before-the-design.md",
+      "author_date": "2026-11-13T14:42:40+08:00",
+      "source_sha256": "a6cd5e0f224af3e013dc39e1036ced154511c7cd24bc68c2223957e4cf365c3c",
+      "question_sha256": "3197f1be7ac14172117753c158524a4610f2bad9480920910e12e825f09369be",
+      "question_characters": 53,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-6",
+      "commit": "76c4f9cbb8b4b690dc48550959656ab09f0b902a",
+      "path": "ready-pr-gets-a-codex-code-review-without-fo-noticing.md",
+      "author_date": "2026-11-13T21:57:48+08:00",
+      "source_sha256": "b39712b8363cd3ee3cb5f56a4a1bbd9494c5a950a4dcda5b613c2e6db8d83246",
+      "question_sha256": "133ccfa5b80560e83766078287f88601f945cb3cd2fad74f5a8d3c3474be1afd",
+      "question_characters": 199,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-7",
+      "commit": "20d2f3198eda1876b3b39a28da27bde01c3abd6b",
+      "path": "validator-commands-fit-the-delivery-check.md",
+      "author_date": "2026-11-13T10:24:54+08:00",
+      "source_sha256": "b5b021d1ec9261863e75545297f36a422d4f8d3407f60c5c3d0225e5150e81da",
+      "question_sha256": "da775a46e615073a34c00c9d115ac0afec4706d9f2c356981f9eeadf42956fb6",
+      "question_characters": 43,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-8",
+      "commit": "355ee7e03e6c8cdcaa7af5202da52e86a7ec881b",
+      "path": "budget-form-counts-ideation-rounds-and-times-each-round.md",
+      "author_date": "2026-11-13T15:14:02+08:00",
+      "source_sha256": "9947d4e6cd2cb3e5289ba25933fb1f9734ce1667559581a7a77f415160f710b7",
+      "question_sha256": "daf96c149258aa149dff443e5c77fd454b43750188bad24cb199f1474e7f29ee",
+      "question_characters": 301,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-9",
+      "commit": "44c795094abb1def1a5a1ba03f688f70fab2f6da",
+      "path": "captain-question-outside-a-gate-is-an-open-record.md",
+      "author_date": "2026-11-13T14:45:53+08:00",
+      "source_sha256": "1870665e07bdb3879116297491d089cda1c0c7155ca6cbf2907a69e09c6e0f27",
+      "question_sha256": "936938d4c611098a8135184565643ad517b33ea7bee2d047b556f627140e704e",
+      "question_characters": 178,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-10",
+      "commit": "2618342c097d7308613eeb5bf1743c85df9b5ef5",
+      "path": "design-check-reads-each-pilot-criterion-for-its-proof-record.md",
+      "author_date": "2026-11-13T20:22:30+08:00",
+      "source_sha256": "fa9eaa3736ef52ca4cf6d1cbc50a43a47c2bc99766e4d2cb4ff2eec0b4566ee4",
+      "question_sha256": "f8859867bea67ab629a863c887a11afcba1bbf7d7701ae629a252d899c465294",
+      "question_characters": 195,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-11",
+      "commit": "70bd01c2c2b3cb6a28489c8758e5b7d1fd6a9149",
+      "path": "design-check-reads-each-pilot-criterion-for-its-proof-record.md",
+      "author_date": "2026-11-13T17:51:53+08:00",
+      "source_sha256": "1703fa512d5543c9aaa4a226e4f33e9e572c8f781ba92b6d773d900f6ae649f0",
+      "question_sha256": "61eac4fb68482a8c5b33f88d6cc21ac8e5ae3bec207fc390f25f893742af3f95",
+      "question_characters": 93,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-12",
+      "commit": "10a7d7af80d11f4de68dee54dfeee38e231329a8",
+      "path": "evidence-is-declared-public-before-state-publication.md",
+      "author_date": "2026-11-13T11:45:10+08:00",
+      "source_sha256": "e689866e4d24b9de1d23742128513bf588b277f0f1be2a204f3ecd327c68ed2c",
+      "question_sha256": "d17c234538a3120f28e40c168c96cbc1603628034dfaa9cdfb59f6120c757fa0",
+      "question_characters": 248,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-13",
+      "commit": "1cdd3383f290d5495259e975e5133acdd520aff5",
+      "path": "merge-ask-is-produced-from-records.md",
+      "author_date": "2026-11-13T22:18:20+08:00",
+      "source_sha256": "a83b260a661cd33a48d0c60ea200afd13bc91bfdcd5cf98d60d5af3e699735fd",
+      "question_sha256": "de29f230ed21c6c126ba00377c32d24a5e6eca929c09c8f4759b28a8eaf72afa",
+      "question_characters": 163,
+      "matches_candidate": true
+    },
+    {
+      "replay": "replay-14",
+      "commit": "ad4e823357024786523b13964f7194b77f0a055f",
+      "path": "merge-ask-is-produced-from-records.md",
+      "author_date": "2026-11-13T23:51:21+08:00",
+      "source_sha256": "184b0c4690623858b8f0142f9597bee890d20d9ad68a938cc63278cc85a83c95",
+      "question_sha256": "8a3236f3b64fba37e8aad720907d82ebd890ec6725268887cff7a54c40cd4d20",
+      "question_characters": 168,
+      "matches_candidate": true
+    }
+  ],
+  "wrong_day_detected": true,
+  "truncated_text_detected": true
+}

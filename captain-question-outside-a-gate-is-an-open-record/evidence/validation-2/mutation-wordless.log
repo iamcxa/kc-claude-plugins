@@ -1,0 +1,18 @@
+F
+======================================================================
+FAIL: test_contract_writer_refuses_wordless_answer_without_approve_means (__main__.TimelineTests.test_contract_writer_refuses_wordless_answer_without_approve_means)
+----------------------------------------------------------------------
+ValueError: wordless answer must select approve_means
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 299, in test_contract_writer_refuses_wordless_answer_without_approve_means
+    with self.assertRaisesRegex(ValueError, "wordless answer needs approve_means"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "wordless answer needs approve_means" does not match "wordless answer must select approve_means"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.031s
+
+FAILED (failures=1)

@@ -1,0 +1,120 @@
+[
+  {
+    "name": "timeline",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_task_timeline.py"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/candidate",
+    "env": {},
+    "exit": 0,
+    "log": "timeline.log"
+  },
+  {
+    "name": "design-missing-binary",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "QuestionRecordTests"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/candidate",
+    "env": {
+      "SPACEDOCK_BIN": "/nonexistent/spacedock"
+    },
+    "exit": 0,
+    "log": "design-missing-binary.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/candidate",
+    "env": {},
+    "exit": 0,
+    "log": "lint.log"
+  },
+  {
+    "name": "adr",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+      "--require",
+      "0086"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+    "env": {},
+    "exit": 0,
+    "log": "adr.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+      "0b620345b538b67f4c6522d8b97028038f1ec17d",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/.."
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+    "env": {},
+    "exit": 0,
+    "log": "comments.log"
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+    "env": {},
+    "exit": 0,
+    "log": "dispatch.log"
+  },
+  {
+    "name": "numbers",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+      "check",
+      "--repo",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+      "--base",
+      "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/..",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+    "env": {},
+    "exit": 2,
+    "log": "numbers.log"
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+      "diff",
+      "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+      "0b620345b538b67f4c6522d8b97028038f1ec17d",
+      "--check"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record",
+    "env": {},
+    "exit": 0,
+    "log": "diff-check.log"
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "name": "unknown-event",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_unknown_event"
+    ],
+    "log": "mutation-unknown-event.log"
+  },
+  {
+    "name": "closed",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted"
+    ],
+    "log": "mutation-closed.log"
+  },
+  {
+    "name": "acted",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_acted_without_answer"
+    ],
+    "log": "mutation-acted.log"
+  },
+  {
+    "name": "wordless",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_wordless_answer_without_approve_means"
+    ],
+    "log": "mutation-wordless.log"
+  },
+  {
+    "name": "recommend",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_recommendation_outside_options"
+    ],
+    "log": "mutation-recommend.log"
+  },
+  {
+    "name": "revision",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_contract_writer_refuses_revision_not_previous_plus_one"
+    ],
+    "log": "mutation-revision.log"
+  },
+  {
+    "name": "answered-listed",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times"
+    ],
+    "log": "mutation-answered-listed.log"
+  },
+  {
+    "name": "open-omitted",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times"
+    ],
+    "log": "mutation-open-omitted.log"
+  },
+  {
+    "name": "every-line",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json"
+    ],
+    "log": "mutation-every-line.log"
+  },
+  {
+    "name": "lookup-removed",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree"
+    ],
+    "log": "mutation-lookup-removed.log"
+  },
+  {
+    "name": "always-refuse",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree"
+    ],
+    "log": "mutation-always-refuse.log"
+  },
+  {
+    "name": "add-time",
+    "exit": 1,
+    "caught": true,
+    "command": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py",
+      "TimelineTests.test_gate_wait_uses_first_naming_commit_after_archive_moves_room"
+    ],
+    "log": "mutation-add-time.log"
+  },
+  {
+    "name": "budget",
+    "exit": 1,
+    "caught": true,
+    "log": "mutation-budget.log"
+  }
+]

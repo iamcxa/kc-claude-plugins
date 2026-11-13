@@ -1,0 +1,26 @@
+[
+  {
+    "name": "F1",
+    "exit": 1,
+    "caught": true,
+    "log": "F1-falsifier.log"
+  },
+  {
+    "name": "F2",
+    "exit": 1,
+    "caught": true,
+    "log": "F2-falsifier.log"
+  },
+  {
+    "name": "F3",
+    "exit": 1,
+    "caught": true,
+    "log": "F3-falsifier.log"
+  },
+  {
+    "name": "AC-7 missing 0086",
+    "exit": 1,
+    "caught": true,
+    "log": "adr-falsifier.log"
+  }
+]

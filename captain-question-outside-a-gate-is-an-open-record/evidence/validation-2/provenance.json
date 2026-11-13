@@ -1,0 +1,34 @@
+{
+  "candidate": "0b620345b538b67f4c6522d8b97028038f1ec17d",
+  "base": "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+  "rejected": "3d65ebd7a456bcb05fd94ce754a79735bdcbcf39",
+  "branch": "spacedock-ensign/captain-question-outside-a-gate-is-an-open-record",
+  "repair_files": [
+    "kc-dev-flow-2/scripts/task_timeline.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_task_timeline.py"
+  ],
+  "full_files": [
+    "docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md",
+    "kc-dev-flow-2/references/captain-question-records.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/design_surfaces.py",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/task_timeline.py",
+    "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "kc-dev-flow-2/scripts/test_task_timeline.py"
+  ],
+  "unchanged_from_validation_1": {
+    "kc-dev-flow-2/scripts/design_surfaces.py": true,
+    "kc-dev-flow-2/scripts/lint-skills.py": true,
+    "kc-dev-flow-2/references/captain-question-records.md": true,
+    "kc-dev-flow-2/references/sd/workflow.md": true,
+    "docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md": true
+  },
+  "worktree_status": "",
+  "state_head": "202095720668085b29c08e02cc5a8a553859d8b6",
+  "reader_sha256": "3986459250080abf83f2026ccd4327d0590f39dd308ab117db191bf0b0900a59",
+  "reader_origin": "../validation-1/blind-output/reader.py",
+  "reader_reused_unchanged": true,
+  "acceptance_sha256": "7feaa00dc108ea43fec00156abb9d7c04dc6a5318c61293afe0c0bd99ac3b42c"
+}

@@ -1,0 +1,11 @@
+{
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/870",
+  "number": 870,
+  "state": "open",
+  "merged": false,
+  "draft": true,
+  "base": "main",
+  "base_sha": "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+  "head": "spacedock-ensign/captain-question-outside-a-gate-is-an-open-record",
+  "head_sha": "0b620345b538b67f4c6522d8b97028038f1ec17d"
+}

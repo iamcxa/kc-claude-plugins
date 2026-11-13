@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_replayed_fourteen_questions_at_declared_synthetic_times (__main__.TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 379, in test_replayed_fourteen_questions_at_declared_synthetic_times
+    self.assertEqual(set(actual), set(expected), tt.iso(clock))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Items in the second set but not the first:
+'replay-2#1' : 2026-11-12T18:17:34Z
+
+----------------------------------------------------------------------
+Ran 1 test in 0.186s
+
+FAILED (failures=1)

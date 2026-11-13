@@ -1,0 +1,2 @@
+{"asked": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。", "asked_at": "2026-11-12T18:11:34Z", "by": "replay FO", "channel": "chat", "holds": "acceptance", "v": 1, "event": "ask", "key": "replay-2#1", "at": "2026-11-12T18:11:34Z"}
+{"channel": "chat", "words": "派第二次驗證補證（建議）", "option": null, "resolution": null, "revision": 1, "v": 1, "event": "answer", "key": "replay-2#1", "at": "2026-11-12T18:22:34Z"}

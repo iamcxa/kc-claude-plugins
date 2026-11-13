@@ -362,3 +362,38 @@ REJECTED: the accepted plain listing entrance crashes, the candidate's hosted te
 ### Summary
 
 This complete report supersedes the earlier implementation report for the rejected candidate. F1, F2 and F3 are repaired at `0b620345b538b67f4c6522d8b97028038f1ec17d` within the original eight-path boundary, with all requested local checks and the FO-approved environment exception recorded. Bare evidence filenames above are under `evidence/implementation-1/repair-1/`; `<scratch>` was the assigned removed root, and `<package>` is the installed 0.41.0 package; FO owns publication, review and independent validation.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #870 head 0b620345 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `0b620345b538b67f4c6522d8b97028038f1ec17d`, base `1c3e714ff6752b8c84a490064639baf0d0ef3c9c`; bounded second-cycle criterion verdicts, inherited evidence boundaries and implementation-limit judgments: `evidence/validation-2/verification.md`.
+- DONE: Second and last validation cycle, scaled to the repair (3d65ebd7a..0b620345b, three files): recheck F1, F2 and F3 of evidence/validation-1/findings.md each with its original trigger, rerun your four-step acceptance script in a fresh shell, and confirm no criterion that passed in validation-1 regressed (AC-2 and AC-8 over the reconciled fixture: rerun the blind comparison). Hosted CI on PR 870 at this head is green; read it, do not rerun the whole list. AC-9 replaces AC-6 (Captain amendment 1). Use the unittest form CI runs.
+  All three former Material findings are resolved; exact three-path repair and five unchanged product blobs recorded in `provenance.json`; original-trigger evidence below, with no new Material, Polish or Needs decision finding.
+- DONE: F1 / AC-9 — plain README list, documented question field, and mixed question/gate rows
+  Fresh-shell `acceptance-observed.log` exits 0 and prints the second question; `timeline.log` exercises text/JSON mixed rows; removing the mapping recreates KeyError: question (`F1-falsifier.log`).
+- DONE: F2 / AC-4 — original missing-binary trigger and current hosted CI
+  `SPACEDOCK_BIN=/nonexistent/spacedock python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py` exits 0: 239 tests / 6 optional skips (`design-full-missing-binary.log`); five new tests run without skips (`design-missing-binary.log`); reverting fixture gives four failures (`F2-falsifier.log`). Hosted run 43483914184 / job 132087213353 succeeds before the install step (`hosted-job.json`).
+- DONE: F3 / AC-2 — complete public-source reconciliation of the same fourteen questions
+  `reconciliation.log`, `fixture-reconciliation.json`, `source-audit.json`: all tuples match complete public records and commit author dates; replay-5 is 2026-11-13T14:42:40+08:00 at 3bf964c4746c0b2022d8ffb36da051722bac61e9. Wrong-day and truncated-text controls are rejected; restoring November 5 fails `F3-falsifier.log`.
+- DONE: AC-2 / AC-8 — rerun the blind comparison with reconciled inputs
+  `reconciled-comparison.json`: fourteen questions, 56 clocks, 28 open rows, zero semantic/text mismatches; `reader-output/counterexamples.json` catches omitted-open and retained-answered lists. Saved contract-only reader reused unchanged; no new blind-agent claim. Prior seven dispositions remain, with truncated-prose point resolved; minute-display tolerance stays 0.051.
+- DONE: AC-1 / AC-3 / AC-5 — writer refusals, legacy interruption count and gate/archive behavior remain intact
+  CI unittest form `python3 -B kc-dev-flow-2/scripts/test_task_timeline.py` exits 0, 28 cases (`timeline.log`); six refusal deletions, counting every line, omitted/answered rows and add-time lookup each fail (`mutation-results.json`). Original 34-gate historical replay was read, not repeated; gate algorithm is unchanged.
+- DONE: AC-4 — omission boundaries and unchanged adoption behavior
+  Own/shared/archive, missing/present records and real history cases pass above; lookup-removed and always-refuse mutations fail. Actual `task-check.log` exits 0 while explicitly skipping omission because the adopted README lacks the new sentence; no live enforcement claim.
+- DONE: AC-7 / AC-9 — reserved ruling, approved owner sentence and startup budget
+  From assigned worktree: `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since 1c3e714ff6752b8c84a490064639baf0d0ef3c9c --require 0086` exits 0, 79 records (`adr.log`); missing 0086 fails. Exact sentence 41 words; workflow 6097 → 6113 (`wording.json`); lint exits 0 and removing +16 startup step fails (`mutation-budget.log`).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `evidence/validation-2/acceptance.sh`: four steps run by `bash --noprofile --norc`, exit 0 (`acceptance-observed.log`); prerequisites, exact final-path command and local-only limits in `verification.md`. F1/F2/F3 resolved; released-day capture and remote consumer remain Deferred risk.
+- DONE: Role trigger, dispatch records, number guards, added comments and product scope checks
+  Role exit 0; eight complete dispatch records; number guard exit 0 after correcting filename, with remote reservation freshness unverified; comments 3/704 lines, 0.4% ≤ 5%; diff check exit 0 (`role.log`, `dispatch.log`, `numbers-corrected.log`, `comments.log`, `diff-check.log`). Product tree remains clean at the named head.
+- SKIPPED: Whole CI list locally, a new blind-agent read, full historical gate/corpus reruns, released-day capture, released remote consumer, adopter installation and sibling PR integration/recount
+  Dispatched repair reuses earlier independent evidence where product bytes are unchanged; all five hosted workflows pass (`hosted-runs.json`). No current-head RoboRev, merge, release or adoption claim; those remain FO-owned. CI cost per PR: not measured.
+- DONE: Public evidence retention and scratch close
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/scratch.py close /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record validation-2` exit 0:
+  Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-2 (66388462 bytes)
+  Evidence: evidence/validation-2/ (92 files, 292.9 KiB)
+
+### Summary
+
+Second and final validation cycle recommends PASSED at `0b620345b538b67f4c6522d8b97028038f1ec17d`: the three original triggers are repaired and targeted regressions/falsifiers pass. This report supersedes the earlier rejected validation verdict for the repaired candidate only; bare evidence names resolve under `evidence/validation-2/`. The local Pilot goal is sufficient and the retained eight-file scope is necessary; the open Draft PR, delivery checks, sibling integration/recount and release/live-use obligations remain with FO.

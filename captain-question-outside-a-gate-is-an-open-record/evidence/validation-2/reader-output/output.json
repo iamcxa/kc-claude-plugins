@@ -1,0 +1,584 @@
+[
+  {
+    "clock": "2026-11-12T17:52:34Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-12T18:17:34Z",
+    "open": [
+      {
+        "key": "replay-2#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-12T18:11:34Z",
+        "waiting_min": 6.0,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-12T18:22:34Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-12T18:27:34Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T01:54:54Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:10:43Z",
+    "open": [
+      {
+        "key": "replay-7#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "waiting_min": 1.8166666666666667,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:19:54Z",
+    "open": [
+      {
+        "key": "replay-7#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "waiting_min": 11.0,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:24:54Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:29:54Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:35:43Z",
+    "open": [
+      {
+        "key": "replay-1#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:30:43Z",
+        "waiting_min": 5.0,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:40:43Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T02:45:43Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T03:15:10Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T03:40:10Z",
+    "open": [
+      {
+        "key": "replay-12#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T03:24:10Z",
+        "waiting_min": 16.0,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T03:45:10Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T03:50:10Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:12:40Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:15:53Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:19:47Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:37:40Z",
+    "open": [
+      {
+        "key": "replay-5#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:28:40Z",
+        "waiting_min": 9.0,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-9#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "waiting_min": 9.783333333333333,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:40:53Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 3.1,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-5#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:28:40Z",
+        "waiting_min": 12.216666666666667,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-9#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "waiting_min": 13.0,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:42:40Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 4.883333333333334,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-9#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "waiting_min": 14.783333333333333,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:44:02Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 6.25,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-9#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "waiting_min": 16.15,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:44:47Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 7.0,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      },
+      {
+        "key": "replay-9#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "waiting_min": 16.9,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:45:53Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 8.1,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:47:40Z",
+    "open": [
+      {
+        "key": "replay-3#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "waiting_min": 9.883333333333333,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:49:47Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:50:53Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T06:54:47Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T07:09:02Z",
+    "open": [
+      {
+        "key": "replay-8#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:57:02Z",
+        "waiting_min": 12.0,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T07:14:02Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T07:19:02Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T07:31:58Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T07:56:58Z",
+    "open": [
+      {
+        "key": "replay-4#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T07:48:58Z",
+        "waiting_min": 8.0,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T08:01:58Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T08:06:58Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T09:21:53Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T09:46:53Z",
+    "open": [
+      {
+        "key": "replay-11#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T09:31:53Z",
+        "waiting_min": 15.0,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T09:51:53Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T09:56:53Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T11:52:30Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T12:17:30Z",
+    "open": [
+      {
+        "key": "replay-10#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T12:03:30Z",
+        "waiting_min": 14.0,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T12:22:30Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T12:27:30Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T13:27:48Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T13:48:20Z",
+    "open": [
+      {
+        "key": "replay-6#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "waiting_min": 5.533333333333333,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T13:52:48Z",
+    "open": [
+      {
+        "key": "replay-6#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "waiting_min": 10.0,
+        "waiting_bound": "exact",
+        "holds": "nothing",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T13:57:48Z",
+    "open": [
+      {
+        "key": "replay-13#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "waiting_min": 1.4666666666666666,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T14:02:48Z",
+    "open": [
+      {
+        "key": "replay-13#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "waiting_min": 6.466666666666667,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T14:13:20Z",
+    "open": [
+      {
+        "key": "replay-13#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "waiting_min": 17.0,
+        "waiting_bound": "exact",
+        "holds": "task",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T14:18:20Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T14:23:20Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T15:21:21Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T15:46:21Z",
+    "open": [
+      {
+        "key": "replay-14#1",
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T15:28:21Z",
+        "waiting_min": 18.0,
+        "waiting_bound": "exact",
+        "holds": "acceptance",
+        "interruptions": 1,
+        "state": "open"
+      }
+    ],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T15:51:21Z",
+    "open": [],
+    "diagnostics": []
+  },
+  {
+    "clock": "2026-11-13T15:56:21Z",
+    "open": [],
+    "diagnostics": []
+  }
+]
