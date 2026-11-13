@@ -34,6 +34,20 @@ gates:
                 id: briefing:observer-check-learn-only-when-listed:ideation:attempt-1:revision-1
                 digest: sha256:2a046d0b728f5ed25e73bbba5717bcec52538a23ef09df3726a447f2243be622
                 room-ref: ./observer-check-learn-only-when-listed/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:observer-check-learn-only-when-listed:ideation:1
+                briefing: briefing:observer-check-learn-only-when-listed:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-13T00:42:43.741375Z"
+                decision: approve
+                reason: 'Round 1 fired no stop condition (worker''s Trial round 1 line: none; no unresolved Captain decision in the design). design_surfaces.py check exit 0 (FO run 2026-11-13). The probe on local branch poc/observer-check-learn-only-when-listed at 5be1ed969 fails the no-learn comparison on base 8125e6d51 and meets both branches of the Stop condition, 24 of 24 fixtures. The design changes six files under kc-dev-flow-2/scripts/ and shares pr_watch.py and its test with PR 858, merged before this record; FO told the Captain of the overlap on 2026-11-13 and held this gate until that merge. Recommendation: followed.'
+                conn:
+                    quote: 五張都准，授權代記設計關卡（建議）
+                    source: host question dialog, 2026-11-13, answering FO's trial admission question (quoted in the task's backlog gate record)
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-12T17:02:57Z
 ---
 
