@@ -24,7 +24,14 @@ status: backlog
 - Non-goals: migrating subspace-relay's or qnow's documents (relay keeps its folder; a move happens section by section when a task touches one, and is its own decision); a documentation site or generator; changing Spacedock; a mandatory architecture document for a repository with one small flow.
 
 ## Budget
-- One ideation, one implementation and one validation cycle, in one package PR to the three files named above and their tests. A check script, if the design asks for one, is a separate task. This is the seeding session's proposal; the Captain did not state a budget.
+1 implementation and 2 validation cycles, in one package PR to the three files named above and their tests. A check script, if the design asks for one, is a separate task. This is the seeding session's proposal; the Captain did not state a budget.
 
 ## Stop condition
 - A Behaviour replay on a real closed adopter task (the Chief Engineer suggests qnow `owner-vehicle-kept-after-name` or a subspace-relay `feat` among the three whose behaviour is still undescribed) shows the changed arm leaving the architecture document true and the control not, with a control task that changes no behaviour staying untouched; or the design shows why not and says what was learned. Return to the Captain if the replay contradicts the trial, or if the design needs a workflow word raise.
+
+## FO alignment
+
+Alignment: needed at ideation; the layout and which facts get which home are the Captain's to accept, and the trial behind this task was run by another session and not re-run by FO.
+Surfaces: none
+Visible change: none
+Release review: not needed: workflow maintenance, on no journey map.
