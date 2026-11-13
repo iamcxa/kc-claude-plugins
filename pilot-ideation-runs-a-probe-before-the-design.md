@@ -366,4 +366,3 @@ The local candidate implements the Pilot-only probe rule, POC proof pointer, pro
 
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/pilot-ideation-runs-a-probe-before-the-design/implementation-1 (33212136 bytes)
 Evidence: evidence/implementation-1/ (69 files, 191.1 KiB)
-
