@@ -71,6 +71,7 @@ Alignment: not needed before ideation: his words admit the first part and name t
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-11-13: amendment 2 replaces only the evidence command of AC-3 with the pattern the independent validator ran and recorded in validation-1 (finding F1); the criterion's statement and falsifier are unchanged and no approved behaviour is withdrawn.
 
 ## Captain amendments
 
@@ -78,6 +79,18 @@ Release review: not needed: workflow maintenance, on no journey map.
 Captain: 「可以，要同時加入預算與計時機制，我看目前你 X implementiation + Y valdiation cycle 方式還不錯」 (chat, 2026-11-13), after his 「我想知道是否可做成 pilot 就是在設計階段跑 poc 流程，就是假設->驗證->擴大方案->假設->驗證->... 等於 pilot 會某種程度上復用 poc proile 的東西，而 prod 就是復用 piliot 的東西，但是更多一些部署，維護承諾等等考量，這是你現在的方向嗎？」 (chat, 2026-11-13)
 Asked: 「有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。」
 Supersedes: none
+
+### Amendment 2 — 2026-11-13, host question dialog
+Captain: 「改指令、查原因、修文字、再驗（建議）」 (host question dialog, 2026-11-13)
+Asked: 「#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 worker 跑一次，再不過我就停下來回到你這裡。」
+Supersedes: AC-3
+Superseded text:
+
+**AC-3** The ideation write ban has one home: `skills/ideation/principles.md` no longer states it, `KNOWN_DUPLICATES` no longer lists it, and lint reports no repeat. Evidence: `accept.sh AC-3`; exit 0; `evidence/ideation-1/out/AC-3.log`. Falsifier: `test_the_known_overlap_is_listed_and_a_new_one_is_not` (an ideation copy in another principles file is refused); red on the probe only from the budget, green with a raise step (`evidence/ideation-1/test_lint_skills.with-temp-raise.log`).
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-13): validation-1 on #864 head f0e00d30c recommended REJECTED with two findings. F1 Needs decision (kind evidence or form): AC-3's approved evidence command counts lint's own success line as a repeat and exits 1 on a conforming candidate; settled by Captain amendment 2, statement unchanged, command corrected. F2 assessed Material and owned (kind build, pending investigation): one history-free test subject built a probe before its design but recorded command, exit and output path for two of its three criteria only, so AC-8 is not met as written; under Captain amendment 2 the implementation worker first investigates without changing the candidate, FO then authorises a repair of the wording, and validation-2 observes again; a second rejection stops the task.
 
 ## Design
 
@@ -289,7 +302,7 @@ implementation, CAND is the candidate head. Paths below are under `pilot-ideatio
 
 **AC-2** The POC workflow is unchanged: `poc_readme.derive` of the candidate README equals that of origin/main. Evidence: `accept.sh AC-2`; exit 0; `evidence/ideation-1/out/AC-2.log` (`poc derived equal`). Falsifier: an edit outside `### ideation` prints `poc derived DIFFER`.
 
-**AC-3** The ideation write ban has one home: `skills/ideation/principles.md` no longer states it, `KNOWN_DUPLICATES` no longer lists it, and lint reports no repeat. Evidence: `accept.sh AC-3`; exit 0; `evidence/ideation-1/out/AC-3.log`. Falsifier: `test_the_known_overlap_is_listed_and_a_new_one_is_not` (an ideation copy in another principles file is refused); red on the probe only from the budget, green with a raise step (`evidence/ideation-1/test_lint_skills.with-temp-raise.log`).
+**AC-3** The ideation write ban has one home: `skills/ideation/principles.md` no longer states it, `KNOWN_DUPLICATES` no longer lists it, and lint reports no repeat. Evidence: `evidence/implementation-1/bin/accept.sh AC-3 <output>`, which counts only lint lines matching `^FAIL:.*repeats`; exit 0; `evidence/validation-1/AC-3-corrected.log`. Falsifier: `test_the_known_overlap_is_listed_and_a_new_one_is_not` (an ideation copy in another principles file is refused), and a copied ban exits 1 (`evidence/validation-1/mutation-AC-3-duplicate-ban.log`).
 
 **AC-4** `lint-skills.py` passes, the README rising by the raise step that carries the Captain's quoted words and loaded moment. Evidence: `accept.sh AC-4`; exit 1 on the probe; `evidence/ideation-1/out/AC-4.log` (66 words over). Not provable now: see below.
 
