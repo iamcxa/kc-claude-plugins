@@ -60,6 +60,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-13T02:06:22.077745Z"
                 reason: FO attached the older delivery check record (ask-1) where the newest is ask-2; same question, re-prepared with the newest record before the Captain saw it.
+            - id: gate-attempt:observer-check-learn-only-when-listed-validation-2
+              briefing:
+                id: briefing:observer-check-learn-only-when-listed:validation:attempt-2:revision-1
+                digest: sha256:3a10e55c604ba01779a2d9a58c1ae0f72d622f2dfedc4ae087dcc9d96c215226
+                room-ref: ./observer-check-learn-only-when-listed/review/validation/briefing-2
 started: 2026-11-12T17:02:57Z
 worktree: .worktrees/spacedock-ensign-observer-check-learn-only-when-listed
 pr: iamcxa/kc-claude-plugins#861
