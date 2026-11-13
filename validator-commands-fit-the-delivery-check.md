@@ -15,6 +15,10 @@ gates:
                 id: briefing:validator-commands-fit-the-delivery-check:backlog:attempt-1:revision-1
                 digest: sha256:288f023b60dc235976f0c8d8332ebb7908c15f28934f09f9e4debe03f834d997
                 room-ref: ./validator-commands-fit-the-delivery-check/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-11-13T13:42:14.907137Z"
+                reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
 ---
 
 ## Scope
