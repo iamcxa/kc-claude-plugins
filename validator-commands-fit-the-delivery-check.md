@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-13T13:42:14.907137Z"
                 reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
+            - id: gate-attempt:validator-commands-fit-the-delivery-check-backlog-2
+              briefing:
+                id: briefing:validator-commands-fit-the-delivery-check:backlog:attempt-2:revision-1
+                digest: sha256:8ea3a640924067f1668de522fde5d515bed09a947bdfcc8347b8245ac0e46e4a
+                room-ref: ./validator-commands-fit-the-delivery-check/review/backlog/briefing-2
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:validator-commands-fit-the-delivery-check:backlog:attempt-2:revision-1",
+  "question": "三張「合併前那一段」的任務要不要進設計，以及實作用什麼強度？ 三張內容同剛才那一題：合併提問摘要自動產生、標成可審查後自動觸發 Codex 審查、驗證者留下的東西能直接過合併檢查。預算各 1 implementation and 2 validation cycles。符合常設授權條件，設計關卡沒踩停止條件時由我代記，合併每張問你。第一張和第三張會動到同一支程式，排先後。",
+  "artifacts": [
+    {
+      "id": "artifact:validator-commands-fit-the-delivery-check:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/e72e59e198dd5fcd90a6e3b201d432606ce9a5e4/validator-commands-fit-the-delivery-check.md",
+      "rev": "sha256:6e65262bbb029cbfc1b64853c05ee359e531f49d74dff1acf7ab608d0bb977e4",
+      "mediaType": "text/markdown",
+      "summary": "profile pilot, variant kc-dev-flow-2; Budget: 1 implementation and 2 validation cycles, in one package PR; Surfaces none; scope, non-goals and stop condition as seeded in the task file; ideation runs probe-first; the Captain's standing grant of 2026-11-13 applies to the ideation gate when no stop fires; the build worker's model and effort follow his answer to this question; seed check exit 0 (FO run 2026-11-13)."
+    }
+  ]
+}
