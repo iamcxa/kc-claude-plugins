@@ -245,3 +245,7 @@ Recommended order: this two-file seed repair before `captain-amendment-form-chec
 ### Summary
 
 Designed the bounded seed-only repair around the existing alignment predicate, with historical replay, read-only adopter compatibility evidence, per-moment word deltas and the batch overlap order. The Captain must settle one acceptance interpretation: preserve existing errors for Result-bearing tasks rather than bypass admission rules; no source file, product branch, PR or sibling state was changed. Pilot design is ready for FO's batch gate preparation; implementation, candidate tests and independent validation remain future work.
+
+## Held
+
+Closed: hold and build nothing (the check exists since 0.31.0; FO's scripts checked a /tmp copy).
