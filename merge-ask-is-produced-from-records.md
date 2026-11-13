@@ -101,6 +101,11 @@ Superseded text:
 
 **AC-5** Integrate through the existing delivery command within one package PR, preserve unrelated live work and privacy, and measure all due reading rather than claiming a speedup from a shorter file. Verified by: `python3 poc/merge_summary_probe.py words --state <pinned state checkout> --out <owned scratch>/reading` reproduces 80→52 recipe and 6099→6071 workflow words; same-mod text remains 48. Evidence identifies unmeasured dynamic lifecycle totals and count-only adopter inspection. Full production integration, lint-budget parity, cleanup and a fresh independent no-hand-edit first ask remain future validation obligations. Falsifier: restore hand-copy instructions, alter the question, grow a due passage without accounting, or archive private-source text; validation must fail the corresponding bound, not infer success from this static measurement.
 
+### Amendment 2 — 2026-11-13, chat
+Captain: 「合併檢查存紀錄那張做成邊界合約：交付紀錄定義一份，流程文件、觀察者、Copilot 擴充改成引用並刪掉抄本，測試改成檢查紀錄符合合約」 (chat, 2026-11-13), after his 「你意思是把這些東西從不同的地方提出來變成一個邊界合約是嗎」 (chat, 2026-11-13)
+Asked: 「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」
+Supersedes: none
+
 ## Not provable now
 
 - **AC-1:** independent generation for the nine event-time deliveries; complete compatible source captures do not currently exist in a common contract. Authenticated historical provider fetches and new real delivery observations were outside the probe grant.
@@ -109,11 +114,6 @@ Superseded text:
 - **AC-4:** all live delivery predicates and the native gate/merge lifecycle. Synthetic green controls do not establish real merge readiness or binding compliance.
 - **AC-5:** total dynamic words per lifecycle moment, elapsed-time savings, production integration, hosted CI, release/adoption and public-evidence classification for private consumers. No CI definition changed; cost per PR was not measured.
 - Mermaid rendered layout: source/prose semantics were checked, rendering was not run.
-
-### Amendment 2 — 2026-11-13, chat
-Captain: 「合併檢查存紀錄那張做成邊界合約：交付紀錄定義一份，流程文件、觀察者、Copilot 擴充改成引用並刪掉抄本，測試改成檢查紀錄符合合約」 (chat, 2026-11-13), after his 「你意思是把這些東西從不同的地方提出來變成一個邊界合約是嗎」 (chat, 2026-11-13)
-Asked: 「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost 「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」
-Supersedes: none
 
 ## Design
 
