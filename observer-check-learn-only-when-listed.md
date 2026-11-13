@@ -3,7 +3,7 @@ title: observer_check prints the learn steps only where the workflow README list
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
