@@ -1,0 +1,111 @@
+## First action
+
+Before anything else, invoke your operating contract:
+
+    Skill(skill="spacedock:ensign")
+
+This loads the shared ensign discipline (stage-report format, background-task polling, worktree ownership, completion signal protocol). The call is safe to call more than once; if the agent-definition preload ever starts working, calling it again is a no-op (the skill content is re-loaded but has no behavioral effect). Do not paraphrase; call the tool.
+
+You are working on: pr_watch.py tasks prints record-PR next lines for tasks whose worktree is not on this machine
+
+Stage: ideation
+
+This workflow is split-root: the entity body and your stage report live in the shared state checkout, not alongside the code. Write and commit them to the state checkout at the entity path below. Commit state path-scoped — `git -C /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state add /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state/pr-watch-tasks-foreign-worktree.md && git -C /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state commit -m "..." -- /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state/pr-watch-tasks-foreign-worktree.md` — never a bare `git add -A` or bare `git commit` in the state checkout (a bare commit cross-attributes a concurrent writer's staged entity). Retry on index.lock contention after a short wait. Then push the state branch so peers see your entity/report: `git -C /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state push origin spacedock-state/wf`; on a non-fast-forward rejection, `git -C /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state pull --rebase origin spacedock-state/wf` then re-push.
+
+Read the entity file at /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state/pr-watch-tasks-foreign-worktree.md for the current spec.
+
+Package root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/package/kc-dev-flow-2
+Start in the assigned worktree; verify pwd and git root before edits.
+
+Profile: pilot. The Captain's words and the evidence are in the task file. This task is one of route trial of 2026-11-13; read the other task files only as they stand, and do not edit them. Design against the current package source: kc-dev-flow-2/ in iamcxa/kc-claude-plugins at origin/main (read the released version from kc-dev-flow-2/.claude-plugin/plugin.json there) (read with `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo show origin/main:<path>` after `git fetch origin`). Check the chain first (Spacedock, then kc-dev-flow-2, then sibling adopters) and say what you found; for a third-party mechanism read its own docs or source, not an adopter's workaround.
+
+Put no private adopter repository's task names, titles, rulings or logs into the task file or folder (the state branch is public): counts only. Do not comment on any PR or issue, and do not message any other session. Never run `git remote set-url` or any `git config` write in a worktree of this repository. Read adopter state (relay, web, qnow) only through read-only commands.
+
+Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
+Done line: Done: pr-watch-tasks-foreign-worktree completed ideation
+Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
+TEST HARNESS (isolated replay): do not invoke the kc-dev-flow-2 skill through the Skill tool; read /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/package/kc-dev-flow-2/skills/ideation/SKILL.md and follow it, resolving every package path against /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/package/kc-dev-flow-2. Do not run the application unit, integration or e2e suites and do not start servers, databases or browsers; say in the report they were not run. Run the package's own scripts as your instructions require. Do not push, merge or commit to any remote. The state checkout is /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state; write your stage report there only. Never git stash.
+
+
+### Completion checklist
+
+A `### Batch overlap` section naming each file the design would change and each other batch task (design-surfaces-task-dir-crash, new-work-checks-what-exists-first, delivery-gate-s4-skips-removed-scratch, observer-check-learn-only-when-listed, pr-watch-tasks-foreign-worktree) and live task of other sessions (dispatch-close-out-archives-evidence-and-removes-scratch (open PR #854), held-and-closed-tasks-leave-the-design-queue (open PR #856), adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions or held; read only)) that changes the same file or check, so FO can order implementation
+The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+
+### Summary
+{brief description of what was accomplished}
+
+### Fetch commands
+
+    /Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf --stage ideation
+
+
+### Completion Signal
+
+When you finish (after all commits and stage report writes are done), your last action MUST be:
+
+    SendMessage(to="team-lead", message="Done: pr_watch.py tasks prints record-PR next lines for tasks whose worktree is not on this machine completed ideation. Report written to /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.xboHE6DyKR/pr-watch-tasks-foreign-worktree-control/wf/.spacedock-state/pr-watch-tasks-foreign-worktree.md.")
+
+**If you are the first officer forwarding this prompt to Agent():** copy the entire block above into `Agent(prompt=...)` character-for-character. Do NOT paraphrase `SendMessage(to="team-lead", ...)` as "SendMessage with to='team-lead'" or any other English rewrite — the parenthesis-equals syntax is the literal call the ensign must emit, not a description of one.### `ideation`
+
+FO may dispatch ideation on a stronger model when the design is hard to reverse,
+such as an event model, an architecture or a security boundary, and says so in
+the dispatch. The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
+work item's recorded variant/profile and the skill's own profile routing table.
+FO aligns direction and requests research when it can change a decision; the
+worker authors the PRFAQ and the artifact each recorded surface owes. When
+`## FO alignment` records alignment as needed, FO records the alignment result
+as a `Result:` line before dispatching the worker. Missing skill or profile
+authority requires a hold report rather than a baseline or default-profile
+substitution.
+Ideation writes no repository file, branch or commit: the design, the criteria and any
+ADR draft live in the task file, and a draft carries no ADR number.
+
+- **Outputs:** Current design definition and acceptance criteria with reproducible
+  evidence clauses; unresolved decisions identified for the user.
+- **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
+  approvals and stops, worth answers, acceptance evidence/limits, and each recorded
+  `Surfaces:` value's artifact. The gate is not presentable without the
+  artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+  output in the gate material at any exit, and treats a non-zero exit as the gate
+  not presentable. Required diagram defects or missing current-stage
+  evidence block recommendation and gate preparation/presentation; honest
+  unverified future checks do not.
+  FO may correct design prose/Mermaid to reflect established decisions under an
+  actual Captain grant covering that task's exact design section; reuse a matching
+  standing grant. Template adoption grants no authority. Record the decision basis;
+  preserve scope, acceptance criteria, risk acceptance, product code, worker
+  evidence, prior reports, approvals and verdicts. Withdraw an affected open binding
+  before editing, then reprepare through the applicable SD lifecycle. Other
+  corrections require an authorized author; hold where no supported route applies,
+  without inventing same-stage rework. Corrections neither replace user approval nor advance stages.
+
+## Dispatch facts
+
+- **Team:** You are one worker in a team completing the project goal; your stage
+  and handoff serve that goal. Before substantial work or retrying a failure,
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
+- **Signal:** send the completion message once, to the first officer by the name
+  your session lists as addressable (`main` under Claude Code dispatch). The
+  completion block's `team-lead` is Spacedock's default and is not registered
+  there (spacedock-dev/spacedock #523, #608); do not try it first and do not
+  describe a fallback in the report.
+- **Package:** `<package>` in stage text is the `Package root:` line of the
+  kc-dev-flow-2 skill you loaded; your dispatch's scope notes state the same path,
+  and if they differ, use the skill's. Run package scripts only from it; never
+  search the filesystem, `/tmp` or another install for them.
+- **Secrets:** `<wrapper>` is the only route to a development secret: run a
+  command that needs one as `<wrapper> <command>`. Never read or print a value.
+  If a guard refuses a command that only mentions a secret-reading tool, rephrase
+  it; do not split, encode or wrap the command to pass the guard.

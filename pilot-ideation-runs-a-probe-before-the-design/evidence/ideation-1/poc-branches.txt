@@ -1,0 +1,12 @@
+# git -C <workflow checkout> branch --list 'poc/<slug>' for the ten trial tasks, 2026-11-13; other local poc/ branches: counted only
+pr-watch-tasks-foreign-worktree branch=1 worktree=0
+new-work-checks-what-exists-first branch=1 worktree=0
+design-surfaces-task-dir-crash branch=1 worktree=0
+observer-check-learn-only-when-listed branch=1 worktree=0
+merge-ask-tests-the-merge-result branch=1 worktree=0
+each-task-records-stage-time-revises-and-interruptions branch=1 worktree=0
+gate-question-facts-are-checked-before-the-captain-reads-them branch=1 worktree=0
+dispatch-close-out-archives-evidence-and-removes-scratch branch=0 worktree=0
+held-and-closed-tasks-leave-the-design-queue branch=0 worktree=0
+delivery-gate-s4-skips-removed-scratch branch=1 worktree=0
+all local poc/ branches: 20 (includes this task's probe)

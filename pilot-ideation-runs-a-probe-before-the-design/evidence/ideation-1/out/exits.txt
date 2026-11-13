@@ -1,0 +1,7 @@
+AC-1 exit 0
+AC-2 exit 0
+AC-3 exit 0
+AC-4 exit 1
+AC-5 exit 0
+AC-6 exit 0 (rerun after harness fix: whole-tree archive)
+AC-7 exit 0

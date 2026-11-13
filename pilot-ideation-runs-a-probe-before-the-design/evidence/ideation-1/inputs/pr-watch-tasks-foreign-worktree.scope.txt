@@ -1,0 +1,8 @@
+Start in the assigned worktree; verify pwd and git root before edits.
+
+Profile: pilot. The Captain's words and the evidence are in the task file. This task is one of route trial of 2026-11-13; read the other task files only as they stand, and do not edit them. Design against the current package source: kc-dev-flow-2/ in iamcxa/kc-claude-plugins at origin/main (read the released version from kc-dev-flow-2/.claude-plugin/plugin.json there) (read with `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo show origin/main:<path>` after `git fetch origin`). Check the chain first (Spacedock, then kc-dev-flow-2, then sibling adopters) and say what you found; for a third-party mechanism read its own docs or source, not an adopter's workaround.
+
+Put no private adopter repository's task names, titles, rulings or logs into the task file or folder (the state branch is public): counts only. Do not comment on any PR or issue, and do not message any other session. Never run `git remote set-url` or any `git config` write in a worktree of this repository. Read adopter state (relay, web, qnow) only through read-only commands.
+
+Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
+Done line: Done: pr-watch-tasks-foreign-worktree completed ideation
