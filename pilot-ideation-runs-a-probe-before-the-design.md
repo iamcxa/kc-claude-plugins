@@ -34,6 +34,17 @@ gates:
                 id: briefing:pilot-ideation-runs-a-probe-before-the-design:ideation:attempt-1:revision-1
                 digest: sha256:4c644ca4bfe2a84a12e2bf42e80aa237bd470cd53cd9d4ec22cc1ffd562ebaef
                 room-ref: ./pilot-ideation-runs-a-probe-before-the-design/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pilot-ideation-runs-a-probe-before-the-design:ideation:1
+                briefing: briefing:pilot-ideation-runs-a-probe-before-the-design:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-13T07:12:46.314722Z"
+                decision: approve
+                reason: 'The Captain chose 「核准，七項都照建議（建議）」 (host question dialog, 2026-11-13), answering 「決定：要不要核准「Pilot 設計階段先做試作」的設計並開始實作？建議核准，七個設計決定都照建議：一、試作是「預期要做，除非設計寫明為什麼不做」；二、試作只能在本機分支，不推送、不部署、不用密鑰、不碰共用環境，做不到的列在「現在無法證明」；三、設計裡記一行試作的分支、基底和最後提交，設計 worker 移除工作目錄、保留分支，實作 worker 做出成品後刪掉分支；四、試作一輪就是一次設計派工，第三次設計派工前我停下來問你，由程式檢查的預算寫法另開任務（你剛才選的分兩步）；五、流程文件增加 66 個字（6033 到 6099）；六、新增一份決策紀錄，只對 Pilot 取代舊紀錄 0005 裡「設計階段不得寫檔」那一條；七、Pilot 的文字指向 POC 既有的那一段規則（43 個字）而不重寫，「擴大方案」這一步留在 Pilot 的文字裡，不改 POC 流程。同意即接受：每次 Pilot 設計派工我少手寫 184 個字，但我每次啟動多讀 66 個字；worker 可以用一句話說明就跳過試作；輪數上限在後續任務做完前只靠我記得；沒有機器證明這會讓交付變快或缺陷變少；有三項驗收條件要等實作或發版後才能驗。」; accepts the design with decisions D1 to D7 as recommended, including the 66-word workflow raise. D4 follows his earlier choice 「分兩步（建議）」 (host question dialog, 2026-11-13). Recommendation: followed.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-13T06:44:05Z
 ---
 
