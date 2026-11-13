@@ -69,7 +69,7 @@ gates:
                 state: pending
 started: 2026-11-12T17:03:02Z
 worktree: .worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree
-pr: iamcxa/kc-claude-plugins#858
+pr: pr-merge:858
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-16), after FO's first run of the v0.23.0 lifecycle mod's idle step on this workflow.
