@@ -1044,6 +1044,11 @@ class TasksTests(unittest.TestCase):
 
     def test_merged_scratch_prompt_precedes_merge_record(self):
         self.readme('learn')
+        detached = self.root / 'detached-state'
+        self.state.rename(detached)
+        self.state = detached
+        readme = self.workflow / 'README.md'
+        readme.write_text(readme.read_text().replace('state: .spacedock-state', f'state: {self.state}'))
         self.task('merged', pr='o/r#7', worktree=False)
         self.report('merged')
         self.scratch_dispatch('merged', 'validation-1')
@@ -1052,6 +1057,15 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 0, lines)
         close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
         self.assertLess(close, lines.index('next: let pr-merge record merged.'))
+        observer = next(line.split('`')[1] for line in lines if line.startswith('after pr-merge: run '))
+        self.assertIn(f'--readme {readme}', observer)
+        done = subprocess.run(observer.split(), capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        readme.write_text(readme.read_text().replace('extensions: [learn]', 'extensions: []'))
+        code, lines = self.tasks({}, look=lambda *a, **k: snap(state='MERGED'))
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(any('scripts/scratch.py close ' in line for line in lines), lines)
+        self.assertFalse(any('observer_check.py' in line or 'let pr-merge' in line for line in lines), lines)
 
     def test_post_archive_removal_record_preserves_learn_and_observer_results(self):
         self.readme('learn')
