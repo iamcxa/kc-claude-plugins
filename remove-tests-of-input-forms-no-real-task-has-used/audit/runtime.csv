@@ -1,0 +1,30 @@
+file,seconds,exit,status,log
+kc-dev-flow-2/extensions/codex/test_codex_review.py,0.144,0,passed,logs/test_codex_review.log
+kc-dev-flow-2/extensions/copilot/test_copilot_review.py,0.086,0,passed,logs/test_copilot_review.log
+kc-dev-flow-2/extensions/journey-map/test_map_footprint.py,0.327,0,passed,logs/test_map_footprint.log
+kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py,1.861,1,failed; inspect log,logs/test_release_acceptance.log
+kc-dev-flow-2/extensions/roborev/test_roborev_gate.py,2.109,0,passed,logs/test_roborev_gate.log
+kc-dev-flow-2/scripts/test_adr_doc_checks.py,1.16,1,failed; inspect log,logs/test_adr_doc_checks.log
+kc-dev-flow-2/scripts/test_comment_ratio.py,6.83,0,passed,logs/test_comment_ratio.log
+kc-dev-flow-2/scripts/test_decision_ledger.py,0.541,0,passed,logs/test_decision_ledger.log
+kc-dev-flow-2/scripts/test_delivery_gate.py,116.195,1,failed; inspect log,logs/test_delivery_gate.log
+kc-dev-flow-2/scripts/test_design_surfaces.py,16.479,1,failed; inspect log,logs/test_design_surfaces.log
+kc-dev-flow-2/scripts/test_dispatch_records.py,122.673,1,failed; inspect log,logs/test_dispatch_records.log
+kc-dev-flow-2/scripts/test_dispatch_stage.py,121.087,1,failed; inspect log,logs/test_dispatch_stage.log
+kc-dev-flow-2/scripts/test_laws_check.py,107.979,1,failed; inspect log,logs/test_laws_check.log
+kc-dev-flow-2/scripts/test_learning.py,50.946,0,passed,logs/test_learning.log
+kc-dev-flow-2/scripts/test_lint_skills.py,11.015,0,passed,logs/test_lint_skills.log
+kc-dev-flow-2/scripts/test_merge_audit.py,13.346,0,passed,logs/test_merge_audit.log
+kc-dev-flow-2/scripts/test_number_guards.py,28.809,0,passed,logs/test_number_guards.log
+kc-dev-flow-2/scripts/test_observer_check.py,9.649,0,passed,logs/test_observer_check.log
+kc-dev-flow-2/scripts/test_observer_recovery.py,3.191,0,passed,logs/test_observer_recovery.log
+kc-dev-flow-2/scripts/test_package_version.py,7.701,0,passed,logs/test_package_version.log
+kc-dev-flow-2/scripts/test_poc_readme.py,1.949,0,passed,logs/test_poc_readme.log
+kc-dev-flow-2/scripts/test_pr_watch.py,92.134,1,failed; inspect log,logs/test_pr_watch.log
+kc-dev-flow-2/scripts/test_replay_dispatch.py,4.932,0,passed,logs/test_replay_dispatch.log
+kc-dev-flow-2/scripts/test_role_triggers.py,75.565,0,passed,logs/test_role_triggers.log
+kc-dev-flow-2/scripts/test_scratch.py,2.68,1,failed; inspect log,logs/test_scratch.log
+kc-dev-flow-2/scripts/test_sd_dispatch.py,,,skipped: requires CI-pinned Spacedock plugin root,
+kc-dev-flow-2/scripts/test_task_timeline.py,2.84,0,passed,logs/test_task_timeline.log
+kc-dev-flow-2/scripts/test_validation_security.py,0.61,0,passed,logs/test_validation_security.log
+kc-dev-flow-2/scripts/test_workflow_checkout.py,7.021,0,passed,logs/test_workflow_checkout.log

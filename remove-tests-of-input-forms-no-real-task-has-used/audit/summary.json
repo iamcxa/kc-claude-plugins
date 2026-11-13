@@ -1,0 +1,103 @@
+{
+  "pin": "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+  "class_counts": [
+    {
+      "class": "A",
+      "count": 64
+    },
+    {
+      "class": "B",
+      "count": 432
+    },
+    {
+      "class": "C",
+      "count": 40
+    },
+    {
+      "class": "D",
+      "count": 107
+    },
+    {
+      "class": "E",
+      "count": 812
+    }
+  ],
+  "total": 1455,
+  "test_files": 29,
+  "test_lines": 24684,
+  "product_files": 31,
+  "product_lines": 10731,
+  "cold_disagreements": 3,
+  "cold_sample": 30,
+  "history_samples": [
+    {
+      "class_": "A",
+      "total": 64,
+      "pickaxe_scanned": 64,
+      "line_trace_sample": 40,
+      "confirmed_post_introduction_failures": 0,
+      "introduction_run_only": 0,
+      "no_confirmed_later_failure_in_available_evidence": 64
+    },
+    {
+      "class_": "B",
+      "total": 432,
+      "pickaxe_scanned": 432,
+      "line_trace_sample": 40,
+      "confirmed_post_introduction_failures": 0,
+      "introduction_run_only": 0,
+      "no_confirmed_later_failure_in_available_evidence": 432
+    },
+    {
+      "class_": "C",
+      "total": 40,
+      "pickaxe_scanned": 40,
+      "line_trace_sample": 40,
+      "confirmed_post_introduction_failures": 2,
+      "introduction_run_only": 0,
+      "no_confirmed_later_failure_in_available_evidence": 38
+    },
+    {
+      "class_": "D",
+      "total": 107,
+      "pickaxe_scanned": 107,
+      "line_trace_sample": 40,
+      "confirmed_post_introduction_failures": 1,
+      "introduction_run_only": 0,
+      "no_confirmed_later_failure_in_available_evidence": 106
+    },
+    {
+      "class_": "E",
+      "total": 812,
+      "pickaxe_scanned": 812,
+      "line_trace_sample": 40,
+      "confirmed_post_introduction_failures": 5,
+      "introduction_run_only": 8,
+      "no_confirmed_later_failure_in_available_evidence": 807
+    }
+  ],
+  "local_seconds": 809.859,
+  "local_passed": 19,
+  "local_failed": 9,
+  "local_skipped": 1,
+  "ci_seconds": 426,
+  "test_additions": 1856,
+  "product_additions": 1143,
+  "candidate_groups": [
+    {
+      "name": "Constructed input edges (B)",
+      "count": 432,
+      "loss": "Malformed, ambiguous or unusual records may be accepted, rejected, or counted wrongly."
+    },
+    {
+      "name": "Sensitivity, harness and overlap (D)",
+      "count": 107,
+      "loss": "Mutation sensitivity and replay mechanics; some tests also provide the only local behavioral assertion."
+    },
+    {
+      "name": "Wording and count pins (C)",
+      "count": 40,
+      "loss": "Instruction drift, omitted reminders, length caps and documented-command promises may go unnoticed."
+    }
+  ]
+}
