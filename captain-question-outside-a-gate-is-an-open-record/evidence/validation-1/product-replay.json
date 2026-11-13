@@ -1,0 +1,890 @@
+[
+  {
+    "clock": "2026-11-05T09:10:56Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-05T09:35:56Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-5#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-05T09:26:56Z",
+        "recorded_at": "2026-11-05T09:26:56Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "recommend": null,
+        "asked": "要不要開「Pilot 流程改動",
+        "approve_means": null,
+        "holds": "acceptance",
+        "options": null,
+        "refs": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-05T09:26:56Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-5",
+        "archived": false,
+        "waiting_min": 9.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-05T09:40:56Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-05T09:45:56Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-12T17:52:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-12T18:17:34Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-2#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-12T18:11:34Z",
+        "recorded_at": "2026-11-12T18:11:34Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "holds": "acceptance",
+        "options": null,
+        "asked": "#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明",
+        "refs": null,
+        "grounds": null,
+        "recommend": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-12T18:11:34Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-2",
+        "archived": false,
+        "waiting_min": 6.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-12T18:22:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-12T18:27:34Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T01:54:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:10:43Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-7#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "recorded_at": "2026-11-13T02:08:54Z",
+        "interruptions": 1,
+        "state": "open",
+        "asked": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段",
+        "refs": null,
+        "grounds": null,
+        "recommend": null,
+        "approve_means": null,
+        "options": null,
+        "tasks": null,
+        "holds": "task",
+        "last_shown": {
+          "at": "2026-11-13T02:08:54Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-7",
+        "archived": false,
+        "waiting_min": 1.8,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:19:54Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-7#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:08:54Z",
+        "recorded_at": "2026-11-13T02:08:54Z",
+        "interruptions": 1,
+        "state": "open",
+        "grounds": null,
+        "holds": "task",
+        "refs": null,
+        "options": null,
+        "tasks": null,
+        "approve_means": null,
+        "asked": "下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段",
+        "recommend": null,
+        "last_shown": {
+          "at": "2026-11-13T02:08:54Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-7",
+        "archived": false,
+        "waiting_min": 11.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:24:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:29:54Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:35:43Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-1#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T02:30:43Z",
+        "recorded_at": "2026-11-13T02:30:43Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "tasks": null,
+        "asked": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+        "approve_means": null,
+        "refs": null,
+        "holds": "task",
+        "grounds": null,
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T02:30:43Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-1",
+        "archived": false,
+        "waiting_min": 5.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T02:40:43Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T02:45:43Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:15:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:40:10Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-12#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T03:24:10Z",
+        "recorded_at": "2026-11-13T03:24:10Z",
+        "interruptions": 1,
+        "state": "open",
+        "refs": null,
+        "options": null,
+        "holds": "nothing",
+        "recommend": null,
+        "tasks": null,
+        "grounds": null,
+        "asked": "#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 #854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker 不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的",
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T03:24:10Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-12",
+        "archived": false,
+        "waiting_min": 16.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T03:45:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T03:50:10Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:15:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:19:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:40:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則",
+        "holds": "nothing",
+        "approve_means": null,
+        "refs": null,
+        "options": null,
+        "recommend": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "waiting_min": 3.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "asked": "要不要開「待決定事項紀錄",
+        "holds": "nothing",
+        "approve_means": null,
+        "refs": null,
+        "options": null,
+        "recommend": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "waiting_min": 13.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:44:02Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "holds": "nothing",
+        "grounds": null,
+        "tasks": null,
+        "options": null,
+        "refs": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則",
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "waiting_min": 6.2,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "holds": "nothing",
+        "grounds": null,
+        "tasks": null,
+        "options": null,
+        "refs": null,
+        "asked": "要不要開「待決定事項紀錄",
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "waiting_min": 16.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:44:47Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "approve_means": null,
+        "options": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則",
+        "holds": "nothing",
+        "tasks": null,
+        "refs": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "waiting_min": 7.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      },
+      {
+        "kind": "question",
+        "key": "replay-9#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:27:53Z",
+        "recorded_at": "2026-11-13T06:27:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "approve_means": null,
+        "options": null,
+        "asked": "要不要開「待決定事項紀錄",
+        "holds": "nothing",
+        "tasks": null,
+        "refs": null,
+        "grounds": null,
+        "last_shown": {
+          "at": "2026-11-13T06:27:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-9",
+        "archived": false,
+        "waiting_min": 16.9,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:45:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-3#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:37:47Z",
+        "recorded_at": "2026-11-13T06:37:47Z",
+        "interruptions": 1,
+        "state": "open",
+        "grounds": null,
+        "options": null,
+        "asked": "有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則",
+        "refs": null,
+        "holds": "nothing",
+        "tasks": null,
+        "approve_means": null,
+        "recommend": null,
+        "last_shown": {
+          "at": "2026-11-13T06:37:47Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-3",
+        "archived": false,
+        "waiting_min": 8.1,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T06:49:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:50:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T06:54:47Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:09:02Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-8#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T06:57:02Z",
+        "recorded_at": "2026-11-13T06:57:02Z",
+        "interruptions": 1,
+        "state": "open",
+        "asked": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。",
+        "refs": null,
+        "grounds": null,
+        "approve_means": null,
+        "tasks": null,
+        "options": null,
+        "holds": "acceptance",
+        "recommend": null,
+        "last_shown": {
+          "at": "2026-11-13T06:57:02Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-8",
+        "archived": false,
+        "waiting_min": 12.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T07:14:02Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:19:02Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:31:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T07:56:58Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-4#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T07:48:58Z",
+        "recorded_at": "2026-11-13T07:48:58Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "holds": "task",
+        "approve_means": null,
+        "asked": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功",
+        "grounds": null,
+        "tasks": null,
+        "refs": null,
+        "recommend": null,
+        "last_shown": {
+          "at": "2026-11-13T07:48:58Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-4",
+        "archived": false,
+        "waiting_min": 8.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T08:01:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T08:06:58Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:21:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:46:53Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-11#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T09:31:53Z",
+        "recorded_at": "2026-11-13T09:31:53Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "grounds": null,
+        "asked": "一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦",
+        "recommend": null,
+        "refs": null,
+        "approve_means": null,
+        "holds": "acceptance",
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T09:31:53Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-11",
+        "archived": false,
+        "waiting_min": 15.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T09:51:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T09:56:53Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T11:52:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T12:17:30Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-10#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T12:03:30Z",
+        "recorded_at": "2026-11-13T12:03:30Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "asked": "#866 這張要怎麼走？",
+        "options": null,
+        "recommend": null,
+        "holds": "task",
+        "grounds": null,
+        "approve_means": null,
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T12:03:30Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-10",
+        "archived": false,
+        "waiting_min": 14.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T12:22:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T12:27:30Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T13:27:48Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T13:48:20Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-6#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "recorded_at": "2026-11-13T13:42:48Z",
+        "interruptions": 1,
+        "state": "open",
+        "tasks": null,
+        "recommend": null,
+        "refs": null,
+        "approve_means": null,
+        "asked": "「自動觸發 Codex 審查",
+        "grounds": null,
+        "holds": "nothing",
+        "options": null,
+        "last_shown": {
+          "at": "2026-11-13T13:42:48Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-6",
+        "archived": false,
+        "waiting_min": 5.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T13:52:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-6#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:42:48Z",
+        "recorded_at": "2026-11-13T13:42:48Z",
+        "interruptions": 1,
+        "state": "open",
+        "holds": "nothing",
+        "refs": null,
+        "grounds": null,
+        "asked": "「自動觸發 Codex 審查",
+        "options": null,
+        "tasks": null,
+        "recommend": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T13:42:48Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-6",
+        "archived": false,
+        "waiting_min": 10.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T13:57:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "options": null,
+        "holds": "task",
+        "approve_means": null,
+        "asked": "這張要怎麼走？",
+        "refs": null,
+        "tasks": null,
+        "grounds": null,
+        "recommend": null,
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "waiting_min": 1.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:02:48Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "asked": "這張要怎麼走？",
+        "recommend": null,
+        "holds": "task",
+        "options": null,
+        "approve_means": null,
+        "refs": null,
+        "grounds": null,
+        "tasks": null,
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "waiting_min": 6.5,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:13:20Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-13#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T13:56:20Z",
+        "recorded_at": "2026-11-13T13:56:20Z",
+        "interruptions": 1,
+        "state": "open",
+        "recommend": null,
+        "holds": "task",
+        "grounds": null,
+        "tasks": null,
+        "asked": "這張要怎麼走？",
+        "options": null,
+        "approve_means": null,
+        "refs": null,
+        "last_shown": {
+          "at": "2026-11-13T13:56:20Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-13",
+        "archived": false,
+        "waiting_min": 17.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T14:18:20Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T14:23:20Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:21:21Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:46:21Z",
+    "open": [
+      {
+        "kind": "question",
+        "key": "replay-14#1",
+        "revision": 1,
+        "by": "replay FO",
+        "waiting_since": "2026-11-13T15:28:21Z",
+        "recorded_at": "2026-11-13T15:28:21Z",
+        "interruptions": 1,
+        "state": "open",
+        "holds": "acceptance",
+        "options": null,
+        "recommend": null,
+        "grounds": null,
+        "asked": "合併檢查存紀錄這張，要不要做成邊界合約？",
+        "tasks": null,
+        "refs": null,
+        "approve_means": null,
+        "last_shown": {
+          "at": "2026-11-13T15:28:21Z",
+          "channel": "chat",
+          "briefing": null
+        },
+        "task": "replay-14",
+        "archived": false,
+        "waiting_min": 18.0,
+        "waiting_bound": "exact",
+        "publish_review": false
+      }
+    ]
+  },
+  {
+    "clock": "2026-11-13T15:51:21Z",
+    "open": []
+  },
+  {
+    "clock": "2026-11-13T15:56:21Z",
+    "open": []
+  }
+]

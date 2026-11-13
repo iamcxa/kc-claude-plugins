@@ -1,0 +1,15 @@
+F
+======================================================================
+FAIL: test_missing_record_refuses_and_present_record_passes_in_split_root_worktree (__main__.QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutant/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2809, in test_missing_record_refuses_and_present_record_passes_in_split_root_worktree
+    self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
+AssertionError: 1 != 0 : demo.md: '### Amendment 1 — 2026-11-14, chat' quoted question has no ask record; FO: record it, using --late when the asking time is unknown
+scope check not run: stage is implementation, not ideation
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.832s
+
+FAILED (failures=1)

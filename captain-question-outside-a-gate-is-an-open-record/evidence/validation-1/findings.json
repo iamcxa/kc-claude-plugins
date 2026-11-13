@@ -1,0 +1,26 @@
+[
+  {
+    "severity": "high",
+    "title": "Plain --open crashes on every open question",
+    "file": "kc-dev-flow-2/scripts/task_timeline.py",
+    "line": 536,
+    "detail": "F1 Material: row holds asked, renderer expects question; acceptance script step 4 exits 1.",
+    "status": "open"
+  },
+  {
+    "severity": "high",
+    "title": "New tests fail before CI installs Spacedock",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2788,
+    "detail": "F2 Material: four failures in hosted run 43475968096, independently reproduced; base control passes.",
+    "status": "open"
+  },
+  {
+    "severity": "medium",
+    "title": "One-day replay includes November 5 data",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 416,
+    "detail": "F3 Material: replay-5 is dated November 5, so the supplied cohort does not substantiate AC-2 historical-day claim.",
+    "status": "open"
+  }
+]

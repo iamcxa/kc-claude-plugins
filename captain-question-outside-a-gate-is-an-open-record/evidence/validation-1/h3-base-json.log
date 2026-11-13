@@ -1,0 +1,50 @@
+{
+ "task": "demo",
+ "stages": [],
+ "done": null,
+ "withdrawn_gate_attempts": 0,
+ "gate_revise_decisions": 0,
+ "stages_without_start": [],
+ "unassigned_asks": [
+  {
+   "at": "2026-11-13T08:00:00Z",
+   "asked": "legacy question"
+  },
+  {
+   "v": 1,
+   "event": "ask",
+   "key": "demo#1",
+   "at": "2026-11-13T08:10:00Z",
+   "asked_at": "2026-11-13T08:10:00Z",
+   "asked": "Open it?",
+   "channel": "dialog",
+   "by": {
+    "name": "fo",
+    "agent_id": null
+   },
+   "holds": "nothing"
+  },
+  {
+   "v": 1,
+   "event": "reask",
+   "key": "demo#1",
+   "at": "2026-11-13T09:00:00Z",
+   "channel": "review",
+   "briefing": null
+  },
+  {
+   "v": 1,
+   "event": "answer",
+   "key": "demo#1",
+   "at": "2026-11-13T09:05:00Z",
+   "revision": 1,
+   "words": null,
+   "option": "yes",
+   "resolution": "r1",
+   "channel": "review",
+   "said_at": null
+  }
+ ],
+ "amendments_outside_gate": 0,
+ "asks_outside_gate": 4
+}

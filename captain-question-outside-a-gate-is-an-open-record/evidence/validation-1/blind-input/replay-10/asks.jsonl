@@ -1,0 +1,2 @@
+{"v": 1, "event": "ask", "key": "replay-10#1", "at": "2026-11-13T12:03:30Z", "asked_at": "2026-11-13T12:03:30Z", "asked": "#866 這張要怎麼走？", "channel": "chat", "by": "replay FO", "holds": "task"}
+{"v": 1, "event": "answer", "key": "replay-10#1", "at": "2026-11-13T12:22:30Z", "revision": 1, "words": "Recorded answer", "option": null, "resolution": null, "channel": "chat"}

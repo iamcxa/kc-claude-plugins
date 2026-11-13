@@ -281,3 +281,40 @@ The existing `asks.jsonl` rule wrote nothing: 0 records in this workflow while 9
 ### Summary
 
 Implemented the accepted Pilot slice and contract revision 2 at the exact candidate above, without a version bump. All evidence paths without a prefix are under `evidence/implementation-1/`; `<scratch>` is the dispatch's removed scratch root and `<package>` is its installed 0.41.0 package. The final affected checks, full CI list, thirteen falsifiers, original h3 regression and thirty-four gate attempts passed; publication, independent validation and post-release observations remain FO-owned.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #870 head 3d65ebd7 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at `3d65ebd7a456bcb05fd94ce754a79735bdcbcf39`, base `1c3e714ff6752b8c84a490064639baf0d0ef3c9c`; criterion-by-criterion evidence and implementation-limit judgments: `evidence/validation-1/verification.md`.
+- DONE: Scale the validation to the diff (eight product files). AC-8: have a second blind reader, given only kc-dev-flow-2/references/captain-question-records.md as shipped, list the fixture's open questions at each declared time and return every question it had to ask; record dispositions. AC-9 replaces AC-6 (Captain amendment 1). AC-1's evidence command names pytest, which CI does not use: run the unittest form CI runs and say so. Read hosted CI on PR 870 instead of rerunning the whole list locally.
+  All eight changed files assessed; fresh blind reader saw only contract and fixture inputs; `blind-output/report.md`, `blind-dispositions.md`, `blind-comparison.json` under the evidence directory. AC-1 used CI's unittest form; hosted CI fails (F2), not replaced by the local full CI list.
+- DONE: AC-1, AC-3 — event refusals, legacy compatibility and interruptions
+  `timeline.log`: 27 tests pass; `h3-results.json`: original four event objects give base text exit 1/count 4, candidate text exit 0/count 3; removing each refusal or counting every line fails in `mutation-results.json`.
+- DONE: AC-2/AC-8 — independently exercise supplied fixture membership, ownership and waits, then disposition all reader questions
+  `blind-comparison.json`: 56 clocks, 23 open rows, zero semantic differences; six harmless 0.1-minute rounding differences explicitly dispositioned; `blind-output/counterexamples.json` catches omitted-open and retained-answered lists. Historical fidelity remains FAILED (F3).
+- DONE: AC-4 — local positive/negative omission cases and selected history boundaries
+  `design.log`: 239 tests, 4 optional skips, exit 0; own/shared/archive records and adoption/export/shallow history exercised; removed lookup and always-refuse mutations fail. Actual `task-check.log` skips the new rule because the adopted README lacks the sentence; it is not enforcement proof.
+- DONE: AC-5 — native gate rows and add-time falsifier
+  `gate-replay.json`: 34/34 attempts pass at fixed state HEAD `52693f2e8d6b1f8c86a16f033995270b1bbdd7fc`; read-only history cache disclosed in `verification.md`; uncached archive-move fixture loses the expected open row under add-time lookup (`mutation-add-time.log`).
+- DONE: AC-7 — ADR lint and reserved ruling
+  From assigned code worktree: `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since 1c3e714ff6752b8c84a490064639baf0d0ef3c9c --require 0086` exit 0 (`adr.log`, 79 records); removing 0086 fails (`adr-falsifier.log`); bare-file form checks zero records.
+- DONE: AC-9 — approved owner flag, exact sentence and budget ruling
+  `wording.log`: exact match, sentence 41 words, workflow 6097 → 6113; `lint.log` exit 0, deletion of the +16 startup step fails `mutation-budget.log`. AC-6 is superseded.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `evidence/validation-1/acceptance.sh`: four steps run using `bash --noprofile --norc`, observed exit 1 at plain --open (`acceptance-observed.log`); expected observations, prerequisites and limits in `verification.md`; ADR command above.
+- DONE: Role trigger, dispatch records, number guards, added comments and diff checks
+  Role trigger exit 0; `dispatch.log`: 6 complete records; `numbers-corrected.log` exit 0 with unavailable state-fetch warning; `comments.log`: 3/656 comment/code lines, 0.5% ≤ 5%; `diff-check.log` exit 0. Initial wrong task-argument diagnostic retained.
+- FAILED: Normal README open-list entry and documented JSON question field
+  F1 Material: `--open` crashes with `KeyError: question`; `open-text.log`, `question-field-check.log` and the fresh-shell acceptance record. Four finding fields and exact trigger in `findings.md`.
+- FAILED: Hosted CI at the named candidate
+  F2 Material: run `43475968096`, job `132059736398` fails four new tests before Spacedock is installed; `hosted-ci.log`, `ci-reproduction.log`; unchanged base passes the same missing-binary control in `ci-base-control.log`.
+- FAILED: AC-2 historical one-day cohort
+  F3 Material: supplied `replay-5` answer is 2026-11-05, not 2026-11-13; inherited truncated prose also limits source fidelity. `blind-input/replay-5/asks.jsonl`, `blind-output/report.md`; no fixture facts were repaired.
+- SKIPPED: Whole CI list locally, deleted historical probe rerun, full existing-task corpus sweep, release/live-day capture, remote-repository reader and sibling PR integration
+  Hosted CI read as dispatched; targeted candidate suites replace no live/adopter claim. Historical probe was read only; cohort correction, PR 869 integration/recount, adoption and delivery remain FO-owned. CI cost per PR: not measured.
+- DONE: Public evidence retention and scratch close
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/scratch.py close <task-folder> validation-1` exit 0: Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1 (100398923 bytes) / Evidence: evidence/validation-1/ (82 files, 229.0 KiB).
+
+### Summary
+
+REJECTED: the accepted plain listing entrance crashes, the candidate's hosted test lane fails, and the supplied replay does not substantiate its exact one-day cohort. The local record lifecycle, omission fixtures, native-gate waits, approved wording and independent blind folding passed within the stated limits; all evidence names above resolve under `evidence/validation-1/`. Goal sufficiency fails; the eight retained files otherwise map to accepted scope. Product bytes remain unchanged; FO owns finding disposition, repair dispatch and any delivery decision.

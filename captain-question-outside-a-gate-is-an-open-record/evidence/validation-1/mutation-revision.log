@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_contract_writer_refuses_revision_not_previous_plus_one (__main__.TimelineTests.test_contract_writer_refuses_revision_not_previous_plus_one)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 309, in test_contract_writer_refuses_revision_not_previous_plus_one
+    with self.assertRaisesRegex(ValueError, r"revision must be previous \+ 1"):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.028s
+
+FAILED (failures=1)

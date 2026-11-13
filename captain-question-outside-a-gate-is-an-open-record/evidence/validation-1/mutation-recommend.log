@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_contract_writer_refuses_recommendation_outside_options (__main__.TimelineTests.test_contract_writer_refuses_recommendation_outside_options)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 303, in test_contract_writer_refuses_recommendation_outside_options
+    with self.assertRaisesRegex(ValueError, "recommend must name an option"):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.033s
+
+FAILED (failures=1)

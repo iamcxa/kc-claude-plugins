@@ -1,0 +1,2 @@
+{"v": 1, "event": "ask", "key": "replay-1#1", "at": "2026-11-13T02:30:43Z", "asked_at": "2026-11-13T02:30:43Z", "asked": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。", "channel": "chat", "by": "replay FO", "holds": "task"}
+{"v": 1, "event": "answer", "key": "replay-1#1", "at": "2026-11-13T02:40:43Z", "revision": 1, "words": "Recorded answer", "option": null, "resolution": null, "channel": "chat"}

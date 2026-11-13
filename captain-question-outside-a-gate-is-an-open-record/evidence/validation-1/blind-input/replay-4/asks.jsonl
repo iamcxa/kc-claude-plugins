@@ -1,0 +1,2 @@
+{"v": 1, "event": "ask", "key": "replay-4#1", "at": "2026-11-13T07:48:58Z", "asked_at": "2026-11-13T07:48:58Z", "asked": "#864（Pilot 設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功", "channel": "chat", "by": "replay FO", "holds": "task"}
+{"v": 1, "event": "answer", "key": "replay-4#1", "at": "2026-11-13T08:01:58Z", "revision": 1, "words": "Recorded answer", "option": null, "resolution": null, "channel": "chat"}

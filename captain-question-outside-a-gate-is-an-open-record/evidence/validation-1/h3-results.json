@@ -1,0 +1,28 @@
+[
+  {
+    "label": "base",
+    "json": false,
+    "exit": 1,
+    "log": "h3-base-text.log"
+  },
+  {
+    "label": "base",
+    "json": true,
+    "exit": 0,
+    "log": "h3-base-json.log",
+    "interruptions": 4
+  },
+  {
+    "label": "candidate",
+    "json": false,
+    "exit": 0,
+    "log": "h3-candidate-text.log"
+  },
+  {
+    "label": "candidate",
+    "json": true,
+    "exit": 0,
+    "log": "h3-candidate-json.log",
+    "interruptions": 3
+  }
+]

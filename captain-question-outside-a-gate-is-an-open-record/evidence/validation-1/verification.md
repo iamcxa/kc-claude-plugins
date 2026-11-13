@@ -1,0 +1,39 @@
+# Validation evidence
+
+Verdict: REJECTED at 3d65ebd7a456bcb05fd94ce754a79735bdcbcf39, base 1c3e714ff6752b8c84a490064639baf0d0ef3c9c. Product tree remained clean. Code was executed from git archive exports; no product branch push, PR comment, review request, ready change, merge or release.
+
+All evidence paths below are relative to this directory. Public repository visibility was checked through GitHub metadata before archiving. Only public source/state, synthetic fixtures and their outputs are retained.
+
+## Criteria
+
+- AC-1: PASS for six events and named refusals. CI's unittest form, python3 -B kc-dev-flow-2/scripts/test_task_timeline.py, exits 0: timeline.log (27 tests). Pytest was not installed or invoked, per dispatch. The six refusal mutations are independently rerun in mutation-results.json. Some removals are caught by a different validation message rather than by persistence; those are accurately shown in individual logs.
+- AC-2: PARTIAL. product-replay.json and blind-comparison.json prove all 56 supplied clocks, with 23 open rows, and exact key/owner/since/holds/interruptions/state agreement. Six numeric waits differ only by product's existing 0.1-minute rounding, explicitly dispositioned. timeline.log exercises unknown asking time with a lower bound. Answered-listed and open-omitted mutations fail. Historical cohort is not accepted: F3.
+- AC-3: PASS. h3-results.json reconstructs the unchanged four original event objects from the ideation h3 JSON evidence (including its revision-1 object owner). Base text exit 1, JSON count 4; candidate text/JSON exit 0, count 3. Each underlying output is retained. The every-line mutation fails 4 != 3.
+- AC-4: PASS locally with installed Spacedock; CI proof fails F2. design.log runs 239 tests with 4 optional skips and covers own/shared/archived records, absence, partial text, adoption author-date, export/shallow-history skips, and split-root git-file behavior. Removed lookup and always-refuse mutations both fail. task-check.log passes the actual task but explicitly skips omission checking because the adopted README lacks the new sentence; it is not counted as proof of enforcement. The old probe's 11-task before/after output was read, not rerun as if it were the shipped checker; its deleted probe and pre-adoption state are not a current candidate command. The full existing-task corpus sweep from learning.md was not repeated; the bounded regression suites are the evidence, and no all-adopter compatibility claim is made.
+- AC-5: PASS. gate-replay.json independently reads 34 declared native attempts at fixed public state HEAD 52693f2e8d6b1f8c86a16f033995270b1bbdd7fc, checks each once between first-naming author time and closure, absent before and at closure, and nonnegative lower-bound wait. Unrelated task files are excluded; identical read-only git-log results are cached against that fixed HEAD. gate_replay.py records the arrangement. The uncached archive-move suite rejects add-time lookup: mutation-add-time.log has no row at the required pre-close clock (IndexError from the test's row access, not an import/setup error).
+- AC-6: SUPERSEDED by Captain amendment 1, not independently enforced.
+- AC-7: PASS. Installed-package adr_lint.py docs/adr --since 1c3e714ff6752b8c84a490064639baf0d0ef3c9c --require 0086 exits 0, adr.log, 79 ADR records. The bare-file spelling exits 0 checking zero records (adr-bare-file.log), so it is not treated as evidence. Removing reserved ADR 0086 is refused, adr-falsifier.log. Protects lists both changed scripts, with pointers.
+- AC-8: PASS on the supplied synthetic fixture, with historical limitation F3. blind-output/report.md, reader.py and output.json were produced by a fresh blind agent seeing only the shipped contract and fixture inputs. It raised seven interpretation/limit points; blind-dispositions.md disposes all seven. blind-comparison.json checks actual candidate CLI results. Both deliberately incorrect lists are detected in blind-output/counterexamples.json. It is same-family independent reading, not cross-family evidence or a remote consumer.
+- AC-9: PASS on exact sentence/count/ruling; F1 separately blocks its operational list entrance. wording.log proves approved candidate plus --by, exactly 41 words, total workflow 6097 -> 6113. lint.log passes; mutation-budget.log refuses removal of the sole added +16 startup step. Its Captain quotes match amendment 1 and the ideation gate.
+
+## Other required checks and limits
+
+- Role trigger precheck exited 0 (implementation 1 / validation 1 within the recorded budget). Dispatch records, including all three implementation follow-ups, were read; dispatch.log reports 6 complete records. No unaccepted implementation requirement found.
+- comments.log: 3 comment lines / 656 code lines, 0.5%, maximum 5%, exit 0. Each added comment was read: two required ADR pointers and the synthetic replay-data declaration; no narration/provenance repair finding.
+- numbers-corrected.log: exit 0, but state fetch unavailable, using local remote refs only; freshness not proven. numbers.log preserves the first invocation's wrong task-argument diagnostic. No number conflict observed locally.
+- diff-check.log: git diff BASE CANDIDATE --check exited 0. Source comments, shipped contract, workflow entry and ADR checked. Implementation's document dispositions were read; F1 shows why that was insufficient to prove the runtime entry.
+- hosted-ci.json/log records candidate's failing unit lane and four successful other workflows. Full CI command list was not rerun locally, as dispatched. The local affected suites' success does not override CI. ci-base-control.log establishes the new dependency regression.
+- Implementation's original full-suite totals and RoboRev claim were read, not promoted to independent reruns. Its original transient design diagnostic and clone-link issue are historical; candidate local tests passed without those failures.
+- Goal sufficiency: FAIL, normal plain --open crashes; historical cohort and CI also fail. Minimal necessity: the eight files map to accepted recording/lifecycle, omission refusal, gate listing, contract, ruling and approved wording; no unrelated retained surface found. Existing tests support each mapping but do not prove live capture or delivery.
+- No UI surface was changed. The contract's text state graph was compared with the exercised transitions; no rendered screen or browser claim. No version bump, installation, release, cross-repository reader, live real-day capture, or PR 869 integration/recount was performed.
+- Validator harness corrections are retained: mutation budget parsing initially expected dict literals instead of dict(...) and was corrected without changing expectations; add-time's missing-row test error is an intended falsifier. First and corrected harness logs remain. Product bytes were never repaired.
+
+## Captain acceptance
+
+Run unchanged in a fresh shell:
+
+    bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-outside-a-gate-is-an-open-record/evidence/validation-1/acceptance.sh
+
+Four steps, expected observations in the script: export the exact candidate; record and inspect one open question; answer it and observe empty listing plus refused reask; ask a second question and read the README's plain list. This validation ran that exact script under fresh bash: acceptance-observed.log, exit 1 at step 4, KeyError: question; preceding observations pass.
+
+Dependencies are explicit in step 1: local assigned clone and pinned package, Python 3, git and tar. It creates only an owned scratch subdirectory and removes that subdirectory on exit. It has no screen and covers local CLI lifecycle/entry only, not CI, omission adoption, native gates or historical/remote fidelity. The scratch root remains under the stage close-out mechanism.

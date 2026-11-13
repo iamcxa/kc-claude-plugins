@@ -1,0 +1,30 @@
+[
+ {
+  "kind": "question",
+  "key": "replay-1#1",
+  "revision": 1,
+  "by": "replay FO",
+  "waiting_since": "2026-11-13T02:30:43Z",
+  "recorded_at": "2026-11-13T02:30:43Z",
+  "interruptions": 1,
+  "state": "open",
+  "asked": "#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。",
+  "recommend": null,
+  "holds": "task",
+  "grounds": null,
+  "tasks": null,
+  "approve_means": null,
+  "refs": null,
+  "options": null,
+  "last_shown": {
+   "at": "2026-11-13T02:30:43Z",
+   "channel": "chat",
+   "briefing": null
+  },
+  "task": "replay-1",
+  "archived": false,
+  "waiting_min": 5.0,
+  "waiting_bound": "exact",
+  "publish_review": false
+ }
+]

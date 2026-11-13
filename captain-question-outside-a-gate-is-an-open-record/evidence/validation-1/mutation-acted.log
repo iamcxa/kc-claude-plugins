@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_contract_writer_refuses_acted_without_answer (__main__.TimelineTests.test_contract_writer_refuses_acted_without_answer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 294, in test_contract_writer_refuses_acted_without_answer
+    with self.assertRaisesRegex(ValueError, "acted needs an answer"):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.028s
+
+FAILED (failures=1)

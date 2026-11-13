@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutations.py", line 39, in <module>
+    start=next(i for i in range(at,-1,-1) if '{"delta":' in lines[i])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration

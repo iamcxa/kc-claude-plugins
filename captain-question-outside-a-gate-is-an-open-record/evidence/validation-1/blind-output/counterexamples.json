@@ -1,0 +1,69 @@
+{
+  "control": {
+    "equal": true,
+    "missing": [],
+    "unexpected": [],
+    "changed": [],
+    "expected_duplicates": [],
+    "actual_duplicates": []
+  },
+  "cases": [
+    {
+      "name": "open question omitted",
+      "clock": "2026-11-05T09:35:56Z",
+      "mutated_key": "replay-5#1",
+      "expected": [
+        {
+          "key": "replay-5#1",
+          "by": "replay FO",
+          "waiting_since": "2026-11-05T09:26:56Z",
+          "waiting_min": 9.0,
+          "waiting_bound": "exact",
+          "holds": "acceptance",
+          "interruptions": 1,
+          "state": "open"
+        }
+      ],
+      "wrong": [],
+      "comparison": {
+        "equal": false,
+        "missing": [
+          "replay-5#1"
+        ],
+        "unexpected": [],
+        "changed": [],
+        "expected_duplicates": [],
+        "actual_duplicates": []
+      }
+    },
+    {
+      "name": "answered question retained",
+      "clock": "2026-11-05T09:40:56Z",
+      "mutated_key": "replay-5#1",
+      "expected": [],
+      "wrong": [
+        {
+          "key": "replay-5#1",
+          "by": "replay FO",
+          "waiting_since": "2026-11-05T09:26:56Z",
+          "waiting_min": 9.0,
+          "waiting_bound": "exact",
+          "holds": "acceptance",
+          "interruptions": 1,
+          "state": "open"
+        }
+      ],
+      "comparison": {
+        "equal": false,
+        "missing": [],
+        "unexpected": [
+          "replay-5#1"
+        ],
+        "changed": [],
+        "expected_duplicates": [],
+        "actual_duplicates": []
+      }
+    }
+  ],
+  "passed": true
+}

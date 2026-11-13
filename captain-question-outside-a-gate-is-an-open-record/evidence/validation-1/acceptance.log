@@ -1,0 +1,24 @@
+step 1: candidate exported
+Recorded ask demo#1; commit asks.jsonl to share it.
+Next showing: python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/product/kc-dev-flow-2/scripts/task_timeline.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/state demo reask demo#1 --channel chat
+Answer: python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/product/kc-dev-flow-2/scripts/task_timeline.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/state demo answer demo#1 --channel chat --words "<Captain words>"
+Withdraw: python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/product/kc-dev-flow-2/scripts/task_timeline.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/state demo withdraw demo#1 --reason "<reason>"
+step 2: one open question, correct key and owner
+Recorded answer demo#1; commit asks.jsonl to share it.
+Acted: python3 /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/product/kc-dev-flow-2/scripts/task_timeline.py /tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/captain.KKpU9f/state demo acted demo#1 --what "<action taken>"
+step 3: no open questions after answer
+usage: task_timeline.py [-h] [--json] [--all] [--open] [--gates] [--late]
+                        [--as-of AS_OF] [--holds {acceptance,nothing,task}]
+                        [--channel {chat,dialog,message,review}] [--by BY]
+                        [--recommend RECOMMEND] [--grounds GROUNDS]
+                        [--approve-means APPROVE_MEANS] [--question QUESTION]
+                        [--reason REASON] [--words WORDS]
+                        [--resolution RESOLUTION] [--what WHAT]
+                        [--briefing BRIEFING] [--revision REVISION]
+                        [--tasks [TASKS ...]] [--option OPTION] [--ref REF]
+                        state [task] [action] [text]
+task_timeline.py: error: demo#1 is answered; no reask after closing
+step 3: reask refused with exit 2
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+KeyError: 'question'

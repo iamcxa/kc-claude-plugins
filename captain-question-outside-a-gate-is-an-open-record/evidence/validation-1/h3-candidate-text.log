@@ -1,0 +1,6 @@
+task: demo
+  done: -
+  ask with no stage start: 2026-11-13T08:00:00Z: legacy question
+  ask with no stage start: 2026-11-13T08:10:00Z: Open it?
+  ask with no stage start: 2026-11-13T09:00:00Z: shown again: demo#1
+  asks outside a gate: 3; withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0

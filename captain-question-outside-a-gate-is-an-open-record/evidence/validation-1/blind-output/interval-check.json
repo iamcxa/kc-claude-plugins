@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "method": "Independent interval oracle: ask.at <= clock < answer.at, and direct comparisons of all eight output fields",
+  "clocks_checked": 56,
+  "open_rows_checked": 23,
+  "all_fixtures_have_exactly_ask_then_answer": true
+}

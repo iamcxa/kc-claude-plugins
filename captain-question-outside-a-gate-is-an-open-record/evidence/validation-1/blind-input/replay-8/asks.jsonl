@@ -1,0 +1,2 @@
+{"v": 1, "event": "ask", "key": "replay-8#1", "at": "2026-11-13T06:57:02Z", "asked_at": "2026-11-13T06:57:02Z", "asked": "Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。", "channel": "chat", "by": "replay FO", "holds": "acceptance"}
+{"v": 1, "event": "answer", "key": "replay-8#1", "at": "2026-11-13T07:14:02Z", "revision": 1, "words": "Recorded answer", "option": null, "resolution": null, "channel": "chat"}

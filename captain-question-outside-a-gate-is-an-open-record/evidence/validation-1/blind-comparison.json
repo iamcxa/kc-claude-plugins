@@ -1,0 +1,44 @@
+{
+  "clocks": 56,
+  "rows": 23,
+  "errors": [],
+  "rounding": [
+    {
+      "clock": "2026-11-13T02:10:43Z",
+      "key": "replay-7#1",
+      "product": 1.8,
+      "blind": 1.8166666666666667
+    },
+    {
+      "clock": "2026-11-13T06:44:02Z",
+      "key": "replay-3#1",
+      "product": 6.2,
+      "blind": 6.25
+    },
+    {
+      "clock": "2026-11-13T06:44:02Z",
+      "key": "replay-9#1",
+      "product": 16.1,
+      "blind": 16.15
+    },
+    {
+      "clock": "2026-11-13T13:48:20Z",
+      "key": "replay-6#1",
+      "product": 5.5,
+      "blind": 5.533333333333333
+    },
+    {
+      "clock": "2026-11-13T13:57:48Z",
+      "key": "replay-13#1",
+      "product": 1.5,
+      "blind": 1.4666666666666666
+    },
+    {
+      "clock": "2026-11-13T14:02:48Z",
+      "key": "replay-13#1",
+      "product": 6.5,
+      "blind": 6.466666666666667
+    }
+  ],
+  "rounding_policy": "Product rounds to 0.1 minute; contract does not specify display rounding; tolerance 0.051 min"
+}

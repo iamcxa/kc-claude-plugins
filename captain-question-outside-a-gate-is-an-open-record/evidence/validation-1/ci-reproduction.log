@@ -1,0 +1,42 @@
+FF.FF
+======================================================================
+FAIL: test_export_absent_sentence_and_shallow_history_skip_once_without_refusal (__main__.QuestionRecordTests.test_export_absent_sentence_and_shallow_history_skip_once_without_refusal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2838, in test_export_absent_sentence_and_shallow_history_skip_once_without_refusal
+    self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+AssertionError: 1 != 0 : demo.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: '/nonexistent/spacedock'
+demo.md: question record check not run: workflow git history unavailable
+scope check not run: stage is implementation, not ideation
+
+
+======================================================================
+FAIL: test_missing_record_refuses_and_present_record_passes_in_split_root_worktree (__main__.QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2809, in test_missing_record_refuses_and_present_record_passes_in_split_root_worktree
+    self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
+AssertionError: 1 != 0 : demo.md: cannot read stage for Worth questions: [Errno 2] No such file or directory: '/nonexistent/spacedock'
+scope check not run: stage is implementation, not ideation
+
+
+======================================================================
+FAIL: test_pre_adoption_amendment_is_not_newly_refused (__main__.QuestionRecordTests.test_pre_adoption_amendment_is_not_newly_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2832, in test_pre_adoption_amendment_is_not_newly_refused
+    self.assertEqual(self.check().returncode, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_shared_record_names_affected_task_and_archived_records_are_read (__main__.QuestionRecordTests.test_shared_record_names_affected_task_and_archived_records_are_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/test_design_surfaces.py", line 2816, in test_shared_record_names_affected_task_and_archived_records_are_read
+    self.assertEqual(self.check().returncode, 0)
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.743s
+
+FAILED (failures=4)

@@ -1,0 +1,2 @@
+{"v": 1, "event": "ask", "key": "replay-9#1", "at": "2026-11-13T06:27:53Z", "asked_at": "2026-11-13T06:27:53Z", "asked": "要不要開「待決定事項紀錄", "channel": "chat", "by": "replay FO", "holds": "nothing"}
+{"v": 1, "event": "answer", "key": "replay-9#1", "at": "2026-11-13T06:45:53Z", "revision": 1, "words": "Recorded answer", "option": null, "resolution": null, "channel": "chat"}

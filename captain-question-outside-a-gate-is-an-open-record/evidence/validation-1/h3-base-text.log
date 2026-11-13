@@ -1,0 +1,15 @@
+task: demo
+  done: -
+  ask with no stage start: 2026-11-13T08:00:00Z: legacy question
+  ask with no stage start: 2026-11-13T08:10:00Z: Open it?
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/base/kc-dev-flow-2/scripts/task_timeline.py", line 269, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/base/kc-dev-flow-2/scripts/task_timeline.py", line 262, in main
+    print(json.dumps(t, indent=1, ensure_ascii=False)) if a.json else show(t)
+                                                                      ^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/base/kc-dev-flow-2/scripts/task_timeline.py", line 210, in show
+    print(f"  ask with no stage start: {ask['at']}: {ask['asked']}")
+                                                     ~~~^^^^^^^^^
+KeyError: 'asked'

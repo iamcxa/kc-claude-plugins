@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/task_timeline.py", line 587, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/candidate/kc-dev-flow-2/scripts/task_timeline.py", line 536, in main
+    print(f"{r['key']} | {r['by'] or 'gate'} | {wait} | {r['holds']} | {r['question']}"
+                                                                        ~^^^^^^^^^^^^
+KeyError: 'question'

@@ -1,0 +1,14 @@
+E
+======================================================================
+ERROR: test_gate_wait_uses_first_naming_commit_after_archive_moves_room (__main__.TimelineTests.test_gate_wait_uses_first_naming_commit_after_archive_moves_room)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/validation-1/mutant/kc-dev-flow-2/scripts/test_task_timeline.py", line 392, in test_gate_wait_uses_first_naming_commit_after_archive_moves_room
+    row = tt.open_rows(self.state, tt.when(self.stamp(20)), gates=True)[0]
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+----------------------------------------------------------------------
+Ran 1 test in 0.269s
+
+FAILED (errors=1)
