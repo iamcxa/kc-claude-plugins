@@ -7,6 +7,7 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
   pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
 
+Tasks reports a task with no PR and an absent worktree as a fact, with no PR-recording action.
 Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
 With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
 
@@ -596,7 +597,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None
             if where and not where.is_dir():
-                out.append(f"next: record {slug}'s PR with status --set {slug} pr=<owner/repo>#<N>; its worktree is not on this machine.")
+                out.append(f"fact: {slug} has no recorded PR; its worktree is not on this machine.")
             elif where:
                 ref = opened_pr(where, ask)
                 if ref:
