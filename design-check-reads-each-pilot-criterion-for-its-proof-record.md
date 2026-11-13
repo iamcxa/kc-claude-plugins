@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:design-check-reads-each-pilot-criterion-for-its-proof-record:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:design-check-reads-each-pilot-criterion-for-its-proof-record-backlog-1
+              briefing:
+                id: briefing:design-check-reads-each-pilot-criterion-for-its-proof-record:backlog:attempt-1:revision-1
+                digest: sha256:415114526c65f8802ea55b310fb612ed5dbd71ccda0fb056baa75c0a2dfc59a7
+                room-ref: ./design-check-reads-each-pilot-criterion-for-its-proof-record/review/backlog/briefing-1
 ---
 
 ## Scope
