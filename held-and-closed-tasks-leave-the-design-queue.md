@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-11-12T05:16:56Z
 worktree: .worktrees/spacedock-ensign-held-and-closed-tasks-leave-the-design-queue
-pr: iamcxa/kc-claude-plugins#856
+pr: pr-merge:856
 ---
 
 ## Scope
