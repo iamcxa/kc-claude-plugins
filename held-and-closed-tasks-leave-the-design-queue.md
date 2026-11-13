@@ -107,9 +107,16 @@ Captain: 「可以，照列名稱（建議）」 (host question dialog, 2026-11-
 Asked: 「「擱置的任務」那一行的字數上限，可以改成「每張擱置的任務最多多 1 個字，另加固定 20 個字」嗎？我建議可以。這取代我上一題請你同意的「每張 3 個字加固定 6 個字」，那組數字是我沒數過就寫的，只有 1 張擱置時做不到。新的數字我實際數過那一行：固定的字 15 個、每個階段名稱 1 個、每張任務名稱 1 個；驗證者量到 1 張時是 17 個字、14 張時是 32 個字，新上限分別是 21 和 34。程式不改，這一行照樣列出每張的名稱。變差的是：擱置的越多這一行越長，這點不變。」
 Supersedes: none
 
+### Amendment 5 — 2026-11-13, chat
+Captain: 「加預算，修完：#854、#856 各改成 1 implementation and 3 validation cycles」 (chat, 2026-11-13)
+Asked: 「#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。」
+Supersedes: none
+Budget: 1 implementation and 3 validation cycles
+
 ### Feedback Cycles
 
 - Cycle 1 (FO, 2026-11-12): validation-1 on #856 head 455846c6d recommended REJECTED with one finding, Needs decision (kind design): the added-words bound of amendment 2 (3 for each held task plus a fixed 6) fails at small counts, 17 words against 9 with one held task, while 14 tasks pass at 32 against 48. The numbers in amendment 2's question were FO's and had not been counted. Settled by Captain amendment 4 (1 word for each held task plus a fixed 20); the program does not change.
+- Cycle 2 (FO, 2026-11-13): no finding on this head; the PR is stacked on PR 854, which is being repaired and merged up to main under its own Cycle 2. Captain amendment 5 grants the third validation cycle; after PR 854's repair the implementation worker merges the new base in, and validation-3 rechecks the merged head.
 
 ## Design
 
