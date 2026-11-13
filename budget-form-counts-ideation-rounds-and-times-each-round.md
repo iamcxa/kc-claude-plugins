@@ -70,6 +70,17 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat
+Captain: 「#868 改推導：產生 POC 流程文件時不帶設計輪數的預算寫法，測試不變」 (chat, 2026-11-14)
+Asked: 「#868（預算把設計輪數算進去）被退回，要怎麼修？ 唯一的問題：這次在預算規則加了「N ideation, …」的寫法，推導出來的 POC 流程文件也帶著這一行，而有個測試規定 POC 文件裡不能出現「ideation」這個字，於是 CI 失敗。POC 的階段路線本身沒壞。兩種修法都要動設計沒列的檔案。 同意第一個選項即接受：產生 POC 流程文件時，把含設計輪數的預算寫法換成不含設計的寫法，因為 POC 沒有設計階段；那個測試維持不變；多動一個檔（推導程式），用掉這張剩下的那一次驗證。變差的是：一般流程和 POC 流程的預算說明會有一句不同。」
+Supersedes: none
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-14): validation-1 on #868 head 2661da44a recommended REJECTED with one finding, F1 Needs decision (kind design): the approved budget wording is carried into the derived POC README, where an existing test refuses any line naming ideation; CI run 43452561375 is red on it; POC routing is intact. Settled by Captain amendment 1: the derivation drops the ideation count for POC and the test stays; FO authorises the repair in the derivation script, a file outside the design's ten; validation-2 rechecks; a second rejection stops the task.
+
 ## PRFAQ
 
 **Proposition.** A Pilot budget can now say how many design rounds it allows, in the same sentence as the build and check cycles: `2 ideation, 1 implementation and 2 validation cycles`. The script FO already runs before every dispatch holds the design dispatch that would pass that number and asks the Captain the same three worth questions it asks at any overrun. A Pilot budget that names no design count allows two, so the "third design dispatch goes back to the Captain" rule from ADR 0084 is now enforced by the script instead of relying on FO to remember it. The timeline helper prints one line per round with its start, end, minutes and what closed it.
