@@ -236,3 +236,27 @@ Start 2026-11-13 21:43:22; end 2026-11-13 21:48:49 Asia/Taipei (system `date`, C
 ### Summary
 
 One approved sentence was committed locally; AC-5 and the required local checks passed. No implementation of the withdrawn automation was carried forward. Start 2026-11-13 21:59:08; end 2026-11-13 22:02:45 Asia/Taipei, system `date` (CST). Validation, RoboRev, hosted CI, Draft PR and merge remain FO-owned and unverified.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #867 head 1c8a29fa against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `1c8a29faf402ef6d7018c298f59bad58d38cfb1d`, base `6a1eaf837bd6087cd0b8b665dc19beaed3c44dff`; AC-5 alone is active. Exact rerun commands/exits and limits: `evidence/validation-1/commands.md`, `results.json`; live public Draft PR pin: `pr.json`, `repository.json`.
+- DONE: The change is one sentence of text in kc-dev-flow-2/extensions/codex/EXTENSION.md under Captain amendment 1 (criteria AC-1 to AC-4 are superseded; AC-5 is the only criterion).
+  `candidate.diff` proves one insertion only; the English text preserves FO, ready event, review comment and once at that event, with no new guarantee. Its ready-event entry immediately precedes the unchanged repair-event rule; both agree.
+- DONE: Judge that the sentence says what the Captain's words say and adds nothing, that it sits at the step where FO marks a PR ready, that the existing after-a-repair sentence still agrees with it, and that the package lint and the extension's own tests pass; run AC-5's evidence and its falsifier.
+  `ac5.log` exit 0; removing only that line in a scratch copy makes the same search exit 1 (`falsifier.log`, `results.json`). Exported-candidate `lint.log` exit 0 and `codex-tests.log` 36/36 pass; reader tests do not detect removed prose, so the separate falsifier supplies that proof.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output
+  Four steps in retained `evidence/validation-1/acceptance.sh`, exact Captain command in `commands.md`; fresh `bash --noprofile --norc` downloaded the public pinned archive, search/negative/lint/36 tests passed, exit 0 in `acceptance.log`. Independent of product worktree and removed scratch; no live review is claimed.
+- DONE: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since 6a1eaf837bd6087cd0b8b665dc19beaed3c44dff` exit 0, 77 records (`adr-lint.log`). No Material, Deferred risk, Polish, or Needs decision findings.
+- DONE: Required document, comment and dispatch checks; preserve evidence and close assigned scratch.
+  `doc-impact.log`, `comment-ratio.log`, `design-check.log`, `dispatch-records.log` exit 0; extension updated, no other affected documents. Role-trigger check exited 0. Public evidence retained; cleanup output in `validation-close.log`.
+- SKIPPED: Do not rerun the full package suite or build mutants for unrelated code; say what you did not run and why that is proportionate
+  No full suite, unrelated mutants, automation replay, browser run, live Codex review, RoboRev or hosted CI: one documentation sentence only. No Number guards section or changed/reserved ADR exists, so no number-guard rerun. CI and duplicate-review costs not measured.
+
+### Summary
+
+PASSED for amendment 1's text-only outcome at `1c8a29faf402ef6d7018c298f59bad58d38cfb1d`: the addition is sufficient, and removing it loses the ready-event instruction. Implementation limits are assessed in `evidence/validation-1/commands.md`; FO still owns review, Captain gate and delivery; green local checks do not prove merge/adoption. Start 2026-11-13 22:05:06 Asia/Taipei, clock tool UTC converted +08:00.
+
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1 (32986888 bytes)
+Evidence: evidence/validation-1/ (17 files, 19.0 KiB)

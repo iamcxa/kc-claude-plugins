@@ -1,0 +1,1 @@
+22:- **When marking ready:** when FO marks a PR ready, it comments `@codex review` on the PR once.

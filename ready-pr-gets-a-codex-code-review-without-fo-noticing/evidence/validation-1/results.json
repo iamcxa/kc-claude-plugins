@@ -1,0 +1,119 @@
+[
+  {
+    "name": "ac5",
+    "command": [
+      "rg",
+      "-n",
+      "-F",
+      "--",
+      "when FO marks a PR ready, it comments `@codex review` on the PR once.",
+      "kc-dev-flow-2/extensions/codex/EXTENSION.md"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1/candidate",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "falsifier",
+    "command": [
+      "rg",
+      "-n",
+      "-F",
+      "--",
+      "when FO marks a PR ready, it comments `@codex review` on the PR once.",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1/without-sentence.md"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1/candidate",
+    "exit": 1,
+    "expected": 1
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1/candidate",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "codex-tests",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "cwd": "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/ready-pr-gets-a-codex-code-review-without-fo-noticing/validation-1/candidate",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "comment-ratio",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+      "1c8a29faf402ef6d7018c298f59bad58d38cfb1d",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "6a1eaf837bd6087cd0b8b665dc19beaed3c44dff",
+      "1c8a29faf402ef6d7018c298f59bad58d38cfb1d"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "design-check",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/ready-pr-gets-a-codex-code-review-without-fo-noticing.md"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "exit": 0,
+    "expected": 0
+  },
+  {
+    "name": "dispatch-records",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/ready-pr-gets-a-codex-code-review-without-fo-noticing"
+    ],
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-ready-pr-gets-a-codex-code-review-without-fo-noticing",
+    "exit": 0,
+    "expected": 0
+  }
+]
