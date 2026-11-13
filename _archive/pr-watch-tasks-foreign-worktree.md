@@ -3,7 +3,7 @@ title: pr_watch.py tasks prints record-PR next lines for tasks whose worktree is
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                 reason: 'The Captain chose 「合併（建議）」 (host question dialog, 2026-11-13), answering 「決定：合併 #858（閒置檢查不再叫我替「工作目錄不在這台機器上的任務」登記 PR，改成只列出事實）嗎？建議合併。同意即接受：要等下一次發版和各 repo 同步後才生效；另外兩句同一天看到的不當提示不在這次範圍；未合併的 #854、#856 也改同兩個檔，它們之後要在合併後的主線上重跑監看測試；只有 Codex 審過，第二審查者未觸發。 Squash merge with --match-head-commit e1fbb6ee5abbd7cefd67f57493ab1481a04ed073, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; accepts delivery of this head by squash merge.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-12T17:03:02Z
 worktree: .worktrees/spacedock-ensign-pr-watch-tasks-foreign-worktree
 pr: pr-merge:858
+verdict: PASSED
+completed: 2026-11-13T00:29:37Z
+archived: 2026-11-13T00:29:37Z
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-16), after FO's first run of the v0.23.0 lifecycle mod's idle step on this workflow.
