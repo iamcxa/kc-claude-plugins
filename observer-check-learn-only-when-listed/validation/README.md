@@ -31,17 +31,15 @@ All candidate execution used a `git archive` export. Its independent fixture met
 
 For the following recorded commands, CODE is the exported candidate, E is this validation folder, and SCRATCH is CODE/.proof-scratch. Those historical commands used temporary execution copies at E, whose original sources and hashes remain in helper-sources.json; the Captain command above creates fresh paths itself.
 
-```sh
-python3 -B "$E/probe.py" fixtures --code "$CODE" --scratch "$SCRATCH"
-python3 -B "$E/probe.py" mutation --code "$CODE" --scratch "$SCRATCH"
-PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/mutations.py" --code "$CODE" --scratch "$SCRATCH"
-python3 -B "$E/words.py" "$CODE"
-python3 -B "$E/unreadable.py" --code "$CODE" --scratch "$SCRATCH/unreadable"
-PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/reproduce.py" --code "$CODE"
-PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/cross-reader-probe.py" --code "$CODE"
-SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_observer_recovery.py
-python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694
-```
+- `python3 -B "$E/probe.py" fixtures --code "$CODE" --scratch "$SCRATCH"`
+- `python3 -B "$E/probe.py" mutation --code "$CODE" --scratch "$SCRATCH"`
+- `PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/mutations.py" --code "$CODE" --scratch "$SCRATCH"`
+- `python3 -B "$E/words.py" "$CODE"`
+- `python3 -B "$E/unreadable.py" --code "$CODE" --scratch "$SCRATCH/unreadable"`
+- `PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/reproduce.py" --code "$CODE"`
+- `PYTHONDONTWRITEBYTECODE=1 python3 -B "$E/cross-reader-probe.py" --code "$CODE"`
+- `SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock python3 -B kc-dev-flow-2/scripts/test_observer_recovery.py`
+- `python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1/scripts/adr_lint.py docs/adr --since c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694`
 
 The real and historical probe invocations used the same three read-only workflow inputs and historical cutoff recorded in AC-4, replacing only CODE/SCRATCH/output paths with this independent export. Public results contain counts only: `real-counts.json`, `historical-counts.json`, and `AC4-unexpected-verdict-output.json`. No private task bodies, names, titles, rulings or raw outputs were retained. `guards.json` records each exact guard command and exit; both selected-host and explicitly dispatched ADR-lint paths passed, with identical ADR-lint bytes.
 
