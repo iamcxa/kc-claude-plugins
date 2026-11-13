@@ -2777,7 +2777,7 @@ class QuestionRecordTests(unittest.TestCase):
         self.state = self.workflow / ".state"
         self.git(source, "worktree", "add", "--detach", str(self.state))
         self.task = self.state / "demo.md"
-        self.task.write_text("---\ntitle: Demo\nstatus: implementation\n---\n\n## FO alignment\nSurfaces: none\nVisible change: none\n\n## Acceptance criteria\n**AC-1**: Verified command.\n\n## Captain amendments\n\n### Amendment 1 — 2026-11-14, chat\nCaptain: 「Yes」\nAsked: 「Proceed with this scope?」\nSupersedes: none\n")
+        self.task.write_text("---\ntitle: Demo\nstatus: implementation\n---\n\n## FO alignment\nSurfaces: none\nVisible change: none\n\n## Design\n### Worth questions\nAsked: keep question records; without: omission passes; premise: compare missing and present records.\n\n## Acceptance criteria\n**AC-1**: Verified command.\n\n## Captain amendments\n\n### Amendment 1 — 2026-11-14, chat\nCaptain: 「Yes」\nAsked: 「Proceed with this scope?」\nSupersedes: none\n")
 
     def git(self, path, *args, env=None):
         return subprocess.run(["git", "-C", str(path), "-c", "user.name=Test", "-c", "user.email=test@example.invalid",

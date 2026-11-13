@@ -469,6 +469,8 @@ def open_rows(state, as_of=None, gates=False):
     if gates:
         rows += gate_rows(state, as_of)
     for row in rows:
+        if row["kind"] == "question":
+            row["question"] = row["asked"]
         since = row["waiting_since"] or row["recorded_at"]
         row["waiting_min"] = mins(when(since), now) if since else None
         row["waiting_bound"] = "at least" if row["kind"] == "gate" or row["waiting_since"] is None else "exact"

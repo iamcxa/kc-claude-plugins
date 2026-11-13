@@ -362,6 +362,7 @@ class TimelineTests(unittest.TestCase):
     def test_replayed_fourteen_questions_at_declared_synthetic_times(self):
         for i, fixture in enumerate(REPLAY_2026_11_13):
             slug, question, answered = fixture
+            self.assertEqual(datetime.fromisoformat(answered).date().isoformat(), "2026-11-13", slug)
             (self.state / f"{slug}.md").write_text("---\ntitle: Replay\n---\n")
             answer_time = tt.when(answered)
             ask_time = answer_time - timedelta(minutes=10 + i)
@@ -379,6 +380,27 @@ class TimelineTests(unittest.TestCase):
             for key, (i, since) in expected.items():
                 self.assertEqual((actual[key]["by"], actual[key]["waiting_since"], actual[key]["waiting_min"], actual[key]["interruptions"], actual[key]["state"], actual[key]["holds"]),
                                  ("replay FO", tt.iso(since), tt.mins(since, clock), 1, "open", ("task", "acceptance", "nothing")[i % 3]))
+
+    def test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text(self):
+        ask = self.cli("demo", "ask", "Proceed?", "--holds", "acceptance", "--by", "test FO")
+        self.assertEqual(ask.returncode, 0, ask.stderr)
+        key = "briefing:demo:ideation:1"
+        self.task.write_text('---\ntitle: Demo\ngates:\n  records:\n    - stage: ideation\n      attempts:\n        - id: gate-attempt:demo:1\n          briefing:\n            id: ' + key + '\n            room-ref: demo/review/ideation/briefing-1\n---\n')
+        self.write("demo/review/ideation/briefing-1/index.json", json.dumps(dict(question="Gate question?")))
+        self.commit("prepare native gate", 10)
+        plain = self.cli("--open")
+        self.assertEqual(plain.returncode, 0, plain.stderr)
+        self.assertIn("Proceed?", plain.stdout)
+        for flags in (("--open", "--json"), ("--open", "--gates", "--json")):
+            run = self.cli(*flags)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            rows = json.loads(run.stdout)
+            self.assertEqual({r["kind"]: r["question"] for r in rows},
+                             {"question": "Proceed?", **({"gate": "Gate question?"} if "--gates" in flags else {})})
+        mixed = self.cli("--open", "--gates")
+        self.assertEqual(mixed.returncode, 0, mixed.stderr)
+        self.assertIn("Proceed?", mixed.stdout)
+        self.assertIn("Gate question?", mixed.stdout)
 
     def test_gate_wait_uses_first_naming_commit_after_archive_moves_room(self):
         (self.state / "_archive").mkdir()
@@ -403,31 +425,56 @@ REPLAY_2026_11_13 = [('replay-1',
   '#854、#856 要不要各加一次驗證預算？ 同意即接受：兩張預算改成 1 implementation and 3 validation cycles；修正交回原 '
   'worker；第三次驗證前先請獨立審查者看一次；第三次再被退回就停下來回到你這裡。',
   '2026-11-13T10:40:43+08:00'),
- ('replay-2', '#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明', '2026-11-13T02:22:34+08:00'),
- ('replay-3', '有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則', '2026-11-13T14:49:47+08:00'),
+ ('replay-2',
+  '#859（做新東西前先查既有的）第一次驗證因「缺一項獨立行為證明」被退回，成品本身沒查到缺陷。要不要用預算內剩下的那一次驗證，派一位新的驗證者只補這一項證明？我建議要。核准等於同意不改成品、不改驗收條件，只重做這項觀察；這次再不過就停下來。',
+  '2026-11-13T02:22:34+08:00'),
+ ('replay-3',
+  '有一件事現在就可以順手做：那張設計中的任務，我可以把你這段話原文交給設計 worker，要它把措辭設計成「引用 POC 的規則」而不是另寫一套，這樣第 3 '
+  '步之後會省很多。這不改任務範圍，只是多一個設計方向。要不要這樣做由你決定。',
+  '2026-11-13T14:49:47+08:00'),
  ('replay-4',
   '#864（Pilot '
-  '設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功',
+  '設計階段先做試作）第一次驗證被退回，有兩個發現，要怎麼處理？我建議修完再驗一次。兩個發現會一起決定剩下那一次驗證怎麼用，所以放在同一題：一、第三條驗收條件的檢查指令寫錯了（會把檢查工具「成功」的訊息也當成重複），成品其實符合條件，驗證者用正確的指令跑過；要你同意把指令改成只算失敗訊息。二、驗證者找了一個沒有背景的 '
+  'worker 讀新版派工：它確實先做試作才寫設計，而且發現那張任務的前提已不成立；但三條驗收條件裡有一條沒照規定記下指令、結束代碼和輸出位置。同意即接受：用掉預算裡最後一次驗證；第二次觀察也只是一個 '
+  'worker 跑一次，再不過我就停下來回到你這裡。',
   '2026-11-13T16:01:58+08:00'),
- ('replay-5', '要不要開「Pilot 流程改動', '2026-11-05T17:40:56+08:00'),
- ('replay-6', '「自動觸發 Codex 審查', '2026-11-13T21:57:48+08:00'),
- ('replay-7', '下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段', '2026-11-13T10:24:54+08:00'),
+ ('replay-5', '要不要開「Pilot 流程改動」的任務（你上一則問的後續，我建議開，拆成先進套件的和維持逐批授權的兩段）。', '2026-11-13T14:42:40+08:00'),
+ ('replay-6',
+  '「自動觸發 Codex 審查」這張要怎麼走？ 同意第一個選項即接受：這張的範圍從「程式自動觸發」改成「在 Codex 擴充的說明加一句：FO 把 PR 標成可審查時同時留言請 Codex '
+  '審查一次」，我自己的出貨腳本現在就照做；記成這張的修正案，原本「恰好一次」的停止條件作廢。變差的是：仍然靠 FO 記得做（但和標成可審查是同一個動作）；偶爾會讓 Codex 對同一版多審一次，我沒量過這個成本。',
+  '2026-11-13T21:57:48+08:00'),
+ ('replay-7', '下一輪顧問試跑要不要現在開始準備，以及是否把「合併前這一段」的三個摩擦點各開一張任務。', '2026-11-13T10:24:54+08:00'),
  ('replay-8',
   'Pilot 試作的設計回來了，核准前要先定一件會改變範圍的事：試作輪數的預算要怎麼管？我建議分兩步。設計查到：現有的預算寫法（N implementation and M validation '
-  'cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。',
+  'cycles）只會算實作和驗證，不會算設計階段的輪數；時間工具會算設計階段派了幾次、整個階段多久，但不會列出每一輪各自的起訖和結果。\n'
+  'Chosen option: 這張先用一句規則：試作一輪就是一次設計派工，第三次派工前我要停下來問你。另開一張小任務把預算寫法擴成「N ideation, N implementation and M '
+  'validation cycles」由程式檢查，並讓時間工具列出每一輪。',
   '2026-11-13T15:14:02+08:00'),
- ('replay-9', '要不要開「待決定事項紀錄', '2026-11-13T14:45:53+08:00'),
- ('replay-10', '#866 這張要怎麼走？', '2026-11-13T20:22:30+08:00'),
+ ('replay-9',
+  '要不要開「待決定事項紀錄」這張任務？\n'
+  'Stated scope: 兩個專案的 FO 今天都轉述你要改善「等你決定的事」的呈現方式。開任務等於接受：我把它放進待辦，寫成「關卡以外問你的每一題是一筆紀錄，答案記錄前都算待決定」；因為寫的是 '
+  'dev2、讀的是 Bridge 和 Review，會先定格式合約再實作；Spacedock 本身和任何畫面都不在範圍內。',
+  '2026-11-13T14:45:53+08:00'),
+ ('replay-10',
+  "「#866 這張要怎麼走？」 with FO's recommendation 「選第三條，#866 "
+  '留著不合併也不再修。接下來要做的「邊界合約先行」那幾張，設計階段都會用到新規則，我每張記下「幾條驗收條件、幾條記齊」。如果五張裡漏記出現兩次以上，再開任務做第二條（結構化紀錄）；如果沒有，就不需要這道關卡。會變差的是：這段期間規則仍只靠文字，而且已經花在這張上的三個小時大部分沒有產出。」',
+  '2026-11-13T20:22:30+08:00'),
  ('replay-11',
   '一、把 Pilot 試作補完整｜這版的兩條規則只靠文字：每條驗收條件要記齊、試作最多兩輪｜驗證時兩個測試 worker 一個漏記；顧問明說只有檢查程式擋得住｜兩張小任務，其中一張已在待辦',
   '2026-11-13T17:51:53+08:00'),
  ('replay-12',
   '#854（派工結束時封存證據、刪暫存）的本機審查報了一個高嚴重度問題：封存時沒有機械檢查證據是不是公開的，私有內容若被 worker 放進證據資料夾就會留在公開分支。要不要先放行這一項、另開任務處理，讓 '
   '#854 進第三次驗證？我建議放行。獨立審查者判定：這不是實作缺陷，是你當初核准的做法（私有證據靠派工文字要求 worker '
-  '不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的',
+  '不封存）本來就沒有機械檢查；這次改動沒有新增任何自動上傳的路徑，也沒有發現實際外漏。放行等於接受：這個缺口暫時留著，我開一張任務「證據進公開分支前要先聲明是公開的」。',
   '2026-11-13T11:45:10+08:00'),
- ('replay-13', '這張要怎麼走？', '2026-11-13T22:18:20+08:00'),
- ('replay-14', '合併檢查存紀錄這張，要不要做成邊界合約？', '2026-11-13T23:51:21+08:00')]
+ ('replay-13',
+  "「這張要怎麼走？」 with FO's recommended option 「改成：檢查結果存成紀錄，拿掉手寫摘要（建議）」 and its stated cost "
+  '「每次合併會多一份檔案寫進公開的狀態分支，內容是 PR 編號、版本、檢查結果，不含私有內容。以及關卡紀錄裡給人讀的那段文字會變成工具輸出的格式，沒那麼好讀。」',
+  '2026-11-13T22:18:20+08:00'),
+ ('replay-14',
+  "「合併檢查存紀錄這張，要不要做成邊界合約？」 with FO's recommended option 「做成合約：一份定義，其他地方引用並刪掉抄本（建議）」 and its stated cost "
+  '「比單純改三個檔多一份合約文件和一些重寫，今晚做不完的機率比較高；而且「其他地方改成引用」是在刪文字，要小心別刪到只有那裡才有的規則。」',
+  '2026-11-13T23:51:21+08:00')]
 
 if __name__ == "__main__":
     unittest.main()
