@@ -1,0 +1,13 @@
+{
+  "passed": 1440,
+  "skipped": 10,
+  "commands": 28,
+  "unittest_passed": 1438,
+  "native_programs_passed": 2,
+  "raw_failed": 1,
+  "selected_replay_replacement": 8,
+  "raw_log": "full-package.log",
+  "raw_results": "full-package/tests.json",
+  "selected_results": "tests.json",
+  "alias_rerun": "replay-alias-tests.json"
+}

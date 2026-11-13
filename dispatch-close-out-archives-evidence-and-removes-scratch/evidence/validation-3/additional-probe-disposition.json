@@ -1,0 +1,7 @@
+{
+  "probe": "Remove only the --readme argument of the active-task observer subprocess.",
+  "result": "survived",
+  "interpretation": "observer_check.py only reads the workflow README for archived tasks; the active-task call does not need it to decide whether the report is committed. This is a limit of that extra falsifier, not observed supported-workflow harm. The candidate retains the argument.",
+  "decisive_behavior": "The upstream merged-task test executes the printed observer command again after archive, checks learn enabled and disabled, and the candidate suite passes it. The existing printed-readme mutation is rejected.",
+  "disposition": "No new Material finding; do not count this extra probe among the 20 rejected mutations."
+}

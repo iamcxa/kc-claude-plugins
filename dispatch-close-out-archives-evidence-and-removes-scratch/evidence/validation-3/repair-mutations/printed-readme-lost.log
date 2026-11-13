@@ -1,0 +1,15 @@
+test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record) ... FAIL
+
+======================================================================
+FAIL: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1061, in test_merged_scratch_prompt_precedes_merge_record
+    self.assertIn(f'--readme {readme.resolve()}', observer)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '--readme /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpql_qsp9b/repo/docs/dev2/README.md' not found in 'python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpql_qsp9b/detached-state merged '
+
+----------------------------------------------------------------------
+Ran 1 test in 0.853s
+
+FAILED (failures=1)

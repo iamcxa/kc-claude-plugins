@@ -1,0 +1,27 @@
+test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files) ... 
+  test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files) (bad=b'not gzip') ... FAIL
+test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files) ... FAIL
+
+======================================================================
+FAIL: test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files) (bad=b'not gzip')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 114, in test_existing_gzip_is_validated_before_compressing_other_files
+    self.assertEqual({p.name: p.read_bytes() for p in self.evidence.iterdir()}, before)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'z.t[22 chars]a.txt.gz': b'\x1f\x8b\x08\x00\x00\x00\x00\x00\[1198 chars]t\n'} != {'z.t[22 chars]a.txt': b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[262198 chars]t\n'}
+Diff is 329311 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 119, in test_existing_gzip_is_validated_before_compressing_other_files
+    self.assertIn(hashlib.sha256(original).hexdigest() + '  a.txt\n', manifest.read_text())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'c592f4a6b099700b5050ce8bc67367f0c8f44810203124e86405c3e7b6f1a2ba  a.txt\n' not found in 'b683e5e3c2e5f7f081019158786970dada15b233b47ae3faf353adf73bfdddaf  a.txt.gz\n9d0a3f9ff7d96d97fb8ad8dc20ff76f6c3b30270c7036c2f11f3b5ce353e0c58  z.txt\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.376s
+
+FAILED (failures=2)

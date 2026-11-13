@@ -1,0 +1,6 @@
+{
+  "paragraph_words": 52,
+  "ceiling": 66,
+  "within_ceiling": true,
+  "rendered_paragraph": "Put files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/validation-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/scratch.py close /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/scratch-test-re805dw3/task validation-1` and paste its output."
+}

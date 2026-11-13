@@ -1,0 +1,24 @@
+{
+ "dispatch": {
+  "second_validation_built_with_own_path": true,
+  "identical_retry_reuses_second_record": true,
+  "first_record_unchanged": true,
+  "private_repository_rule_kept": true
+ },
+ "compression": {
+  "collision_refusal_changed_no_files": true,
+  "retry_original_digests_correct": true,
+  "committed_gzip_restores_originals": true,
+  "own_root_absent": true,
+  "own_registered_worktrees": 0,
+  "peer_registered_worktrees": 1,
+  "peer_uncommitted_preserved": true
+ },
+ "removed_fixture_paths": [
+  "/private/tmp/dev2/dispatch-code-e7262b9402dc46a9/dispatch-fixture-d917b32cabe64e63bf8e33fe62e97321",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/original-acceptance/tmp/dispatch-stage-_2mqclqy",
+  "/private/tmp/dev2/scratch-933ac559e07344a8b4d614ee75f00647-cbd1b2348f890fde",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/original-acceptance/tmp/scratch-test-okhcobrv"
+ ],
+ "synthetic_only": true
+}

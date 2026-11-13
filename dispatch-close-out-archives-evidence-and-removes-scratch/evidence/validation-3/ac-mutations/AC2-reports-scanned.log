@@ -1,0 +1,19 @@
+report names removed /tmp path -> exit 1 | S4 in output: True
+.....F...
+======================================================================
+FAIL: test_report_naming_removed_tmp_scratch (__main__.RemovedScratchInReport.test_report_naming_removed_tmp_scratch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-3/s4_repro.py", line 12, in test_report_naming_removed_tmp_scratch
+    self.assertEqual(run.returncode, 0, run.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+Captain steps record fails: message S4: missing path /tmp/ccx-ideation-removed-scratch-worktree
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.542s
+
+FAILED (failures=1)

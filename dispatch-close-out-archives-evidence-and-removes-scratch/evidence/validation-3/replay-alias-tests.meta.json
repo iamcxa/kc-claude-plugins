@@ -1,0 +1,21 @@
+{
+ "script": "scripts/test_replay_dispatch.py",
+ "unittest_runs": [
+  {
+   "testsRun": 8,
+   "failures": 0,
+   "errors": 0,
+   "skips": 0
+  }
+ ],
+ "owned_paths": [
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmp9km1x89u",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmp_f4q5kkp",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpfeys6h6r",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpiytkqy_a",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpjfenf22p",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpq0l7xyen",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmptnsm5obs",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpu76dse05"
+ ]
+}

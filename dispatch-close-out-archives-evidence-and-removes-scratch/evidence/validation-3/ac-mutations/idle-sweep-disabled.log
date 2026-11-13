@@ -1,0 +1,15 @@
+test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown) ... FAIL
+
+======================================================================
+FAIL: test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1038, in test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown
+    self.assertEqual(len(closes), 2, lines)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : []
+
+----------------------------------------------------------------------
+Ran 1 test in 1.164s
+
+FAILED (failures=1)

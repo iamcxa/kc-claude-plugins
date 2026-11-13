@@ -1,0 +1,14 @@
+test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record) ... ERROR
+
+======================================================================
+ERROR: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_pr_watch.py", line 1058, in test_merged_scratch_prompt_precedes_merge_record
+    close = next(i for i, line in enumerate(lines) if 'scripts/scratch.py close ' in line)
+StopIteration
+
+----------------------------------------------------------------------
+Ran 1 test in 0.816s
+
+FAILED (errors=1)

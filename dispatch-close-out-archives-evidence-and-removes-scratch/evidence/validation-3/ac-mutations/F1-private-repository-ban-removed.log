@@ -1,0 +1,15 @@
+test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input) ... FAIL
+
+======================================================================
+FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 388, in test_scratch_in_record_and_real_dispatch_artifact_without_changing_input
+    self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Never archive private repository evidence, secrets or personal data' not found in '# ideation-1\nDispatched: c55fe8b1d58cf6e9dfa26878db3f6fadb902ef7c (workflow checkout)\nModel: fixture-model\nBudget: not recorded\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-794913ef8eca194f/dispatch-fixture-b6c910c2714042dd8100f21ee4b96c7b/ideation-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/scratch.py close /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-mc661q_2/code/docs/dev2/.spacedock-state/dispatch-fixture-b6c910c2714042dd8100f21ee4b96c7b ideation-1` and paste its output.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.131s
+
+FAILED (failures=1)

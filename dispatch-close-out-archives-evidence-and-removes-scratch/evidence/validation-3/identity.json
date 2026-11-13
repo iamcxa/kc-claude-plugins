@@ -1,0 +1,9 @@
+{
+  "root": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk",
+  "code": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate",
+  "evidence": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/dispatch-close-out-archives-evidence-and-removes-scratch/evidence/validation-3",
+  "head": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+  "base": "abe8c08ea2716e5f1c046823082e122759703b87",
+  "export_method": "git archive, isolated fixture Git metadata; no shared worktree created",
+  "start_taipei": "2026-11-13 11:46:23 Asia/Taipei"
+}

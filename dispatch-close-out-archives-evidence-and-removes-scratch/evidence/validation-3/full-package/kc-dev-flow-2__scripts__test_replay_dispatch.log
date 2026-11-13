@@ -1,0 +1,15 @@
+..F.....
+======================================================================
+FAIL: test_build_merges_the_readme_checks_out_both_commits_and_keeps_the_dispatch (__main__.ReplayDispatchTests.test_build_merges_the_readme_checks_out_both_commits_and_keeps_the_dispatch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_replay_dispatch.py", line 92, in test_build_merges_the_readme_checks_out_both_commits_and_keeps_the_dispatch
+    self.assertIn(f"Package root: {self.run_dir / 'package' / 'kc-dev-flow-2'}", scope.replace("/private", ""))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'Package root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpr_c4_c4t/runs/r1/package/kc-dev-flow-2' not found in "Package root: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpr_c4_c4t/runs/r1/package/kc-dev-flow-2\nSend your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\nTEST HARNESS (isolated replay): do not invoke the kc-dev-flow-2 skill through the Skill tool; read /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpr_c4_c4t/runs/r1/package/kc-dev-flow-2/skills/implementation/SKILL.md and follow it, resolving every package path against /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpr_c4_c4t/runs/r1/package/kc-dev-flow-2. Do not run the application unit, integration or e2e suites and do not start servers, databases or browsers; say in the report they were not run. Run the package's own scripts as your instructions require. Do not push, merge or commit to any remote. The state checkout is /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpr_c4_c4t/runs/r1/wf/.spacedock-state; write your stage report there only. Never git stash.\n"
+
+----------------------------------------------------------------------
+Ran 8 tests in 4.735s
+
+FAILED (failures=1)
+removed /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmphk6kqdgw/runs/r1

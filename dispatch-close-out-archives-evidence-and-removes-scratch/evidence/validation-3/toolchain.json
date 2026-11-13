@@ -1,0 +1,8 @@
+{
+  "python": "Python 3.15.0",
+  "spacedock": "spacedock 0.27.2",
+  "binary_sha256": "86974bf3eb974087bf47ab2fee5a5a026405651744ccf1a34a8525891be8050a",
+  "plugin_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "source_head": "c429ab1815a5fc5507056ee54f8005be024e1e69",
+  "policy_package": "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.39.1"
+}

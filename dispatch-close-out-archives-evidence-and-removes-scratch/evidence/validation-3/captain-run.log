@@ -1,0 +1,42 @@
+spacedock 0.27.2
+Step 1 PASS: exported c429ab1815a5fc5507056ee54f8005be024e1e69
+{
+ "dispatch": {
+  "second_validation_built_with_own_path": true,
+  "identical_retry_reuses_second_record": true,
+  "first_record_unchanged": true,
+  "private_repository_rule_kept": true
+ },
+ "compression": {
+  "collision_refusal_changed_no_files": true,
+  "retry_original_digests_correct": true,
+  "committed_gzip_restores_originals": true,
+  "own_root_absent": true,
+  "own_registered_worktrees": 0,
+  "peer_registered_worktrees": 1,
+  "peer_uncommitted_preserved": true
+ },
+ "removed_fixture_paths": [
+  "/private/tmp/dev2/dispatch-code-ea7c91d5adf1f012/dispatch-fixture-788de092a4574aefb8b6ed9be4f4b9a5",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-captain.sBx4ep/tmp/dispatch-stage-mm2f1v6g",
+  "/private/tmp/dev2/scratch-22bba796ca37407fbf25c03dbd543cbb-0f4c00b8e7419b77",
+  "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-captain.sBx4ep/tmp/scratch-test-5ooczdi9"
+ ],
+ "synthetic_only": true
+}
+Step 2 PASS: native record count 1; restore and peer preservation
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 4.841s
+
+OK
+report names removed /tmp path -> exit 0 | S4 in output: False
+FO message names the same path -> exit 1 | ['Captain steps record fails: message S4: missing path /tmp/ccx-ideation-removed-scratch-worktree']
+Step 3 PASS: report exit 0; missing message path exit 1
+....
+----------------------------------------------------------------------
+Ran 4 tests in 7.384s
+
+OK
+Step 4 PASS: four regression tests
+Step 5 PASS: temporary export removed

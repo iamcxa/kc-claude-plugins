@@ -1,0 +1,30 @@
+[
+  {
+    "path": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+    "sha256": "8ff5f5e9cea6b1d5ec2ce5107dd008426d50089ecbbcb440fe537ffb160fa2bd"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/dispatch_stage.py",
+    "sha256": "790acaf5f8ea6c07f86c1e506a35a524b160a19f729e08d83a3c30afae4f7138"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/pr_watch.py",
+    "sha256": "b740ec67740c39f808f345a33160d728400a61d7d2f736b82bdd7199beb5c2f3"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/scratch.py",
+    "sha256": "f76d30d95aadbcd2bf5cc34b7d87ce54145a644dc654bba7351b31c0841b1e63"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "sha256": "67ff29b9db867c22a7ae17302afe522ae2b48d261a6543c8d137324c5d92fcc8"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "sha256": "3255b41925f319f34cfc777be56910103d66a5d4fb143a7a8e89e6893971cf3d"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/test_scratch.py",
+    "sha256": "c3b5f72f1f51d7be2f115ab778b19dd139c525135b39bae3ef5942cd7195a3ec"
+  }
+]

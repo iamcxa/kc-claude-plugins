@@ -1,0 +1,6 @@
+{
+  "raw_tmpdir": "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp",
+  "rerun_tmpdir": "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp",
+  "reason": "An unchanged replay test removes /private from observed scope but not its expected fixture path. Both spellings point to the same owned directory. Only TMPDIR changes; source and assertions are unchanged.",
+  "replay_source_matches_base": true
+}

@@ -1,0 +1,52 @@
+[
+ {
+  "name": "scripts/test_design_surfaces.py:AmendmentCorpusTests.test_every_pinned_task_and_artifact_with_per_file_verdicts",
+  "status": "skipped",
+  "message": "set DEV2_AMENDMENT_CORPORA and DEV2_AMENDMENT_BASE for frozen corpus CLI replay"
+ },
+ {
+  "name": "scripts/test_design_surfaces.py:AmendmentHistoricalTests.test_declared_reading_manifest_and_fixture_stdout",
+  "status": "skipped",
+  "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+ },
+ {
+  "name": "scripts/test_design_surfaces.py:AmendmentHistoricalTests.test_real_form_bites_and_single_field_repairs_with_event_artifacts",
+  "status": "skipped",
+  "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+ },
+ {
+  "name": "scripts/test_design_surfaces.py:AmendmentHistoricalTests.test_real_rewrite_cli_ranges_and_exact_state_workflow_invocation",
+  "status": "skipped",
+  "message": "set DEV2_AMENDMENT_STATE for exact historical CLI replays"
+ },
+ {
+  "name": "extensions/release-acceptance/test_release_acceptance.py:DueTests.test_live_commented_and_quoted_task_fields_match_spacedock",
+  "status": "skipped",
+  "message": "node, kc-journey-map dependencies or spacedock missing"
+ },
+ {
+  "name": "extensions/release-acceptance/test_release_acceptance.py:DueTests.test_live_producer_keeps_done_but_live_release_and_agrees_on_unbuilt",
+  "status": "skipped",
+  "message": "node, kc-journey-map dependencies or spacedock missing"
+ },
+ {
+  "name": "extensions/release-acceptance/test_release_acceptance.py:DueTests.test_live_yaml_scalars_and_renamed_spacedock_use_the_real_producer",
+  "status": "skipped",
+  "message": "node, kc-journey-map dependencies or spacedock missing"
+ },
+ {
+  "name": "extensions/release-acceptance/test_release_acceptance.py:ReportForJourneyAcceptTests.test_the_report_keeps_top_level_stories_and_the_shipped_accept_reads_them",
+  "status": "skipped",
+  "message": "node or journey-accept.mjs unavailable"
+ },
+ {
+  "name": "scripts/test_delivery_gate.py:HistoricalBoundQuestionTests.test_historical_answers_lose_grant_and_whole_question_restores_it",
+  "status": "skipped",
+  "message": "set GATE_PRESENTATION_STATE for the five committed validation replays"
+ },
+ {
+  "name": "scripts/test_laws_check.py:RealAmendmentTests.test_five_pinned_records_scope_and_report_edits_keep_form_debt",
+  "status": "skipped",
+  "message": "DEV2_OBLIGATION_SOURCES: JSON rows with state, rev, path; see VALIDATION.md"
+ }
+]

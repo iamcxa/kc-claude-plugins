@@ -1,0 +1,26 @@
+test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries) ... FAIL
+
+======================================================================
+FAIL: test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 415, in test_next_role_accepts_its_own_scratch_path_and_retries
+    result = self.role()
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 121, in role
+    return self.call([sys.executable, "-B", WRAPPER, "--workflow-dir", self.workflow,
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--entity-path", self.entity, "--role", role, "--model", "opus",
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--checklist-file", self.checklist, "--scope-notes-file", self.notes,
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      "--spacedock", BINARY, *extra], expected)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 89, in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/repair-mutations/old-selection.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/code/docs/dev2/.spacedock-state/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-7ae68c899a221906/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a/engineering-reviewer-1: /private/tmp/dev2/dispatch-code-7ae68c899a221906/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a/engineering-reviewer-2/checkout. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\n')
+
+----------------------------------------------------------------------
+Ran 1 test in 1.377s
+
+FAILED (failures=1)

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "AC1-paragraph-removed",
+    "reasons": [
+      "FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)",
+      "AssertionError: 0 != 1"
+    ]
+  },
+  {
+    "name": "AC2-reports-scanned",
+    "reasons": [
+      "FAIL: test_report_naming_removed_tmp_scratch (__main__.RemovedScratchInReport.test_report_naming_removed_tmp_scratch)",
+      "AssertionError: 1 != 0 : next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`."
+    ]
+  },
+  {
+    "name": "AC3-skip-worktree-remove",
+    "reasons": [
+      "FAIL: test_dirty_registered_worktree_removed_and_external_worktree_survives (test_scratch.ScratchTests.test_dirty_registered_worktree_removed_and_external_worktree_survives)",
+      "AssertionError: '/private/tmp/dev2/scratch-1b6b3c5ae51d4d7b9531cb7d2740c916-38c31cb30d881098/task/validation-1/checkout with spaces' unexpectedly found in 'worktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/scratch-test-57095h5f\\nHEAD 69e69c8f80f25e22132063d248c969997ae0bf80\\nbranch refs/heads/main\\n\\nworktree /private/tmp/dev2/scratch-1b6b3c5ae51d4d7b9531cb7d2740c916-38c31cb30d881098/task/validation-1/checkout with spaces\\nHEAD 69e69c8f80f25e22132063d248c969997ae0bf80\\ndetached\\nprunable gitdir file points to non-existent location\\n\\nworktree /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/scratch-test-57095h5f/external\\nHEAD 69e69c8f80f25e22132063d248c969997ae0bf80\\ndetached\\n\\n'"
+    ]
+  },
+  {
+    "name": "AC4-own-worktree-left",
+    "reasons": [
+      "FAIL: test_close_keeps_another_dispatch_in_the_same_repository (test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository)",
+      "AssertionError: 1 != 0"
+    ]
+  },
+  {
+    "name": "AC4-peer-root-deleted",
+    "reasons": [
+      "ERROR: test_close_keeps_another_dispatch_in_the_same_repository (test_scratch.ScratchTests.test_close_keeps_another_dispatch_in_the_same_repository)",
+      "FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/dev2/scratch-dee3ebbf0c8f44d5950b753302c500f8-da84d6acd67cbbd1/task/validation-2/peer-checkout/uncommitted'"
+    ]
+  },
+  {
+    "name": "F1-private-repository-ban-removed",
+    "reasons": [
+      "FAIL: test_scratch_in_record_and_real_dispatch_artifact_without_changing_input (test_dispatch_stage.DispatchStageTests.test_scratch_in_record_and_real_dispatch_artifact_without_changing_input)",
+      "AssertionError: 'Never archive private repository evidence, secrets or personal data' not found in '# ideation-1\\nDispatched: c55fe8b1d58cf6e9dfa26878db3f6fadb902ef7c (workflow checkout)\\nModel: fixture-model\\nBudget: not recorded\\n\\n## Checklist\\nInspect the real dispatch seam\\nKeep the received second checklist line\\n\\n## Scope notes\\nPackage root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2\\nSend your completion message to `main`.\\nKeep this second scope-notes line verbatim.\\n\\nScratch: /tmp/dev2/dispatch-code-794913ef8eca194f/dispatch-fixture-b6c910c2714042dd8100f21ee4b96c7b/ideation-1\\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/scratch.py close /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-mc661q_2/code/docs/dev2/.spacedock-state/dispatch-fixture-b6c910c2714042dd8100f21ee4b96c7b ideation-1` and paste its output.\\n'"
+    ]
+  },
+  {
+    "name": "idle-sweep-disabled",
+    "reasons": [
+      "FAIL: test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown (test_pr_watch.TasksTests.test_scratch_sweep_prompts_old_and_archived_roots_and_leaves_current_and_unknown)",
+      "AssertionError: 0 != 2 : []"
+    ]
+  },
+  {
+    "name": "outside-scope-notes-allowed",
+    "reasons": [
+      "FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/x')",
+      "AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/ac-mutations/scope-mutant.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2/.spacedock-state/dispatch-fixture-981b5711aee74a9f883df5394a6d6436.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/spy')], '{\\n  \"schema_version\": 2,\\n  \"subagent_type\": \"spacedock:ensign\",\\n  \"description\": \"Synthetic dispatch: ideation\",\\n  \"fetch_commands\": [\\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2 --stage ideation\"\\n  ],\\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md\",\\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md and treat its content as your assignment.\",\\n  \"model\": null,\\n  \"name\": \"spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation\"\\n}\\n', \"[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\\n\")",
+      "FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/private/tmp/x')",
+      "AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/ac-mutations/scope-mutant.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2/.spacedock-state/dispatch-fixture-981b5711aee74a9f883df5394a6d6436.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/spy')], '{\\n  \"schema_version\": 2,\\n  \"subagent_type\": \"spacedock:ensign\",\\n  \"description\": \"Synthetic dispatch: ideation\",\\n  \"fetch_commands\": [\\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2 --stage ideation\"\\n  ],\\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md\",\\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md and treat its content as your assignment.\",\\n  \"model\": null,\\n  \"name\": \"spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation\"\\n}\\n', \"[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\\n\")",
+      "FAIL: test_scope_notes_outside_scratch_refuse_before_record_and_build (test_dispatch_stage.DispatchStageTests.test_scope_notes_outside_scratch_refuse_before_record_and_build) (path='/tmp/dev2/dispatch-code-cfeb61caa10d8984/dispatch-fixture-981b5711aee74a9f883df5394a6d6436/ideation-1/../escape')",
+      "AssertionError: 0 != 1 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/ac-mutations/scope-mutant.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2/.spacedock-state/dispatch-fixture-981b5711aee74a9f883df5394a6d6436.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--spacedock', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/spy')], '{\\n  \"schema_version\": 2,\\n  \"subagent_type\": \"spacedock:ensign\",\\n  \"description\": \"Synthetic dispatch: ideation\",\\n  \"fetch_commands\": [\\n    \"/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-jpavbotp/code/docs/dev2 --stage ideation\"\\n  ],\\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md\",\\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation.md and treat its content as your assignment.\",\\n  \"model\": null,\\n  \"name\": \"spacedock-ensign-dispatch-fixture-981b5711aee74a-ideation\"\\n}\\n', \"[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\\n\")"
+    ]
+  },
+  {
+    "name": "root-mismatch-allowed",
+    "reasons": [
+      "FAIL: test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse)",
+      "AssertionError: ValueError not raised"
+    ]
+  },
+  {
+    "name": "size-cap-disabled",
+    "reasons": [
+      "FAIL: test_evidence_size_limit_preserves_scratch_and_restorable_evidence (test_scratch.ScratchTests.test_evidence_size_limit_preserves_scratch_and_restorable_evidence)",
+      "AssertionError: ValueError not raised"
+    ]
+  },
+  {
+    "name": "symlink-follows-sentinel",
+    "reasons": [
+      "FAIL: test_symlink_root_and_parent_leave_sentinel (test_scratch.ScratchTests.test_symlink_root_and_parent_leave_sentinel)",
+      "AssertionError: \"symlinked\" does not match \"scratch ownership missing or differs: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/scratch-test-1mxfyzqo/sentinel\""
+    ]
+  },
+  {
+    "name": "threshold-disabled",
+    "reasons": [
+      "FAIL: test_threshold_restore_and_idempotence (test_scratch.ScratchTests.test_threshold_restore_and_idempotence)",
+      "AssertionError: True is not false"
+    ]
+  },
+  {
+    "name": "truncated-gzip",
+    "reasons": [
+      "ERROR: test_threshold_restore_and_idempotence (test_scratch.ScratchTests.test_threshold_restore_and_idempotence)"
+    ]
+  },
+  {
+    "name": "collision-partial-write",
+    "reasons": [
+      "FAIL: test_compression_collision_refuses_before_changes_and_retry_keeps_digests (test_scratch.ScratchTests.test_compression_collision_refuses_before_changes_and_retry_keeps_digests)",
+      "AssertionError: {'z.t[262193 chars]a.txt.gz': b'\\x1f\\x8b\\x08\\x00\\x00\\x00\\x00\\x00\\[1106 chars]x00'} != {'z.t[262193 chars]a.txt': b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[262106 chars]aaa'}"
+    ]
+  },
+  {
+    "name": "gzip-validation-after-write",
+    "reasons": [
+      "FAIL: test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files) (bad=b'not gzip')",
+      "AssertionError: {'z.t[22 chars]a.txt.gz': b'\\x1f\\x8b\\x08\\x00\\x00\\x00\\x00\\x00\\[1198 chars]t\\n'} != {'z.t[22 chars]a.txt': b'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[262198 chars]t\\n'}",
+      "FAIL: test_existing_gzip_is_validated_before_compressing_other_files (test_scratch.ScratchTests.test_existing_gzip_is_validated_before_compressing_other_files)",
+      "AssertionError: 'c592f4a6b099700b5050ce8bc67367f0c8f44810203124e86405c3e7b6f1a2ba  a.txt\\n' not found in 'b683e5e3c2e5f7f081019158786970dada15b233b47ae3faf353adf73bfdddaf  a.txt.gz\\n9d0a3f9ff7d96d97fb8ad8dc20ff76f6c3b30270c7036c2f11f3b5ce353e0c58  z.txt\\n'"
+    ]
+  },
+  {
+    "name": "later-write-loses-digest",
+    "reasons": [
+      "FAIL: test_later_gzip_write_failure_keeps_original_digests_for_retry (test_scratch.ScratchTests.test_later_gzip_write_failure_keeps_original_digests_for_retry)",
+      "AssertionError: 'c592f4a6b099700b5050ce8bc67367f0c8f44810203124e86405c3e7b6f1a2ba  a.txt\\n' not found in 'b683e5e3c2e5f7f081019158786970dada15b233b47ae3faf353adf73bfdddaf  a.txt.gz\\n1ed43fb29fbaa2eac07de3e4a2b965450f148efc6eba66935080e6e2ff169937  z.txt\\n'"
+    ]
+  },
+  {
+    "name": "merged-cleanup-lost",
+    "reasons": [
+      "ERROR: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)"
+    ]
+  },
+  {
+    "name": "printed-readme-lost",
+    "reasons": [
+      "FAIL: test_merged_scratch_prompt_precedes_merge_record (test_pr_watch.TasksTests.test_merged_scratch_prompt_precedes_merge_record)",
+      "AssertionError: '--readme /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpql_qsp9b/repo/docs/dev2/README.md' not found in 'python3 /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/tmpql_qsp9b/detached-state merged '"
+    ]
+  },
+  {
+    "name": "role-next-root",
+    "reasons": [
+      "FAIL: test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries)",
+      "AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/repair-mutations/old-selection.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/code/docs/dev2/.spacedock-state/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a.md'), '--role', 'engineering-reviewer', '--model', 'opus', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-rlthsrqb/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-7ae68c899a221906/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a/engineering-reviewer-1: /private/tmp/dev2/dispatch-code-7ae68c899a221906/dispatch-fixture-9ff7c8a7baf3416ead4fc539b889bf1a/engineering-reviewer-2/checkout. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\\n')"
+    ]
+  },
+  {
+    "name": "validation-next-root",
+    "reasons": [
+      "FAIL: test_next_validation_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_validation_accepts_its_own_scratch_path_and_retries)",
+      "AssertionError: 1 != 0 : (['/opt/homebrew/opt/python@3.15/bin/python3.15', '-B', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/repair-mutations/old-selection.py'), '--workflow-dir', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-8phc0jfj/code/docs/dev2'), '--entity-path', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-8phc0jfj/code/docs/dev2/.spacedock-state/dispatch-fixture-4639f27d63a54efe8c382bf291a4f91e.md'), '--stage', 'validation', '--model', 'fixture-model', '--checklist-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-8phc0jfj/checklist.txt'), '--scope-notes-file', PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/tmp/dispatch-stage-8phc0jfj/notes.txt'), '--spacedock', '/Users/kent/.local/bin/spacedock', '--host', 'codex', '--candidate', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '--symptom', 'none'], '', 'dispatch_stage: dispatch not built; scope notes name a /tmp path outside /private/tmp/dev2/dispatch-code-5913dc78d65c4dba/dispatch-fixture-4639f27d63a54efe8c382bf291a4f91e/validation-1: /private/tmp/dev2/dispatch-code-5913dc78d65c4dba/dispatch-fixture-4639f27d63a54efe8c382bf291a4f91e/validation-2/checkout. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.\\n')"
+    ]
+  }
+]

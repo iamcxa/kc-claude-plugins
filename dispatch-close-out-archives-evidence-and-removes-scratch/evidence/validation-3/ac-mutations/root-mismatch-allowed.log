@@ -1,0 +1,15 @@
+test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse) ... FAIL
+
+======================================================================
+FAIL: test_mismatched_root_and_traversal_refuse (test_scratch.ScratchTests.test_mismatched_root_and_traversal_refuse)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/pr854-validation3-kvxw6mzk/candidate/kc-dev-flow-2/scripts/test_scratch.py", line 202, in test_mismatched_root_and_traversal_refuse
+    with self.assertRaisesRegex(ValueError, 'differs'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.255s
+
+FAILED (failures=1)
