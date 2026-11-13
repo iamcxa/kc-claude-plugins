@@ -46,7 +46,9 @@ open(os.path.join(d, "calls.log"), "a").write(" ".join(a) + "\\n")
 if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
     sys.stderr.write(os.environ.get("STUB_GH_FAIL", ""))
     sys.exit(1)
-if a[:2] == ["pr", "view"]:
+if a[:2] == ["repo", "view"]:
+    print('{{"isPrivate": false}}')
+elif a[:2] == ["pr", "view"]:
     own = os.path.join(d, "pr-" + a[2] + ".json")
     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
@@ -1085,7 +1087,7 @@ class RecordTests(unittest.TestCase):
 
     def test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught(self):
         self.assertEqual(run_check(facts=dict(isDraft=True)).written, {})
-        module = variant_of("    emit(*problems, *holds)\n", "    emit(*problems, *holds)\n    write_record(task, {})\n")
+        module = variant_of("    emit(*problems, *holds)\n    if problems:", "    emit(*problems, *holds)\n    write_record(task, {})\n    if problems:")
         self.assertEqual(list(run_variant(module, facts=dict(isDraft=True)).written), ["ask-1.json"])
 
 
@@ -1380,7 +1382,7 @@ class ConfirmationTests(unittest.TestCase):
         self.assertEqual(saved["necessity"], "x" * 200)
 
     def test_dropping_the_check_changes_exactly_the_missing_clause_cases(self):
-        module = variant_of("    for label in unstated_confirmations(gate_text):", "    for label in []:")
+        module = variant_of("    for label in unstated_confirmations(gate_text) if confirmations else []:", "    for label in []:")
 
         def outcome(run, text):
             try:
@@ -2712,7 +2714,7 @@ class QuestionTests(unittest.TestCase):
         out = run_check(text=text).out
         self.assertNotIn("keep the merge", out)
         self.assertNotIn("worktree", out)
-        gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
+        gated = variant_of("found, wanted = text_problems(task_text, gate_text, confirmations=not observed)", "found, wanted = text_problems(task_text, gate_text, at_gate=True, confirmations=not observed)")
         self.assertIn("keep the merge", run_variant(gated, text=text).out)
 
 
@@ -3422,6 +3424,96 @@ class ScopeDisclosureTests(unittest.TestCase):
             self.assertEqual(self.ask(claim, saved=changed, module=mutant)[0], 0)
             self.assertIn(gate.SCOPE_MARK, normal["text"])
             self.assertNotIn(gate.SCOPE_MARK, changed["text"])
+
+
+
+class ObservedFactsTests(unittest.TestCase):
+    def test_record_route_checks_steps_not_just_candidate_header(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK)
+            question.write_text("Review this candidate.\n")
+            readme(root)
+            captain_record(task)
+            step = gate.task_folder(task) / "captain-steps/1.md"
+            step.write_text(step.read_text().replace("Observed: checks passed", "Observed:"))
+            with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 1)
+
+    def test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct(self):
+        for outcome, expected in (("pending", 0), ("error", 2)):
+            with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                task, question = root / "task.md", root / "question.txt"
+                task.write_text(TASK)
+                question.write_text("Review this candidate.\nSecond reviewer: not triggered\n")
+                readme(root, "extensions: [codex, copilot]\nsecond-reviewer: copilot\n")
+                captain_record(task)
+                rows = [dict(reviewer="codex", head=HEAD40, outcome="clean", evidence="review:1", scope="pr"),
+                        dict(reviewer="copilot", head=HEAD40, outcome=outcome, evidence=None, scope="pr")]
+                with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=rows), contextlib.redirect_stdout(io.StringIO()):
+                    code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+                self.assertEqual(code, expected)
+
+    def test_question_only_records_observed_facts_and_no_manual_summary(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK + f"\n## Stage Report: validation\n- DONE: actual candidate {HEAD40}\n### Summary\nPASSED at {HEAD40}.\n")
+            question.write_text("Review this candidate. Accept the recorded observations?\n")
+            readme(root)
+            captain_record(task)
+            original = question.read_bytes()
+            with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 0)
+            path = next((gate.task_folder(task) / "merge").glob("ask-*.json"))
+            data = json.loads(path.read_text())
+            self.assertEqual(data["validation"]["verdict"], "PASSED")
+            self.assertEqual(data["validation"]["rounds"], 1)
+            self.assertEqual(data["head"], HEAD40)
+            self.assertEqual(data["result"]["exit"], 0)
+            self.assertEqual(question.read_bytes(), original)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(gate.main(["question", str(task), "--text-file", str(question), "--facts-record", str(path)]), 0)
+            dispatch = gate.task_folder(task) / "dispatch/validation-2.md"
+            dispatch.write_text(record(S2))
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(gate.main(["question", str(task), "--text-file", str(question), "--facts-record", str(path)]), 1)
+
+    def test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK)
+            question.write_text("Inspect pending observations?\n")
+            readme(root)
+            captain_record(task)
+            pr = pr_json(statusCheckRollup=[dict(status="IN_PROGRESS", conclusion="")])
+            with stubbed(root, pr=pr), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 1)
+            self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
+            held = list((gate.task_folder(task) / "merge").glob("observation-*.json"))
+            self.assertEqual(len(held), 1)
+            self.assertEqual(json.loads(held[0].read_text())["result"]["exit"], 1)
+
+    def test_recorded_local_jobs_do_not_inflate_three_real_round_counts(self):
+        for pr, declared, ids in ((854, 4, ["review:5873421269", "summary:6821181686@c429ab181"]),
+                                  (856, 3, ["summary:6844239189@5859c3ccd"]),
+                                  (861, 3, ["summary:6841024641@97fe3d6ff"])):
+            with self.subTest(pr=pr), tempfile.TemporaryDirectory() as d:
+                task = Path(d, "task.md")
+                task.write_text(TASK)
+                folder = gate.task_folder(task) / "merge"
+                folder.mkdir(parents=True)
+                rows = [dict(reviewer="codex", head=HEAD40, evidence=ident, scope="pr", outcome="clean") for ident in ids]
+                rows += [dict(reviewer="roborev", head=HEAD40, evidence="roborev:1810", scope="local", outcome="clean")]
+                (folder / "ask-1.json").write_text(json.dumps(dict(schema="delivery-facts/v1", reviewers=rows)))
+                self.assertEqual(gate.saved_rounds(task, rows), len(ids))
+                self.assertNotEqual(gate.saved_rounds(task, rows), declared)
 
 
 if __name__ == "__main__":
