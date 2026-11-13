@@ -1,0 +1,28 @@
+task: journey-map-dev2-contract
+  backlog: 2026-10-13T03:04:32Z -> 2026-10-13T03:04:41Z  0.2 min (before gate 0.0, Captain wait 0.2, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-13T03:04:32Z, closed 2026-10-13T03:04:41Z, approve
+  ideation: 2026-10-13T03:05:11Z -> 2026-10-13T05:13:08Z  85.4 min (before gate 41.7, Captain wait 43.1, after gate 0.6); dispatches 3, repeats 2
+    round 1: 2026-10-13T03:05:11Z -> 2026-10-13T04:30:34Z  85.4 min; revise, withdrawn, approve
+    round 2: 2026-10-13T05:13:08Z -> 2026-10-13T05:13:08Z  0.0 min; redispatched
+    round 3: 2026-10-13T05:13:08Z -> 2026-10-13T05:13:08Z  0.0 min; redispatched
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-13T03:28:06Z, closed 2026-10-13T03:56:22Z, revise
+    gate attempt 2: opened 2026-10-13T04:15:06Z, closed 2026-10-13T04:15:24Z, withdrawn
+    gate attempt 3: opened 2026-10-13T04:15:29Z, closed 2026-10-13T04:29:56Z, approve
+  implementation: 2026-10-13T04:30:34Z -> 2026-10-13T06:28:48Z  93.6 min (before gate 93.6, Captain wait 0, after gate 0.0); dispatches 6, repeats 5
+    round 1: 2026-10-13T04:30:34Z -> 2026-10-13T04:58:59Z  28.4 min; next validation
+    round 2: 2026-10-13T05:13:08Z -> 2026-10-13T05:59:00Z  45.9 min; redispatched
+    round 3: 2026-10-13T05:59:00Z -> 2026-10-13T06:00:54Z  1.9 min; redispatched
+    round 4: 2026-10-13T06:00:54Z -> 2026-10-13T06:07:15Z  6.3 min; next validation
+    round 5: 2026-10-13T06:17:43Z -> 2026-10-13T06:20:14Z  2.5 min; redispatched
+    round 6: 2026-10-13T06:20:14Z -> 2026-10-13T06:28:48Z  8.6 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-13T04:58:59Z -> 2026-10-13T06:59:28Z  55.4 min (before gate 36.1, Captain wait 4.0, after gate 15.3); dispatches 3, repeats 2
+    round 1: 2026-10-13T04:58:59Z -> 2026-10-13T05:13:08Z  14.2 min; next ideation
+    round 2: 2026-10-13T06:07:15Z -> 2026-10-13T06:17:43Z  10.5 min; next implementation
+    round 3: 2026-10-13T06:28:48Z -> 2026-10-13T06:59:28Z  30.7 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-13T06:40:10Z, closed 2026-10-13T06:44:07Z, approve
+  done: 2026-10-13T06:59:28Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 1; revise decisions: 1; amendments outside a gate: 1

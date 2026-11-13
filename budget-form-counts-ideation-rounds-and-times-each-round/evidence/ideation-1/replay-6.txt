@@ -1,0 +1,4 @@
+case 6: task merge-ask-holds-missing-clauses (profile pilot), budget 'two ideation, one implementation and two validation cycles, in one package PR.', pending ideation-3
+next: merge-ask-holds-missing-clauses budget exceeded; hold for the Captain. Symptom: none. Ask: which Captain words does this serve; what breaks without it; which single premise would make the task unneeded, and what cheap test checks it now? Record his new bound as Budget: verbatim from Asked: or Captain: in a Captain amendment; or stop, record a known limit or split. Default: keep the results, report the remaining work and stop adding, unless the Captain replaces this outcome.
+budget: Budget: two ideation, one implementation and two validation cycles, in one package PR.; spent ideation 3, implementation 0, validation 0
+exit 1

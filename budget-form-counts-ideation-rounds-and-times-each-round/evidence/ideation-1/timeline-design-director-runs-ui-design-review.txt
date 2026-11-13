@@ -1,0 +1,24 @@
+task: design-director-runs-ui-design-review
+  backlog: 2026-10-22T05:11:12Z -> 2026-10-22T07:27:22Z  136.2 min (before gate 0.0, Captain wait 136.2, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-22T05:11:12Z, closed 2026-10-22T07:27:22Z, approve
+  ideation: 2026-10-22T07:27:36Z -> 2026-10-22T11:31:12Z  243.6 min (before gate 153.8, Captain wait 89.2, after gate 0.6); dispatches 3, repeats 2
+    round 1: 2026-10-22T07:27:36Z -> 2026-10-22T08:02:49Z  35.2 min; redispatched
+    round 2: 2026-10-22T08:02:49Z -> 2026-10-22T09:43:49Z  101.0 min; redispatched
+    round 3: 2026-10-22T09:43:49Z -> 2026-10-22T11:31:12Z  107.4 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-22T10:01:22Z, closed 2026-10-22T11:30:35Z, approve
+  implementation: 2026-10-22T11:31:12Z -> 2026-10-23T04:14:20Z  907.8 min (before gate 907.8, Captain wait 0, after gate 0.0); dispatches 4, repeats 3
+    round 1: 2026-10-22T11:31:12Z -> 2026-10-23T02:13:38Z  882.4 min; redispatched
+    round 2: 2026-10-23T02:13:38Z -> 2026-10-23T02:15:50Z  2.2 min; next validation
+    round 3: 2026-10-23T02:42:52Z -> 2026-10-23T02:54:48Z  11.9 min; next validation
+    round 4: 2026-10-23T04:03:04Z -> 2026-10-23T04:14:20Z  11.3 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-23T02:15:50Z -> 2026-10-23T06:21:52Z  222.8 min (before gate 207.3, Captain wait 6.5, after gate 9.0); dispatches 3, repeats 2
+    round 1: 2026-10-23T02:15:50Z -> 2026-10-23T02:42:52Z  27.0 min; next implementation
+    round 2: 2026-10-23T02:54:48Z -> 2026-10-23T04:03:04Z  68.3 min; next implementation
+    round 3: 2026-10-23T04:14:20Z -> 2026-10-23T06:21:52Z  127.5 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-23T06:06:23Z, closed 2026-10-23T06:12:51Z, approve
+  done: 2026-10-23T06:21:52Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 2

@@ -1,0 +1,25 @@
+task: new-work-starts-from-a-story-map
+  backlog: 2026-10-20T05:18:16Z -> 2026-10-20T05:18:19Z  0.1 min (before gate 0.0, Captain wait 0.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-20T05:18:16Z, closed 2026-10-20T05:18:19Z, approve
+  ideation: 2026-10-21T07:29:46Z -> 2026-10-22T04:01:41Z  1231.9 min (before gate 1121.6, Captain wait 91.9, after gate 18.4); dispatches 3, repeats 2
+    round 1: 2026-10-21T07:29:46Z -> 2026-10-21T08:57:34Z  87.8 min; redispatched
+    round 2: 2026-10-21T08:57:34Z -> 2026-10-22T00:58:22Z  960.8 min; redispatched
+    round 3: 2026-10-22T00:58:22Z -> 2026-10-22T04:01:41Z  183.3 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-22T02:11:25Z, closed 2026-10-22T03:43:17Z, approve
+  implementation: 2026-10-22T04:01:41Z -> 2026-10-22T10:26:38Z  303.6 min (before gate 303.6, Captain wait 0, after gate 0.0); dispatches 4, repeats 3
+    round 1: 2026-10-22T04:01:41Z -> 2026-10-22T07:30:09Z  208.5 min; next validation
+    round 2: 2026-10-22T08:36:24Z -> 2026-10-22T09:53:54Z  77.5 min; redispatched
+    round 3: 2026-10-22T09:53:54Z -> 2026-10-22T10:05:02Z  11.1 min; next validation
+    round 4: 2026-10-22T10:20:11Z -> 2026-10-22T10:26:38Z  6.5 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-22T07:30:09Z -> 2026-10-23T03:37:03Z  1111.9 min (before gate 1082.4, Captain wait 19.2, after gate 10.3); dispatches 4, repeats 3
+    round 1: 2026-10-22T07:30:09Z -> 2026-10-22T08:36:24Z  66.2 min; next implementation
+    round 2: 2026-10-22T10:05:02Z -> 2026-10-22T10:20:11Z  15.2 min; next implementation
+    round 3: 2026-10-22T10:26:38Z -> 2026-10-23T02:55:59Z  989.4 min; redispatched
+    round 4: 2026-10-23T02:55:59Z -> 2026-10-23T03:37:03Z  41.1 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-23T03:07:33Z, closed 2026-10-23T03:26:45Z, approve
+  done: 2026-10-23T03:37:03Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 2

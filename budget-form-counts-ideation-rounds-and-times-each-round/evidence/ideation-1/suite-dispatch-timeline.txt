@@ -1,0 +1,45 @@
+...F................................................................                        [100%]
+=================================== FAILURES ===================================
+_ DispatchStageTests.test_budget_hold_removes_record_and_skips_build_until_amended _
+
+self = <test_dispatch_stage.DispatchStageTests testMethod=test_budget_hold_removes_record_and_skips_build_until_amended>
+
+    def test_budget_hold_removes_record_and_skips_build_until_amended(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- One cycle per stage.\n")
+        self.set_stage("implementation")
+        self.build("implementation", ("--symptom", "none"))
+        held = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy), expected=1)
+        self.assertIn("budget exceeded; hold for the Captain", held.stderr)
+        self.assertIn("Symptom: failing contract", held.stderr)
+        self.assertEqual(held.stdout, "")
+        self.assertFalse(self.marker.exists())
+        self.assertFalse(self.record("implementation", 2).exists())
+        self.entity.write_text(self.entity.read_text() + "\n## Captain amendments\n"
+                               "### Amendment 1 — 2026-11-11, chat\nCaptain: 「approved」\n"
+                               "Asked: approve two cycles per stage\nBudget: two cycles per stage\nSupersedes: none\n")
+        self.commit_task()
+        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
+        resumed = self.build("implementation", ("--symptom", "failing contract", "--spacedock", self.spy))
+        self.assertTrue(self.marker.exists())
+>       self.assertIn("spent implementation 2, validation 0", resumed.stderr)
+E       AssertionError: 'spent implementation 2, validation 0' not found in "budget: Budget: two cycles per stage; spent ideation 0 of 2 by default, implementation 2, validation 0\n[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+test_dispatch_stage.py:196: AssertionError
+_ DispatchStageTests.test_budget_line_and_spent_cycles_are_printed_before_build (value='One cycle per stage.') _
+
+self = <test_dispatch_stage.DispatchStageTests testMethod=test_budget_line_and_spent_cycles_are_printed_before_build>
+
+    def test_budget_line_and_spent_cycles_are_printed_before_build(self):
+        for value, suffix in (("One cycle per stage.", ""),):
+            with self.subTest(value=value):
+                self.entity.write_text(self.entity.read_text() + f"\n## Budget\n- {value}\n")
+                self.set_stage("implementation")
+                result = self.build("implementation", ("--symptom", "none"))
+>               self.assertIn(f"budget: Budget: {value}; spent implementation 1, validation 0{suffix}", result.stderr)
+E               AssertionError: 'budget: Budget: One cycle per stage.; spent implementation 1, validation 0' not found in "budget: Budget: One cycle per stage.; spent ideation 0 of 2 by default, implementation 1, validation 0\n[build] declared model 'sonnet' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+
+test_dispatch_stage.py:132: AssertionError
+=========================== short test summary info ============================
+FAILED test_dispatch_stage.py::DispatchStageTests::test_budget_hold_removes_record_and_skips_build_until_amended
+(value='One cycle per stage.') SUBFAIL test_dispatch_stage.py::DispatchStageTests::test_budget_line_and_spent_cycles_are_printed_before_build
+2 failed, 67 passed in 370.44s (0:06:10)

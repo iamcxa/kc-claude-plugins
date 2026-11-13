@@ -1,0 +1,2 @@
+archived tasks 169; rounds 812; ideation rounds 191; ideation rows whose round count differs from dispatches 0; rounds without end 0; zero-minute rounds 3
+results: approve 267; archived 18; hold 2; next <stage> 307; redispatched 179; revise 21; revise, withdrawn, approve 1; withdrawn 4; withdrawn, approve 10; withdrawn, revise, approve 1; withdrawn, withdrawn, approve 2

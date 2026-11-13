@@ -1,0 +1,257 @@
+diff --git a/kc-dev-flow-2/references/sd/workflow.md b/kc-dev-flow-2/references/sd/workflow.md
+index 4521b06e1..78cf17be4 100644
+--- a/kc-dev-flow-2/references/sd/workflow.md
++++ b/kc-dev-flow-2/references/sd/workflow.md
+@@ -70,7 +70,7 @@ Before admission and dispatch, FO holds unknown/mismatched profiles;
+ SD does not enforce this rule. Preserve approved outcome and scope.
+ New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
+ under `## Scope` or matching level-two sections. Replay counts do not enforce
+-these on existing tasks. Budgets start with `N cycles per stage`, `N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
++these on existing tasks. Budgets start with `N cycles per stage`, `[N ideation, ]N implementation and M validation cycles`, or `at most N dispatches total` (`最多 N 次派工`); the first overrun holds for his amendment. Only messages with a named `Symptom:` count. Minutes are not counted. Default: keep results, report remaining work and stop adding, unless he decides otherwise. Use bold **AC-N** declarations with individual evidence clauses.
+ 
+ ## Batch gates
+ 
+@@ -187,7 +187,7 @@ Pilot ideation builds a throwaway probe on local branch `poc/<slug>` unless the
+ says why not; it is never pushed or deployed and uses no credential or shared
+ environment. Every criterion's evidence command runs once on it, recording command, exit and output path
+ per criterion, provenance included; unrunnable: `Not provable now`. A probe round is one
+-ideation dispatch; FO holds a third for the Captain. Otherwise ideation writes no
++ideation dispatch, two by default. Otherwise ideation writes no
+ repository file, branch or commit. The design, the criteria and any ADR draft live in
+ the task file, and a draft carries no ADR number.
+ 
+diff --git a/kc-dev-flow-2/scripts/design_surfaces.py b/kc-dev-flow-2/scripts/design_surfaces.py
+index 6ad921da7..c75bfa7a5 100644
+--- a/kc-dev-flow-2/scripts/design_surfaces.py
++++ b/kc-dev-flow-2/scripts/design_surfaces.py
+@@ -1042,6 +1042,7 @@ def check_seed_fields(name, text):
+     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
+     if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
+         errors.append(f"{name}: Budget must start with 'N cycles per stage', 'N implementation and M validation cycles', "
++                      "'N ideation, N implementation and M validation cycles', "
+                       "'at most N dispatches total' or '最多 N 次派工'; an explicit agent-minutes clause may precede it, but minutes are not counted")
+     return errors
+ 
+diff --git a/kc-dev-flow-2/scripts/dispatch_stage.py b/kc-dev-flow-2/scripts/dispatch_stage.py
+index d1b4dae89..d6db60d71 100644
+--- a/kc-dev-flow-2/scripts/dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/dispatch_stage.py
+@@ -215,9 +215,10 @@ def main(argv=None):
+         print("dispatch_stage: dispatch not built; --role needs the opus model floor or above (astra qualifies)",
+               file=sys.stderr)
+         return 1
+-    if args.stage in ("implementation", "validation"):
++    if args.stage in ("ideation", "implementation", "validation"):
+         roles = subprocess.run([sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
+-                                str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
++                                str(folder.parent), folder.name, "--pending", str(path)]
++                               + ["--budget-only"] * (args.stage == "ideation"), capture_output=True, text=True)
+         if roles.returncode:
+             remove_uncommitted(path, wrote)
+             print(f"dispatch_stage: dispatch not built; {folder.name} budget or special-role check held:", file=sys.stderr)
+diff --git a/kc-dev-flow-2/scripts/lint-skills.py b/kc-dev-flow-2/scripts/lint-skills.py
+index 18dcad38b..0481245e5 100644
+--- a/kc-dev-flow-2/scripts/lint-skills.py
++++ b/kc-dev-flow-2/scripts/lint-skills.py
+@@ -83,6 +83,7 @@ WORKFLOW_BUDGET_STEPS = [
+     dict(delta=66, why="Pilot ideation carries probe permission, local bounds, criterion proof runs and a third-dispatch hold instead of the blanket write ban",
+          captain='「核准，七項都照建議（建議）」 (Captain, ideation gate, 2026-11-13), answering the seven-decision question including 「五、流程文件增加 66 個字（6033 到 6099）」; D4 follows 「分兩步（建議）」: the third-dispatch hold stays prose, with budget grammar and per-round timing deferred',
+          loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
++    dict(delta=-2, why="role_triggers.py holds a Pilot ideation dispatch past its bound, two by default; the README names the form"),
+ ]
+ DUPLICATE_RUN = 12
+ # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+diff --git a/kc-dev-flow-2/scripts/role_triggers.py b/kc-dev-flow-2/scripts/role_triggers.py
+index 7b88fa564..e45e96ae8 100644
+--- a/kc-dev-flow-2/scripts/role_triggers.py
++++ b/kc-dev-flow-2/scripts/role_triggers.py
+@@ -102,6 +102,8 @@ def review_facts(comments):
+ 
+ 
+ def parse(args):
++    budget_only = "--budget-only" in args
++    args = [arg for arg in args if arg != "--budget-only"]
+     options = {"--rev": "HEAD", "--review-rounds": None, "--drift-date": None, "--pending": None}
+     for name in options:
+         if name in args:
+@@ -118,7 +120,8 @@ def parse(args):
+         raise Unverifiable("usage: --drift-date needs YYYY-MM-DD")
+     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
+         raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--review-rounds N [--drift-date YYYY-MM-DD]]")
+-    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift, options["--pending"]
++    return (Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift, options["--pending"],
++            budget_only)
+ 
+ 
+ def read_task(state, slug, rev):
+@@ -169,6 +172,9 @@ def budget_bound(value):
+     per_stage = re.match(rf"^({NUMBER}) cycles? per stage\b", value, re.I)
+     if per_stage:
+         return dict.fromkeys(("implementation", "validation"), number(per_stage[1]))
++    rounds = re.match(rf"^({NUMBER}) ideation, ({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
++    if rounds:
++        return dict(zip(("ideation", "implementation", "validation"), map(number, rounds.groups())))
+     split = re.match(rf"^({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
+     return {"implementation": number(split[1]), "validation": number(split[2])} if split else None
+ 
+@@ -204,25 +210,30 @@ def budget_dispatches(dispatches):
+         not record[3] or (symptom_name(body) and symptom_name(body) != "none"))]
+ 
+ 
+-def budget_status(text, dispatches, slug):
++def budget_status(text, dispatches, slug, profile=None):
+     value = budget_text(text)
+     bound = budget_bound(value)
++    default = bool(bound and "ideation" not in bound and profile == "pilot")
++    if default:
++        bound = {**bound, "ideation": 2}
+     spent = {stage: max((int(m[2]) for name, _ in dispatches
+-                        if (m := DIAGNOSIS_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
+-             for stage in ("implementation", "validation")}
++                        if (m := STAGE_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
++             for stage in ("ideation", "implementation", "validation")}
+     stages = [body for name, body in dispatches if STAGE_RECORD.fullmatch(name)]
+     counted = budget_dispatches(dispatches)
+     total = len(counted)
+     admitted = bool(stages and re.search(r"^Budget:", dispatch_header(stages[0]), re.M))
+-    summary = [f"budget: Budget: {value or 'not recorded'}; spent implementation {spent['implementation']}, validation {spent['validation']}"
++    summary = [f"budget: Budget: {value or 'not recorded'}; spent "
++               + (f"ideation {spent['ideation']}{' of 2 by default' if default else ''}, " if bound and "ideation" in bound else "")
++               + f"implementation {spent['implementation']}, validation {spent['validation']}"
+                + (f"; total dispatches {total}" if bound and "total" in bound else "")
+                + ("" if bound else "; states no cycles")
+                + ("; minutes not counted" if MINUTES.search(value) else "")] if value or admitted else []
+-    over = (["total"] if total > bound["total"] else []) if bound and "total" in bound else [
+-        stage for stage, count in spent.items() if bound and count > bound[stage]]
++    over = [key for key in (bound or {}) if (total if key == "total" else spent[key]) > bound[key]]
+     if admitted and over:
+         newest = counted[-1][0] if counted else ""
+-        record = newest if over == ["total"] else f"{over[0]}-{spent[over[0]]}.md"
++        stage = next((key for key in over if key != "total"), None)
++        record = f"{stage}-{spent[stage]}.md" if stage else newest
+         symptom = next((m[1] for name, body in reversed(dispatches)
+                         if name == record
+                         and (m := re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(body), re.M))), None)
+@@ -390,7 +401,7 @@ def hint(slug, agent, heading):
+             "move it under ## FO alignment.")
+ 
+ 
+-def check(state, slug, rev, rounds=None, drift=None, pending=None):
++def check(state, slug, rev, rounds=None, drift=None, pending=None, budget_only=False):
+     text = read_task(state, slug, rev)
+     lines = list(outside_fences(text))
+     reports, amendments = events(lines)
+@@ -407,10 +418,12 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
+         except (OSError, UnicodeError) as error:
+             raise Unverifiable(f"cannot read pending dispatch record {pending}: {error}") from error
+     symptoms = symptom_rounds(dispatches)
+-    budget_held, budget_lines, bound = budget_status(text, dispatches, slug)
+-    kept = list(alignment(lines))
+     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+     profile = FRONT_PROFILE.search(front.group(1)) if front else None
++    budget_held, budget_lines, bound = budget_status(text, dispatches, slug, profile and profile.group(1))
++    if budget_only:
++        return int(budget_held), "\n".join(budget_lines if budget_held or (bound and "ideation" in bound) else [])
++    kept = list(alignment(lines))
+     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
+     owed, seen, stepped = [], 0, False
+     repairs = max(reports - 1, 0)
+@@ -481,8 +494,8 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
+ def main(argv=None):
+     args = sys.argv[1:] if argv is None else list(argv)
+     try:
+-        state, slug, rev, rounds, drift, pending = parse(args)
+-        code, message = check(state, slug, rev, rounds, drift, pending)
++        state, slug, rev, rounds, drift, pending, budget_only = parse(args)
++        code, message = check(state, slug, rev, rounds, drift, pending, budget_only)
+     except Unverifiable as err:
+         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
+         return 2
+diff --git a/kc-dev-flow-2/scripts/task_timeline.py b/kc-dev-flow-2/scripts/task_timeline.py
+index 8d0a36ae1..04159226b 100644
+--- a/kc-dev-flow-2/scripts/task_timeline.py
++++ b/kc-dev-flow-2/scripts/task_timeline.py
+@@ -140,6 +140,17 @@ def timeline(state, slug):
+             before, after = 0.0, round(row["elapsed"] - wait, 1)
+         # see docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md
+         n = max(len(starts.get(stage, [])), max(records.get(stage, {}), default=0))
++        rounds = []
++        for (start, st), end in zip(segments, ends):
++            if st != stage:
++                continue
++            closed = [a for a in attempts if a["closed"] and start <= a["closed"] <= (end or now)]
++            opened = [a for a in attempts if not a["closed"] and start <= a["opened"] <= (end or now)]
++            following = next((s for t, s in segments if t == end), None) if end else None
++            result = (", ".join(a["outcome"] for a in closed) if closed else "gate open" if opened else "running" if end is None
++                      else "redispatched" if following == stage else f"next {following}" if following else "archived")
++            rounds.append({"round": len(rounds) + 1, "start": iso(start), "end": iso(end),
++                           "minutes": mins(start, end or now), "result": result})
+         out.append({
+             "stage": stage, "start": iso(row["start"]), "end": iso(row["end"]),
+             "elapsed_min": round(row["elapsed"], 1),
+@@ -147,6 +158,7 @@ def timeline(state, slug):
+             "captain_wait_min": round(wait, 1), "after_gate_min": after,
+             "dispatches": n, "repeat_dispatches": max(n - 1, 0), "dispatch_records": len(records.get(stage, {})),
+             "gate_attempts": [{**a, "opened": iso(a["opened"]), "closed": iso(a["closed"])} for a in attempts],
++            "rounds": rounds,
+         })
+     asks_file = folder(task) / "asks.jsonl"
+     asks = [json.loads(line) for line in asks_file.read_text().splitlines() if line.strip()] if asks_file.is_file() else []
+@@ -183,6 +195,8 @@ def show(t):
+         print(f"  {r['stage']}: {r['start']} -> {r['end'] or 'running'}  {r['elapsed_min']} min "
+               f"(before gate {r['before_gate_min']}, Captain wait {r['captain_wait_min']}, after gate {r['after_gate_min']}); "
+               f"dispatches {r['dispatches']}, repeats {r['repeat_dispatches']}")
++        for x in r["rounds"]:
++            print(f"    round {x['round']}: {x['start']} -> {x['end'] or 'running'}  {x['minutes']} min; {x['result']}")
+         print(f"    asks outside a gate: {r['asks_outside_gate'] if r['asks_outside_gate'] is not None else 'not recorded'}")
+         for ask in r["asks"]:
+             print(f"      {ask['at']}: {ask['asked']}")
+diff --git a/kc-dev-flow-2/scripts/test_dispatch_stage.py b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+index 573b8989c..cbd8ecc3d 100644
+--- a/kc-dev-flow-2/scripts/test_dispatch_stage.py
++++ b/kc-dev-flow-2/scripts/test_dispatch_stage.py
+@@ -196,6 +196,44 @@ class DispatchStageTests(unittest.TestCase):
+         self.assertIn("spent implementation 2, validation 0", resumed.stderr)
+         self.assertIn("Budget: two cycles per stage\n", self.record("implementation", 2).read_text())
+ 
++    def test_probe_ideation_bound_holds_the_dispatch_past_it(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 1 ideation, 1 implementation and 2 validation cycles\n")
++        self.commit_task()
++        first = self.build("ideation")
++        self.assertIn("budget: Budget: 1 ideation, 1 implementation and 2 validation cycles; spent ideation 1,", first.stderr)
++        self.checklist.write_text(self.checklist.read_text() + "Revise the design after the gate\n")
++        held = self.build("ideation", ("--spacedock", self.spy), expected=1)
++        self.assertIn("budget exceeded; hold for the Captain", held.stderr)
++        self.assertFalse(self.marker.exists())
++        self.assertFalse(self.record("ideation", 2).exists())
++
++    def test_probe_pilot_default_holds_the_third_ideation(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 1 implementation and 2 validation cycles\n")
++        self.commit_task()
++        quiet = self.build("ideation")
++        self.assertIn("spent ideation 1 of 2 by default, implementation 0", quiet.stderr)
++        for number in (2, 3):
++            self.checklist.write_text(self.checklist.read_text() + f"Round {number}\n")
++            result = self.build("ideation", expected=0 if number == 2 else 1)
++        self.assertIn("budget exceeded; hold for the Captain", result.stderr)
++        self.assertFalse(self.record("ideation", 3).exists())
++        prod = self.entity.read_text().replace("profile: pilot", "profile: prod")
++        self.entity.write_text(prod)
++        self.commit_task()
++        self.build("ideation")
++        self.assertTrue(self.record("ideation", 3).exists())
++
++    def test_probe_no_budget_prints_nothing_at_ideation(self):
++        self.assertNotIn("budget:", self.build("ideation").stderr)
++
++    def test_probe_ideation_ignores_owed_special_roles(self):
++        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 2 ideation, 1 implementation and 2 validation cycles\n"
++                               "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「change it」\n"
++                               "Asked: change it\nSupersedes: AC-1\n")
++        self.commit_task()
++        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
++        self.build("ideation")
++
+     def test_total_cap_holds_before_build_and_keeps_existing_results(self):
+         self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 240 累計代理分鐘、最多 1 次派工，含一輪修正\n")
+         self.set_stage("implementation")

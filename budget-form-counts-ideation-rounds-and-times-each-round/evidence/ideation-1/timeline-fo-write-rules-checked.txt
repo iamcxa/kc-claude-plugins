@@ -1,0 +1,24 @@
+task: fo-write-rules-checked
+  backlog: 2026-10-20T04:56:52Z -> 2026-10-20T04:56:55Z  0.1 min (before gate 0.0, Captain wait 0.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-20T04:56:52Z, closed 2026-10-20T04:56:55Z, approve
+  ideation: 2026-10-20T04:58:17Z -> 2026-10-20T13:26:10Z  507.8 min (before gate 359.1, Captain wait 146.5, after gate 2.2); dispatches 4, repeats 3
+    round 1: 2026-10-20T04:58:17Z -> 2026-10-20T08:19:08Z  200.8 min; redispatched
+    round 2: 2026-10-20T08:19:08Z -> 2026-10-20T09:30:40Z  71.5 min; redispatched
+    round 3: 2026-10-20T09:30:40Z -> 2026-10-20T10:26:12Z  55.5 min; redispatched
+    round 4: 2026-10-20T10:26:12Z -> 2026-10-20T13:26:10Z  180.0 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-20T10:57:26Z, closed 2026-10-20T13:23:56Z, approve
+  implementation: 2026-10-20T13:26:10Z -> 2026-10-20T15:29:46Z  66.9 min (before gate 66.9, Captain wait 0, after gate 0.0); dispatches 3, repeats 2
+    round 1: 2026-10-20T13:26:10Z -> 2026-10-20T13:58:19Z  32.1 min; next validation
+    round 2: 2026-10-20T14:46:41Z -> 2026-10-20T14:55:53Z  9.2 min; next validation
+    round 3: 2026-10-20T15:04:08Z -> 2026-10-20T15:29:46Z  25.6 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-20T13:58:19Z -> 2026-10-21T00:44:59Z  611.8 min (before gate 597.5, Captain wait 5.8, after gate 8.5); dispatches 3, repeats 2
+    round 1: 2026-10-20T13:58:19Z -> 2026-10-20T14:46:41Z  48.4 min; next implementation
+    round 2: 2026-10-20T14:55:53Z -> 2026-10-20T15:04:08Z  8.2 min; next implementation
+    round 3: 2026-10-20T15:29:46Z -> 2026-10-21T00:44:59Z  555.2 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T00:30:42Z, closed 2026-10-21T00:36:28Z, approve
+  done: 2026-10-21T00:44:59Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 3

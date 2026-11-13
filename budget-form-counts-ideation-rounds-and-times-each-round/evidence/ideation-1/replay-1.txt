@@ -1,0 +1,3 @@
+case 1: task merge-ask-holds-missing-clauses (profile pilot), budget '2 ideation, 1 implementation and 2 validation cycles', pending ideation-2
+budget: Budget: 2 ideation, 1 implementation and 2 validation cycles; spent ideation 2, implementation 0, validation 0
+exit 0

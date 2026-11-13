@@ -1,0 +1,35 @@
+................................................... [ 80%]
+....FF......                                                             [100%]
+=================================== FAILURES ===================================
+___ BudgetTest.test_old_first_stage_record_never_opts_in_with_later_headers ____
+
+self = <test_role_triggers.BudgetTest testMethod=test_old_first_stage_record_never_opts_in_with_later_headers>
+
+    def test_old_first_stage_record_never_opts_in_with_later_headers(self):
+        self.seed()
+        self.record("ideation", 1, header=False)
+        self.record("implementation", 2)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+>       self.assertIn("spent implementation 2", out)
+E       AssertionError: 'spent implementation 2' not found in 'budget: Budget: One cycle per stage.; spent ideation 1 of 2 by default, implementation 2, validation 0\n'
+
+test_role_triggers.py:915: AssertionError
+_______ BudgetTest.test_pending_overrun_holds_and_an_amendment_clears_it _______
+
+self = <test_role_triggers.BudgetTest testMethod=test_pending_overrun_holds_and_an_amendment_clears_it>
+
+    def test_pending_overrun_holds_and_an_amendment_clears_it(self):
+        self.seed()
+        self.record("ideation", 1)
+        self.record("implementation", 1)
+        code, out = run(self.state, SLUG)
+        self.assertEqual(code, 0, out)
+>       self.assertIn("Budget: One cycle per stage.; spent implementation 1, validation 0", out)
+E       AssertionError: 'Budget: One cycle per stage.; spent implementation 1, validation 0' not found in 'budget: Budget: One cycle per stage.; spent ideation 1 of 2 by default, implementation 1, validation 0\n'
+
+test_role_triggers.py:877: AssertionError
+=========================== short test summary info ============================
+FAILED test_role_triggers.py::BudgetTest::test_old_first_stage_record_never_opts_in_with_later_headers
+FAILED test_role_triggers.py::BudgetTest::test_pending_overrun_holds_and_an_amendment_clears_it
+2 failed, 61 passed in 133.06s (0:02:13)

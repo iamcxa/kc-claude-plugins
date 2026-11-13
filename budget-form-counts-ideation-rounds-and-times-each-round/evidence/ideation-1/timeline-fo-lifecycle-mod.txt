@@ -1,0 +1,42 @@
+task: fo-lifecycle-mod
+  backlog: 2026-10-13T23:49:43Z -> 2026-10-13T23:51:07Z  1.4 min (before gate 0.0, Captain wait 1.4, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-13T23:49:43Z, closed 2026-10-13T23:51:07Z, approve
+  ideation: 2026-10-13T23:51:23Z -> 2026-10-14T05:40:20Z  173.4 min (before gate 59.8, Captain wait 112.2, after gate 1.4); dispatches 3, repeats 2
+    round 1: 2026-10-13T23:51:23Z -> 2026-10-13T23:53:07Z  1.7 min; redispatched
+    round 2: 2026-10-13T23:53:07Z -> 2026-10-14T01:53:09Z  120.0 min; approve
+    round 3: 2026-10-14T04:48:38Z -> 2026-10-14T05:40:20Z  51.7 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-14T00:17:41Z, closed 2026-10-14T01:52:36Z, approve
+    gate attempt 2: opened 2026-10-14T05:22:06Z, closed 2026-10-14T05:39:25Z, approve
+  implementation: 2026-10-14T01:53:09Z -> 2026-10-14T14:42:12Z  232.5 min (before gate 232.5, Captain wait 0, after gate 0.0); dispatches 16, repeats 15
+    round 1: 2026-10-14T01:53:09Z -> 2026-10-14T02:01:53Z  8.7 min; redispatched
+    round 2: 2026-10-14T02:01:53Z -> 2026-10-14T02:28:35Z  26.7 min; redispatched
+    round 3: 2026-10-14T02:28:35Z -> 2026-10-14T02:36:26Z  7.8 min; next validation
+    round 4: 2026-10-14T02:54:45Z -> 2026-10-14T02:58:49Z  4.1 min; redispatched
+    round 5: 2026-10-14T02:58:49Z -> 2026-10-14T03:09:30Z  10.7 min; next validation
+    round 6: 2026-10-14T05:40:20Z -> 2026-10-14T06:15:02Z  34.7 min; next validation
+    round 7: 2026-10-14T06:58:29Z -> 2026-10-14T07:02:32Z  4.0 min; redispatched
+    round 8: 2026-10-14T07:02:32Z -> 2026-10-14T07:17:32Z  15.0 min; next validation
+    round 9: 2026-10-14T07:58:23Z -> 2026-10-14T08:00:37Z  2.2 min; redispatched
+    round 10: 2026-10-14T08:00:37Z -> 2026-10-14T08:28:45Z  28.1 min; next validation
+    round 11: 2026-10-14T08:36:40Z -> 2026-10-14T08:38:27Z  1.8 min; redispatched
+    round 12: 2026-10-14T08:38:27Z -> 2026-10-14T09:23:58Z  45.5 min; redispatched
+    round 13: 2026-10-14T09:23:58Z -> 2026-10-14T09:38:51Z  14.9 min; next validation
+    round 14: 2026-10-14T14:06:15Z -> 2026-10-14T14:24:38Z  18.4 min; next validation
+    round 15: 2026-10-14T14:32:18Z -> 2026-10-14T14:35:50Z  3.5 min; redispatched
+    round 16: 2026-10-14T14:35:50Z -> 2026-10-14T14:42:12Z  6.4 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-14T02:36:26Z -> 2026-10-14T23:32:30Z  1015.1 min (before gate 500.2, Captain wait 68.8, after gate 446.1); dispatches 8, repeats 7
+    round 1: 2026-10-14T02:36:26Z -> 2026-10-14T02:54:45Z  18.3 min; next implementation
+    round 2: 2026-10-14T03:09:30Z -> 2026-10-14T04:48:38Z  99.1 min; next ideation
+    round 3: 2026-10-14T06:15:02Z -> 2026-10-14T06:58:29Z  43.5 min; next implementation
+    round 4: 2026-10-14T07:17:32Z -> 2026-10-14T07:58:23Z  40.9 min; next implementation
+    round 5: 2026-10-14T08:28:45Z -> 2026-10-14T08:36:40Z  7.9 min; next implementation
+    round 6: 2026-10-14T09:38:51Z -> 2026-10-14T14:06:15Z  267.4 min; next implementation
+    round 7: 2026-10-14T14:24:38Z -> 2026-10-14T14:32:18Z  7.7 min; next implementation
+    round 8: 2026-10-14T14:42:12Z -> 2026-10-14T23:32:30Z  530.3 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-14T14:57:35Z, closed 2026-10-14T16:06:22Z, approve
+  done: 2026-10-14T23:32:30Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 6

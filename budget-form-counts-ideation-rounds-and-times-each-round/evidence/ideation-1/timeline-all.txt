@@ -1,0 +1,2 @@
+archived tasks: 169; at least one stage timed: 146; with a repeat dispatch: 99; with a withdrawn gate attempt: 30; with an amendment outside a gate: 61; with asks.jsonl: 0
+no stage timed: 23 tasks (names omitted)

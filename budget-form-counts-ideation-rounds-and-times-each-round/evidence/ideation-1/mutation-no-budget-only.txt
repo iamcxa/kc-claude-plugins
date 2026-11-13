@@ -1,0 +1,24 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+______ DispatchStageTests.test_probe_ideation_ignores_owed_special_roles _______
+
+self = <test_dispatch_stage.DispatchStageTests testMethod=test_probe_ideation_ignores_owed_special_roles>
+
+    def test_probe_ideation_ignores_owed_special_roles(self):
+        self.entity.write_text(self.entity.read_text() + "\n## Budget\n- 2 ideation, 1 implementation and 2 validation cycles\n"
+                               "\n## Captain amendments\n### Amendment 1 — 2026-11-11, chat\nCaptain: 「change it」\n"
+                               "Asked: change it\nSupersedes: AC-1\n")
+        self.commit_task()
+        self.checklist.write_text(self.checklist.read_text() + "Captain amendment 1\n")
+>       self.build("ideation")
+
+test_dispatch_stage.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+test_dispatch_stage.py:112: in build
+    return self.call([*launch, "--workflow-dir", self.workflow,
+test_dispatch_stage.py:89: in call
+    self.assertEqual(result.returncode, expected, (args, result.stdout, result.stderr))
+E   AssertionError: 1 != 0 : (['~/.pyenv/versions/3.11.14/bin/python3', '-B', PosixPath('~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/poc-budget-form-counts-ideation-rounds-and-times-each-round/kc-dev-flow-2/scripts/dispatch_stage.py'), '--workflow-dir', PosixPath('$TMPDIR/dispatch-stage-o2kbd3d1/code/docs/dev2'), '--entity-path', PosixPath('$TMPDIR/dispatch-stage-o2kbd3d1/code/docs/dev2/.spacedock-state/dispatch-fixture-3b9ddf5160464499ac2a5532ce3b42b5.md'), '--stage', 'ideation', '--model', 'fixture-model', '--checklist-file', PosixPath('$TMPDIR/dispatch-stage-o2kbd3d1/checklist.txt'), '--scope-notes-file', PosixPath('$TMPDIR/dispatch-stage-o2kbd3d1/notes.txt'), '--spacedock', '~/.local/bin/spacedock', '--host', 'codex'], '', 'dispatch_stage: dispatch not built; dispatch-fixture-3b9ddf5160464499ac2a5532ce3b42b5 budget or special-role check held:\nnext: dispatch-fixture-3b9ddf5160464499ac2a5532ce3b42b5 has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus or gpt-6-astra with the question "do these amendments withdraw what the Captain approved, and what changes in the build?" and record `Reviewer: kc-dev-flow-2:engineering-reviewer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>` instead.\nbudget: Budget: 2 ideation, 1 implementation and 2 validation cycles; spent ideation 1, implementation 0, validation 0\n')
+=========================== short test summary info ============================
+FAILED test_dispatch_stage.py::DispatchStageTests::test_probe_ideation_ignores_owed_special_roles
+1 failed, 1 passed, 52 deselected in 4.01s

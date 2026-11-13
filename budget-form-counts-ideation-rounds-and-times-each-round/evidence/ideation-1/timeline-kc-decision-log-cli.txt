@@ -1,0 +1,25 @@
+task: kc-decision-log-cli
+  backlog: 2026-10-21T01:14:13Z -> 2026-10-21T01:19:19Z  5.1 min (before gate 0.0, Captain wait 5.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T01:14:13Z, closed 2026-10-21T01:19:19Z, approve
+  ideation: 2026-10-21T01:21:24Z -> 2026-10-21T18:48:00Z  914.4 min (before gate 66.6, Captain wait 257.0, after gate 590.8); dispatches 3, repeats 2
+    round 1: 2026-10-21T01:21:24Z -> 2026-10-21T12:51:59Z  690.6 min; approve
+    round 2: 2026-10-21T12:51:59Z -> 2026-10-21T16:35:44Z  223.8 min; approve
+    round 3: 2026-10-21T18:48:00Z -> 2026-10-21T18:48:00Z  0.0 min; redispatched
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T02:14:42Z, closed 2026-10-21T03:01:58Z, approve
+    gate attempt 2: opened 2026-10-21T13:05:11Z, closed 2026-10-21T16:34:54Z, approve
+  implementation: 2026-10-21T16:35:44Z -> 2026-10-22T01:18:38Z  446.9 min (before gate 446.9, Captain wait 0, after gate 0.0); dispatches 5, repeats 4
+    round 1: 2026-10-21T16:35:44Z -> 2026-10-21T17:11:26Z  35.7 min; next validation
+    round 2: 2026-10-21T17:16:43Z -> 2026-10-21T17:35:24Z  18.7 min; redispatched
+    round 3: 2026-10-21T17:35:24Z -> 2026-10-21T17:37:20Z  1.9 min; next validation
+    round 4: 2026-10-21T18:48:00Z -> 2026-10-22T01:15:26Z  387.4 min; redispatched
+    round 5: 2026-10-22T01:15:26Z -> 2026-10-22T01:18:38Z  3.2 min; archived
+    asks outside a gate: not recorded
+  validation: 2026-10-21T17:11:26Z -> 2026-10-21T18:48:00Z  76.0 min (before gate 9.8, Captain wait 36.7, after gate 29.5); dispatches 2, repeats 1
+    round 1: 2026-10-21T17:11:26Z -> 2026-10-21T17:16:43Z  5.3 min; next implementation
+    round 2: 2026-10-21T17:37:20Z -> 2026-10-21T18:48:00Z  70.7 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T17:41:44Z, closed 2026-10-21T18:18:27Z, approve
+  done: 2026-10-22T01:18:38Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 7

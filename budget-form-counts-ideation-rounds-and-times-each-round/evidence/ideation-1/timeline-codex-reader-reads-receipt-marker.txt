@@ -1,0 +1,24 @@
+task: codex-reader-reads-receipt-marker
+  backlog: 2026-10-21T07:26:18Z -> 2026-10-21T07:28:37Z  2.3 min (before gate 0.0, Captain wait 2.3, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T07:26:18Z, closed 2026-10-21T07:28:37Z, approve
+  ideation: 2026-10-21T07:29:50Z -> 2026-10-21T14:52:37Z  442.8 min (before gate 369.6, Captain wait 72.5, after gate 0.7); dispatches 3, repeats 2
+    round 1: 2026-10-21T07:29:50Z -> 2026-10-21T09:12:33Z  102.7 min; revise
+    round 2: 2026-10-21T09:12:33Z -> 2026-10-21T11:50:58Z  158.4 min; redispatched
+    round 3: 2026-10-21T11:50:58Z -> 2026-10-21T14:52:37Z  181.7 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-21T08:00:05Z, closed 2026-10-21T09:12:30Z, revise
+    gate attempt 2: opened 2026-10-21T14:51:53Z, closed 2026-10-21T14:51:56Z, approve
+  implementation: 2026-10-21T14:52:37Z -> 2026-10-21T18:50:14Z  55.7 min (before gate 55.7, Captain wait 0, after gate 0.0); dispatches 3, repeats 2
+    round 1: 2026-10-21T14:52:37Z -> 2026-10-21T15:16:22Z  23.8 min; next validation
+    round 2: 2026-10-21T18:01:23Z -> 2026-10-21T18:12:36Z  11.2 min; next validation
+    round 3: 2026-10-21T18:29:34Z -> 2026-10-21T18:50:14Z  20.7 min; next validation
+    asks outside a gate: not recorded
+  validation: 2026-10-21T15:16:22Z -> 2026-10-22T01:28:51Z  580.6 min (before gate 551.1, Captain wait 21.0, after gate 8.5); dispatches 3, repeats 2
+    round 1: 2026-10-21T15:16:22Z -> 2026-10-21T18:01:23Z  165.0 min; next implementation
+    round 2: 2026-10-21T18:12:36Z -> 2026-10-21T18:29:34Z  17.0 min; next implementation
+    round 3: 2026-10-21T18:50:14Z -> 2026-10-22T01:28:51Z  398.6 min; approve
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-10-22T00:59:18Z, closed 2026-10-22T01:20:20Z, approve
+  done: 2026-10-22T01:28:51Z
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 1; amendments outside a gate: 3

@@ -1,0 +1,70 @@
+DIFF agent-messages-are-english
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF architecture-documents-have-a-layout-and-each-fact-one-home
+    < budget: Budget: One ideation, one implementation and one validation cycle, in one package PR to the three files named above and their tests. A check script, if the design asks for one, is a sepa
+    > budget: Budget: One ideation, one implementation and one validation cycle, in one package PR to the three files named above and their tests. A check script, if the design asks for one, is a sepa
+DIFF budget-form-counts-ideation-rounds-and-times-each-round
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 0, validation 0
+DIFF captain-question-outside-a-gate-is-an-open-record
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF delivery-gate-s4-skips-removed-scratch
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR to delivery_gate.py and its tests.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR to delivery_gate.py and its tests.; spent ideation 1 of 2 by default, implementation 0, validation 0
+DIFF design-check-reads-each-pilot-criterion-for-its-proof-record
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 0, validation 0
+DIFF design-surfaces-task-dir-crash
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 1, validation 1
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 1
+DIFF dispatch-close-out-archives-evidence-and-removes-scratch
+    < budget: Budget: 1 implementation and 3 validation cycles; spent implementation 1, validation 3
+    > budget: Budget: 1 implementation and 3 validation cycles; spent ideation 1 of 2 by default, implementation 1, validation 3
+DIFF each-task-records-stage-time-revises-and-interruptions
+    < budget: Budget: 1 implementation and 2 validation cycles; spent implementation 1, validation 2
+    > budget: Budget: 1 implementation and 2 validation cycles; spent ideation 1 of 2 by default, implementation 1, validation 2
+DIFF evidence-is-declared-public-before-state-publication
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF gate-question-facts-are-checked-before-the-captain-reads-them
+    < budget: Budget: 1 implementation and 2 validation cycles; spent implementation 1, validation 2
+    > budget: Budget: 1 implementation and 2 validation cycles; spent ideation 1 of 2 by default, implementation 1, validation 2
+DIFF held-and-closed-tasks-leave-the-design-queue
+    < budget: Budget: 1 implementation and 3 validation cycles; spent implementation 1, validation 3
+    > budget: Budget: 1 implementation and 3 validation cycles; spent ideation 1 of 2 by default, implementation 1, validation 3
+DIFF main-tests-pass-with-worth-check-and-story-test
+    < budget: Budget: One ideation, one implementation and one validation cycle, in one package PR to the file or files the design names under `kc-dev-flow-2/scripts/`.; spent implementation 1, valida
+    > budget: Budget: One ideation, one implementation and one validation cycle, in one package PR to the file or files the design names under `kc-dev-flow-2/scripts/`.; spent ideation 1, implementati
+DIFF merge-ask-is-produced-from-records
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF merge-ask-tests-the-merge-result
+    < budget: Budget: 1 cycle per stage, in one package PR.; spent implementation 1, validation 1
+    > budget: Budget: 1 cycle per stage, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 1
+DIFF new-work-checks-what-exists-first
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 1, validation 2
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 2
+DIFF observer-check-learn-only-when-listed
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 1, validation 1
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 1
+DIFF pilot-ideation-runs-a-probe-before-the-design
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 1, validation 2
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 2
+DIFF pr-watch-tasks-foreign-worktree
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 1, validation 1
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 1 of 2 by default, implementation 1, validation 1
+DIFF ready-pr-gets-a-codex-code-review-without-fo-noticing
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF validation-rerun-survives-repaired-history
+    < budget: Budget: One implementation and one validation cycle, in one package PR to `scripts/dispatch_records.py` and its tests, plus an ADR change only if the design shows 0045's words exclude th
+    > budget: Budget: One implementation and one validation cycle, in one package PR to `scripts/dispatch_records.py` and its tests, plus an ADR change only if the design shows 0045's words exclude th
+DIFF validator-commands-fit-the-delivery-check
+    < budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent implementation 0, validation 0
+    > budget: Budget: 1 implementation and 2 validation cycles, in one package PR.; spent ideation 0 of 2 by default, implementation 0, validation 0
+DIFF worth-questions-asked-only-before-the-design-gate
+    < budget: Budget: 1 cycle per stage, in one package PR to `kc-dev-flow-2/scripts/design_surfaces.py`, its tests and, if the design shows ADR 0077's words exclude the outcome, that ADR.; spent impl
+    > budget: Budget: 1 cycle per stage, in one package PR to `kc-dev-flow-2/scripts/design_surfaces.py`, its tests and, if the design shows ADR 0077's words exclude the outcome, that ADR.; spent idea
+tasks compared: 247; differing: 23
