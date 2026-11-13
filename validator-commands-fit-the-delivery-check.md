@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:validator-commands-fit-the-delivery-check:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:validator-commands-fit-the-delivery-check-backlog-1
+              briefing:
+                id: briefing:validator-commands-fit-the-delivery-check:backlog:attempt-1:revision-1
+                digest: sha256:288f023b60dc235976f0c8d8332ebb7908c15f28934f09f9e4debe03f834d997
+                room-ref: ./validator-commands-fit-the-delivery-check/review/backlog/briefing-1
 ---
 
 ## Scope
