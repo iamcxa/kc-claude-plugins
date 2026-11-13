@@ -364,7 +364,13 @@ def reviewer_config(scalars, lists):
     return second, extensions
 
 
-def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None):
+def copilot_retry_problems(text):
+    if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
+        return ["copilot not run needs the conditional retry offer"]
+    return []
+
+
+def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None, observations=None):
     problems = []
     if second:
         rows = re.findall(r"(?i)\bsecond reviewer:[ \t]*([^\n]*)", text)
@@ -377,6 +383,21 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None, hea
                 problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
         elif not re.match(re.escape(second) + r"[ \t]+because[ \t]+\S", rows[0], re.I):
             problems.append(f"second reviewer declaration must name {second} because <nonempty trigger>, or not triggered")
+    if observations is not None:
+        plain = "\n".join(outside_fences(text))
+        if {row["reviewer"] for row in observations} != set(extensions) & {"codex", "copilot", "roborev"}:
+            problems.append("configured reviewers differ from the delivery observation")
+        for row in observations:
+            reviewer, outcome, identity = row["reviewer"], row["outcome"], row.get("evidence")
+            if outcome in {"findings", "answered"}:
+                decisions = re.findall(rf"^Review decision:[ \t]*{re.escape(reviewer)}[ \t]+{re.escape(identity or '')}[ \t]+(clean|disposed):[ \t]+(\S.*)$", plain, re.M | re.I)
+                if not identity or len(decisions) != 1 or (outcome == "findings" and decisions[0][0].lower() != "disposed"):
+                    problems.append(f"{reviewer} needs one FO review decision at {identity or 'a missing evidence identity'}")
+            if reviewer == "copilot" and outcome == "not-run":
+                if not re.search(r"(?im)^Copilot (?:not read|not run):[ \t]*\S", plain):
+                    problems.append("the question needs the Copilot unread decision")
+                problems += copilot_retry_problems(plain)
+        return problems, (["next: hold the ask; record the FO review decision or unread/retry decision in the question."] if problems else [])
     if "copilot" in extensions:
         for skipped in re.finditer(r"(?i)\bcopilot skipped:[ \t]*([^\n]*)", text):
             kind = re.fullmatch(r"([a-z]+) PR[.]?[ \t]*", skipped[1], re.I)
@@ -405,8 +426,7 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None, hea
                 disclosure = f'Copilot not read: {head.lower()}; last refusal: {source["head"]}'
                 if not re.search(rf"(?im)^{re.escape(disclosure)}[.]?[ \t]*$", text):
                     problems.append(f"Copilot refusal is for {source['head']}, not PR head {head.lower()}; add a separate '{disclosure}' line")
-            if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
-                problems.append("copilot not run needs the conditional retry offer")
+            problems += copilot_retry_problems(text)
     return problems, (["next: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer."] if problems else [])
 
 
@@ -793,9 +813,10 @@ def check(args):
     if observed:
         try:
             reviewers = reviewer_facts(repo, number, extensions, str((facts or {}).get("headRefOid", "")))
+            found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions, observations=reviewers)
+            problems += found
+            nexts += wanted
             untriggered = bool(second and re.search(r"(?im)^Second reviewer:[ \t]*not triggered[.; \t]*$", gate_text))
-            if untriggered and (re.search(r"^profile:[ \t]*prod[ \t]*$", task_text, re.M) or re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)):
-                problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
             if any(row["outcome"] == "error" for row in reviewers):
                 holds.append("cannot read a configured reviewer")
             if any(row["outcome"] == "pending" and not (untriggered and row["reviewer"] == second) for row in reviewers):
@@ -849,6 +870,7 @@ def check(args):
                     "trunk": trunk_observation, "role_calls": {"exit": code},
                     "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), "public": True,
                     "question_sha256": hashlib.sha256(text_file.read_bytes()).hexdigest(),
+                    **disclosure_facts(task_folder(task), gate_text, (facts or {}).get("body") or ""),
                     "candidate": [c for c in candidates if c == (facts or {}).get("headRefOid")], "validation": verdict,
                     "ci": [{k: row.get(k) for k in ("status", "conclusion", "state")} for row in (facts or {}).get("statusCheckRollup", [])],
                     "workflow_runs": [{k: row.get(k) for k in ("id", "status", "conclusion")} for row in runs or []],
@@ -1076,6 +1098,15 @@ def scope_disclosure(folder, sources, extra=""):
     return results
 
 
+def disclosure_facts(folder, text, extra):
+    copies = scope_pr_copies(folder, extra)
+    text = "\n".join(line for line in text.splitlines() if line not in copies)
+    _, unchecked = count_problems(folder, text + "\n" + extra)
+    claims = scope_claims(folder, text) + scope_claims(folder, extra)
+    return {"unchecked_counts": len(unchecked),
+            "scope_disclosure": {"cited": sum(row[2] for row in claims), "marked": sum(not row[2] for row in claims), "mark": SCOPE_MARK}}
+
+
 def count_disclosure(folder, text, destination, declared):
     # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
     checked, unchecked = count_problems(folder, text)
@@ -1199,6 +1230,11 @@ def captain_step_problems(task, gate_text, summary):
     return []
 
 
+def merge_head_matches(head, text):
+    grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
+    return bool(grants) and all(head.startswith(sha) for sha in grants)
+
+
 def matching_delivery_record(task, text):
     records = [(int(m[1]), path) for path in (task_folder(task) / "merge").glob("ask-*.json")
                if (m := re.fullmatch(r"ask-(\d+)\.json", path.name))]
@@ -1212,8 +1248,7 @@ def matching_delivery_record(task, text):
     if not isinstance(record, dict) or not isinstance(head := record.get("head"), str) or not re.fullmatch(r"[0-9a-f]{7,40}", head):
         return None
     candidates, _ = dispatched_candidates(task)
-    grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
-    if not any(candidate.startswith(head) for candidate in candidates) or not grants or not all(head.startswith(sha) for sha in grants):
+    if not any(candidate.startswith(head) for candidate in candidates) or not merge_head_matches(head, text):
         return None
     if any(record.get(label.lower()) != clean(clause(text, label) or "")[:200] for label in CONFIRMATIONS):
         return None
@@ -1360,9 +1395,15 @@ def facts_question(args):
             raise ValueError("validation changed since facts were observed")
         if data.get("result", {}).get("exit") != 0:
             raise ValueError("delivery check is held")
-        if GRANT.search(text) and (any(not data["head"].startswith(x) for x in re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})", text))):
+        if GRANT.search(text) and not merge_head_matches(data["head"], text):
             raise ValueError("delivery is held or the merge head differs")
         problems, _ = text_problems(task.read_text(), text, at_gate=True, confirmations=False)
+        workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
+        if not workflow_dir:
+            raise ValueError("cannot read current reviewer configuration")
+        second, extensions = reviewer_config(scalars, lists)
+        found, _ = reviewer_problems(task, task.read_text(), text, second, extensions, observations=data["reviewers"])
+        problems += found
         if GRANT.search(text) and not WORKTREE_REMOVAL.search(text):
             problems.append("question omits removing its clean, pushed worktree")
         if data.get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(text))):

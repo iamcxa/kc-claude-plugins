@@ -3580,5 +3580,100 @@ class ObservedFactsTests(unittest.TestCase):
                 self.assertNotEqual(gate.saved_rounds(task, rows), declared)
 
 
+class RecordRouteParityTests(unittest.TestCase):
+    def paired(self, *, rows=None, declaration=DECLARATION, decisions=True, outcome=True,
+               extra="", head=HEAD40, profile="pilot", after_config=False, refusal=False):
+        rows = rows if rows is not None else [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                                              dict(reviewer="copilot", head=HEAD40, exit=0, outcome="answered", evidence="review:2", scope="pr")]
+        result = {}
+        for route in ("legacy", "record"):
+            with tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                task, question, summary, combined = [root / name for name in ("task.md", "question.txt", "summary.txt", "combined.txt")]
+                task.write_text(TASK.replace("profile: pilot", "profile: " + profile))
+                readme(root, REVIEWERS.replace("roborev, ", "").replace("second-reviewer: copilot", "second-reviewer: codex" if declaration.startswith("Second reviewer: codex") else "second-reviewer: copilot"))
+                proof = captain_record(task)
+                if profile != "pilot":
+                    security = gate.task_folder(task) / "security/validation-1.yaml"
+                    security.parent.mkdir()
+                    security.write_text("tob_security_review:\n  pr: 9\n  findings: []\n")
+                    task.write_text(task.read_text() + f"\nSecurity review (validation): security/validation-1.yaml at {HEAD40}\n")
+                judgment = "".join(f"Review decision: {r['reviewer']} {r['evidence']} {'disposed' if r['outcome'] == 'findings' else 'clean'}: Read this review and applied workflow dispositions.\n"
+                                   for r in rows if decisions and r["outcome"] in {"findings", "answered"})
+                ask = f"Review this candidate. Merge with --match-head-commit {head}, and removing its clean, pushed worktree, unless he says he merges or holds.\n"
+                question.write_text(ask + extra + judgment + (declaration if route == "record" else ""))
+                evidence = "Copilot review:2. Codex review:5.\n" if outcome else ""
+                if refusal:
+                    saved, evidence = globals()["refusal"]("Copilot quota limit.", head=HEAD40)
+                    source = gate.task_folder(task) / "review/copilot-not-run.txt"
+                    source.parent.mkdir(); source.write_text(saved)
+                summary.write_text(CLAUSES + ROUNDS + declaration + evidence + proof)
+                combined.write_text(question.read_text() + summary.read_text())
+                original = question.read_bytes()
+                with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=rows), contextlib.redirect_stdout(io.StringIO()):
+                    check = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question if route == "record" else combined)] + (["--record-facts"] if route == "record" else []))
+                    records = list((gate.task_folder(task) / "merge").glob("*.json"))
+                    data = json.loads(records[0].read_text()) if records else None
+                    if after_config:
+                        (root / "README.md").write_text((root / "README.md").read_text().replace("second-reviewer: copilot", "second-reviewer: invalid"))
+                    code = gate.main(["question", str(task), "--text-file", str(question)] +
+                                     (["--facts-record", str(records[0])] if route == "record" else ["--summary-file", str(summary)]))
+                result[route] = dict(check=check, question=code, data=data, text=question.read_text(), summary=summary.read_text(), unchanged=question.read_bytes() == original)
+        return result
+
+    def test_review_findings_need_the_fo_decision_missing_from_observations(self):
+        for reviewer, outcome in (("codex", "findings"), ("copilot", "answered")):
+            rows = [dict(reviewer=reviewer, head=HEAD40, exit=1 if reviewer == "codex" else 0, outcome=outcome, evidence="review:5", scope="pr")]
+            # The text route also needs an outcome for its configured second reviewer.
+            rows += [dict(reviewer="copilot" if reviewer == "codex" else "codex", head=HEAD40, exit=0, outcome="answered" if reviewer == "codex" else "clean", evidence="review:2", scope="pr")]
+            with self.subTest(reviewer=reviewer):
+                pair = self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n", decisions=False, outcome=False)
+                self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+                self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+                self.assertEqual(self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")["record"]["question"], 0)
+
+    def test_known_quota_refusal_needs_unread_and_retry_in_question(self):
+        rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                dict(reviewer="copilot", head=HEAD40, exit=5, outcome="not-run", evidence=None, scope="pr")]
+        pair = self.paired(rows=rows, refusal=True)
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+        for extra in ("Copilot not read: Captain decides whether to proceed.\n", RETRY + "\n"):
+            self.assertEqual(self.paired(rows=rows, refusal=True, extra=extra)["record"]["question"], 1)
+        self.assertEqual(self.paired(rows=rows, refusal=True, extra="Copilot not read: Captain decides whether to proceed.\n" + RETRY + "\n")["record"]["question"], 0)
+
+    def test_configured_trigger_guard_includes_quoted_prod_profiles(self):
+        for declaration in ("", DECLARATION * 2, "Second reviewer: other because policy.\n", "Second reviewer: copilot because \n"):
+            pair = self.paired(declaration=declaration)
+            self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+        rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                dict(reviewer="copilot", head=HEAD40, exit=3, outcome="pending", evidence=None, scope="pr")]
+        for profile in ('"prod"', "'prod'"):
+            pair = self.paired(profile=profile, declaration="Second reviewer: not triggered.\n", rows=rows)
+            self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+        self.assertEqual(self.paired(declaration="Second reviewer: not triggered.\n", rows=rows)["record"]["question"], 0)
+
+    def test_merge_head_token_must_be_nonempty_and_bounded(self):
+        for head in ("", "not-a-sha", "a" * 41):
+            pair = self.paired(head=head)
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+        self.assertEqual(self.paired(head=HEAD40[:9])["record"]["question"], 0)
+
+    def test_question_reloads_current_reviewer_configuration(self):
+        pair = self.paired(after_config=True)
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+        for route in ("legacy", "record"):
+            self.assertNotEqual(pair[route]["question"], 0)
+
+    def test_computed_disclosures_are_record_fields_without_question_mutation(self):
+        pair = self.paired(extra="There are 17 checks. Existing tasks are not affected.\n")
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+        self.assertIn("Unchecked counts: 1", pair["legacy"]["summary"])
+        self.assertIn("（未對過紀錄）", pair["legacy"]["text"])
+        self.assertEqual(pair["record"]["data"].get("unchecked_counts"), 1)
+        self.assertEqual(pair["record"]["data"]["scope_disclosure"], {"cited": 0, "marked": 1, "mark": "（未對過紀錄）"})
+        self.assertTrue(pair["record"]["unchanged"])
+        assert_record_contract(self, pair["record"]["data"])
+
+
 if __name__ == "__main__":
     unittest.main()

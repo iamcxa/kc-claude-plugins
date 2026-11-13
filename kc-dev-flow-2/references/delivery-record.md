@@ -56,6 +56,12 @@ security-only/unrecognized responses and missing identities. Repeated reads add
 no round. This counts saved observations, not unobserved review history.
 `answered` means the adapter saw a review, not that FO found it clean.
 FO still reads findings and applies the workflow's disposition rules.
+For each `findings` or `answered` observation, the question needs one
+`Review decision: <reviewer> <evidence> disposed: <judgment>`; `answered` may
+instead use `clean:` after FO reads it. These are human judgments, not new
+adapter outcomes or proof of a truthful classification or Captain waiver.
+Both commands apply the shared reviewer declaration/profile guards; `question`
+rereads current reviewer configuration. Merge questions need a valid head token.
 
 List an unread reviewer in the question when the record cannot establish its
 status; the Captain decides. An untriggered conditional second reviewer is
@@ -67,7 +73,15 @@ the record route; legacy intentional not-read exceptions retain the text route.
 Exit 5 is not run, never a
 round or clean, and needs no wait. Do not request it again in this task until the
 Captain says quota is back; offer that retry in the question. The record route
-needs no refusal-quote boilerplate or copied review heading.
+needs no refusal-quote boilerplate or copied review heading. For exit 5 the question
+needs `Copilot not read: <decision>` (or `Copilot not run: <decision>`) and
+`Copilot retry: available when the Captain confirms quota is back.`
+
+The check scans the question and PR body with the text route's count/scope
+readers. It writes `unchecked_counts` and `scope_disclosure` counts plus the
+`（未對過紀錄）` mark into the record, without changing the question or copying
+claim prose. A marked count means uncited existing-item effect claims; these
+warnings neither hold the ask nor certify the claims.
 
 ### Legacy text route
 
@@ -95,7 +109,7 @@ permitted. Nested descriptions name the source or the meaning a reader may use.
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object", "additionalProperties": false,
-  "required": ["schema", "tool_version", "time", "public", "pr", "head", "candidate", "pr_state", "ci", "workflow_runs", "required_checks", "trunk", "merge_result", "validation", "reviewers", "external_rounds", "round_scope", "captain_steps", "question_sha256", "role_calls", "result"],
+  "required": ["schema", "tool_version", "time", "public", "pr", "head", "candidate", "pr_state", "ci", "workflow_runs", "required_checks", "trunk", "merge_result", "validation", "reviewers", "external_rounds", "round_scope", "captain_steps", "question_sha256", "unchecked_counts", "scope_disclosure", "role_calls", "result"],
   "properties": {
     "schema": {"const": "delivery-facts/v1", "description": "Format version; incompatible shapes require a new version."},
     "tool_version": {"type": "string", "description": "Producing package version, not a source commit."},
@@ -123,6 +137,9 @@ permitted. Nested descriptions name the source or the meaning a reader may use.
     "captain_steps": {"type": ["object", "null"], "additionalProperties": false, "required": ["path", "sha256", "candidate_matches"], "properties": {
       "path": {"type": "string", "pattern": "^captain-steps/[1-9][0-9]*\\.md$", "description": "Newest step record relative to task folder."}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "Step-source digest."}, "candidate_matches": {"type": "boolean", "description": "Step header equals observed head; not execution authentication."}}},
     "question_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "FO-written question byte digest."},
+    "unchecked_counts": {"type": "integer", "minimum": 0, "description": "Question and PR-body quantity claims without matching saved-number evidence; not a hold."},
+    "scope_disclosure": {"type": "object", "additionalProperties": false, "required": ["cited", "marked", "mark"], "properties": {
+      "cited": {"type": "integer", "minimum": 0, "description": "Existing-item effect claims citing task-local evidence."}, "marked": {"type": "integer", "minimum": 0, "description": "Uncited existing-item effect claims carrying the record's scope mark."}, "mark": {"const": "（未對過紀錄）", "description": "Unverified scope mark; claim prose stays outside the record."}}},
     "role_calls": {"type": "object", "additionalProperties": false, "required": ["exit"], "properties": {"exit": {"type": "integer", "description": "Special-role reader exit; nonzero holds."}}},
     "result": {"type": "object", "additionalProperties": false, "required": ["exit", "problems", "unreadable"], "properties": {
       "exit": {"enum": [0, 1, 2], "description": "0 passed, 1 problems, 2 unreadable without problems."}, "problems": {"type": "integer", "minimum": 0, "description": "Observed problem count."}, "unreadable": {"type": "integer", "minimum": 0, "description": "Unreadable-source count; problems take exit precedence."}}}
