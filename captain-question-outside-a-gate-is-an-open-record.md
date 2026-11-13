@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:captain-question-outside-a-gate-is-an-open-record:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:captain-question-outside-a-gate-is-an-open-record-ideation-1
+              briefing:
+                id: briefing:captain-question-outside-a-gate-is-an-open-record:ideation:attempt-1:revision-1
+                digest: sha256:2f0d2f0cc373f3c9c529f585316df1af1febefa9122a0bec0e9819935d61f882
+                room-ref: ./captain-question-outside-a-gate-is-an-open-record/review/ideation/briefing-1
 started: 2026-11-13T16:37:26Z
 ---
 
