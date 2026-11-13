@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-11-13T13:42:01.503467Z"
                 reason: The Captain answered the first question with a question about model and effort instead of a decision (chat, 2026-11-13); FO asked again with the build strength in the question, and that second question is the one he answered.
+            - id: gate-attempt:ready-pr-gets-a-codex-code-review-without-fo-noticing-backlog-2
+              briefing:
+                id: briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-2:revision-1
+                digest: sha256:2d5e803415b5053ec61bc21c8892c0ebd26c7ee9419e19cb563744f8ae4ac881
+                room-ref: ./ready-pr-gets-a-codex-code-review-without-fo-noticing/review/backlog/briefing-2
 ---
 
 ## Scope
