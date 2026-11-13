@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "0b620345b538b67f4c6522d8b97028038f1ec17d",
+  "merge_result": null,
+  "model": "not run",
+  "necessity": "the timeline helper, the design check, the question record contract, the workflow text, the lint budget, ADR 0086 and their tests change against the PR's base (gh pr view 870 file list, FO read 2026-1",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '`evidence/validation-2/acceptance.sh`: four steps run by `bash'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-11-14'",
+    "point: path: 'docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md'",
+    "point: path: 'kc-dev-flow-2/references/captain-question-records.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/task_timeline.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_task_timeline.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#870",
+  "sufficiency": "an ask outside a gate is written as a record naming who waits, what it holds, options and recommendation; each later showing, answer or withdrawal is appended; the plain open list and its JSON form li",
+  "time": "2026-11-13T18:51:49Z",
+  "verdict": "ask"
+}
