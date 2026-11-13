@@ -1,0 +1,43 @@
+[
+  {
+    "log": "timeline-first.log",
+    "summary": [
+      "Ran 27 tests in 9.625s",
+      "OK"
+    ]
+  },
+  {
+    "log": "design-first.log",
+    "summary": [
+      "Ran 238 tests in 20.876s",
+      "FAILED (failures=34, skipped=4)"
+    ]
+  },
+  {
+    "log": "design-second.log",
+    "summary": [
+      "Ran 238 tests in 20.749s",
+      "OK (skipped=4)"
+    ]
+  },
+  {
+    "log": "design-final.log",
+    "summary": [
+      "Ran 239 tests in 20.571s",
+      "OK (skipped=4)"
+    ]
+  },
+  {
+    "log": "timeline-final.log",
+    "summary": [
+      "Ran 27 tests in 7.400s",
+      "OK"
+    ]
+  },
+  {
+    "log": "ac1-pytest.log",
+    "summary": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15: No module named pytest"
+    ]
+  }
+]

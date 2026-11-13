@@ -1,0 +1,111 @@
+FFFFFFFFFF
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='answer', event='reask')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='answer', event='revise')
+----------------------------------------------------------------------
+ValueError: revision must be previous + 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "after closing" does not match "revision must be previous + 1"
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='answer', event='answer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='answer', event='withdraw')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='answer', event='acted')
+----------------------------------------------------------------------
+ValueError: acted needs an answer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "after closing" does not match "acted needs an answer"
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='withdraw', event='reask')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='withdraw', event='revise')
+----------------------------------------------------------------------
+ValueError: revision must be previous + 1
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "after closing" does not match "revision must be previous + 1"
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='withdraw', event='answer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='withdraw', event='withdraw')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_contract_writer_refuses_every_event_after_closing_except_one_acted (__main__.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted) (closed='withdraw', event='acted')
+----------------------------------------------------------------------
+ValueError: acted needs an answer
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 287, in test_contract_writer_refuses_every_event_after_closing_except_one_acted
+    with self.assertRaisesRegex(ValueError, "after closing"):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "after closing" does not match "acted needs an answer"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.040s
+
+FAILED (failures=10)

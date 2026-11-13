@@ -1,0 +1,206 @@
+[
+  {
+    "key": "briefing:design-surfaces-task-dir-crash:backlog:attempt-1:revision-1",
+    "since": "2026-11-12T17:01:14Z",
+    "closed": "2026-11-12T17:01:18.104672Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:design-surfaces-task-dir-crash:ideation:attempt-1:revision-1",
+    "since": "2026-11-12T17:24:34Z",
+    "closed": "2026-11-12T17:24:38.140168Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:design-surfaces-task-dir-crash:validation:attempt-1:revision-1",
+    "since": "2026-11-13T00:25:06Z",
+    "closed": "2026-11-13T00:29:07.598035Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:dispatch-close-out-archives-evidence-and-removes-scratch:validation:attempt-1:revision-1",
+    "since": "2026-11-13T04:05:08Z",
+    "closed": "2026-11-13T04:07:48.408091Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:each-task-records-stage-time-revises-and-interruptions:validation:attempt-1:revision-1",
+    "since": "2026-11-12T16:00:50Z",
+    "closed": "2026-11-12T16:08:15.717306Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:held-and-closed-tasks-leave-the-design-queue:validation:attempt-1:revision-1",
+    "since": "2026-11-13T05:15:34Z",
+    "closed": "2026-11-13T06:07:51.907014Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:new-work-checks-what-exists-first:backlog:attempt-1:revision-1",
+    "since": "2026-11-12T17:01:25Z",
+    "closed": "2026-11-12T17:01:28.675944Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:new-work-checks-what-exists-first:ideation:attempt-1:revision-1",
+    "since": "2026-11-12T17:37:00Z",
+    "closed": "2026-11-12T17:37:04.390686Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:new-work-checks-what-exists-first:validation:attempt-1:revision-1",
+    "since": "2026-11-13T00:31:01Z",
+    "closed": "2026-11-13T00:34:54.450213Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:observer-check-learn-only-when-listed:backlog:attempt-1:revision-1",
+    "since": "2026-11-12T17:01:44Z",
+    "closed": "2026-11-12T17:01:48.112583Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:observer-check-learn-only-when-listed:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T00:42:40Z",
+    "closed": "2026-11-13T00:42:43.741375Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:observer-check-learn-only-when-listed:validation:attempt-1:revision-1",
+    "since": "2026-11-13T02:06:10Z",
+    "closed": "2026-11-13T02:06:22.077745Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:observer-check-learn-only-when-listed:validation:attempt-2:revision-1",
+    "since": "2026-11-13T02:06:28Z",
+    "closed": "2026-11-13T02:08:06.228571Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pilot-ideation-runs-a-probe-before-the-design:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T06:42:59Z",
+    "closed": "2026-11-13T06:43:56.513937Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pilot-ideation-runs-a-probe-before-the-design:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T07:11:59Z",
+    "closed": "2026-11-13T07:12:46.314722Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pilot-ideation-runs-a-probe-before-the-design:validation:attempt-1:revision-1",
+    "since": "2026-11-13T09:04:48Z",
+    "closed": "2026-11-13T09:27:15.853193Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pr-watch-tasks-foreign-worktree:backlog:attempt-1:revision-1",
+    "since": "2026-11-12T17:01:54Z",
+    "closed": "2026-11-12T17:01:58.054817Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pr-watch-tasks-foreign-worktree:ideation:attempt-1:revision-1",
+    "since": "2026-11-12T17:25:28Z",
+    "closed": "2026-11-12T17:25:31.145872Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:pr-watch-tasks-foreign-worktree:validation:attempt-1:revision-1",
+    "since": "2026-11-12T19:23:19Z",
+    "closed": "2026-11-13T00:23:10.304393Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T13:37:56Z",
+    "closed": "2026-11-13T13:42:01.503467Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:backlog:attempt-2:revision-1",
+    "since": "2026-11-13T13:42:05Z",
+    "closed": "2026-11-13T13:42:08.597392Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T13:58:27Z",
+    "closed": "2026-11-13T13:58:30.919955Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:ready-pr-gets-a-codex-code-review-without-fo-noticing:validation:attempt-1:revision-1",
+    "since": "2026-11-13T14:12:42Z",
+    "closed": "2026-11-13T14:20:22.347578Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:budget-form-counts-ideation-rounds-and-times-each-round:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T09:52:31Z",
+    "closed": "2026-11-13T09:54:45.159744Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:budget-form-counts-ideation-rounds-and-times-each-round:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T15:02:16Z",
+    "closed": "2026-11-13T15:02:19.725092Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:delivery-gate-s4-skips-removed-scratch:backlog:attempt-1:revision-1",
+    "since": "2026-11-12T17:01:35Z",
+    "closed": "2026-11-12T17:01:38.316509Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:delivery-gate-s4-skips-removed-scratch:ideation:attempt-1:revision-1",
+    "since": "2026-11-12T17:38:25Z",
+    "closed": "2026-11-12T17:38:28.503314Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:design-check-reads-each-pilot-criterion-for-its-proof-record:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T09:52:27Z",
+    "closed": "2026-11-13T09:54:38.596406Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:design-check-reads-each-pilot-criterion-for-its-proof-record:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T10:46:19Z",
+    "closed": "2026-11-13T10:57:31.564335Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:merge-ask-is-produced-from-records:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T13:37:52Z",
+    "closed": "2026-11-13T13:41:47.915088Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:merge-ask-is-produced-from-records:backlog:attempt-2:revision-1",
+    "since": "2026-11-13T13:41:51Z",
+    "closed": "2026-11-13T13:41:54.99377Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:merge-ask-is-produced-from-records:ideation:attempt-1:revision-1",
+    "since": "2026-11-13T14:58:40Z",
+    "closed": "2026-11-13T14:58:43.868928Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:validator-commands-fit-the-delivery-check:backlog:attempt-1:revision-1",
+    "since": "2026-11-13T13:37:59Z",
+    "closed": "2026-11-13T13:42:14.907137Z",
+    "wait_bound": "at least"
+  },
+  {
+    "key": "briefing:validator-commands-fit-the-delivery-check:backlog:attempt-2:revision-1",
+    "since": "2026-11-13T13:42:18Z",
+    "closed": "2026-11-13T13:42:21.746099Z",
+    "wait_bound": "at least"
+  }
+]

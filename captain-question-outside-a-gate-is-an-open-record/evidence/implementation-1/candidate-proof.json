@@ -1,0 +1,17 @@
+{
+  "base": "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+  "candidate": "3d65ebd7a456bcb05fd94ce754a79735bdcbcf39",
+  "product_tree": "clean",
+  "open_pr_count": 0,
+  "gates_replayed": 34,
+  "mutations_caught": 13,
+  "ci_cost_per_pr": "not measured",
+  "ci_commands": 29,
+  "unittest_tests_in_ci_run": 1478,
+  "ci_skips": 11,
+  "final_affected_tests": {
+    "timeline": 27,
+    "design_surfaces": 239,
+    "design_skips": 4
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "label": "base",
+    "json": false,
+    "exit": 1,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/baseline-scripts/task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
+      "demo"
+    ],
+    "log": "h3-base-text.log"
+  },
+  {
+    "label": "base",
+    "json": true,
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/baseline-scripts/task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
+      "demo",
+      "--json"
+    ],
+    "log": "h3-base-json.log",
+    "interruptions": 4
+  },
+  {
+    "label": "candidate",
+    "json": false,
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
+      "demo"
+    ],
+    "log": "h3-candidate-text.log"
+  },
+  {
+    "label": "candidate",
+    "json": true,
+    "exit": 0,
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record/kc-dev-flow-2/scripts/task_timeline.py",
+      "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/h3-state",
+      "demo",
+      "--json"
+    ],
+    "log": "h3-candidate-json.log",
+    "interruptions": 3
+  }
+]

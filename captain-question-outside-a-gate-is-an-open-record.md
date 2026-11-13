@@ -237,3 +237,44 @@ ADR: 0086
 ### Summary
 
 The existing `asks.jsonl` rule wrote nothing: 0 records in this workflow while 9 outside-gate questions came after it reached the README, so the riskiest problem is that records are not written, not their format. The design extends `asks.jsonl` and `task_timeline.py`, gates presentability on a record for each amendment's quoted question, and leaves five choices to the Captain (no-task questions, gate rows, the two relayed wishes, check strength). The 2026-11-13 replay held 14 outside-gate questions in the format, with `tasks` added for questions answered into several tasks; none had an asking time in any record.
+
+
+## Stage Report: implementation
+
+- DONE: Build the approved design and decisions D1 to D5 to contract revision 2, within the named files and Pilot budget.
+  Branch `spacedock-ensign/captain-question-outside-a-gate-is-an-open-record`; base `1c3e714ff6752b8c84a490064639baf0d0ef3c9c`; candidate `3d65ebd7a456bcb05fd94ce754a79735bdcbcf39`; eight product files, clean tree. `candidate-proof.json` below.
+- DONE: AC-1 — writer fields, six events and every named refusal, including revision-2 approve_means, option effect and tasks.
+  `python3 -B kc-dev-flow-2/scripts/test_task_timeline.py` exit 0, 27 tests: `evidence/implementation-1/timeline-final.log`; six refusal mutations fail their cases; `mutation-results.json` and `mutation-*.log` below. CLI ask/reask/Review answer/acted also exit 0 (`smoke-result.log`).
+- DONE: AC-2 — fourteen extracted questions with declared synthetic asking times and replay owner/keys, listed exactly at 56 declared clocks; unknown asking time retains its lower bound.
+  `python3 -B kc-dev-flow-2/scripts/test_task_timeline.py` exit 0 (`timeline-final.log`); answered-listed and open-omitted mutations each exit 1. The fixture declares the synthetic data; it proves no real historical asking time.
+- DONE: AC-3 — legacy, ask, reask and answer read in text and JSON; interruptions count legacy + ask + reask, while PR 868's per-round lines remain working.
+  `python3 -B <scratch>/baseline_h3.py` exit 0 (`h3-result.log`, `h3-results.json`): unchanged original h3 fixture gives base text exit 1 / KeyError asked / JSON 4, candidate text exit 0 / JSON 3; count-every-line mutation exits 1.
+- DONE: AC-4 — missing amendment question refuses; own/shared/archived records pass; partial question text refuses; adoption found and unavailable cases use real git fixtures, including a split-root .git file.
+  `python3 -B kc-dev-flow-2/scripts/test_design_surfaces.py` exit 0, 239 tests / 4 optional skips (`design-final.log`); lookup-removed and always-refuse mutations exit 1. FO's recorded answer authorizes first introducing author-date from the README's own git root; absent/shallow/export history prints a skip, without a new hold.
+- DONE: AC-5 — each of the day's thirty-four native gate attempts appears once before closure, disappears at closure, and has a nonnegative at-least wait.
+  `python3 -B <scratch>/replay_gates.py` exit 0 (`gate-replay.log`, `gate-replay.json`); immutable actual git-history reads are cached and unrelated task documents excluded, as `evidence-notes.md` states. The uncached archive-move fixture rejects the add-time mutation with exit 1.
+- DONE: AC-7 — ADR 0086 quotes the Captain's scope/design words and amendment, records the five choices, and protects the timeline and design check.
+  `python3 <package>/scripts/adr_lint.py docs/adr --since 1c3e714ff6752b8c84a490064639baf0d0ef3c9c --require 0086` exit 0, 79 ADR files (`adr-final.log`); the criterion's bare file form checked zero records, so this required-directory run is the evidence.
+- DONE: AC-9 (Captain amendment 1, replacing AC-6) — approved ask sentence plus --by is an exact match, 41 words; one budget step quotes his words and names startup.
+  `python3 -B kc-dev-flow-2/scripts/lint-skills.py` exit 0 (`lint-final.log`, `wording-check.log`); removal of this step fails (`mutation-budget.log`). Sentence 25 → 41; workflow 6097 → 6113, delta +16 (`word-counts.json`); wording/budget alone are the last commit `3d65ebd7a`.
+- DONE: Run the whole CI test list, using python3 per test file from the product worktree, with SPACEDOCK_BIN=/Users/kent/.local/bin/spacedock for dispatch suites.
+  `python3 <scratch>/run_ci.py` exit 0: all 29 commands, 1,478 unittest tests / 11 optional skips plus native dispatch checks (`ci-results.json`, `ci-summary.json`, `ci-*.log`); final affected suites refreshed after the last relevant edits. Binary 0.27.2, activated plugin root 0.28.0. CI cost per PR: not measured.
+- DONE: Each named falsifier shown failing by a mutation, using python3 -B with caches cleared.
+  `python3 -B <scratch>/mutations.py` exit 0: 12 / 12 caught; separate budget-step removal caught, total 13 (`mutation-results.json`, `mutation-budget.log`); no unexpected import failure substituted for the intended failures.
+- DONE: Number guards, comment maximum, affected documents and diff checks.
+  `python3 <package>/scripts/number_guards.py check --repo <product> --workflow-dir <workflow> --task <task>` exit 0 (`number-guards-final.log`); `comment_ratio.py <base> HEAD --workflow-dir <workflow>` exit 0: 3 / 656 lines, 0.5% ≤ 5% (`comment-ratio-final.log`); `doc_impact.py <base> HEAD --json` exit 0, each of 17 documents has updated/unaffected disposition (`doc-dispositions.json`); `git diff <base> --check` exit 0.
+- DONE: Check the existing chain, preserve overlapping work, commit locally, and delete the revision-1 probe branch once committed.
+  Reused the approved before-new-work audit; fetched origin/main with PR 868, extended its timeline and legacy reader, reused decision_ledger's native gate parsing, read Accepted ADRs 0020/0080/0085. Local probe branch `poc/captain-question-outside-a-gate-is-an-open-record` at `abcec77ba` deleted; no other repository touched. PR 869 requires one later integration/recount before delivery.
+- DONE: Public evidence retained under evidence/implementation-1/; temporary files kept under the assigned scratch; run scratch close and paste its output.
+  `python3 <package>/scripts/scratch.py close <task-folder> implementation-1` exit 0: Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1 (206709438 bytes) / Evidence: evidence/implementation-1/ (71 files, 84.7 KiB)
+  After adding the exact-wording check, sealed again (exit 0): Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1 (absent) / Evidence: evidence/implementation-1/ (72 files, 84.9 KiB)
+- SKIPPED: AC-1's pytest evidence spelling.
+  `python3 -B -m pytest kc-dev-flow-2/scripts/test_task_timeline.py -q` exit 1, No module named pytest (`ac1-pytest.log`); FO explicitly instructed the CI unittest equivalent above, with no install or virtualenv. The initial design-suite diagnostic failure and its correction remain in `attempt-summary.json`.
+- SKIPPED: AC-8, the second blind reader and its dispositions; real released-day asking-time capture; a reader in another repository reading the remote branch.
+  Not provable now: AC-8 belongs to independent validation; the others need release/live use. Synthetic waits, local writer behavior and omission fixtures do not prove those claims.
+- SKIPPED: Product push, Draft PR opening, RoboRev, hosted CI and independent acceptance.
+  FO owns these; no PR opened: no product push grant. Prepared Conventional Commit PR title/body at `implementation/pr.md`; live read found zero open PRs for this branch. State/report sync is the authorized exception.
+
+### Summary
+
+Implemented the accepted Pilot slice and contract revision 2 at the exact candidate above, without a version bump. All evidence paths without a prefix are under `evidence/implementation-1/`; `<scratch>` is the dispatch's removed scratch root and `<package>` is its installed 0.41.0 package. The final affected checks, full CI list, thirteen falsifiers, original h3 regression and thirty-four gate attempts passed; publication, independent validation and post-release observations remain FO-owned.

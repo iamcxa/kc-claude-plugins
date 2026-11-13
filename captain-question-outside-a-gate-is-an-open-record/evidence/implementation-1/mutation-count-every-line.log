@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json (__main__.TimelineTests.test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/captain-question-outside-a-gate-is-an-open-record/implementation-1/mutants/kc-dev-flow-2/scripts/test_task_timeline.py", line 346, in test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json
+    self.assertEqual(json.loads(result.stdout)["asks_outside_gate"], 3)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 4 != 3
+
+----------------------------------------------------------------------
+Ran 1 test in 0.169s
+
+FAILED (failures=1)
