@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Check that a task's observer report is committed in the state checkout.
 
-Usage: observer_check.py <state checkout> <task slug> [--rev REV]
+Usage: observer_check.py <state checkout> <task slug> [--rev REV] [--readme FILE]
 Reads the committed tree at REV (default HEAD), not the disk. The report is <slug>/observer.md before the
 task is archived and _archive/<slug>/observer.md after.
 Exit 0 when that file is committed and not blank; stdout names it, and repeats the first line when it
-starts "observer not run:"; for an archived task it adds the learn steps. Exit 1 when it is not: stdout
+starts "observer not run:"; for an archived task it adds the learn steps when the workflow README lists learn.
+The README is FILE, else the nearest ancestor README.md with entity-type: in its frontmatter.
+An archived check with no readable workflow README exits 2 rather than guessing the extension selection.
+Exit 1 when the report is not committed: stdout
 names the observer dispatch and the save command, each as a `next:` line.
 Exit 2 when the check cannot be made (usage, not a git work tree, REV names no commit, the slug has no task at
 REV): stdout names the cause. Nothing here changes the checkout.
@@ -14,6 +17,9 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
+
+from decision_ledger import split_task
+from workflow_extensions import readme_extensions
 
 WAIVER = "observer not run:"
 
@@ -34,15 +40,39 @@ def kind(state, rev, path):
 
 def parse(args):
     rev = "HEAD"
-    if "--rev" in args:
-        at = args.index("--rev")
+    readme = None
+    for flag in ("--rev", "--readme"):
+        if flag not in args:
+            continue
+        at = args.index(flag)
         if at + 1 >= len(args):
-            raise Unverifiable("usage: --rev needs a value")
-        rev = args[at + 1]
+            raise Unverifiable(f"usage: {flag} needs a value")
+        if flag == "--rev":
+            rev = args[at + 1]
+        else:
+            readme = Path(args[at + 1])
         args = args[:at] + args[at + 2:]
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
         raise Unverifiable("usage: observer_check.py <state checkout> <task slug> [--rev REV]")
-    return Path(args[0]), args[1], rev
+    return Path(args[0]), args[1], rev, readme
+
+
+def learn_enabled(state, readme):
+    try:
+        if readme is None:
+            for parent in Path(state).resolve().parents:
+                candidate = parent / "README.md"
+                if not candidate.is_file():
+                    continue
+                lines, _ = split_task(candidate.read_text())
+                if any(line.startswith("entity-type:") for line in lines or []):
+                    readme = candidate
+                    break
+        if readme is None:
+            raise Unverifiable("no workflow README above the state checkout; supply --readme FILE")
+        return "learn" in readme_extensions(readme)
+    except (OSError, ValueError) as err:
+        raise Unverifiable(f"workflow README unreadable: {err}") from err
 
 
 def locate(state, slug, rev):
@@ -59,12 +89,12 @@ def locate(state, slug, rev):
     return not live and archived
 
 
-def check(state, slug, rev):
+def check(state, slug, rev, readme=None):
     archived = locate(state, slug, rev)
     path = f"_archive/{slug}/observer.md" if archived else f"{slug}/observer.md"
     code, out = git(state, "show", f"{rev}:./{path}")
     learn = [f"next: run kc-dev-flow-2:learn for {slug}.",
-             "next: send learn's notice, then the observer report unedited, in one message; answer none of its findings."]
+             "next: send learn's notice, then the observer report unedited, in one message; answer none of its findings."] if archived and learn_enabled(state, readme) else []
     if code == 0 and out.strip():
         first = out.strip().splitlines()[0].strip()
         note = f" {first}" if first.startswith(WAIVER) else ""
@@ -92,8 +122,8 @@ def check(state, slug, rev):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev = parse(args)
-        code, message = check(state, slug, rev)
+        state, slug, rev, readme = parse(args)
+        code, message = check(state, slug, rev, readme)
     except Unverifiable as err:
         print(f"cannot tell whether the observer report is committed: {err}. Hold and report the cause.")
         return 2

@@ -7,6 +7,7 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
   pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
 
+Tasks reports a task with no PR and an absent worktree as a fact, with no PR-recording action.
 Tasks forwards advisory step-back questions from role_triggers.py even when no role call is owed.
 With release-acceptance listed, tasks also prints unclaimed release walks due under docs/journey/.
 
@@ -77,6 +78,7 @@ from role_triggers import review_facts  # noqa: E402
 from dispatch_records import coverage, worker_stages  # noqa: E402
 from learning import job_key  # noqa: E402
 import scratch  # noqa: E402
+from workflow_extensions import readme_extensions  # noqa: E402
 
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
@@ -591,7 +593,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
     state = workflow / readme["state"] if readme.get("state") else workflow
-    listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
+    listed = set(readme_extensions(workflow / "README.md"))
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors, live, rounds = [], {}, [], [], {}
     found = entities(state)
@@ -633,7 +635,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None
             if where and not where.is_dir():
-                out.append(f"next: record {slug}'s PR with status --set {slug} pr=<owner/repo>#<N>; its worktree is not on this machine.")
+                out.append(f"fact: {slug} has no recorded PR; its worktree is not on this machine.")
             elif where:
                 ref = opened_pr(where, ask)
                 if ref:
@@ -663,12 +665,14 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                 errors.append(f"next: report scratch close-out to the Captain: {str(error)[:120]}.")
             if "learn" not in listed:
                 continue
-            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
+            done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug,
+                                   "--readme", str(workflow / "README.md")],
                                   capture_output=True, text=True)
             if done.returncode:
                 out += [f"next: keep {slug} out of pr-merge's scan in this pass.", *done.stdout.splitlines()]
             else:
-                check = f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug}"
+                check = (f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug} "
+                         f"--readme {shlex.quote(str(workflow / 'README.md'))}")
                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
                         "after pr-merge: do each next: line it prints."]
     for slug in live:

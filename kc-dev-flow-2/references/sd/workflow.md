@@ -49,7 +49,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.39.1 x-release-please-version -->
+<!-- kc-dev-flow-2 0.40.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -250,6 +250,8 @@ an explicit verdict. Apply Delivery authority below; a pending PR or missing hoo
 not completion.
 
 ## Captain steps
+
+Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>"`; `python3 <package>/scripts/task_timeline.py <state> <task>` prints each stage's times and counts.
 
 Before asking the Captain to run or look at anything (an acceptance script, a
 command, a link, a sign-in, a file of steps), FO runs each step as written, in a
