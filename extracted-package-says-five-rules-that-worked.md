@@ -1,7 +1,7 @@
 ---
 id:
 title: The extracted package says five rules that already worked, each once, where its reader loads it
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
