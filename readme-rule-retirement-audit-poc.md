@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-readme-rule-retirement-audit-poc
-pr:
+pr: local-merge:c2f035b6612f5edb42220576b3414e993531ffd6
 gates:
     version: 1
     records:
@@ -52,6 +52,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-11-14T02:35:03Z
+mod-block: merge:pr-merge
 ---
 
 The README grew from 10 KB to 41 KB in 58 days, with about 63 mandatory steps per default task and 12 repeating per dispatch; 44 tasks cite an observer finding as the reason for a new form check, and no step removes a rule (brief C2, figures from proposal.md "Measured", not re-measured here).
