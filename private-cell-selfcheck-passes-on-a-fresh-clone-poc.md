@@ -76,3 +76,16 @@ Release review: not needed: maintenance of a private measurement repository.
 ### Summary
 
 The second laptop cell's `selfcheck` now exits 0 on a fresh clone, naming the nine entries it cannot check. It still grades all twelve when the raw outputs are present, and still fails on a wrong expected grade or a deleted carried fixture. Candidate a836cda is scanned clean and unpushed; FO pushes. AC-1's post-push fresh clone is the validator's.
+
+## Stage Report: implementation
+
+- DONE: Re-make the candidate commit with the repository's configured git identity as author and committer, with the same tree and message, on the same branch; report the new SHA and confirm the tree is byte-identical to the old candidate's.
+  New candidate b61e8f4be42d50e605d4e011401dcfec1b4b28b2 on `selfcheck-fresh-clone`, parent a1068423 (origin/main). `git rev-parse a836cda2^{tree}` and `b61e8f4b^{tree}` both read 7dbfd28703aa2c1e7f0eae3ff8be20cbcfc25ec1. Message compared byte for byte with the old one: identical. Author and committer email equal `git config user.email` of that repository (checked by string equality, not printed).
+- DONE: Change nothing else.
+  Changed path against origin/main is still `behaviour/run_cell.py` only; working tree clean. A fresh clone of the branch: all three cells' `selfcheck` exit 0. Not pushed. Identity-change findings go to FO, not into a commit, from now on. An unreferenced intermediate commit fb07f1f8 (message had one extra trailing newline) was created and replaced; nothing points at it.
+- DONE: Append a complete new stage report that supersedes the earlier one.
+  The scan read zero in every class on a836cda2 with the configured email replaced. The tree and message are unchanged; the one difference is the configured email now appearing as author and committer, as ruled. The scan was not re-run on b61e8f4b.
+
+### Summary
+
+This supersedes the earlier report. The candidate is now b61e8f4be42d50e605d4e011401dcfec1b4b28b2 with the repository's configured identity; the tree matches a836cda2 exactly. All other results of the earlier report (selfcheck on fresh clone, laptop and mutation runs, scan counts) stand, since they depend only on the tree and message. Not pushed; FO pushes.
