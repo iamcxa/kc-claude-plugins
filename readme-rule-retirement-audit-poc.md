@@ -1,7 +1,7 @@
 ---
 id:
 title: Which README rule sentences does a check already enforce whole (read-only retirement audit; a list for the Captain's ruling)
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: 'Captain 「三張都准入，預算照你的提議」 (chat with this FO, 2026-11-14) to the bound backlog question: selects profile poc and accepts outcome, Non-goals, Stop condition, AC-1 and the Budget of 1 implementation and 1 validation cycles as filed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 The README grew from 10 KB to 41 KB in 58 days, with about 63 mandatory steps per default task and 12 repeating per dispatch; 44 tasks cite an observer finding as the reason for a new form check, and no step removes a rule (brief C2, figures from proposal.md "Measured", not re-measured here).
