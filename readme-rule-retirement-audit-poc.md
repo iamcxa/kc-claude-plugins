@@ -57,6 +57,14 @@ Verified by: the validator re-runs a sample of the recorded violating inputs aga
 Alignment: not needed before implementation: the brief names the inputs, the output table and the count; the backlog gate confirms scope and Budget.
 Release review: not needed: reform measurement with no release.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat (standing grant; scope given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain. Under that grant the reform session (Paseo 26215d96, messages 6ee7ee5b and a8df76d7) answered "yes" to FO's proposal "budget becomes 2 implementation and 1 validation cycles, the same worker audits the other five sections without the early stop, then validation, then close", and replaced the stop condition with "cover the five README sections the bite names plus the form-check list in .context/dev2-reform/rework-ceremony.md; stop when those are covered or the budget ends. Output stays a list for the Captain's ruling; nothing is deleted."
+Supersedes: none
+Budget: 2 implementation and 1 validation cycles
+
 ## Stage Report: implementation
 
 - SKIPPED: One table covering every rule sentence of the six named sections of docs/dev2/README.md at origin/main: rule (quoted) / enforcing check (script or test, quoted) / exit code on a violating input you constructed and ran in a throwaway copy / verdict (covered whole, covered part, uncovered)
