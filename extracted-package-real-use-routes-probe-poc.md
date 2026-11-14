@@ -97,3 +97,47 @@ State layout common to all three (tried in a scratch repository with a local bar
 ### Summary
 
 All three routes were tried to their smallest step in about six minutes, and the answers are in the table; no recommendation is made or acted on. This report is a draft held in the scratch folder, not in the task file: both attempts to write into the state checkout (a shell write and the Write tool) were denied by the permission classifier as "Unsanctioned Communication", so FO needs to place this report and the evidence file into the task folder, or tell me how to proceed, before `scratch.py close` is run.
+
+## Stage Report: implementation
+
+- DONE: At most three routes for running a real task on the extracted package with private task state, each answered by trying its smallest step, not by reasoning: where the workflow and state branch live; how a session loads the extracted package without colliding with the installed package of the same skill names; laptop or clean host. For each: the command tried and its observed output, what it needs from the Captain, what breaks
+  Three routes in the table; first-round steps L1-L9 and H1-H6 in evidence/implementation-1/observed-steps.txt, follow-up steps Q1a-Q2e in evidence/implementation-2/observed-steps-2.txt.
+- DONE: A list of everything created, installed or registered during the probe and its removal, or the scratch location it stays in; no credential used beyond what the session already has, no plugin install on the Captain's laptop outside a scratch location, no write to a shared configuration: a step needing one is listed as what that route needs from him and not taken
+  See "Created and removed"; the only installs and registrations were inside scratch config homes; the user-level state file and every Paseo setting were left unchanged.
+- DONE: A stage report in the task file with the options table and the limits of the probe; no recommendation acted on
+  This report; no route was built or chosen.
+- DONE: Can a worker started through Paseo load the extracted package, with project-level settings only, nothing registered or installed (follow-up item 1)
+  No. Keys used and their source are in the table notes. The Paseo worker reported "UNKNOWN SKILL" (Q1d). Two observed causes: the folder was not trusted (Q1c), and once trusted, a same-named installed plugin kept the name even with `enabledPlugins` false for the project (Q1e, Q1f). No package root was obtainable by this route.
+- DONE: Whether Paseo can pass a launch flag or environment to a provider's session, and what a second provider carrying the plugin-directory flag would take (follow-up item 2)
+  Yes in shape: a provider entry has `extends`, `label`, `command` (an argument list, already carrying `--agent spacedock:first-officer`) and an optional `env` map (Q2a-Q2c). The flag form and the variable form both worked on the claude command line (Q2e, Q1g). Not tried through Paseo: creating a provider is the Captain's.
+- DONE: This superseding stage report draft, with the options table extended by both results and one Captain sentence per option (follow-up item 3)
+  Table below.
+
+### Options table (extended)
+
+| | Route 1: laptop, same-name session plugin | Route 2: laptop, renamed copy beside the installed package | Route 3: clean host, same-name session plugin |
+|---|---|---|---|
+| FO session | `spacedock claude "..." -- --plugin-dir <PKG>` loads it and finds the workflow (L9) | the installed package answers the original skill names (L5) | the flag loads it on the host's Claude Code 2.1.311 (H3, H5) |
+| Worker started through Paseo, settings only | Fails: untrusted folder skips the project skills directory (Q1c, Q1d); trusted, the installed same-name plugin still wins when disabled for the project (Q1f) | not tried | not tried (the host's Paseo configuration was not read) |
+| Worker started through Paseo, flag or variable | Needs a second provider whose command or env carries `--plugin-dir <PKG>` or `CLAUDE_CODE_PLUGIN_DIRS=<PKG>`; both work on the command line (Q2e, Q1g); through Paseo untried | n/a | same, in the host daemon's own provider list (not read) |
+| What the Captain must do | add one provider entry to his Paseo configuration (a copy of the first-officer one plus the flag or variable), or launch every first officer himself with the flag | decide to rename the package everywhere | grant a write credential for the state branch, or keep state host-only; add the provider entry on the host |
+| What breaks | the installed package is hidden in sessions carrying the flag, and any worker from a provider without it loads the installed copy | workers load the installed copy; renaming means editing 39 files | older Claude Code and Spacedock than the laptop (2.1.311 and 0.28.0); key is read-only, so the state branch cannot be pushed |
+
+Notes on the settings-only attempt: `enabledPlugins` `{"<name>@<marketplace>": false}` in `.claude/settings.local.json` and a plugin directory at `.claude/skills/<name>/` are the documented keys (https://code.claude.com/docs/en/plugins/loading, https://code.claude.com/docs/en/plugins/install); the trust dialog writes a per-project entry into the user-level state file, which the probe did not do outside a scratch home. Project and local settings cannot set `CLAUDE_CODE_PLUGIN_DIRS` (same loading page).
+
+### Created and removed
+
+- Scratch folder `implementation-2` (named scratch location): holds the drafts, a scratch config home with a stub marketplace and stub plugin, and the scratch repository; the private package copies were deleted from it.
+- Paseo: one workspace and one agent created, both archived; the archive soft-deletes, so their records remain in Paseo's own store (one project record, one workspace record, one agent record). No provider or configuration changed; the configuration file was read for key names and the first-officer command only.
+- Laptop Claude home: one transcript directory written by the Paseo worker, removed; the user-level state file has no entry for the scratch path; no install, marketplace or setting written outside the scratch config home.
+- Model requests: one Paseo worker (one skill call) and three short `claude -p` turns on the existing sign-in.
+
+### Limits of the probe
+
+- The flag and variable routes were tried on the claude command line, not through a Paseo provider; whether Paseo's safehouse wrapper (create_agent returned type safehouse-claude) carries a new provider's command and env was not observed.
+- The trust and name-conflict results come from Claude Code 2.1.323 with a stub standing in for the installed package; the real installed package was only present in the first Paseo attempt, where it was disabled and the folder untrusted.
+- The host's Paseo configuration and its first-officer provider were not read.
+
+### Summary
+
+This supersedes the earlier implementation report. A worker started through Paseo cannot load the extracted package from project settings alone: the folder must be trusted, and a same-named installed plugin still holds the name even when disabled for the project. The one mechanism that replaced the installed copy in every test is the session plugin flag or variable, which Paseo could carry in a second provider entry; that entry is the Captain's to add and was not tried through Paseo.

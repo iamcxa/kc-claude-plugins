@@ -1,0 +1,41 @@
+Follow-up probe, 2026-11-14, 20:28-20:33 local. <PKG> = the package exported with `git archive` at the pinned commit
+2b391a40f926646b6be949cb2cf07466005e277c into a scratch directory. <REPO> = an empty scratch git repository.
+<HOME2> = a scratch Claude config home (CLAUDE_CONFIG_DIR) with no sign-in. No path, host name or run id kept.
+
+DOCUMENTATION READ (official Claude Code docs, fetched 2026-11-14)
+D1  https://code.claude.com/docs/en/settings            file scopes: .claude/settings.json (shared), .claude/settings.local.json (untracked); CLAUDE_CONFIG_DIR moves the user home
+D2  https://code.claude.com/docs/en/plugins/loading     enabledPlugins: {"<name>@<marketplace>": true|false}; local > project > user; "@skills-dir" plugins load from
+                                                        <project>/.claude/skills/<name>/ with .claude-plugin/plugin.json, only after the workspace trust dialog;
+                                                        "@inline" (--plugin-dir, --plugin-url, CLAUDE_CODE_PLUGIN_DIRS) replaces a same-named installed plugin silently;
+                                                        order: managed > inline > installed marketplace > skills-dir > synced; project/local settings cannot set CLAUDE_CODE_PLUGIN_DIRS
+D3  https://code.claude.com/docs/en/plugins/create      "Share the plugin through a repository" (the skills-dir layout); CLAUDE_CODE_PLUGIN_DIRS needs Claude Code 2.1.280 or later
+D4  https://code.claude.com/docs/en/plugins/install     project scope = enabledPlugins in .claude/settings.json; "Disable for me" writes false to .claude/settings.local.json
+
+QUESTION 1: settings-only load for a Paseo-started worker (nothing registered, nothing installed)
+Q1a <REPO>/.claude/skills/kc-dev-flow-2 -> symlink to <PKG>; <REPO>/.claude/settings.local.json =
+      {"enabledPlugins": {"kc-dev-flow-2@kc-claude-plugins": false}, "permissions": {"allow": ["Skill"]}}
+Q1b claude -p (real home, existing sign-in) in <REPO>, Skill "kc-dev-flow-2:implementation"
+      -> init lists only kc-dev-flow and spacedock; model answer: the skill is unknown, only kc-dev-flow:* exist
+Q1c claude plugin list in <REPO> -> installed kc-dev-flow-2@kc-claude-plugins "Status: disabled" (key worked);
+      "Skills-directory plugins: 1 project-scope directory under ./.claude/skills/ ... was skipped because this workspace was not trusted"
+Q1d Paseo: create_workspace (local, background, path <REPO>), then create_agent (claude/claude-sonnet-5-5, that workspace), prompt = same Skill call
+      -> agent finished: "UNKNOWN SKILL" with only kc-dev-flow:* names listed. The tool reply showed type safehouse-claude and currentModeId bypassPermissions
+         although modeId default was requested. Agent archived, workspace archived (see "created" list).
+Q1e <HOME2>/.claude.json = {"projects": {"<REPO real path>": {"hasTrustDialogAccepted": true}}}  (key name read from the existing state file's per-project keys)
+      CLAUDE_CONFIG_DIR=<HOME2> claude -p ... in <REPO> -> init: kc-dev-flow-2@skills-dir 0.41.0 loaded, 12 skills; `plugin list`: "Status: loaded"
+      (result api_error: <HOME2> has no sign-in; only the loading was observed)
+Q1f In <HOME2>: a stub marketplace + stub plugin named kc-dev-flow-2 installed at user scope (stands in for the installed package)
+      without override -> skills-dir: "Not loaded - the name kc-dev-flow-2 is already taken by an installed plugin (kc-dev-flow-2@stubmk)"
+      with <REPO>/.claude/settings.local.json enabledPlugins {"kc-dev-flow-2@stubmk": false} -> stub "Status: disabled", skills-dir STILL "Not loaded - ... already taken"
+      session init (claude -p) -> no kc-dev-flow-2 plugin at all. Control: without the stub installed, skills-dir loaded (Q1e).
+Q1g Same <HOME2> with the stub installed, claude -p run from a directory outside <REPO> with CLAUDE_CODE_PLUGIN_DIRS=<PKG>
+      -> init: kc-dev-flow-2@inline 0.41.0 (the stub is replaced; its marker skill absent). Same run without the variable: kc-dev-flow-2@stubmk 0.0.1.
+
+QUESTION 2: how the first-officer provider is defined (names and shape only; no env value read)
+Q2a ~/.paseo/config.json -> agents.providers.<id>; keys seen across providers: command, description, enabled, env, extends, label, paseoTools
+Q2b claude-fo: extends "claude", label, command ["claude", "--agent", "spacedock:first-officer"]; no env key
+Q2c safehouse-claude-fo: extends "claude", label, command = ["/bin/sh", "<generated launcher script>"], env = 10 names (values not read), paseoTools {enabled: false}
+Q2d Paseo list_providers shows claude, claude-fo, safehouse-claude, safehouse-claude-fo among the enabled providers; create_agent with provider claude returned type safehouse-claude
+Q2e claude --agent spacedock:first-officer --plugin-dir <PKG> -p "Reply with the single word ok" (real home, existing sign-in; scratch cwd)
+      -> init: kc-dev-flow-2@inline, kc-dev-flow@kc-claude-plugins, spacedock@spacedock; result completed (the argument shape a provider command would carry)
+Not done: any change to a provider or to Paseo configuration; any Paseo start through a provider carrying the flag or the variable.
