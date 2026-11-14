@@ -5,7 +5,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-task-scoreboard-five-numbers-poc
 pr:
 gates:
     version: 1
@@ -32,6 +32,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-14T12:18:32Z
 ---
 
 Today's reform work produced its numbers by hand, in a log. The package already holds a script that computes most of them from state records; no command prints them as one table per task.
