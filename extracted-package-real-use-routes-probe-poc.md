@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-extracted-package-real-use-routes-probe-poc
-pr:
+pr: local-merge:c2f035b6612f5edb42220576b3414e993531ffd6
 gates:
     version: 1
     records:
@@ -55,6 +55,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-11-14T12:18:27Z
+mod-block: merge:pr-merge
 ---
 
 Nine of the sixteen approved outcomes can only be measured in real use, and nobody uses the extracted package yet. The next real task of the reform should be run by a First Officer and workers that load the extracted package, not the installed one, with its task state in a private place from the first commit.
