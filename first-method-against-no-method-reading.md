@@ -285,6 +285,14 @@ Reused as they are: the package's `replay_dispatch.py` (arm M's dispatch), the r
 - Other live tasks: none share a file, check, table or numbered record with this one.
 Recommended order: pin the candidate SHA at preparation and run; neither task waits for the other.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat (standing grant; scope amendment given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain by this FO. The reform session (Paseo 26215d96, message 046fefe6) relays his decision in its own conversation, 「同意再跑六次確認，規則由那位沒看過結果的裁定者定，事先提交，兩次讀數並列回報。」 (relayed), and amends the scope under the grant: six more launches (14 in total, 6 used; the two old spares stay spares for invalid runs of this round only); the placement rule is the one fixed by an adjudicator who saw neither the runs nor which rule changes any grade (it answered that the approved sentence does not decide, so the stricter rule applies); the second reading is committed before any launch with its fixtures passing and its limits stating that the rule was revised after the first six runs were seen and that the Captain, FO and the reform session knew which placement changed the stored grades; six fresh runs, same case, arms, arm-N prompt, model, effort and mode, in new folders; both safety scans before any grade is looked at; script grading; a blind check; the first reading's six are not regraded into the second and its verdict is not edited; both readings are reported side by side with usage per arm and the agents each run started.
+Supersedes: none
+Budget: 3 implementation and 2 validation cycles
+
 ## Stage Report: ideation
 
 - DONE: A reading design that settles each point the task's Scope lists, in the form it will be committed before any launch: the grading rule that scores "identified that the criterion cannot be proven and said so" from both output shapes without scoring format as behaviour, with a falsifier fixture for each shape; arm N's exact prompt (no mention of provability, proof or evidence commands; not weaker than what a real person would type); the contamination rule for a host where the case's own task edits the package's files, naming which paths count; the 3-against-3 patterns for method better, no difference and cannot discriminate, with silence in arm N as an outcome decided in advance; the limits
