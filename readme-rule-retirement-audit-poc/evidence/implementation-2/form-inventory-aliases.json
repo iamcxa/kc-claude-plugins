@@ -1,0 +1,184 @@
+[
+  {
+    "id": "B2",
+    "listed_sentence": "B2 seed lines Non-goals / Budget / Stop condition (Schema; #740 seed-check-requires-schema-fields) E - FORM check",
+    "probes": [
+      "seed-no-non-goals",
+      "seed-no-budget",
+      "seed-no-stop"
+    ],
+    "exits": {
+      "seed-no-non-goals": 1,
+      "seed-no-budget": 1,
+      "seed-no-stop": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "B3",
+    "listed_sentence": "B3 `## FO alignment` need+reason (+ `Result:` line when needed) (### backlog; ideation principles hold otherwise; 4 tasks held on this) E - FORM",
+    "probes": [
+      "alignment-no-result"
+    ],
+    "exits": {
+      "alignment-no-result": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "B4",
+    "listed_sentence": "B4 `Surfaces:` and `Visible change:` lines (### backlog) E - FORM",
+    "probes": [
+      "seed-no-surfaces",
+      "seed-no-visible"
+    ],
+    "exits": {
+      "seed-no-surfaces": 1,
+      "seed-no-visible": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "B5",
+    "listed_sentence": "B5 `Release review:` line or \"not needed: reason\" (### backlog; 204 of 246 tasks carry it) E - FORM",
+    "probes": [
+      "seed-good"
+    ],
+    "exits": {
+      "seed-good": 0
+    },
+    "verdict": "uncovered",
+    "limit": "Release review is absent in seed-good and still passes; the study lists this as form but no enforcing predicate was found."
+  },
+  {
+    "id": "B6",
+    "listed_sentence": "B6 `design_surfaces.py check --seed` before gate prepare (### backlog; #694 idle names failing seeds) E - FORM",
+    "probes": [
+      "seed-no-non-goals"
+    ],
+    "exits": {
+      "seed-no-non-goals": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "B8",
+    "listed_sentence": "B8 gate record: `decision_ledger.py --reason` + `Recommendation: followed` or `Override:` line (Review-finding disposition; \"Override:\" present in 109 tasks) E - FORM",
+    "probes": [
+      "decision-missing-declaration",
+      "decision-wrong-question"
+    ],
+    "exits": {
+      "decision-missing-declaration": 1,
+      "decision-wrong-question": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "B9",
+    "listed_sentence": "B9 each number/claim in a gate summary or PR body names command + date (## Captain steps; #777 claims-name-their-source) E - FORM",
+    "probes": [
+      "gate-unverified-count"
+    ],
+    "exits": {
+      "gate-unverified-count": 0
+    },
+    "verdict": "uncovered",
+    "limit": "Claim-source disclosure inserts Unchecked counts with exit 0; it does not authenticate command/date."
+  },
+  {
+    "id": "D5",
+    "listed_sentence": "D5 scope notes carry `Package root:` line + \"send completion to main\" line (#633) E - FORM",
+    "probes": [
+      "dispatch-no-root",
+      "dispatch-no-main"
+    ],
+    "exits": {
+      "dispatch-no-root": 1,
+      "dispatch-no-main": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "D7",
+    "listed_sentence": "D7 `dispatch_records.py <task folder>` (record complete) E - FORM",
+    "probes": [
+      "dispatch-no-root"
+    ],
+    "exits": {
+      "dispatch-no-root": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "D8",
+    "listed_sentence": "D8 `dispatch_records.py --names --strict <record>` (bare package script names fail) E - FORM",
+    "probes": [
+      "dispatch-bare-name"
+    ],
+    "exits": {
+      "dispatch-bare-name": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "D10",
+    "listed_sentence": "D10 after each worker report `dispatch_records.py --coverage` (#743) E - FORM",
+    "probes": [
+      "dispatch-coverage-missing",
+      "dispatch-coverage-empty-record"
+    ],
+    "exits": {
+      "dispatch-coverage-missing": 1,
+      "dispatch-coverage-empty-record": 0
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "I4",
+    "listed_sentence": "I4 worker runs `design_surfaces.py check <task>`, cites output E - FORM",
+    "probes": [
+      "design-no-worth"
+    ],
+    "exits": {
+      "design-no-worth": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "I5",
+    "listed_sentence": "I5 FO runs the same check before `gate prepare`, includes output E - FORM",
+    "probes": [
+      "design-no-worth"
+    ],
+    "exits": {
+      "design-no-worth": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  },
+  {
+    "id": "L2",
+    "listed_sentence": "L2 `delivery_gate.py question ... --summary-file`; summary declares `External rounds: N` and second-reviewer outcome E - FORM",
+    "probes": [
+      "gate-no-rounds",
+      "gate-no-captain-steps"
+    ],
+    "exits": {
+      "gate-no-rounds": 1,
+      "gate-no-captain-steps": 1
+    },
+    "verdict": "covered part",
+    "limit": "The named record shape has the listed rejecting control; timing, actual execution and truth remain outside that predicate."
+  }
+]

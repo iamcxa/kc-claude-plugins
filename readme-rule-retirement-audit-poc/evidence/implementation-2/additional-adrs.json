@@ -1,0 +1,14 @@
+[
+  {
+    "path": "docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md",
+    "sha256": "bbad68a92898aa09307888c24bf137fd4de4a8df08889904c30f95abdaa56fd3",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "sha256": "fdd01e8977fab361d09ae6910f822aa4ae10eefb14d8528d82a8e8d1f10b2b15",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted"
+  }
+]

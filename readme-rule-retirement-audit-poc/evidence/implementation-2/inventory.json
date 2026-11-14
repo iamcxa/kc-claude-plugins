@@ -1,0 +1,704 @@
+[
+  {
+    "number": 16,
+    "section": "Review-finding disposition",
+    "rule": "Before repair authorization, product bytes and the recorded candidate revision stay unchanged.",
+    "char_start": 19871,
+    "char_end": 19965,
+    "byte_start": 19883,
+    "byte_end": 19977
+  },
+  {
+    "number": 17,
+    "section": "Review-finding disposition",
+    "rule": "Read-only inspection, non-mutating reproductions, existing tests and throwaway-checkout probes are allowed.",
+    "char_start": 19966,
+    "char_end": 20073,
+    "byte_start": 19978,
+    "byte_end": 20085
+  },
+  {
+    "number": 18,
+    "section": "Review-finding disposition",
+    "rule": "Report/gate commits may advance repository HEAD without changing the candidate.",
+    "char_start": 20074,
+    "char_end": 20153,
+    "byte_start": 20086,
+    "byte_end": 20165
+  },
+  {
+    "number": 19,
+    "section": "Review-finding disposition",
+    "rule": "Validators recommend `PASSED` or `REJECTED`; new findings or changed evidence re-enter this checkpoint.",
+    "char_start": 20154,
+    "char_end": 20257,
+    "byte_start": 20166,
+    "byte_end": 20269
+  },
+  {
+    "number": 20,
+    "section": "Review-finding disposition",
+    "rule": "The four evidence fields are released user and normal workflow; observable harm; affected value acceptance criterion or non-negotiable boundary; and trigger evidence.",
+    "char_start": 20259,
+    "char_end": 20425,
+    "byte_start": 20271,
+    "byte_end": 20437
+  },
+  {
+    "number": 21,
+    "section": "Review-finding disposition",
+    "rule": "Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or `contract[repo/relative/path#anchor]` plus a nonblank claim.",
+    "char_start": 20426,
+    "char_end": 20550,
+    "byte_start": 20438,
+    "byte_end": 20562
+  },
+  {
+    "number": 22,
+    "section": "Review-finding disposition",
+    "rule": "`none:` with a rationale does not establish Material.",
+    "char_start": 20551,
+    "char_end": 20604,
+    "byte_start": 20563,
+    "byte_end": 20616
+  },
+  {
+    "number": 23,
+    "section": "Review-finding disposition",
+    "rule": "all four fields establish supported-workflow harm to a protected boundary or value acceptance criterion.",
+    "char_start": 20622,
+    "char_end": 20728,
+    "byte_start": 20634,
+    "byte_end": 20740
+  },
+  {
+    "number": 24,
+    "section": "Review-finding disposition",
+    "rule": "hypothetical, unsupported, unobserved or unpromised trigger; record what would make it material.",
+    "char_start": 20750,
+    "char_end": 20848,
+    "byte_start": 20762,
+    "byte_end": 20860
+  },
+  {
+    "number": 25,
+    "section": "Review-finding disposition",
+    "rule": "no current user-visible loss or protected boundary is at risk.",
+    "char_start": 20863,
+    "char_end": 20925,
+    "byte_start": 20875,
+    "byte_end": 20937
+  },
+  {
+    "number": 26,
+    "section": "Review-finding disposition",
+    "rule": "the task cannot own the scope, product or compatibility call.",
+    "char_start": 20948,
+    "char_end": 21009,
+    "byte_start": 20960,
+    "byte_end": 21021
+  },
+  {
+    "number": 27,
+    "section": "Review-finding disposition",
+    "rule": "A `Follow-up:` line in Scope is not accepted scope by itself: the first stage of the receiving task to meet it assesses it against its stated reason and earlier rulings.",
+    "char_start": 21011,
+    "char_end": 21180,
+    "byte_start": 21023,
+    "byte_end": 21192
+  },
+  {
+    "number": 28,
+    "section": "Review-finding disposition",
+    "rule": "It builds the line only when the change alters no behaviour that an accepted criterion, a Captain ruling or a journey contract relies on; otherwise it returns the line to FO as a Needs decision.",
+    "char_start": 21181,
+    "char_end": 21375,
+    "byte_start": 21193,
+    "byte_end": 21387
+  },
+  {
+    "number": 29,
+    "section": "Review-finding disposition",
+    "rule": "It records which, and why.",
+    "char_start": 21376,
+    "char_end": 21402,
+    "byte_start": 21388,
+    "byte_end": 21414
+  },
+  {
+    "number": 30,
+    "section": "Review-finding disposition",
+    "rule": "A finding FO declined in a committed gate summary or under `### FO declines` is settled: a later validator does not report it again unless the candidate changes the lines or the evidence the decline names, or new evidence would make it Material.",
+    "char_start": 21403,
+    "char_end": 21648,
+    "byte_start": 21415,
+    "byte_end": 21660
+  },
+  {
+    "number": 31,
+    "section": "FO steps: review findings",
+    "rule": "Apply this checkpoint to findings from implementation, validation, detached audits, consequential FO quick work and rejected gates.",
+    "char_start": 21680,
+    "char_end": 21811,
+    "byte_start": 21692,
+    "byte_end": 21823
+  },
+  {
+    "number": 32,
+    "section": "FO steps: review findings",
+    "rule": "Reviewers observe; workers' classifications and `actor:ensign` Resolutions are advisory.",
+    "char_start": 21816,
+    "char_end": 21907,
+    "byte_start": 21828,
+    "byte_end": 21919
+  },
+  {
+    "number": 33,
+    "section": "FO steps: review findings",
+    "rule": "Preserve findings and assess the four evidence fields above, separating materiality, ownership and disposition.",
+    "char_start": 21908,
+    "char_end": 22022,
+    "byte_start": 21920,
+    "byte_end": 22034
+  },
+  {
+    "number": 34,
+    "section": "FO steps: review findings",
+    "rule": "Missing required evidence or unresolved classification requires investigation or hold.",
+    "char_start": 22023,
+    "char_end": 22112,
+    "byte_start": 22035,
+    "byte_end": 22124
+  },
+  {
+    "number": 35,
+    "section": "FO steps: review findings",
+    "rule": "Within approved boundaries, FO may explicitly decline evidenced Deferred risk or Polish in the existing committed gate summary, naming the finding, reason, candidate revision and the lines or evidence it rests on.",
+    "char_start": 22116,
+    "char_end": 22335,
+    "byte_start": 22128,
+    "byte_end": 22347
+  },
+  {
+    "number": 36,
+    "section": "FO steps: review findings",
+    "rule": "When that summary is already consumed, FO writes the decline under `### FO declines` in the task file, committed with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate lists each entry there.",
+    "char_start": 22336,
+    "char_end": 22562,
+    "byte_start": 22348,
+    "byte_end": 22574
+  },
+  {
+    "number": 37,
+    "section": "FO steps: review findings",
+    "rule": "This FO-authored decision requires no live worker or reviewer rerun for acknowledgement; preserve worker reports and verdicts.",
+    "char_start": 22563,
+    "char_end": 22692,
+    "byte_start": 22575,
+    "byte_end": 22704
+  },
+  {
+    "number": 38,
+    "section": "FO steps: review findings",
+    "rule": "Repairs require worker investigation without candidate mutation, distinct FO `fix` authorization through the runtime's addressable-worker boundary, then independent validation.",
+    "char_start": 22696,
+    "char_end": 22878,
+    "byte_start": 22708,
+    "byte_end": 22890
+  },
+  {
+    "number": 39,
+    "section": "FO steps: review findings",
+    "rule": "Without that authorization, hold.",
+    "char_start": 22879,
+    "char_end": 22912,
+    "byte_start": 22891,
+    "byte_end": 22924
+  },
+  {
+    "number": 40,
+    "section": "FO steps: review findings",
+    "rule": "Scope, value, threshold, tolerance, risk-acceptance and acceptance-criteria changes require the Captain.",
+    "char_start": 22916,
+    "char_end": 23023,
+    "byte_start": 22928,
+    "byte_end": 23035
+  },
+  {
+    "number": 41,
+    "section": "FO steps: review findings",
+    "rule": "Material findings cannot use the record-only lane; hold/route-for-decision forbids repair and reviewer rerun.",
+    "char_start": 23024,
+    "char_end": 23136,
+    "byte_start": 23036,
+    "byte_end": 23148
+  },
+  {
+    "number": 42,
+    "section": "FO steps: review findings",
+    "rule": "A round is one verdict of an external reviewer of the delivery on the PR head (Codex on the PR, RoboRev or another); FO counts rounds and records the count in the committed gate summary.",
+    "char_start": 23140,
+    "char_end": 23332,
+    "byte_start": 23152,
+    "byte_end": 23344
+  },
+  {
+    "number": 43,
+    "section": "FO steps: review findings",
+    "rule": "A reviewer that a listed extension covers is read the way its `EXTENSION.md` says (`## Extensions`).",
+    "char_start": 23333,
+    "char_end": 23436,
+    "byte_start": 23345,
+    "byte_end": 23448
+  },
+  {
+    "number": 44,
+    "section": "FO steps: review findings",
+    "rule": "A finding assessed Material, or labelled P1 by the reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by the Captain with the reason recorded (step 4).",
+    "char_start": 23437,
+    "char_end": 23626,
+    "byte_start": 23449,
+    "byte_end": 23638
+  },
+  {
+    "number": 45,
+    "section": "FO steps: review findings",
+    "rule": "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev).",
+    "char_start": 23627,
+    "char_end": 23732,
+    "byte_start": 23639,
+    "byte_end": 23744
+  },
+  {
+    "number": 46,
+    "section": "FO steps: review findings",
+    "rule": "Rounds 1 and 2 follow steps 1 to 4.",
+    "char_start": 23733,
+    "char_end": 23771,
+    "byte_start": 23745,
+    "byte_end": 23783
+  },
+  {
+    "number": 47,
+    "section": "FO steps: review findings",
+    "rule": "From round 3 a finding that is neither does not start a repair cycle: FO declines it in the committed gate summary, naming the finding and its reason.",
+    "char_start": 23772,
+    "char_end": 23928,
+    "byte_start": 23784,
+    "byte_end": 23940
+  },
+  {
+    "number": 48,
+    "section": "FO steps: review findings",
+    "rule": "Only an observed failure naming who it hurts, a repeat in a later round or task, or a Captain ask makes it a backlog task (`spacedock new`, or the one holding it); it never enters an open task's Scope.",
+    "char_start": 23929,
+    "char_end": 24136,
+    "byte_start": 23941,
+    "byte_end": 24148
+  },
+  {
+    "number": 49,
+    "section": "FO steps: review findings",
+    "rule": "The terminal gate lists each such task.",
+    "char_start": 24137,
+    "char_end": 24179,
+    "byte_start": 24149,
+    "byte_end": 24191
+  },
+  {
+    "number": 50,
+    "section": "FO steps: review findings",
+    "rule": "Rejection routing carries evidence, classifications, authorized dispositions and assignment without re-triage.",
+    "char_start": 24181,
+    "char_end": 24291,
+    "byte_start": 24193,
+    "byte_end": 24303
+  },
+  {
+    "number": 51,
+    "section": "FO steps: review findings",
+    "rule": "Materiality and ownership are independent.",
+    "char_start": 24293,
+    "char_end": 24335,
+    "byte_start": 24305,
+    "byte_end": 24347
+  },
+  {
+    "number": 52,
+    "section": "FO steps: review findings",
+    "rule": "Owned Material is eligible for an FO-authorized fix; out-of-scope Material holds as Needs decision.",
+    "char_start": 24336,
+    "char_end": 24435,
+    "byte_start": 24348,
+    "byte_end": 24447
+  },
+  {
+    "number": 53,
+    "section": "FO steps: review findings",
+    "rule": "Deferred risk or Polish may use the recorded FO decline above within existing risk acceptance.",
+    "char_start": 24436,
+    "char_end": 24530,
+    "byte_start": 24448,
+    "byte_end": 24542
+  },
+  {
+    "number": 54,
+    "section": "FO steps: review findings",
+    "rule": "A Needs decision put to the Captain at a gate carries FO's recommendation.",
+    "char_start": 24532,
+    "char_end": 24606,
+    "byte_start": 24544,
+    "byte_end": 24618
+  },
+  {
+    "number": 55,
+    "section": "FO steps: review findings",
+    "rule": "His plain approval accepts that recommendation only when the gate question says so, for example \"approving accepts the recommendation for D2; say if you object\".",
+    "char_start": 24607,
+    "char_end": 24768,
+    "byte_start": 24619,
+    "byte_end": 24780
+  },
+  {
+    "number": 56,
+    "section": "FO steps: review findings",
+    "rule": "Without that sentence a decision he did not address stays open: FO records its handling as FO's reading, never as his ruling, and asks him.",
+    "char_start": 24769,
+    "char_end": 24908,
+    "byte_start": 24781,
+    "byte_end": 24920
+  },
+  {
+    "number": 57,
+    "section": "FO steps: review findings",
+    "rule": "A decision an accepted ADR already settles is not asked again: FO applies it and states it in the gate summary as `Precedent: ADR <number> — 「<that ADR's Words line>」`, and the Captain may reopen it.",
+    "char_start": 24910,
+    "char_end": 25109,
+    "byte_start": 24922,
+    "byte_end": 25127
+  },
+  {
+    "number": 58,
+    "section": "FO steps: review findings",
+    "rule": "An ADR with no Words line is quoted by the decision sentence it applies, as `Precedent: ADR <number> (no Words line) — 「<that sentence>」`.",
+    "char_start": 25110,
+    "char_end": 25248,
+    "byte_start": 25128,
+    "byte_end": 25272
+  },
+  {
+    "number": 59,
+    "section": "FO steps: review findings",
+    "rule": "Authority, a gate approval, a merge, an outward-facing action, an irreversible change and money are always asked, whatever an ADR says, and an ADR on one of them is never a `Precedent:` line.",
+    "char_start": 25249,
+    "char_end": 25440,
+    "byte_start": 25273,
+    "byte_end": 25464
+  },
+  {
+    "number": 60,
+    "section": "FO steps: review findings",
+    "rule": "A Captain ruling is his reply to the question it settles, given after that question was put.",
+    "char_start": 25442,
+    "char_end": 25534,
+    "byte_start": 25466,
+    "byte_end": 25558
+  },
+  {
+    "number": 61,
+    "section": "FO steps: review findings",
+    "rule": "FO never records as his ruling: silence on a decision the question did not state approval accepts, consent he gave earlier to a different question, or a choice he raised but did not make.",
+    "char_start": 25535,
+    "char_end": 25722,
+    "byte_start": 25559,
+    "byte_end": 25746
+  },
+  {
+    "number": 62,
+    "section": "FO steps: review findings",
+    "rule": "FO answers a question the Captain asks at a gate before dispatching on it, and returns a choice he raised to him rather than to a worker.",
+    "char_start": 25723,
+    "char_end": 25860,
+    "byte_start": 25747,
+    "byte_end": 25884
+  },
+  {
+    "number": 63,
+    "section": "FO steps: review findings",
+    "rule": "When the Captain chooses differently from the recommendation, FO writes `Override: recommended <option>; Captain chose <option>; area: <area>` in the gate resolution reason, so later workers find past rulings with `git grep 'Override:'` in the state checkout.",
+    "char_start": 25862,
+    "char_end": 26121,
+    "byte_start": 25886,
+    "byte_end": 26145
+  },
+  {
+    "number": 64,
+    "section": "FO steps: review findings",
+    "rule": "A revise asking for what FO did not recommend, and his approval of a recommendation FO revised after pushback, also owe one, on the task they concern.",
+    "char_start": 26123,
+    "char_end": 26273,
+    "byte_start": 26147,
+    "byte_end": 26297
+  },
+  {
+    "number": 65,
+    "section": "FO steps: review findings",
+    "rule": "Otherwise the reason carries `Recommendation: followed`.",
+    "char_start": 26274,
+    "char_end": 26330,
+    "byte_start": 26298,
+    "byte_end": 26354
+  },
+  {
+    "number": 66,
+    "section": "FO steps: review findings",
+    "rule": "Before `gate record --actor person:captain`, FO runs `python3 <package>/scripts/decision_ledger.py --reason <file> --task <task>`; nonzero holds the record.",
+    "char_start": 26331,
+    "char_end": 26487,
+    "byte_start": 26355,
+    "byte_end": 26511
+  },
+  {
+    "number": 67,
+    "section": "Decision records",
+    "rule": "The implementation worker writes one ADR file per decision by its stage principles.",
+    "char_start": 26510,
+    "char_end": 26593,
+    "byte_start": 26534,
+    "byte_end": 26617
+  },
+  {
+    "number": 68,
+    "section": "Decision records",
+    "rule": "Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which requires every record the candidate added or changed, plus `--require <numbers>` for each `ADR:` number the task's `## Number guards` reserves and any number the implementation report names; exit 1 or a missing record returns through the existing feedback route, and exit 2 is a configuration error that returns to FO.",
+    "char_start": 26594,
+    "char_end": 26999,
+    "byte_start": 26618,
+    "byte_end": 27023
+  },
+  {
+    "number": 69,
+    "section": "Number guards",
+    "rule": "Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.",
+    "char_start": 30621,
+    "char_end": 30881,
+    "byte_start": 30669,
+    "byte_end": 30929
+  },
+  {
+    "number": 70,
+    "section": "Number guards",
+    "rule": "`python3 <package>/scripts/number_guards.py --help` lists the flags and rules; `trunk:`, `migrations-path:` and `adr-path:` (default `docs/adr`) come from this README's frontmatter.",
+    "char_start": 30882,
+    "char_end": 31063,
+    "byte_start": 30930,
+    "byte_end": 31111
+  },
+  {
+    "number": 71,
+    "section": "Number guards",
+    "rule": "`check` freezes a migration in a commit recorded `Applied at:` (R2).",
+    "char_start": 31080,
+    "char_end": 31148,
+    "byte_start": 31128,
+    "byte_end": 31196
+  },
+  {
+    "number": 72,
+    "section": "Number guards",
+    "rule": "`Applied: none as of <sha>` records that nothing was pushed up to that commit; a validator that finds none of `Applied at:`, `Not applied:` or `Applied: none` reports the missing record to FO instead of re-checking deploys.",
+    "char_start": 31151,
+    "char_end": 31380,
+    "byte_start": 31199,
+    "byte_end": 31428
+  },
+  {
+    "number": 73,
+    "section": "Number guards",
+    "rule": "A task with no `Migration:` line owes none of these.",
+    "char_start": 31381,
+    "char_end": 31433,
+    "byte_start": 31429,
+    "byte_end": 31481
+  },
+  {
+    "number": 74,
+    "section": "Number guards",
+    "rule": "`python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>` runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR head before FO asks for merge.",
+    "char_start": 31447,
+    "char_end": 31668,
+    "byte_start": 31495,
+    "byte_end": 31716
+  },
+  {
+    "number": 75,
+    "section": "Number guards",
+    "rule": "Exit 2 is a configuration error, which returns to FO as a hold.",
+    "char_start": 31669,
+    "char_end": 31734,
+    "byte_start": 31717,
+    "byte_end": 31782
+  },
+  {
+    "number": 76,
+    "section": "Number guards",
+    "rule": "A task whose recorded `profile` is `poc` adds, edits and deletes no migration file and reserves no number.",
+    "char_start": 31746,
+    "char_end": 31854,
+    "byte_start": 31794,
+    "byte_end": 31902
+  },
+  {
+    "number": 77,
+    "section": "Number guards",
+    "rule": "A `FAIL R6` crosses the POC boundary (a schema change persists across sessions): the worker records `boundary-crossed: persistent-state` naming the path, and the task is not repaired in place.",
+    "char_start": 31855,
+    "char_end": 32053,
+    "byte_start": 31903,
+    "byte_end": 32101
+  },
+  {
+    "number": 78,
+    "section": "FO steps: number guards",
+    "rule": "Before an implementation dispatch, FO runs `git -C <repo> fetch`, then `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>` once per kind the task needs, when the implementation dispatch is built and not earlier; a task holds one number per kind, and a task needing a second ADR or migration returns to FO.",
+    "char_start": 32098,
+    "char_end": 32496,
+    "byte_start": 32146,
+    "byte_end": 32544
+  },
+  {
+    "number": 79,
+    "section": "FO steps: number guards",
+    "rule": "FO records each printed `Migration: NNNN` / `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as dispatch scope notes.",
+    "char_start": 32497,
+    "char_end": 32645,
+    "byte_start": 32545,
+    "byte_end": 32693
+  },
+  {
+    "number": 80,
+    "section": "FO steps: number guards",
+    "rule": "Before any push of a candidate to a persistent shared non-production environment (a database branch, or a separate hosting project such as a staging project whose database is that project's own production database), FO records `Applied at: <environment> <sha>` for the commit being pushed.",
+    "char_start": 32661,
+    "char_end": 32956,
+    "byte_start": 32709,
+    "byte_end": 33004
+  },
+  {
+    "number": 81,
+    "section": "FO steps: number guards",
+    "rule": "When the push is rejected or the deploy is confirmed not to have run for that commit (the push's non-zero output, or the environment's own deploy record showing no deploy of it), FO replaces that one line with `Not applied: <environment> <sha> - <evidence>` and the migration is no longer frozen.",
+    "char_start": 32957,
+    "char_end": 33261,
+    "byte_start": 33005,
+    "byte_end": 33309
+  },
+  {
+    "number": 82,
+    "section": "FO steps: number guards",
+    "rule": "Without that confirmation the line stays and the migration counts as applied.",
+    "char_start": 33262,
+    "char_end": 33341,
+    "byte_start": 33310,
+    "byte_end": 33389
+  },
+  {
+    "number": 83,
+    "section": "FO steps: number guards",
+    "rule": "When FO dispatches validation and nothing was pushed for the task, FO records `Applied: none as of <candidate sha>`, so a task with neither line has a skipped record.",
+    "char_start": 33342,
+    "char_end": 33512,
+    "byte_start": 33390,
+    "byte_end": 33560
+  },
+  {
+    "number": 84,
+    "section": "FO steps: number guards",
+    "rule": "A task with no `Migration:` line records no `Applied:` line.",
+    "char_start": 33513,
+    "char_end": 33573,
+    "byte_start": 33561,
+    "byte_end": 33621
+  },
+  {
+    "number": 85,
+    "section": "FO steps: number guards",
+    "rule": "FO presents the `boundary-crossed: persistent-state` marker at the validation gate.",
+    "char_start": 33592,
+    "char_end": 33677,
+    "byte_start": 33640,
+    "byte_end": 33725
+  },
+  {
+    "number": 86,
+    "section": "FO steps: number guards",
+    "rule": "Without `migrations-path:` a db task exits 2 and a POC is not guarded; `none` declares no migration files.",
+    "char_start": 33678,
+    "char_end": 33786,
+    "byte_start": 33726,
+    "byte_end": 33834
+  },
+  {
+    "number": 87,
+    "section": "FO steps: number guards",
+    "rule": "When two tasks hold one migration number (`check` reports R3, R5 or R8 on the later candidate), the task whose migration is applied keeps it and the other, unapplied task renumbers, so no reset is needed.",
+    "char_start": 33804,
+    "char_end": 34012,
+    "byte_start": 33852,
+    "byte_end": 34060
+  },
+  {
+    "number": 88,
+    "section": "FO steps: number guards",
+    "rule": "A migration counts as applied when its task has an `Applied at:` line or it is on the base branch; when both tasks are applied and neither is on the base branch, the one that merges first keeps the number.",
+    "char_start": 34013,
+    "char_end": 34224,
+    "byte_start": 34061,
+    "byte_end": 34272
+  },
+  {
+    "number": 89,
+    "section": "FO steps: number guards",
+    "rule": "The renumbering task deletes its `Migration:` line, FO runs `reserve` again, and the task returns to implementation with the new number in its scope notes.",
+    "char_start": 34225,
+    "char_end": 34384,
+    "byte_start": 34273,
+    "byte_end": 34432
+  },
+  {
+    "number": 90,
+    "section": "FO steps: number guards",
+    "rule": "When the renumbering task has an `Applied at:` line, its environment's database holds a migration no branch will carry, and FO holds for the Captain: a database branch is reset, and a shared non-production database that cannot be reset (a separate project's own database) is deleted and recreated by the Captain.",
+    "char_start": 34385,
+    "char_end": 34703,
+    "byte_start": 34433,
+    "byte_end": 34751
+  },
+  {
+    "number": 91,
+    "section": "FO steps: number guards",
+    "rule": "FO then replaces the line with `Not applied: <environment> <sha> - database reset` so that `check` accepts the renumber.",
+    "char_start": 34704,
+    "char_end": 34828,
+    "byte_start": 34752,
+    "byte_end": 34876
+  },
+  {
+    "number": 92,
+    "section": "FO steps: number guards",
+    "rule": "A branch database is reset through the provider's own API; `adoption.md` gives one provider's example.",
+    "char_start": 34829,
+    "char_end": 34933,
+    "byte_start": 34877,
+    "byte_end": 34981
+  },
+  {
+    "number": 93,
+    "section": "FO steps: number guards",
+    "rule": "This step is documented, not wrapped in a tool.",
+    "char_start": 34934,
+    "char_end": 34981,
+    "byte_start": 34982,
+    "byte_end": 35029
+  }
+]

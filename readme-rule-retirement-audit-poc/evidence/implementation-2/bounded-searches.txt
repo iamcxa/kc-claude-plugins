@@ -1,0 +1,198 @@
+Scope: production scripts and test_*.py, pinned commit c2f035b6612f5edb42220576b3414e993531ffd6
+Pattern: Follow-up:|value-ac|four evidence|Material|Precedent:|Applied: none|Not applied:|FAIL R[1-8]|no.*reason|Reviewer:
+
+kc-dev-flow-2/scripts/decision_ledger.py:28:     if not reason.strip():
+kc-dev-flow-2/scripts/decision_ledger.py:44:         if not quotes_bound_question({"question": bound, "reason": reason}):
+kc-dev-flow-2/scripts/delivery_gate.py:14: at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
+kc-dev-flow-2/scripts/delivery_gate.py:24: after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+kc-dev-flow-2/scripts/delivery_gate.py:28: a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
+kc-dev-flow-2/scripts/delivery_gate.py:38: When trunk is not an ancestor of the head, check requires a passing merge-result run matching README `merge-test:`, or a `Merge result: not run: <reason>` line.
+kc-dev-flow-2/scripts/delivery_gate.py:386:                     problems.append("copilot configuration error needs a nonempty reason")
+kc-dev-flow-2/scripts/delivery_gate.py:526:                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
+kc-dev-flow-2/scripts/delivery_gate.py:529:         problems.append(f"declined item has no reason: {tok(item)}")
+kc-dev-flow-2/scripts/delivery_gate.py:732:                                  "using the workflow README `merge-test:` command, or write `Merge result: not run: <reason>` in the question the Captain reads.")
+kc-dev-flow-2/scripts/delivery_gate.py:1054:             problems.append(f"step {number}: Ran needs fresh shell or real browser and a valid UTC timestamp, or none — <reason>")
+kc-dev-flow-2/scripts/delivery_gate.py:1059:             if not reason or len(reason[1].split()) < 2:
+kc-dev-flow-2/scripts/delivery_gate.py:1190:             problems.append("the question itself needs Merge result: not run: <reason>")
+kc-dev-flow-2/scripts/design_surfaces.py:7: lines opening with Non-goals, Budget, Stop condition or Follow-up: are exempt. The check reads git history and the working copy,
+kc-dev-flow-2/scripts/design_surfaces.py:12: `Override: recommended ...; Captain chose ...; area: ...` line in the body that no gate resolution reason carries is printed as a note, exit code unchanged.
+kc-dev-flow-2/scripts/design_surfaces.py:76: SCOPE_EXEMPT = re.compile(r"\s*(?:[-*]\s*)?(?:Non-goals?\b|Budget\b|Stop condition\b|Follow-up:)", re.I)
+kc-dev-flow-2/scripts/design_surfaces.py:295:             issues.append((entry.start + 1, f"'{entry.header.strip()}' needs one 'Supersedes:' value: none or explicit unique AC ids, optionally '(no replacement: reason)'"))
+kc-dev-flow-2/scripts/design_surfaces.py:577:             errors.append(f"{name}: report finding {number} has no 'Security finding {number}:' line naming a declared AC-<id>, 'declined: <reason>' (MEDIUM or LOW only) or 'Needs decision: <text>'")
+kc-dev-flow-2/scripts/design_surfaces.py:798:             errors.append(f"{name}: report finding {number} has no 'Design finding {number}:' line naming a declared AC-<id>, 'fixed: <what changed>', 'declined: <reason>' (MINOR only) or 'Needs decision: <text>'")
+kc-dev-flow-2/scripts/design_surfaces.py:885:             errors.append(f"{name}: built screen finding {number} has no 'Built screen finding {number}:' line naming F<N> (MAJOR), 'declined: <reason>' (MINOR only) or 'Needs decision: <text>' (MINOR only)")
+kc-dev-flow-2/scripts/design_surfaces.py:1131:         return [f"{path.name}: '## FO alignment' needs a 'Story:' line naming a story or 'none: <reason>'"] if seed else []
+kc-dev-flow-2/scripts/design_surfaces.py:1274:         notes.extend(f"{path.name}: this Override line is in no gate resolution reason: {line[:120]}" for line in owed_overrides(text))
+kc-dev-flow-2/scripts/dispatch_records.py:13: `release-acceptance:` in frontmatter. A line `<name> not run: <reason>` satisfies each instruction check.
+kc-dev-flow-2/scripts/dispatch_records.py:153:                 f"{base}/extensions/{name}/EXTENSION.md into the scope notes, or add a line '{name} not run: <reason>'")
+kc-dev-flow-2/scripts/dispatch_records.py:160:             f"bullet of {base}/extensions/{name}/EXTENSION.md into the scope notes, or add a line '{name} not run: <reason>'")
+kc-dev-flow-2/scripts/observer_check.py:115:                  f"if it cannot be dispatched, save the one line `{WAIVER} <reason>` there instead.",
+kc-dev-flow-2/scripts/pr_watch.py:551:             "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."] if held else []
+kc-dev-flow-2/scripts/role_triggers.py:13: Two validations with a Material or Needs decision F bullet, or two amendments with non-none Supersedes, print
+kc-dev-flow-2/scripts/role_triggers.py:25: A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call at opus rank or above, or a
+kc-dev-flow-2/scripts/role_triggers.py:28: `Reviewer: <agent> not run <date>: <reason>` dated no earlier than it, clears that amendment.
+kc-dev-flow-2/scripts/role_triggers.py:52: FINDING = re.compile(r"^[ \t]*[-*][ \t]+\*{0,2}F[0-9]+\*{0,2}[ \t]*[:(—–-]?[ \t]*(?:Material|Needs decision)\b")
+kc-dev-flow-2/scripts/role_triggers.py:58: MARK = r"(?:-[ \t]+)?Reviewer:[ \t]*(?:kc-dev-flow-2:)?"
+kc-dev-flow-2/scripts/role_triggers.py:363:     """Return (calls, waivers): (model, date) and (date or None, reason) for each `Reviewer:` line naming agent."""
+kc-dev-flow-2/scripts/role_triggers.py:396:             f"and record `Reviewer: kc-dev-flow-2:{agent} {model} <date> — <question>` under ## FO alignment; "
+kc-dev-flow-2/scripts/role_triggers.py:397:             f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: {reason or '<reason>'}` instead.")
+kc-dev-flow-2/scripts/role_triggers.py:401:     return (f"next: {slug} has a Reviewer: line for {agent} under \"{heading}\", where it does not count; "
+kc-dev-flow-2/scripts/role_triggers.py:443:         failures_owed = failures >= 3 and not (calls or reasoned)
+kc-dev-flow-2/scripts/role_triggers.py:454:             found += [f"{failures} validations with a Material or Needs decision finding"] * failures_owed
+kc-dev-flow-2/scripts/role_triggers.py:483:     reminder = [f"next: {slug} has {failures} validations with a Material or Needs decision finding and "
+kc-dev-flow-2/scripts/test_delivery_gate.py:262:             "not run with a reason": COPILOT_NOT_RUN,
+kc-dev-flow-2/scripts/test_delivery_gate.py:273:     def test_a_not_run_with_no_reason_or_a_token_for_another_name_does_not_count(self):
+kc-dev-flow-2/scripts/test_delivery_gate.py:365:             "open Material": (dict(review=SECURITY.replace("1: Needs decision: cap sessions", "1: Material: cap sessions")),
+kc-dev-flow-2/scripts/test_delivery_gate.py:366:                               "is Material and open at this head"),
+kc-dev-flow-2/scripts/test_delivery_gate.py:1205:         'Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. '
+kc-dev-flow-2/scripts/test_delivery_gate.py:1241:         'Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. '
+kc-dev-flow-2/scripts/test_delivery_gate.py:1245:         'Declined, with reasons: Deferred risk, a fabricated findings: [] report cannot be told from a real one (none seen; Material if found); Deferred risk, a worker that skips the review meets the hold at the merge ask, not the validation gate (D3, ruled); Deferred risk, Opus and Fable one run each and no real refusal yet; Polish, the standalone check accepts a review at any dispatched head (delivery_gate.py binds it); Polish, a task with no readable profile now holds instead of skipping (safer deviation). '
+kc-dev-flow-2/scripts/test_delivery_gate.py:1277:                 self.assertEqual(sum(line.startswith("declined item has no reason: ") for line in lines), count)
+kc-dev-flow-2/scripts/test_delivery_gate.py:1280:     def test_every_item_with_a_bracketed_reason_passes_and_a_one_word_bracket_is_no_reason(self):
+kc-dev-flow-2/scripts/test_delivery_gate.py:1284:         self.assertIn("declined item has no reason: 'Polish, a docstring (none)'", out)
+kc-dev-flow-2/scripts/test_delivery_gate.py:1290:         self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, a docstring wording'")
+kc-dev-flow-2/scripts/test_delivery_gate.py:1295:         self.assertEqual(out.splitlines()[2], "declined item has no reason: 'Polish, typo'")
+kc-dev-flow-2/scripts/test_delivery_gate.py:1518:     def test_a_one_word_bracket_in_either_form_is_still_no_reason(self):
+kc-dev-flow-2/scripts/test_delivery_gate.py:1522:             self.assertIn("declined item has no reason", out)
+kc-dev-flow-2/scripts/test_delivery_gate.py:1530:                 self.assertIn("declined item has no reason", out)
+kc-dev-flow-2/scripts/test_delivery_gate.py:1572:         parts = with_report("- F1 Deferred risk: (a) one part, no reason given.", "- F2 Deferred risk: (b) the other part.")
+kc-dev-flow-2/scripts/test_delivery_gate.py:1942:     def test_unobserved_steps_hold_even_when_ran_none_has_no_captain_reason(self):
+kc-dev-flow-2/scripts/test_delivery_gate.py:1996:         no_reason = variant_of('if not reason or len(reason[1].split()) < 2:', 'if False:')
+kc-dev-flow-2/scripts/test_delivery_gate.py:1997:         self.assertEqual(self.run_steps(self.step("Sign in", only="sign in"), "Sign in", no_reason)[0], 0)
+kc-dev-flow-2/scripts/test_delivery_gate.py:2722: REVIEWED = AMENDED.replace("Alignment: not needed.\n", "Alignment: not needed.\nReviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-21 \u2014 do these amendments withdraw what was approved?\n")
+kc-dev-flow-2/scripts/test_delivery_gate.py:2770:         report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+kc-dev-flow-2/scripts/test_delivery_gate.py:2788:                               "Reviewer: kc-dev-flow-2:chief-engineer gpt-6-astra 2026-10-20 — what next?")
+kc-dev-flow-2/scripts/test_design_surfaces.py:397:     def test_seed_requires_unfenced_story_or_none_with_reason_in_map_workflows(self):
+kc-dev-flow-2/scripts/test_design_surfaces.py:605:             "no line": AMENDMENT.replace("Captain: 「keep the count per slot」 (gate reason)\n", ""),
+kc-dev-flow-2/scripts/test_design_surfaces.py:606:             "no words": AMENDMENT.replace("「keep the count per slot」 (gate reason)", ""),
+kc-dev-flow-2/scripts/test_design_surfaces.py:1004:     def test_mutation_dropping_the_not_run_rule_changes_its_reason(self):
+kc-dev-flow-2/scripts/test_design_surfaces.py:1685:     def notes(self, body_line, reason="ok", module=ds):
+kc-dev-flow-2/scripts/test_design_surfaces.py:1692:     def test_an_override_line_no_gate_reason_carries_prints_one_note_and_changes_no_verdict(self):
+kc-dev-flow-2/scripts/test_design_surfaces.py:1699:         self.assertEqual(self.notes(OVERRIDE_LINE, reason="Override: recommended option C; Captain chose option B; area: ui")[1], [])
+kc-dev-flow-2/scripts/test_design_surfaces.py:1700:         self.assertEqual(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE)[1], [])
+kc-dev-flow-2/scripts/test_design_surfaces.py:1714:         self.assertEqual(len(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE, module=uncarried)[1]), 1)
+kc-dev-flow-2/scripts/test_design_surfaces.py:2001:         for line in ("- Non-goals: nothing else.", "Budget: one day.", "- Stop condition: green CI.", "Follow-up: a later task."):
+kc-dev-flow-2/scripts/test_dispatch_records.py:724:     def test_the_root_substituted_path_or_a_not_run_reason_passes(self):
+kc-dev-flow-2/scripts/test_dispatch_records.py:1814:           'boundary: captain-ruling[2026-10-27] no-repeat words conflict with value-ac[AC-8] explicit repeat; trigger: '
+kc-dev-flow-2/scripts/test_dispatch_records.py:1890:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:1952:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2006:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2015:           'worker; observable harm = none demonstrated, but full accepted proof absent; boundary = value-ac[AC-2] '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2016:           'immediate-spawn order and value-ac[AC-6] unchanged generated prompt/fields; trigger = committed '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2081:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2090:           'worker; observable harm = none demonstrated, but full accepted proof absent; boundary = value-ac[AC-2] '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2091:           'immediate-spawn order and value-ac[AC-6] unchanged generated prompt/fields; trigger = committed '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2138:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2147:           'worker; observable harm = none demonstrated, but full accepted proof absent; boundary = value-ac[AC-2] '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2148:           'immediate-spawn order and value-ac[AC-6] unchanged generated prompt/fields; trigger = committed '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2157:           'assignment or product damage observed; boundary = value-ac[AC-2] no intervening operation, plus the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2229:           'fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2238:           'worker; observable harm = none demonstrated, but full accepted proof absent; boundary = value-ac[AC-2] '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2239:           'immediate-spawn order and value-ac[AC-6] unchanged generated prompt/fields; trigger = committed '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2248:           'assignment or product damage observed; boundary = value-ac[AC-2] no intervening operation, plus the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2378:           'and no link back to Paired computers. A full binding chain (`unbindDevice` reason `full`) gets the same '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2424:           'and no link back to Paired computers. A full binding chain (`unbindDevice` reason `full`) gets the same '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2518:                         'validation-1 REJECTED with F1 Material, F2 and F3 Polish, F4 Needs decision.',
+kc-dev-flow-2/scripts/test_dispatch_records.py:2539:           'fresh Codex scenarios; command-not-found prevents real Terminal review. `value-ac[AC-1]` and '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2540:           '`value-ac[AC-18]` installed-path proof remains incomplete. Exact command/digest/source evidence and all '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2546:           'fresh Codex scenarios; command-not-found prevents real Terminal review. `value-ac[AC-1]` successful Codex '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2792:           'and 0 after, so staff cannot create a booking at that branch until `open`. Not Material under the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:2926:                  'given, assess X1 and X2 as findings with their own F numbers and Material bullets, and report the '
+kc-dev-flow-2/scripts/test_dispatch_records.py:3202:     "Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-27 — batch 8 review at the ideation gate (the Captain's batch ruling 2026-10-27): per-task disposition, the Captain's decisions, order and batch risk.\n"
+kc-dev-flow-2/scripts/test_dispatch_stage.py:556:                                "Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-11-09 — reviewed amendments\n"))
+kc-dev-flow-2/scripts/test_number_guards.py:73:             self.assertIn("FAIL R1", out)
+kc-dev-flow-2/scripts/test_number_guards.py:88:             self.assertIn("FAIL R1", out)
+kc-dev-flow-2/scripts/test_number_guards.py:107:         self.assertIn("FAIL R2", out)
+kc-dev-flow-2/scripts/test_number_guards.py:115:         for line in (f"Not applied: uat {self.applied} - push rejected", f"Not applied: uat {self.applied}"):
+kc-dev-flow-2/scripts/test_number_guards.py:119:         self.assertEqual((code, "FAIL R2" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_number_guards.py:126:         self.assertIn("FAIL R2", out)
+kc-dev-flow-2/scripts/test_number_guards.py:133:         self.assertEqual((code, "FAIL R3" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_number_guards.py:136:         self.assertEqual((code, "FAIL R2" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_number_guards.py:137:         reset = f"Not applied: uat {self.applied} - database reset"
+kc-dev-flow-2/scripts/test_number_guards.py:196:             self.assertIn("FAIL R3", out)
+kc-dev-flow-2/scripts/test_number_guards.py:218:             self.assertIn("FAIL R4", out)
+kc-dev-flow-2/scripts/test_number_guards.py:227:             self.assertIn("FAIL R4", out)
+kc-dev-flow-2/scripts/test_number_guards.py:237:             self.assertIn("FAIL R4", out)
+kc-dev-flow-2/scripts/test_number_guards.py:248:             self.assertIn("FAIL R5", out)
+kc-dev-flow-2/scripts/test_number_guards.py:273:                     self.assertIn(f"FAIL R6: {path.replace('__', '/')}", out)
+kc-dev-flow-2/scripts/test_number_guards.py:331:             self.assertEqual((code, "FAIL R5" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_number_guards.py:343:                 self.assertEqual((code, "FAIL R7" in out), (0, False), out)
+kc-dev-flow-2/scripts/test_number_guards.py:346:                 self.assertEqual((code, "FAIL R7: db/migs/0002_x.sql" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_number_guards.py:444:         self.assertIn("FAIL R8: docs/adr/0060-distinct.md: 0060 is held by "
+kc-dev-flow-2/scripts/test_number_guards.py:515:         self.assertIn("FAIL R5", done.stdout)
+kc-dev-flow-2/scripts/test_number_guards.py:516:         self.assertNotIn("FAIL R8", done.stdout)
+kc-dev-flow-2/scripts/test_number_guards.py:529:         self.assertIn("FAIL R8", done.stdout)
+kc-dev-flow-2/scripts/test_number_guards.py:574:             self.assertEqual((code, "FAIL R1" in out), (1, True), out)
+kc-dev-flow-2/scripts/test_observer_check.py:75:         self.assertIn(f"`observer not run: <reason>`", lines[3])
+kc-dev-flow-2/scripts/test_poc_readme.py:104:         for phrase in ("FAIL R6", "boundary-crossed: persistent-state", "not repaired in\n  place", "reserves no number"):
+kc-dev-flow-2/scripts/test_pr_watch.py:1203:             {"action": "no-change", "entry": None, "reason": "fixture", "evidence": []}]}))
+kc-dev-flow-2/scripts/test_pr_watch.py:1775:         self.fourth_repair("some-task", extra="Reviewer: kc-dev-flow-2:chief-engineer not run: Captain ordered it")
+kc-dev-flow-2/scripts/test_pr_watch.py:1785:         report = "\n## Stage Report: validation\n\n- F1 Material: gap\n"
+kc-dev-flow-2/scripts/test_pr_watch.py:1828:         text = (self.state / "some-task.md").read_text() + f"## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus {date} — q\n"
+kc-dev-flow-2/scripts/test_pr_watch.py:1860:         text = (self.state / "some-task.md").read_text() + "## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus 2026-10-18 — q\n"
+kc-dev-flow-2/scripts/test_pr_watch.py:2156:                                  "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."])
+kc-dev-flow-2/scripts/test_pr_watch.py:2169:             "a not-needed review with no reason": self.R4_MARK + "Release review: not needed:\n",
+kc-dev-flow-2/scripts/test_role_triggers.py:70:     return f"Reviewer: {agent} {model} {date} — {question}"
+kc-dev-flow-2/scripts/test_role_triggers.py:82:             self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run: Captain ordered it"))
+kc-dev-flow-2/scripts/test_role_triggers.py:93:         self.assertIn(f"Reviewer: {CE} <model> <date>", lines[0])
+kc-dev-flow-2/scripts/test_role_triggers.py:154:         self.assertIn("`Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>`", out)
+kc-dev-flow-2/scripts/test_role_triggers.py:157:                    "a dated waiver on it": f"Reviewer: {CE} not run 2026-10-24: Captain ordered it"}
+kc-dev-flow-2/scripts/test_role_triggers.py:158:         left = {"a call the day before": call(CE, "opus", "2026-10-23"), "an undated waiver": f"Reviewer: {CE} not run: Captain ordered it",
+kc-dev-flow-2/scripts/test_role_triggers.py:159:                 "a dated waiver the day before": f"Reviewer: {CE} not run 2026-10-23: Captain ordered it"}
+kc-dev-flow-2/scripts/test_role_triggers.py:182:         self.put(task(repairs=4, extra=f"Reviewer: {CE} not run: Captain ordered the passes"))
+kc-dev-flow-2/scripts/test_role_triggers.py:184:         self.put(task(repairs=4, extra=f"Reviewer: {CE} not run 2026-10-18: Captain ordered the passes"))
+kc-dev-flow-2/scripts/test_role_triggers.py:196:             "blank reason": f"Reviewer: {CE} not run:",
+kc-dev-flow-2/scripts/test_role_triggers.py:197:             "no reason text": f"Reviewer: {CE} not run: ( )",
+kc-dev-flow-2/scripts/test_role_triggers.py:198:             "no date": f"Reviewer: {CE} opus — what next?",
+kc-dev-flow-2/scripts/test_role_triggers.py:199:             "no question": f"Reviewer: {CE} opus 2026-10-16 —",
+kc-dev-flow-2/scripts/test_role_triggers.py:201:             "plan line": "Reviewer: one run per design when the Captain asks",
+kc-dev-flow-2/scripts/test_role_triggers.py:217:         self.assertIn(f"Reviewer: {ER} <model> <date>", lines[1])
+kc-dev-flow-2/scripts/test_role_triggers.py:228:         self.put(task(amendments=amendments, extra=f"Reviewer: {ER} not run 2026-10-16: widened scope only"))
+kc-dev-flow-2/scripts/test_role_triggers.py:230:         self.put(task(amendments=amendments, extra=f"Reviewer: {ER} not run: widened scope only"))
+kc-dev-flow-2/scripts/test_role_triggers.py:278:         self.put(task(amendments=amendment, profile="prod", extra=f"Reviewer: {ER} not run 2026-10-18: widened only"))
+kc-dev-flow-2/scripts/test_role_triggers.py:288:             self.put(task(repairs=repairs, extra=f"Reviewer: {CE} not run 2026-10-24: Captain waived"))
+kc-dev-flow-2/scripts/test_role_triggers.py:307:         line, waiver = call(CE, "opus", "2026-10-16"), f"Reviewer: {CE} not run: Captain ordered the passes"
+kc-dev-flow-2/scripts/test_role_triggers.py:321:         (self.state / f"{SLUG}.md").write_text(task(repairs=4, extra=f"Reviewer: {CE} not run: busy"))
+kc-dev-flow-2/scripts/test_role_triggers.py:357:     failed = "- F1 Material: gap\n- F2 Needs decision: another gap"
+kc-dev-flow-2/scripts/test_role_triggers.py:439:                 self.assertIn("not run <date>: <reason>", out)
+kc-dev-flow-2/scripts/test_role_triggers.py:449:     def test_failure_calls_need_the_model_floor_but_no_date_floor_and_reasoned_waivers_clear(self):
+kc-dev-flow-2/scripts/test_role_triggers.py:452:                 (f"Reviewer: {CE} not run: Captain waived", 1), (f"Reviewer: {CE} not run 2026-01-01: waived", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:453:                 (f"Reviewer: {CE} not run: {UNRELATED}", 0), (f"Reviewer: {CE} not run 2026-01-01: {UNRELATED}", 0)):
+kc-dev-flow-2/scripts/test_role_triggers.py:465:                 (call(CE, "opus", "2026-10-19"), 0), (f"Reviewer: {CE} not run: waived", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:466:                 (f"Reviewer: {CE} not run 2026-10-17: waived", 1), (f"Reviewer: {CE} not run 2026-10-18: waived", 0)):
+kc-dev-flow-2/scripts/test_role_triggers.py:553:                                     (er + f"\nReviewer: {CE} not run 2026-11-09: the outcome is unchanged; the gap is testable now", 1)):
+kc-dev-flow-2/scripts/test_role_triggers.py:653:                                (f"Reviewer: {CE} not run: reason", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:654:                                (f"Reviewer: {CE} not run 2026-11-02: reason", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:655:                                (f"Reviewer: {CE} not run 2026-11-03: reason", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:656:                                (f"Reviewer: {CE} not run: {UNRELATED}", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:657:                                (f"Reviewer: {CE} not run 2026-11-02: {UNRELATED}", 1),
+kc-dev-flow-2/scripts/test_role_triggers.py:658:                                (f"Reviewer: {CE} not run 2026-11-03: {UNRELATED}", 0)):
+kc-dev-flow-2/scripts/test_role_triggers.py:665:         self.put(task(extra=f"Reviewer: {CE} not run: {UNRELATED}"))
+kc-dev-flow-2/scripts/test_role_triggers.py:699:         report = "\n## Stage Report: validation\n- F1 Material: gap\n"
+kc-dev-flow-2/scripts/test_role_triggers.py:727:                     body = task(extra=f"Reviewer: {CE} not run 2026-11-03: {reason}")
+kc-dev-flow-2/scripts/test_role_triggers.py:749:                     body = task(extra=f"Reviewer: {CE} not run 2026-11-09: {answer}")
+kc-dev-flow-2/scripts/test_sd_dispatch.py:32:                "The four evidence fields are", "- **Needs decision:**")
+kc-dev-flow-2/scripts/test_sd_dispatch.py:59:              "replaces that one line with `Not applied: <environment> <sha> - <evidence>`",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:94:               "`Not applied: <environment> <sha> - database reset`",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:171:         need=("FO records `Applied: none as of <candidate sha>`",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:173:               "a validator that finds none of `Applied at:`, `Not applied:` or `Applied: none`"),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:176:                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:185:                 ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:186:                (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:189:               "or new evidence would make it Material"),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:191:         swaps=((r" A finding FO declined in a committed gate summary or under `### FO declines` is settled:.*?would make it Material\.", ""),)),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:224:         swaps=((r"Treat each `Follow-up:` line in Scope.*?which, and why\. ", ""),)),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:312:         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:313:               "an ADR on one of them is never a `Precedent:` line",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:314:               "`Precedent: ADR <number> (no Words line) — 「<that sentence>」`"),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:316:         swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
+kc-dev-flow-2/scripts/test_sd_dispatch.py:319:               "`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.",
+kc-dev-flow-2/scripts/test_task_timeline.py:257:         self.event("revise", revision=2, asked="Proceed now?", holds="task", reason="New scope")
+kc-dev-flow-2/scripts/test_validation_security.py:83:     "open Material": dict(lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: Material: cap sessions per room")),
+kc-dev-flow-2/scripts/test_validation_security.py:86:     "duplicate finding line": dict(lines="Security finding (validation 1) 1: Material: cap sessions\n" + LINES),
+kc-dev-flow-2/scripts/test_validation_security.py:106:     "open Material": "is Material and open at this head",
+kc-dev-flow-2/scripts/test_validation_security.py:123:     "the open-Material rule": (r'if re.match(r"Material:\s*\S", entry):', "if False:", "open Material"),
+kc-dev-flow-2/scripts/validation_security.py:8:   Security finding (validation <N>) <n>: Material: <text> | declined: <reason> | Needs decision: <text>
+kc-dev-flow-2/scripts/validation_security.py:71:         if re.match(r"Material:\s*\S", entry):
+kc-dev-flow-2/scripts/validation_security.py:72:             errors.append(f"{name}: finding {n} of {path} is Material and open at this head; repair and revalidate a new candidate")
+kc-dev-flow-2/scripts/validation_security.py:78:             errors.append(f"{name}: finding {n} of {path} has no 'Security finding (validation {number}) {n}:' line of 'Material: <text>', 'declined: <reason>' (MEDIUM or LOW only) or 'Needs decision: <text>'")

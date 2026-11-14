@@ -85,3 +85,26 @@ Budget: 2 implementation and 1 validation cycles
 ### Summary
 
 Completed the bounded read-only audit by its approved early stop: N=15, M=0, K=0, with no README deletion or product mutation. The report distinguishes narrow record-format enforcement from whole worker behavior and leaves the other five sections unexamined; evidence and a portable pinned-source replay script are in this task folder. FO can now dispatch the single independent validation cycle and copy the report beside the study.
+
+## Stage Report: implementation
+
+- DONE: Captain amendment 1 (in the task file): continue the same table for every rule sentence of the five sections not yet examined ("Review-finding disposition", "FO steps: review findings", "Number guards", "FO steps: number guards", "Decision records"), with no early stop; each row as before: rule quoted / enforcing check quoted / exit code on a violating input you constructed and ran / verdict
+  implementation/report.md appends rows 16–93, preserving the first 15 rows and their evidence; evidence/implementation-2/inventory.json maps all 78 added sentences to exact source-byte spans, with no unquoted body text except list labels/prefixes.
+- DONE: The same rows for each form check listed in .context/dev2-reform/rework-ceremony.md under the workspace root: which README sentence or check script it stands for and whether a run on a violating input exits nonzero; say so if that file names no checkable list
+  The file contains nine form-check families plus fourteen inventory lines explicitly marked FORM; form-checks.json and form-inventory-aliases.json cover all of them, with a source digest/excerpt in form-list-source.md and exact rejecting/accepting controls in runs.json.
+- DONE: Final counts over all six sections: N, M covered whole with a recorded nonzero exit, K README bytes removable if the M went; output is a list for the Captain's ruling and nothing is deleted
+  N=93, M=1, K=68 bytes at unchanged source/base/candidate c2f035b6612f5edb42220576b3414e993531ffd6; row 71 has isolated R2 edit/delete exits 1 and an unchanged exit 0, with the exact 68-byte source slice in evidence/implementation-2/summary.json.
+- DONE: Apply Captain amendment 1 and the replacement stop condition
+  Installed role_triggers.py exited 0 with Budget 2 implementation and 1 validation cycles, spent implementation 2/validation 0; Supersedes is none, so no AC block moved. All five sections and the form list are covered; FO did not end the budget.
+- DONE: Record actual probes and their limits without changing product bytes
+  146 native CLI/function-adapter runs are retained with pre-command file bytes, observed exits/stdout/stderr and any tool-authored scratch-file changes. Row-71 edit/delete returning 0 falsifies M=1; duplicate live AC IDs, false round counts, missing applied records and synthetic reviewer lines remain accepted counterexamples, not hidden passes.
+- DONE: Retain public evidence and close implementation-2 scratch
+  scratch.py close exited 0, removed 16015445 bytes and retained 14 files (551.0 KiB); exact output is in implementation/report.md, hashes in evidence/implementation-2/SHA256SUMS, and the first-cycle evidence manifest remains intact.
+- SKIPPED: State commit and synchronization
+  This dispatch explicitly says not to run spacedock state commit and that FO commits; all authorized entity/report/evidence changes are left uncommitted for FO. No git add fallback, product commit, push, PR, review request or external diagnostic operation was run.
+- SKIPPED: Live POC design-surface obligation, full package suites and roborev
+  The dispatch excludes design_surfaces.py check on this POC route; only Pilot-shaped throwaway fixtures audit the research list. roborev not run: read-only measurement with no code candidate to review; full suite, native agent behavior, live deployments and database resets are not claimed.
+
+### Summary
+
+This report supersedes the earlier implementation stage report and early-stop aggregate conclusion under Captain amendment 1, while preserving its first 15 rows. The expanded read-only audit finishes all six README sections and the listed form checks with N=93, M=1, K=68 bytes; no rule is deleted and the product branch remains clean at the same pinned commit. FO owns the pending state commit, independent validation and study-side report copy.

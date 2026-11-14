@@ -1,0 +1,1055 @@
+$ python3 -B snapshot/kc-dev-flow-2/scripts/decision_ledger.py --reason fixtures/decision/decision-good.txt --task fixtures/decision/sample.md
+exit: 0
+reason: followed
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/decision_ledger.py --reason fixtures/decision/decision-missing-declaration.txt --task fixtures/decision/sample.md
+exit: 1
+reason: missing declaration
+next: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/decision_ledger.py --reason fixtures/decision/decision-wrong-question.txt --task fixtures/decision/sample.md
+exit: 1
+reason: does not quote the bound question
+next: write answering 「Approve the synthetic sample?」 with the bound question copied from fixtures/decision/sample/review/validation/briefing-1/index.json; if he answered a different question, gate withdraw and prepare again with the question he answered, then ask him.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/decision_ledger.py --reason fixtures/decision/decision-placeholder.txt --task fixtures/decision/sample.md
+exit: 1
+reason: placeholder recommendation
+next: write Override: recommended <option>; Captain chose <option>; area: <area> with a concrete recommendation, or Recommendation: followed.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/decision_ledger.py --reason fixtures/decision/decision-false-followed.txt --task fixtures/decision/sample.md
+exit: 0
+reason: followed
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-good-question.md --summary-file fixtures/gate/gate-good-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-no-sufficiency-question.md --summary-file fixtures/gate/gate-no-sufficiency-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the gate text has no 'Sufficiency:' clause: add 'Sufficiency: <the acceptance criteria this candidate met, from its validation report>'
+next: hold the ask; add the missing clause to the question or summary.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-no-necessity-question.md --summary-file fixtures/gate/gate-no-necessity-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+the gate text has no 'Necessity:' clause: add 'Necessity: <who uses this change and what breaks without it>'
+next: hold the ask; add the missing clause to the question or summary.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-no-rounds-question.md --summary-file fixtures/gate/gate-no-rounds-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+summary needs one top-level External rounds: N line (nonnegative integer)
+next: hold preparation; record the external round count in the summary.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-false-rounds-question.md --summary-file fixtures/gate/gate-false-rounds-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-no-captain-steps-question.md --summary-file fixtures/gate/gate-no-captain-steps-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text needs one Captain steps: <record path> line
+next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-decline-no-reason-question.md --summary-file fixtures/gate/gate-decline-no-reason-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+declined item has no reason: 'Polish, synthetic formatting'
+next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-decline-missing-revision-question.md --summary-file fixtures/gate/gate-decline-missing-revision-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-unhandled-polish-question.md --summary-file fixtures/gate/gate-unhandled-polish-summary.md --workflow-dir fixtures/gate
+exit: 1
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+declined items (0) are fewer than the validation report's Deferred risk and Polish findings (1): add a declined item for each, naming the fix as its reason when FO fixed it.
+next: hold the ask; write one declined item for each finding, then run this check again.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-material-with-no-fields-question.md --summary-file fixtures/gate/gate-material-with-no-fields-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-precedent-money-question.md --summary-file fixtures/gate/gate-precedent-money-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/gate/sample.md --text-file fixtures/gate/gate-unverified-count-question.md --summary-file fixtures/gate/gate-unverified-count-summary.md --workflow-dir fixtures/gate
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 1 unchecked
+unchecked count: The test suite has 1234 checks.
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py steps fixtures/gate/sample/captain-steps/1.md --text-file fixtures/gate/steps-message.md
+exit: 1
+step 1 S2: no Observed output or justified unrun step
+Candidate: <40-hex head, or none>\n\n### Step 1\nAsked: <the step exactly as the message states it>\nRan: <what FO ran, where (fresh shell, real browser), UTC time>\nObserved: <the output, or a path in the task folder holding it>\nOnly he can: <what is left> — <why: his credential, account, device or judgment>
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py steps fixtures/gate/sample/captain-steps/1.md --text-file fixtures/gate/steps-message.md
+exit: 0
+captain steps complete: 1 steps, 0 left to him
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 0e91a72704726046873543820f518f68962e6b36
+exit: 0
+PASS: no findings
+base 06a38d7c4b31 head 0e91a7270472 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head bc3df321c7a6cd0c4f0acec707664b63e39890bd
+exit: 1
+FAIL R2: migrations/0002_change.sql: M since 0e91a7270472, applied at synthetic; revert it and add a new migration
+base 06a38d7c4b31 head bc3df321c7a6 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 7fe5d0b16fec4feb080dbfb72d61e06672aea5c6
+exit: 1
+FAIL R2: migrations/0002_change.sql: D since 0e91a7270472, applied at synthetic; revert it and add a new migration
+base 06a38d7c4b31 head 7fe5d0b16fec merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head bc3df321c7a6cd0c4f0acec707664b63e39890bd
+exit: 0
+PASS: no findings
+base 06a38d7c4b31 head bc3df321c7a6 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head bc3df321c7a6cd0c4f0acec707664b63e39890bd
+exit: 0
+PASS: no findings
+base 06a38d7c4b31 head bc3df321c7a6 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 0e91a72704726046873543820f518f68962e6b36
+exit: 1
+FAIL R6: migrations/0002_change.sql: A under the migrations directory; a POC task changes none of it
+base 06a38d7c4b31 head 0e91a7270472 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head bc3df321c7a6cd0c4f0acec707664b63e39890bd
+exit: 1
+FAIL R6: migrations/0002_change.sql: A under the migrations directory; a POC task changes none of it
+base 06a38d7c4b31 head bc3df321c7a6 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 0e91a72704726046873543820f518f68962e6b36 --migrations-path migrations --task fixtures/numbers/task.md --head 7fe5d0b16fec4feb080dbfb72d61e06672aea5c6
+exit: 1
+FAIL R1: migrations/0002_change.sql: D since the merge-base; a migration on the base branch must not change, revert it and add a new migration
+FAIL R6: migrations/0002_change.sql: D under the migrations directory; a POC task changes none of it
+base 0e91a7270472 head 7fe5d0b16fec merge-base 0e91a7270472
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 06a38d7c4b31e2fab8f106f5390f44150356d522
+exit: 0
+PASS: no findings
+base 06a38d7c4b31 head 06a38d7c4b31 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --head 06a38d7c4b31e2fab8f106f5390f44150356d522 --task fixtures/numbers/task.md
+exit: 2
+number_guards: task has Surfaces: db but no migrations-path is declared (set migrations-path: <directory> in the workflow README, or migrations-path: none when the repository has no migration files)
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --head 0e91a72704726046873543820f518f68962e6b36 --task fixtures/numbers/task.md
+exit: 0
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 06a38d7c4b31 head 0e91a7270472 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --head 0e91a72704726046873543820f518f68962e6b36 --task fixtures/numbers/task.md --migrations-path none
+exit: 1
+migration guard skipped: README declares migrations-path: none
+FAIL R7: migrations/0002_change.sql: added, but the README declares migrations-path: none
+base 06a38d7c4b31 head 0e91a7270472 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --head 06a38d7c4b31e2fab8f106f5390f44150356d522 --task fixtures/numbers/task.md --migrations-path none
+exit: 0
+migration guard skipped: README declares migrations-path: none
+PASS: no findings
+base 06a38d7c4b31 head 06a38d7c4b31 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py reserve --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --task fixtures/numbers/task.md --kind migration --migrations-path migrations --state-dir fixtures/numbers
+exit: 0
+Migration: 0002
+Migration: 0003
+warning: state checkout has no origin; no other workflow sees these reservations; set a unique state-branch: before adding origin and push state to the repository
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 0e91a72704726046873543820f518f68962e6b36
+exit: 1
+FAIL R4: migrations/0002_change.sql: number 0002 is not in the task's Migration: lines
+base 06a38d7c4b31 head 0e91a7270472 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head ca189b4c8ef0e6fee8a12c12fa2ad226f1cc68b5
+exit: 1
+FAIL R1: migrations/0001_base.sql: M since the merge-base; a migration on the base branch must not change, revert it and add a new migration
+base 06a38d7c4b31 head ca189b4c8ef0 merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/number_guards.py check --repo fixtures/numbers --base 06a38d7c4b31e2fab8f106f5390f44150356d522 --migrations-path migrations --task fixtures/numbers/task.md --head 0b77510ea73b21603d2b1c28daf3e35d257d36f1
+exit: 1
+FAIL R3: migrations/0001_collision.sql: base already has 0001 (0001_base.sql)
+base 06a38d7c4b31 head 0b77510ea73b merge-base 06a38d7c4b31
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/adr_lint.py fixtures/adrs/docs/adr --since d7cecf33f4de65825ab4b06442d2a3fd8ae2ff08 --require 0001
+exit: 0
+1 ADR file(s) checked, 0 legacy
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/adr_lint.py fixtures/adrs/docs/adr --since d7cecf33f4de65825ab4b06442d2a3fd8ae2ff08 --require 0002
+exit: 1
+required ADR 0002 does not exist
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/adr_lint.py fixtures/adrs/docs/adr --since d7cecf33f4de65825ab4b06442d2a3fd8ae2ff08
+exit: 1
+required ADR 0001: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/adr_lint.py fixtures/adrs/docs/adr --since nonexistent-synthetic-ref
+exit: 2
+--since nonexistent-synthetic-ref: fatal: bad revision 'nonexistent-synthetic-ref'
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 0
+sample.md: seed fields and FO alignment recorded
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 1
+sample.md: missing required body field: Non-goals
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 1
+sample.md: missing required body field: Budget
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 1
+sample.md: missing required body field: Stop condition
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 1
+sample.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check --seed fixtures/design/sample.md
+exit: 1
+sample.md: '## FO alignment' needs a 'Visible change:' line
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 0
+sample.md: design surfaces presentable
+scope check not run: no closed backlog approval
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 1
+sample.md: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test
+scope check not run: no closed backlog approval
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 0
+sample.md: design surfaces presentable
+scope check not run: no closed backlog approval
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 1
+sample.md: '### Amendment 1 — 2026-11-14, chat' supersedes AC-1 but no criterion says 'Amended by Captain, amendment 1' and its 'Supersedes:' line does not say 'no replacement'
+scope check not run: no closed backlog approval
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 1
+sample.md: '### Amendment 1 — 2026-11-14, chat' supersedes AC-1 but no criterion says 'Amended by Captain, amendment 1' and its 'Supersedes:' line does not say 'no replacement'
+scope check not run: no closed backlog approval
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/design_surfaces.py check fixtures/design/sample.md
+exit: 1
+sample.md: '### Amendment 1 — 2026-11-14, chat' supersedes AC-1 but no criterion says 'Amended by Captain, amendment 1' and its 'Supersedes:' line does not say 'no replacement'
+scope check not run: no closed backlog approval
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md --coverage fixtures/dispatch/sample.md --stage implementation
+exit: 1
+fixtures/dispatch/sample.md: no dispatch record for completed implementation; hold advancement and gate preparation
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md --coverage fixtures/dispatch/sample.md --stage implementation
+exit: 0
+dispatch coverage complete: implementation
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md fixtures/dispatch/sample
+exit: 0
+1 dispatch record(s) complete
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md fixtures/dispatch/sample
+exit: 1
+implementation-1.md: needs a 'Package root:' line with an absolute path in its scope notes
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md fixtures/dispatch/sample
+exit: 1
+implementation-1.md: needs a scope-notes line naming main as the completion recipient
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/dispatch/sample/dispatch/implementation-1.md
+exit: 1
+fixtures/dispatch/sample/dispatch/implementation-1.md:4: bare package script name adr_lint.py
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/dispatch/README.md fixtures/dispatch/sample
+exit: 1
+implementation-1.md: needs a checklist of its own, not only a reference to another dispatch record
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/dispatch/sample/dispatch/implementation-1.md
+exit: 1
+fixtures/dispatch/sample/dispatch/implementation-1.md:1: reserved line 'ADR: 0001' missing from scope notes; copy it from the task's '## Number guards' into this record's '## Scope notes', then run this check again
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/dispatch/sample/dispatch/ideation-1.md
+exit: 1
+fixtures/dispatch/sample/dispatch/ideation-1.md:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/role_triggers.py fixtures/roles sample
+exit: 1
+next: sample has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer on opus or gpt-6-astra with the question "what is the smallest next step, given the findings so far?" and record `Reviewer: kc-dev-flow-2:chief-engineer <model> <date> — <question>` under ## FO alignment; or, to decline, record `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` instead.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/role_triggers.py fixtures/roles sample
+exit: 0
+role triggers: 1 event(s) read at HEAD, each with a call or a waiver.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/doc_impact.py 69f2872d1fd338e898c85acac62f0f5718271993 cfe0f5116b56b0ae4d3f0d06faf7809db934ad7b --repo fixtures/documents
+exit: 0
+docs/guide.md	review	src/worker.py
+1 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+
+
+$ python3 -B budget_probe.py snapshot/kc-dev-flow-2/scripts/lint-skills.py 0
+exit: 0
+budget exact
+
+
+$ python3 -B budget_probe.py snapshot/kc-dev-flow-2/scripts/lint-skills.py 1
+exit: 1
+references/sd/workflow.md: 6114 words exceeds the budget of 6113; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS
+
+
+$ python3 -B budget_probe.py snapshot/kc-dev-flow-2/scripts/lint-skills.py -1
+exit: 1
+references/sd/workflow.md: 6112 words is 1 under the budget of 6113; add a cut step of -1 with a 'why' to WORKFLOW_BUDGET_STEPS
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/laws_check.py fixtures/laws --before b7bd6c83de5a40f5dfe4d80d45fcbf18d284120e --after 1ea4af1c6a3f7af02ffb9cafb39358e47e908aa8 --readme fixtures/laws-readme.md
+exit: 1
+L1 observer-before-sentinel: 1 events judged in b7bd6c83de5a..1ea4af1c6a3f, 1 violated
+violation: L1 observer-before-sentinel task=sample commit=1ea4af1c6a3f observer report not committed: sample/observer.md at 1ea4af1c6a3f7af02ffb9cafb39358e47e908aa8.
+L2 dispatch-record-complete: 0 events judged in b7bd6c83de5a..1ea4af1c6a3f, 0 violated
+L3 amendment-append-only: 0 events judged in b7bd6c83de5a..1ea4af1c6a3f, 0 violated
+L4 amendment-moves-use-fresh-ids: 0 events judged in b7bd6c83de5a..1ea4af1c6a3f, 0 violated
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+
+
+$ python3 -B snapshot/kc-dev-flow-2/scripts/delivery_gate.py question fixtures/rule-witnesses/sample.md --text-file fixtures/rule-witnesses/question.md --summary-file fixtures/rule-witnesses/summary.md --workflow-dir fixtures/rule-witnesses
+exit: 0
+next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.
+counts: 0 checked, 0 unchecked
+gate text complete
+next: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering 「<that question>」`.
+

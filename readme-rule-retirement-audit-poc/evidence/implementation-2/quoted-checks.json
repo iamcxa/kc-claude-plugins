@@ -1,0 +1,97 @@
+[
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 529,
+    "quote": "        problems.append(f\"declined item has no reason: {tok(item)}\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+    "line": 855,
+    "quote": "        return [\"summary needs one top-level External rounds: N line (nonnegative integer)\"]"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/decision_ledger.py",
+    "line": 54,
+    "quote": "    print(\"next: write Override: recommended <option>; Captain chose <option>; area: <area> \""
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/decision_ledger.py",
+    "line": 45,
+    "quote": "            print(\"reason: does not quote the bound question\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/adr_lint.py",
+    "line": 181,
+    "quote": "            errors.append(f\"required ADR {raw} does not exist\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 208,
+    "quote": "                fail(\"R2\", path, f\"{status} since {sha[:12]}, applied at {env}; revert it and add a new migration\")\n        top = max(base_numbers)"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 204,
+    "quote": "            fail(\"R1\", path, f\"{status} since the merge-base; a migration on the base branch must not change, \"\n                 \"revert it and add a new migration\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 217,
+    "quote": "                fail(\"R4\", path, f\"number {number:04d} is not in the task's Migration: lines\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 222,
+    "quote": "                fail(\"R6\", path, f\"{status} under the migrations directory; a POC task changes none of it\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 213,
+    "quote": "                fail(\"R3\", path, f\"base already has {number:04d} ({base_numbers[number][0]})\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 188,
+    "quote": "        raise Misconfigured(\"task has Surfaces: db but no migrations-path is declared \"\n                            \"(set migrations-path: <directory> in the workflow README, or migrations-path: none \""
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/dispatch_records.py",
+    "line": 28,
+    "quote": "`<file>:1: reserved line 'ADR: NNNN' missing from scope notes; ...` when `implementation-1.md` has no scope-notes line"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/number_guards.py",
+    "line": 255,
+    "quote": "    if facts[args.kind]:\n        for number in sorted(facts[args.kind]):\n            print(f\"{label}: {number:04d}\")\n        return 0"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1041,
+    "quote": "    errors = [f\"{name}: missing required body field: {label}\" for label, _ in fields if label not in found]"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/design_surfaces.py",
+    "line": 1290,
+    "quote": "            errors.append(f\"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/role_triggers.py",
+    "line": 25,
+    "quote": "A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call at opus rank or above, or a"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/doc_impact.py",
+    "line": 66,
+    "quote": "        print(f\"{len(rows)} document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/lint-skills.py",
+    "line": 272,
+    "quote": "    if count > budget:\n        errors.append(f\"{WORKFLOW}: {count} words exceeds the budget of {budget}; move the added text out of the README, \"\n                      f\"or add a raise step of {count - budget} with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS\")\n    elif count < budget:\n        errors.append(f\"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; \"\n                      f\"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS\")"
+  },
+  {
+    "path": "kc-dev-flow-2/scripts/laws_check.py",
+    "line": 392,
+    "quote": "    \"L1\": (\"observer-before-sentinel\", l1_observer_before_sentinel),"
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "readme_sha256": "284e9c88cb38a0a5b183fa7c66784d1a41b1ea78a2cbfe252d4965aa243a9f8c",
+  "examined": 93,
+  "covered_whole": 1,
+  "covered_part": 29,
+  "uncovered": 63,
+  "removable_readme_bytes": 68,
+  "removal_byte_spans": [
+    {
+      "number": 71,
+      "byte_start": 31128,
+      "byte_end": 31196,
+      "bytes": 68,
+      "source": "`check` freezes a migration in a commit recorded `Applied at:` (R2)."
+    }
+  ],
+  "additional_sentences": 78,
+  "cycle_2_probe_runs": 146,
+  "cycle_1_rows_sha256": "a9f620fc78b20360ecd725208fe47377ba58e05a204ac8f874bc42621d6b8f11",
+  "stop": "all five remaining sections and the listed form checks covered",
+  "product_tree": "clean, unchanged",
+  "state_commit": "FO-owned; not performed by this worker"
+}

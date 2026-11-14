@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Seed fields",
+    "listed_check": "design_surfaces.py check --seed (B2-B4, B6)",
+    "check": "`design_surfaces.py:1041`: `errors = [f\"{name}: missing required body field: {label}\" for label, _ in fields if label not in found]`",
+    "probes": [
+      "seed-no-non-goals",
+      "seed-no-budget",
+      "seed-no-stop",
+      "seed-no-surfaces",
+      "seed-no-visible",
+      "seed-good"
+    ],
+    "exits": {
+      "seed-no-non-goals": 1,
+      "seed-no-budget": 1,
+      "seed-no-stop": 1,
+      "seed-no-surfaces": 1,
+      "seed-no-visible": 1,
+      "seed-good": 0
+    },
+    "verdict": "covered part",
+    "limit": "Fields and surface syntax are checked on Pilot-shaped synthetic fixtures; timing and field truth are not. Not run on the live POC task."
+  },
+  {
+    "name": "Amendment and criteria form",
+    "listed_check": "design_surfaces.py check (amendment form, AC id reuse, Amended by Captain marker, Worth questions)",
+    "check": "`design_surfaces.py:1290`: `errors.append(f\"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test\")`",
+    "probes": [
+      "design-unmoved-ac",
+      "design-reused-superseded-id",
+      "design-unmarked-replacement",
+      "design-no-worth",
+      "design-duplicate-ac",
+      "design-good"
+    ],
+    "exits": {
+      "design-unmoved-ac": 1,
+      "design-reused-superseded-id": 1,
+      "design-unmarked-replacement": 1,
+      "design-no-worth": 1,
+      "design-duplicate-ac": 0,
+      "design-good": 0
+    },
+    "verdict": "covered part",
+    "limit": "The specific amendment forms fail; a repeated ordinary live AC-1 is accepted. Heading presence does not validate the Worth answers. The initial duplicate-AC expectation failed (exit 0), and that counterexample is retained here, not repaired."
+  },
+  {
+    "name": "Dispatch record form",
+    "listed_check": "dispatch_records.py (bare names, Package root, main, non-pointer checklist; --coverage)",
+    "check": "`dispatch_records.py:28`: ``<file>:1: reserved line 'ADR: NNNN' missing from scope notes; ...` when `implementation-1.md` has no scope-notes line`",
+    "probes": [
+      "dispatch-no-root",
+      "dispatch-no-main",
+      "dispatch-bare-name",
+      "dispatch-pointer-only",
+      "dispatch-coverage-missing",
+      "dispatch-coverage-empty-record",
+      "dispatch-good"
+    ],
+    "exits": {
+      "dispatch-no-root": 1,
+      "dispatch-no-main": 1,
+      "dispatch-bare-name": 1,
+      "dispatch-pointer-only": 1,
+      "dispatch-coverage-missing": 1,
+      "dispatch-coverage-empty-record": 0,
+      "dispatch-good": 0
+    },
+    "verdict": "covered part",
+    "limit": "Each listed missing shape has a rejecting control. Coverage accepts an empty record because it proves existence only; dispatch behavior is unverified."
+  },
+  {
+    "name": "Gate reason form",
+    "listed_check": "decision_ledger.py --reason (reason must quote the bound question)",
+    "check": "`decision_ledger.py:45`: `print(\"reason: does not quote the bound question\")`",
+    "probes": [
+      "decision-wrong-question",
+      "decision-missing-declaration",
+      "decision-placeholder",
+      "decision-good",
+      "decision-false-followed"
+    ],
+    "exits": {
+      "decision-wrong-question": 1,
+      "decision-missing-declaration": 1,
+      "decision-placeholder": 1,
+      "decision-good": 0,
+      "decision-false-followed": 0
+    },
+    "verdict": "covered part",
+    "limit": "The quotation/marker predicates are real; neither a human reply nor the semantic choice is authenticated."
+  },
+  {
+    "name": "Question and Captain-step form",
+    "listed_check": "delivery_gate.py question/steps (Sufficiency/Necessity, External rounds, Captain steps, Unchecked counts)",
+    "check": "`delivery_gate.py:855`: `return [\"summary needs one top-level External rounds: N line (nonnegative integer)\"]`",
+    "probes": [
+      "gate-no-sufficiency",
+      "gate-no-necessity",
+      "gate-no-rounds",
+      "gate-no-captain-steps",
+      "steps-no-observation",
+      "gate-unverified-count",
+      "steps-good"
+    ],
+    "exits": {
+      "gate-no-sufficiency": 1,
+      "gate-no-necessity": 1,
+      "gate-no-rounds": 1,
+      "gate-no-captain-steps": 1,
+      "steps-no-observation": 1,
+      "gate-unverified-count": 0,
+      "steps-good": 0
+    },
+    "verdict": "covered part",
+    "limit": "Required clauses, round shape, step declaration and observations can fail. Unchecked counts are inserted into the scratch summary by the tool with exit 0; a nonzero is not required for that disclosure and it does not prove measurement."
+  },
+  {
+    "name": "Dated role-call line",
+    "listed_check": "role_triggers.py (a dated Reviewer line, not effect)",
+    "check": "`role_triggers.py:25`: `A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call at opus rank or above, or a`",
+    "probes": [
+      "role-owed",
+      "role-line-clears"
+    ],
+    "exits": {
+      "role-owed": 1,
+      "role-line-clears": 0
+    },
+    "verdict": "covered part",
+    "limit": "The owed-role state rejects, while a syntactically dated synthetic call clears without an actual review. This is the intentionally narrower check the list describes."
+  },
+  {
+    "name": "Document disposition",
+    "listed_check": "doc_impact.py (updated|unaffected: reason line)",
+    "check": "`doc_impact.py:66`: `print(f\"{len(rows)} document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\")`",
+    "probes": [
+      "doc-impact-missing-disposition"
+    ],
+    "exits": {
+      "doc-impact-missing-disposition": 0
+    },
+    "verdict": "uncovered",
+    "limit": "The helper lists a guide as review and exits 0 even with no report/disposition. The study attributes enforcement to a listing helper; none was demonstrated."
+  },
+  {
+    "name": "Word budget",
+    "listed_check": "lint-skills.py word budget",
+    "check": "`lint-skills.py:272`: `if count > budget:\n        errors.append(f\"{WORKFLOW}: {count} words exceeds the budget of {budget}; move the added text out of the README, \"\n                      f\"or add a raise step of {count - budget} with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS\")\n    elif count < budget:\n        errors.append(f\"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; \"\n                      f\"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS\")`",
+    "probes": [
+      "word-budget-over",
+      "word-budget-under",
+      "word-budget-exact"
+    ],
+    "exits": {
+      "word-budget-over": 1,
+      "word-budget-under": 1,
+      "word-budget-exact": 0
+    },
+    "verdict": "covered whole",
+    "limit": "At the original budget_errors function boundary, +1 and -1 fail and the exact budget passes. A small exit-code adapter calls the unmodified source function; the full package lint CLI was not run. This row is outside the six-section N/M/K totals."
+  },
+  {
+    "name": "State-history shapes",
+    "listed_check": "laws_check.py (state-history shapes)",
+    "check": "`laws_check.py:392`: `\"L1\": (\"observer-before-sentinel\", l1_observer_before_sentinel),`",
+    "probes": [
+      "laws-no-observer"
+    ],
+    "exits": {
+      "laws-no-observer": 1
+    },
+    "verdict": "covered part",
+    "limit": "A committed sentinel without an observer fails L1 in an actual throwaway Git history. This demonstrates one law, not every historical shape or the truth of reports."
+  }
+]
