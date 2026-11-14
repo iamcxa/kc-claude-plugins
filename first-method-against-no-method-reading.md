@@ -1,7 +1,7 @@
 ---
 id:
 title: A first reading of whether an agent given the method does better than one given the task in plain words, on one ideation case, in a place with no copy of the package
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -31,7 +31,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 items-1-and-2 from the reform session, Paseo message fa01bfc1-0e7d-4197-9636-a25f2818c562
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Two readings of one cell on the operator's laptop (archived task behaviour-baseline-first-cell) could not include a no-method arm: an installed copy of the package was one skill call away, and all three control runs loaded it. The question the Captain asks first, 「該怎麼知道用我的工作方法，確實比沒用較好？」 (outcome 零 of the reform's approved outcomes, as recorded in `.context/dev2-reform/結果定義.md`), is still unanswered by any run.
