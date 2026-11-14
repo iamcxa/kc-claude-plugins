@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:private-cell-selfcheck-passes-on-a-fresh-clone-poc-validation-1
+              briefing:
+                id: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:attempt-1:revision-1
+                digest: sha256:3512521790d628800ff1d0b85860a902ab3a0a13165fbbbd70645b06ee0993a7
+                room-ref: ./private-cell-selfcheck-passes-on-a-fresh-clone-poc/review/validation/briefing-1
 started: 2026-11-14T11:33:09Z
 ---
 

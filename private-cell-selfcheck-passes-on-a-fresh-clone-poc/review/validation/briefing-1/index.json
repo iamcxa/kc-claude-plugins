@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:attempt-1:revision-1",
+  "question": "Close this task as passed? (decided by FO under the Captain's grant; the change is on the private working repository's remote main; nothing is merged into this repository)",
+  "artifacts": [
+    {
+      "id": "artifact:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5174d4e7174f906d3279aa44db38789010a60020/private-cell-selfcheck-passes-on-a-fresh-clone-poc.md",
+      "rev": "sha256:7f27b58a8489b945dca901ddb3c6651efd3e0e5c85d89df0bd70792a44a05a6b",
+      "mediaType": "text/markdown",
+      "summary": "Validation recommends PASSED on both criteria (Claude Opus, fresh clone of the private remote's main at b61e8f4be42d50e605d4e011401dcfec1b4b28b2): every cell's selfcheck exits 0; the second laptop cell prints which 9 of 12 entries it could not check and why; a wrong expected grade and a present-but-incomplete fixture folder both exit 1; the pushed range changes one file and scans at zero in every class, with planted values confirming the scan. FO ran the validator's acceptance script on a fresh clone 2026-11-14: main equals the candidate; exits 0, 0, 0 with 9, 0, 0 entries not checked; flipped verdict exits 1; empty folder exits 1. The commit carries the repository's configured git identity by the reform session's ruling. Limits: the laptop case rests on the implementer's report; prepare passes on a fresh clone with nine entries unchecked; one deferred risk (a whole carried fixture folder deleted reads as not checked) that no current cell can exploit. The ADR check exits 2 there because that repository has no ADR folder; no ADR is involved."
+    }
+  ]
+}
