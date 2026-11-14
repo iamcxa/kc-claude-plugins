@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:behaviour-baseline-first-cell:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:behaviour-baseline-first-cell-backlog-1
+              briefing:
+                id: briefing:behaviour-baseline-first-cell:backlog:attempt-1:revision-1
+                digest: sha256:b5664e5209c5d2fac6204d5ca3778145ad19aafa70dfdaa2431d11c3afe2a0b8
+                room-ref: ./behaviour-baseline-first-cell/review/backlog/briefing-1
 ---
 
 The package has no check that runs a model and looks at what its instructions cause. An earlier attempt (task validation-reads-pr-review-comments) had 7 valid runs of 12, two runs at the 1800-second cap, and a base that already passed 3 of 3, so it could show nothing (figures from `.context/dev2-reform/改革總計劃.md`, not re-measured here).

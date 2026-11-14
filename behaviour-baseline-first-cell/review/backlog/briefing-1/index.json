@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:behaviour-baseline-first-cell:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile pilot with the outcome, non-goals, stop condition, acceptance criteria and a budget of 2 cycles per stage as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave; approving starts the design stage and merges nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:behaviour-baseline-first-cell:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7263f5eb10bf0b51b04e7c7b509d702a36f39d44/behaviour-baseline-first-cell.md",
+      "rev": "sha256:3981ac930bb9aa8ec1dbe5feb079336ee5e2b625f4cf5624c6b828a4edb62e35",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: variant kc-dev-flow-2, profile pilot; outcome, Non-goals, Stop condition and AC-1 to AC-4 as filed; Budget 2 cycles per stage; FO alignment not needed before ideation; Surfaces none; Visible change none; seed check exit 0."
+    }
+  ]
+}
