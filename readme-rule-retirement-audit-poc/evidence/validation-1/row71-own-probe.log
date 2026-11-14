@@ -1,0 +1,6 @@
+exit=0 :: unchanged-after-applied (expect 0)
+exit=1 :: edit-applied (expect 1)
+exit=1 :: delete-applied (expect 1)
+exit=0 :: edit-no-record control (expect 0)
+exit=0 :: record without environment token (expect 0: not matched)
+exit=0 :: lowercase label (expect 0: not matched)
