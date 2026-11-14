@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted",
+    "sha256": "d89bbda0d60ff5ba8649104b7025f5ec90a40a31ce0aa2fedba417bcacdc134c"
+  },
+  {
+    "path": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted",
+    "sha256": "8ff5f5e9cea6b1d5ec2ce5107dd008426d50089ecbbcb440fe537ffb160fa2bd"
+  },
+  {
+    "path": "docs/adr/0083-workers-check-the-existing-chain-before-new-work.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted",
+    "sha256": "fa7eac969b44fce599021350918614bbb019149a0797df932832669bfd11b6dc"
+  },
+  {
+    "path": "docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "status": "Accepted",
+    "sha256": "eb9ab38df6fef76c40cca52470d5cb31ea078422a1d199d2e4d1c68b3c0dcfbf"
+  }
+]

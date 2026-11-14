@@ -1,0 +1,38 @@
+[
+  {
+    "case": "as-written-in-test",
+    "argv": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/task_timeline.py",
+      "<state>",
+      "demo",
+      "ask",
+      "  "
+    ],
+    "exit": 2,
+    "stdout": "",
+    "stderr": "usage: task_timeline.py [-h] [--json] [--all] [--open] [--gates] [--late]\n                        [--as-of AS_OF] [--holds {acceptance,nothing,task}]\n                        [--channel {chat,dialog,message,review}] [--by BY]\n                        [--recommend RECOMMEND] [--grounds GROUNDS]\n                        [--approve-means APPROVE_MEANS] [--question QUESTION]\n                        [--reason REASON] [--words WORDS]\n                        [--resolution RESOLUTION] [--what WHAT]\n                        [--briefing BRIEFING] [--revision REVISION]\n                        [--tasks [TASKS ...]] [--option OPTION] [--ref REF]\n                        state [task] [action] [text]\ntask_timeline.py: error: ask needs --by with the FO session name; run: python3 <scratch>/pr-870/kc-dev-flow-2/scripts/task_timeline.py <scratch>/blank-question-probe demo ask '  ' --channel chat --by '<session>'\n",
+    "record_written": false
+  },
+  {
+    "case": "valid-owner-and-holds",
+    "argv": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/task_timeline.py",
+      "<state>",
+      "demo",
+      "ask",
+      "  ",
+      "--holds",
+      "task",
+      "--by",
+      "test FO"
+    ],
+    "exit": 2,
+    "stdout": "",
+    "stderr": "usage: task_timeline.py [-h] [--json] [--all] [--open] [--gates] [--late]\n                        [--as-of AS_OF] [--holds {acceptance,nothing,task}]\n                        [--channel {chat,dialog,message,review}] [--by BY]\n                        [--recommend RECOMMEND] [--grounds GROUNDS]\n                        [--approve-means APPROVE_MEANS] [--question QUESTION]\n                        [--reason REASON] [--words WORDS]\n                        [--resolution RESOLUTION] [--what WHAT]\n                        [--briefing BRIEFING] [--revision REVISION]\n                        [--tasks [TASKS ...]] [--option OPTION] [--ref REF]\n                        state [task] [action] [text]\ntask_timeline.py: error: question needs nonempty asked and holds task|acceptance|nothing\n",
+    "record_written": false
+  }
+]

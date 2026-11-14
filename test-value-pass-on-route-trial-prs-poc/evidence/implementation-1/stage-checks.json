@@ -1,0 +1,24 @@
+[
+  {
+    "command": "python3 -B <package>/scripts/comment_ratio.py c2f035b6612f5edb42220576b3414e993531ffd6 HEAD --workflow-dir docs/dev2-poc",
+    "exit": 0,
+    "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+  },
+  {
+    "command": "python3 -B <package>/scripts/doc_impact.py c2f035b6612f5edb42220576b3414e993531ffd6 c2f035b6612f5edb42220576b3414e993531ffd6",
+    "exit": 0,
+    "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "command": "python3 -B <package>/scripts/number_guards.py check --workflow-dir docs/dev2-poc --task docs/dev2-poc/.spacedock-state/test-value-pass-on-route-trial-prs-poc.md",
+    "exit": 0,
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase c2f035b6612f head c2f035b6612f merge-base c2f035b6612f\nwarning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\n"
+  },
+  {
+    "command": "python3 -B <package>/scripts/design_surfaces.py check docs/dev2-poc/.spacedock-state/test-value-pass-on-route-trial-prs-poc.md",
+    "exit": 1,
+    "output": "test-value-pass-on-route-trial-prs-poc.md: '## FO alignment' needs a non-empty 'Surfaces:' line\ntest-value-pass-on-route-trial-prs-poc.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: stage is implementation, not ideation\n",
+    "applicable": false,
+    "scope_note": "FO dispatch correction: not applicable to this POC route; README limits seed check to five-stage route. Original exploratory output retained."
+  }
+]

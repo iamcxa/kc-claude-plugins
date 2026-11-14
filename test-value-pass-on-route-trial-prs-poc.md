@@ -56,3 +56,30 @@ Verified by: the validator re-runs a sample of flagged tests and reads the cover
 
 Alignment: not needed before implementation: the brief names the inputs, the output table and the count; the backlog gate confirms scope and Budget.
 Release review: not needed: reform measurement with no release.
+
+## Stage Report: implementation
+
+- DONE: For each of merged PRs #858, #860, #859, #861 and #870 in iamcxa/kc-claude-plugins: the tests the PR added or changed, each flagged test listed by class (false-confidence, implementation-coupled, duplicate, test-only seam) only after you ran it and read the whole test, the code it covers and that code's callers, with what it stood in for
+  `test-value-pass-on-route-trial-prs-poc/implementation/report.md` and `evidence/implementation-1/audit.json` cover all 37 changed methods at their own merge revisions. One false-confidence case: #870's blank-input assertion exits on missing owner before empty-question validation; whole-test execution and two unmodified CLI probes confirm it. Useful contract coverage is retained; no deletion or repair was performed.
+- DONE: The counts N tests added or changed across the 5 PRs, F flagged, F_ok of the F confirmed by run and reading; for a sample of unflagged tests, why they pass the bar
+  `test-value-pass-on-route-trial-prs-poc/evidence/implementation-1/counts.json`: N=37 (31 added, six modified including one rename), F=1, F_ok=1. Per-PR totals are 1, 6, 0, 8, 22; logs and `tests.xml` show all 37 passing. The retained reproducer reran the same 37 successfully. The report gives ten unflagged examples and the error each detects.
+- DONE: The stop condition applied and reported: more than a third of flagged tests overturned on reading stops the pass
+  Zero of the one flagged method was overturned after execution and complete test/code/caller reading; 0/1 does not exceed one third. No flagged candidate was discarded from this denominator.
+- DONE: Preserve the read-only outcome and the POC boundary
+  Product branch `spacedock-ensign/test-value-pass-on-route-trial-prs-poc`; base and unchanged candidate `c2f035b6612f5edb42220576b3414e993531ffd6`. No product file, test, README or script changed; no product commit, branch push or PR. Prepared PR text is not applicable. Inspected exported source bytes match the named Git revisions after execution (`source-locks.json`).
+- DONE: Record checks actually run and material limits
+  `stage-checks.json`: comment ratio exit 0 (zero changed lines), document impact exit 0 (zero affected product documents), number guards exit 0 (no migration path; state-fetch warning retained). Architectural decision sources and digests are in `adr-sources.json`. Original persona source was not found; the task's quoted classes, run/read/caller rule and public-contract/protocol/security exceptions were applied.
+- SKIPPED: Design-surface acceptance check
+  Not applicable to this POC route per FO's explicit dispatch correction. The exploratory exit-1 output remains in `stage-checks.json`; it is not a task failure and no accepted task fields were rewritten.
+- SKIPPED: Product review, publication and independent validation
+  RoboRev not run: read-only measurement with no code candidate. No PR opened: no product push grant and no product changes. Independent validation not run by this worker; FO owns its dispatch and the report copy beside the study.
+- SKIPPED: Worker state commit and sync
+  FO's final dispatch correction explicitly requires handing back written state files without worker commit or escalation; FO runs the atomic state commit. No state commit or push was attempted by the worker.
+- DONE: Close dispatch scratch and retain cited public evidence
+  The prescribed scratch close command exited 0; all cited evidence remains under this task, with SHA256SUMS. Its output was:
+  `Scratch removed: /private/tmp/dev2/kc-claude-plugins-0a31751399576cc5/test-value-pass-on-route-trial-prs-poc/implementation-1 (24239615 bytes)`
+  `Evidence: evidence/implementation-1/ (17 files, 86.6 KiB)`
+
+### Summary
+
+The bounded five-PR pass found one confirmed ineffective negative assertion while all 37 changed test methods passed; the product currently rejects the same blank input correctly when valid caller fields are supplied. The report distinguishes that test gap from useful protocol coverage, and makes no claim about package-wide prevalence, false-negative rate, savings or worker compliance. Product bytes are unchanged, scratch is closed, and the report and public evidence are ready for FO's state commit and independent validation.

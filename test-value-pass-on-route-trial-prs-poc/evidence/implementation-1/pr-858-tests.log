@@ -1,0 +1,9 @@
+Command: python3 -B -m unittest -v test_pr_watch.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent
+test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent (test_pr_watch.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 3.038s
+
+OK
+
+Exit: 0

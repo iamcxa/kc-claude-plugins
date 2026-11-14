@@ -1,0 +1,224 @@
+[
+  {
+    "name": "PR 858: test_pr_watch.TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "line": 1442
+  },
+  {
+    "name": "PR 860: test_design_surfaces.SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 509
+  },
+  {
+    "name": "PR 860: test_design_surfaces.TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 1759
+  },
+  {
+    "name": "PR 860: test_design_surfaces.TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 1772
+  },
+  {
+    "name": "PR 860: test_design_surfaces.TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 1780
+  },
+  {
+    "name": "PR 860: test_design_surfaces.TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 1789
+  },
+  {
+    "name": "PR 860: test_design_surfaces.TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 1801
+  },
+  {
+    "name": "PR 861: test_laws_check.L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "line": 269
+  },
+  {
+    "name": "PR 861: test_observer_check.ObserverCheckTest.test_archived_miss_and_report_print_no_learn_steps_without_the_extension",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "line": 100
+  },
+  {
+    "name": "PR 861: test_observer_check.ObserverCheckTest.test_the_shared_extension_parser_handles_quoted_commented_and_block_lists",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "line": 119
+  },
+  {
+    "name": "PR 861: test_observer_check.ObserverCheckTest.test_an_explicit_readme_overrides_discovery_for_a_detached_state_checkout",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "line": 127
+  },
+  {
+    "name": "PR 861: test_observer_check.ObserverCheckTest.test_an_archived_check_holds_when_selection_cannot_be_read",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "line": 135
+  },
+  {
+    "name": "PR 861: test_observer_check.RecoveryCommandQuotingTest.test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "line": 285
+  },
+  {
+    "name": "PR 861: test_pr_watch.TasksTests.test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "line": 1285
+  },
+  {
+    "name": "PR 861: test_pr_watch.TasksTests.test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "line": 1320
+  },
+  {
+    "name": "PR 870: test_design_surfaces.QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2800
+  },
+  {
+    "name": "PR 870: test_design_surfaces.QuestionRecordTests.test_shared_record_names_affected_task_and_archived_records_are_read",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2811
+  },
+  {
+    "name": "PR 870: test_design_surfaces.QuestionRecordTests.test_partial_or_recommendation_text_does_not_stand_in_for_the_question",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2821
+  },
+  {
+    "name": "PR 870: test_design_surfaces.QuestionRecordTests.test_pre_adoption_amendment_is_not_newly_refused",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2830
+  },
+  {
+    "name": "PR 870: test_design_surfaces.QuestionRecordTests.test_export_absent_sentence_and_shallow_history_skip_once_without_refusal",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "line": 2834
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_ask_cli_appends_utc_questions_and_rejects_empty_without_write",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 196
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 214
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_v2_six_events_and_revision_fields_persist",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 252
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_unknown_event",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 271
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 276
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_acted_without_answer",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 292
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_wordless_answer_without_approve_means",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 297
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_recommendation_outside_options",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 302
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_revision_not_previous_plus_one",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 307
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_contract_writer_refuses_answer_that_does_not_match_last_channel_showing",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 312
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_missing_owner_prints_complete_command_without_writing",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 319
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_review_escalation_after_three_showings_and_unknown_wait_bound",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 326
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 337
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_reader_ignores_unknown_and_pre_ask_events_and_does_not_reopen_closed_key",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 351
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 362
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 384
+  },
+  {
+    "name": "PR 870: test_task_timeline.TimelineTests.test_gate_wait_uses_first_naming_commit_after_archive_moves_room",
+    "status": "passed",
+    "file": "kc-dev-flow-2/scripts/test_task_timeline.py",
+    "line": 405
+  }
+]

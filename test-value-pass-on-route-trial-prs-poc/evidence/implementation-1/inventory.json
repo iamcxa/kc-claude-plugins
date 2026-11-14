@@ -1,0 +1,489 @@
+[
+  {
+    "pr": 858,
+    "merge_sha": "9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58",
+    "parent_sha": "8125e6d516d32abbf79c6772de10cde2c20900a8",
+    "tests": [
+      {
+        "pr": 858,
+        "merge_sha": "9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58",
+        "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+        "test": "TasksTests.test_an_empty_pr_whose_worktree_is_gone_is_a_fact_and_one_with_no_worktree_field_stays_silent",
+        "line": 1442,
+        "end_line": 1450,
+        "change": "modified (renamed)"
+      }
+    ],
+    "helper_changes": [],
+    "changed_paths": [
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ]
+  },
+  {
+    "pr": 860,
+    "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+    "parent_sha": "9bdc9f73083d8b2cf6a317a10f91a10a3d9fbb58",
+    "tests": [
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "SeedBoundsTests.test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback",
+        "line": 509,
+        "end_line": 517,
+        "change": "modified"
+      },
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.test_same_named_directory_checks_the_sibling_task_in_both_modes",
+        "line": 1759,
+        "end_line": 1770,
+        "change": "added"
+      },
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.test_suffixless_name_without_a_directory_checks_the_task",
+        "line": 1772,
+        "end_line": 1778,
+        "change": "added"
+      },
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.test_an_existing_file_wins_over_a_sibling_md_file",
+        "line": 1780,
+        "end_line": 1787,
+        "change": "added"
+      },
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.test_resolving_a_name_preserves_a_failing_verdict",
+        "line": 1789,
+        "end_line": 1799,
+        "change": "added"
+      },
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.test_unresolved_names_and_directories_are_usage_errors",
+        "line": 1801,
+        "end_line": 1811,
+        "change": "added"
+      }
+    ],
+    "helper_changes": [
+      {
+        "pr": 860,
+        "merge_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "TaskArgumentTests.cli",
+        "line": 1754,
+        "end_line": 1757,
+        "change": "added"
+      }
+    ],
+    "changed_paths": [
+      "kc-dev-flow-2/scripts/design_surfaces.py",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ]
+  },
+  {
+    "pr": 859,
+    "merge_sha": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+    "parent_sha": "c7d4464c5da2611d2653d3732f05a1c17eff5a9e",
+    "tests": [],
+    "helper_changes": [],
+    "changed_paths": [
+      "docs/adr/0083-workers-check-the-existing-chain-before-new-work.md",
+      "kc-dev-flow-2/skills/ideation/principles.md",
+      "kc-dev-flow-2/skills/implementation/principles.md"
+    ]
+  },
+  {
+    "pr": 861,
+    "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+    "parent_sha": "c8d6dd40cf12ff6d9047e42e4d1041afa3bcf694",
+    "tests": [
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_laws_check.py",
+        "test": "L1Test.test_l1_uses_the_shared_extension_list_forms_and_ignores_comment_words",
+        "line": 269,
+        "end_line": 283,
+        "change": "added"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "ObserverCheckTest.test_archived_miss_and_report_print_no_learn_steps_without_the_extension",
+        "line": 100,
+        "end_line": 117,
+        "change": "added"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "ObserverCheckTest.test_the_shared_extension_parser_handles_quoted_commented_and_block_lists",
+        "line": 119,
+        "end_line": 125,
+        "change": "added"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "ObserverCheckTest.test_an_explicit_readme_overrides_discovery_for_a_detached_state_checkout",
+        "line": 127,
+        "end_line": 133,
+        "change": "added"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "ObserverCheckTest.test_an_archived_check_holds_when_selection_cannot_be_read",
+        "line": 135,
+        "end_line": 145,
+        "change": "added"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "RecoveryCommandQuotingTest.test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace",
+        "line": 285,
+        "end_line": 311,
+        "change": "modified"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+        "test": "TasksTests.test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after",
+        "line": 1285,
+        "end_line": 1313,
+        "change": "modified"
+      },
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_pr_watch.py",
+        "test": "TasksTests.test_extension_list_forms_use_the_shared_reader_and_ignore_comment_words",
+        "line": 1320,
+        "end_line": 1336,
+        "change": "added"
+      }
+    ],
+    "helper_changes": [
+      {
+        "pr": 861,
+        "merge_sha": "629180e576a8b7dafd6d9bf12202f7d66958bd6e",
+        "path": "kc-dev-flow-2/scripts/test_observer_check.py",
+        "test": "ObserverCheckTest.setUp",
+        "line": 33,
+        "end_line": 45,
+        "change": "modified"
+      }
+    ],
+    "changed_paths": [
+      "kc-dev-flow-2/scripts/laws_check.py",
+      "kc-dev-flow-2/scripts/observer_check.py",
+      "kc-dev-flow-2/scripts/pr_watch.py",
+      "kc-dev-flow-2/scripts/test_laws_check.py",
+      "kc-dev-flow-2/scripts/test_observer_check.py",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ]
+  },
+  {
+    "pr": 870,
+    "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "parent_sha": "1c3e714ff6752b8c84a490064639baf0d0ef3c9c",
+    "tests": [
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.test_missing_record_refuses_and_present_record_passes_in_split_root_worktree",
+        "line": 2800,
+        "end_line": 2809,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.test_shared_record_names_affected_task_and_archived_records_are_read",
+        "line": 2811,
+        "end_line": 2819,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.test_partial_or_recommendation_text_does_not_stand_in_for_the_question",
+        "line": 2821,
+        "end_line": 2828,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.test_pre_adoption_amendment_is_not_newly_refused",
+        "line": 2830,
+        "end_line": 2832,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.test_export_absent_sentence_and_shallow_history_skip_once_without_refusal",
+        "line": 2834,
+        "end_line": 2852,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_ask_cli_appends_utc_questions_and_rejects_empty_without_write",
+        "line": 196,
+        "end_line": 212,
+        "change": "modified"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_asks_are_attributed_to_running_segment_with_boundary_on_next_stage",
+        "line": 214,
+        "end_line": 224,
+        "change": "modified"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_v2_six_events_and_revision_fields_persist",
+        "line": 252,
+        "end_line": 269,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_unknown_event",
+        "line": 271,
+        "end_line": 274,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_every_event_after_closing_except_one_acted",
+        "line": 276,
+        "end_line": 290,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_acted_without_answer",
+        "line": 292,
+        "end_line": 295,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_wordless_answer_without_approve_means",
+        "line": 297,
+        "end_line": 300,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_recommendation_outside_options",
+        "line": 302,
+        "end_line": 305,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_revision_not_previous_plus_one",
+        "line": 307,
+        "end_line": 310,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_contract_writer_refuses_answer_that_does_not_match_last_channel_showing",
+        "line": 312,
+        "end_line": 317,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_missing_owner_prints_complete_command_without_writing",
+        "line": 319,
+        "end_line": 324,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_review_escalation_after_three_showings_and_unknown_wait_bound",
+        "line": 326,
+        "end_line": 335,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_mixed_legacy_ask_reask_answer_counts_only_showings_in_text_and_json",
+        "line": 337,
+        "end_line": 349,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_reader_ignores_unknown_and_pre_ask_events_and_does_not_reopen_closed_key",
+        "line": 351,
+        "end_line": 360,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_replayed_fourteen_questions_at_declared_synthetic_times",
+        "line": 362,
+        "end_line": 382,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_readme_plain_open_entrance_and_mixed_gate_rows_have_question_text",
+        "line": 384,
+        "end_line": 403,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.test_gate_wait_uses_first_naming_commit_after_archive_moves_room",
+        "line": 405,
+        "end_line": 419,
+        "change": "added"
+      }
+    ],
+    "helper_changes": [
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.setUp",
+        "line": 2758,
+        "end_line": 2780,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.git",
+        "line": 2782,
+        "end_line": 2784,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.commit",
+        "line": 2786,
+        "end_line": 2788,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.check",
+        "line": 2790,
+        "end_line": 2792,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+        "test": "QuestionRecordTests.record",
+        "line": 2794,
+        "end_line": 2798,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.ask",
+        "line": 245,
+        "end_line": 247,
+        "change": "added"
+      },
+      {
+        "pr": 870,
+        "merge_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+        "path": "kc-dev-flow-2/scripts/test_task_timeline.py",
+        "test": "TimelineTests.event",
+        "line": 249,
+        "end_line": 250,
+        "change": "added"
+      }
+    ],
+    "changed_paths": [
+      "docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md",
+      "kc-dev-flow-2/references/captain-question-records.md",
+      "kc-dev-flow-2/references/sd/workflow.md",
+      "kc-dev-flow-2/scripts/design_surfaces.py",
+      "kc-dev-flow-2/scripts/lint-skills.py",
+      "kc-dev-flow-2/scripts/task_timeline.py",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py",
+      "kc-dev-flow-2/scripts/test_task_timeline.py"
+    ]
+  }
+]
