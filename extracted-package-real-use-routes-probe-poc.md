@@ -40,6 +40,20 @@ gates:
                 id: briefing:extracted-package-real-use-routes-probe-poc:validation:attempt-1:revision-1
                 digest: sha256:a52332b3a61ad2c4bd553880dc26269caafaa2f83c43478127d0285e7437b6b5
                 room-ref: ./extracted-package-real-use-routes-probe-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extracted-package-real-use-routes-probe-poc:validation:1
+                briefing: briefing:extracted-package-real-use-routes-probe-poc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T14:06:20.75101Z"
+                decision: approve
+                reason: Approves closing as answered with validation skipped, on the reform session's ruling inside scope 3 under the Captain's grant; no merge and no outward action.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item B from the reform session, Paseo messages 82533e80-8ac0-44f2-9b84-20cb044c3c6d and 05f7f3b7-7c36-43a8-8d70-7c7b45942b6b
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T12:18:27Z
 ---
 
