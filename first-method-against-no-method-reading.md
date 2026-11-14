@@ -1,7 +1,7 @@
 ---
 id:
 title: A first reading of whether an agent given the method does better than one given the task in plain words, on one ideation case, in a place with no copy of the package
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
