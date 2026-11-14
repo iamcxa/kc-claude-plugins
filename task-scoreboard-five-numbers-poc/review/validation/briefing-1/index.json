@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:task-scoreboard-five-numbers-poc:validation:attempt-1:revision-1",
+  "question": "Close this task with validation PASSED at candidate b000ffce22a0 and the merged commit 7e0f9c242e64, which differs from the validated one by the saved table file alone? Not asked of the Captain: decided by FO under his standing grant, on the reform session's ruling.",
+  "artifacts": [
+    {
+      "id": "artifact:task-scoreboard-five-numbers-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/409ec7c2dc4fd9741228b123b24b19834fe052b5/task-scoreboard-five-numbers-poc.md",
+      "rev": "sha256:50eeaad32dfe298e05426d453ec79a96d50a3981b129029b8260a7450338f182",
+      "mediaType": "text/markdown",
+      "summary": "Validation-1 PASSED at b000ffce22a0: seven hand-checked numbers on three finished tasks match, the timeline script is imported unchanged, two runs wrote nothing to either state checkout. Merged to the private working repository's main at 7e0f9c242e64 by fast-forward; FO checked that the diff from b000ffce22a0 to 7e0f9c242e64 touches docs/scoreboard/2026-11-14.md only (the saved table regenerated with all five tasks and a selection-rule line, because FO's first task list was short by two). The merged commit was not validated a second time. Known limits, not fixed: a total can read 0.1 min high from per-stage rounding; the JSON flag fails in one argument position; JSON output omits the read-with-care line; first report means first gate briefing; waiting includes gates resolved under a grant; questions outside a gate are not recorded for most tasks."
+    }
+  ]
+}

@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:task-scoreboard-five-numbers-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:task-scoreboard-five-numbers-poc-validation-1
+              briefing:
+                id: briefing:task-scoreboard-five-numbers-poc:validation:attempt-1:revision-1
+                digest: sha256:001487075d0a57c180a60dfc98c075bc7e5ff518748ec11b598d335c89d3c5fb
+                room-ref: ./task-scoreboard-five-numbers-poc/review/validation/briefing-1
 started: 2026-11-14T12:18:32Z
 ---
 
