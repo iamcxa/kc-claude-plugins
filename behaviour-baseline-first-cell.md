@@ -232,6 +232,12 @@ Captain: 「行為基準實跑用訂閱權杖，我自己產生後放進密碼�
 Asked: asks.jsonl ask 1 in this task's folder (the credential for isolated runs, decision D1 of the design)
 Supersedes: none
 
+### Amendment 2 — 2026-11-14, chat (standing grant; ruling given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain. Under that grant the reform session (Paseo 26215d96, message a63e845a) ruled on FO's stop report: "continue, do not re-cut. Budget amended to 3 implementation cycles; this is the last one I grant"; the aborted launch "counts toward the 18 launches and is recorded as operator abort; it is not one of the two INVALID trials that halt the cell"; and five proofs with a stub agent command are owed before any further paid run, validated by a different worker running them.
+Supersedes: none
+Budget: 3 implementation cycles
+
 ## Stage Report: ideation
 
 - DONE: A design for the thin runner (launch, hard stop, manifest, grade, table) that reuses scripts/replay_dispatch.py and the maintain-flow procedure, names every file it adds in the private working repository, and states how isolation is achieved and shown (empty home and config directory; no read of an installed skill copy or personal configuration)
