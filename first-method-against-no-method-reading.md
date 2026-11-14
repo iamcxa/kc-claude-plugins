@@ -1,7 +1,7 @@
 ---
 id:
 title: A first reading of whether an agent given the method does better than one given the task in plain words, on one ideation case, in a place with no copy of the package
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -53,7 +53,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 items 1 and 2 from the reform session, Paseo messages fa01bfc1-0e7d-4197-9636-a25f2818c562 and 984e93a3-33fc-4abb-8957-7c7e5f94cb09
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-14T09:53:07Z
 ---
 
