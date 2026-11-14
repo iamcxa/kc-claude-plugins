@@ -18,6 +18,20 @@ gates:
                 id: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:backlog:attempt-1:revision-1
                 digest: sha256:033debd07b66ec73b2dbca7919aa0e3767696c9fd9a4fb1d623987970ee45479
                 room-ref: ./gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:backlog:1
+                briefing: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T09:52:32.02113Z"
+                decision: approve
+                reason: Inside scope 2 given by the reform session under the Captain's grant (message fa01bfc1); profile pilot justified in the Scope; seed check exit 0; admission involves no public merge, outward action, outcome-definition change or suspected key.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 item-3 from the reform session, Paseo message fa01bfc1-0e7d-4197-9636-a25f2818c562
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The state guard merged in pull request 871 is installed with private task slugs and tailnet hostnames refusing, and private repository names, the email and the home directory only warning. Two of the warning classes cannot move to refuse today, because a refusal there has no legitimate way forward: a home path or a private repository name can sit inside sealed worker evidence, and the delivery gate's own form demands an absolute acceptance command in the gate summary and in the Captain-steps record.
