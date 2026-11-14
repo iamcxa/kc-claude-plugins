@@ -18,6 +18,20 @@ gates:
                 id: briefing:extracted-package-says-five-rules-that-worked:backlog:attempt-1:revision-1
                 digest: sha256:03e73b4c8212876c34bc292de0dc1cf0b0c6253b7d5d3d5c046e64f72ba111c3
                 room-ref: ./extracted-package-says-five-rules-that-worked/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extracted-package-says-five-rules-that-worked:backlog:1
+                briefing: briefing:extracted-package-says-five-rules-that-worked:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T12:15:50.476763Z"
+                decision: approve
+                reason: Inside scope 3 given by the reform session under the Captain's grant; no public merge, outward action, outcome-definition change or suspected key is involved in admission.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 from the reform session, Paseo message 6dd41248-d90d-4c35-ba36-bc70f9e033d7
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
