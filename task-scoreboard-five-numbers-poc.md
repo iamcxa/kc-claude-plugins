@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:task-scoreboard-five-numbers-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:task-scoreboard-five-numbers-poc-backlog-1
+              briefing:
+                id: briefing:task-scoreboard-five-numbers-poc:backlog:attempt-1:revision-1
+                digest: sha256:d79a6a484046d635be0597dea341dd8c06c656b0ea5d9851bc164947b3dd7011
+                room-ref: ./task-scoreboard-five-numbers-poc/review/backlog/briefing-1
 ---
 
 Today's reform work produced its numbers by hand, in a log. The package already holds a script that computes most of them from state records; no command prints them as one table per task.
