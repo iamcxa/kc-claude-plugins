@@ -1,0 +1,14 @@
+test_computed_disclosures_are_record_fields_without_question_mutation (test_delivery_gate.RecordRouteParityTests.test_computed_disclosures_are_record_fields_without_question_mutation) ... FAIL
+
+======================================================================
+FAIL: test_computed_disclosures_are_record_fields_without_question_mutation (test_delivery_gate.RecordRouteParityTests.test_computed_disclosures_are_record_fields_without_question_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3692, in test_computed_disclosures_are_record_fields_without_question_mutation
+    self.assertEqual(pair["record"]["data"].get("unchecked_counts"), 1)
+AssertionError: None != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.385s
+
+FAILED (failures=1)

@@ -646,3 +646,38 @@ Canonical close output (exit 0; message evidence separately manifested):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (20965 bytes)
 Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
 ```
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #869 head a5657edd against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Cycle 2 recommendation PASSED at a5657edd6531916cd01f659b888feaa021219ead; active AC-6 and amendments 2/4 pass. F1 resolved, no new findings; validation/report-2.md judges retained limits and necessity, with evidence/validation-2/ primary outputs.
+- DONE: Recheck F1 of evidence/validation-1 with its original trigger and rerun the blind read over kc-dev-flow-2/references/delivery-record.md as shipped
+  Original omitted declaration holds check/question 1/1 on both inputs; contract-only reader's declaration passes 0/0. Its rounds/outcome/Captain-step lines pass all four guards; three missing-fact questions dispositioned. Four form-deletion mutations each fail (blind-guards.json; contract-form-mutations.json).
+- DONE: Check the visibility change (only PUBLIC saves a record)
+  PUBLIC saves; PRIVATE/missing/INTERNAL with isPrivate=false all exit 2 without a record. Restored boolean criterion fails the INTERNAL case; unmocked public PR 865 saves a held observation (visibility-proof.json; live.json).
+- DONE: Confirm nothing that passed in validation-1 regressed and rerun the active criterion evidence commands and falsifiers
+  Two archive replays 0/0/0, live held check/question 1/1, rounds 2/1/1, summary/local-round/held-filename/changed-dispatch falsifiers all pass; six paired regressions and eight shared-guard omissions remain detected. Counts cite replays.json, live.json, rounds.json, candidate-mutations.json, mutations.json and shared-guard-mutations.json.
+- DONE: Judge FO-declined findings 1859 and 1863 only if new harm is found
+  Neither reopened: later changed-head check still holds (late-head.json); question-time live reread remains base behavior, and removing Sufficiency/Necessity presence tests follows the accepted record-route design. No new harm found.
+- DONE: Read hosted CI on PR 869 at this head; do not rerun the whole list
+  hosted-pr.json confirms exact head OPEN/Draft, five SUCCESS and one SKIPPED deploy. Focused independent checks supplement hosted evidence; implementation full-suite results are not relabeled independent runs.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; installed adr_lint.py docs/adr --since <base> with its exit code; verdict with Review-finding disposition
+  validation/acceptance-2.sh has four steps; exact fresh-shell run exits 0, 14 delivery + nine POC tests and lint pass (acceptance-exact-command.log). Installed ADR lint against c2f035b6612f5edb42220576b3414e993531ffd6 exits 0, 79 records (adr-lint.log). Prior F1 is fixed in findings.json.
+- DONE: Check role/profile/dispatch ownership, affected documents, comments and unchanged exact candidate
+  Pilot role check passes; 15 dispatch records complete, design/doc-impact pass and all 20 document dispositions reviewed; comments 3/562=0.5%, workflow 5996/5996 (governance.json; comments.log; acceptance-exact-command.log). Clean candidate/export hashes match provenance.json; no new ADR/migration/number reservation.
+- DONE: Retain cited evidence, close scratch and commit the path-scoped state report
+  validation/close-2.txt records exit 0; evidence/validation-2 contains 76 retained public/synthetic files (161.7 KiB). Product/PR/gate unchanged; state-only report/evidence commit and sync use the assigned state command.
+- SKIPPED: Claim green live delivery, complete live lifecycle or installed adoption
+  Public observation still holds; historical identities/report hashes do not authenticate execution. Conditional waivers, private rollout, downstream adoption, Mermaid rendering and reading/speed gains remain unproved; CI cost per PR not measured. Full limits: validation/report-2.md.
+
+### Summary
+
+Cycle 2 recommends PASSED at a5657edd6531916cd01f659b888feaa021219ead. F1's lost declaration is now independently usable from the one contract, explicit PUBLIC visibility is fail-closed, and all rerun prior passing behavior/falsifiers remain intact. FO owns acceptance replay and the Captain's gate/delivery decision; this validator grants neither merge nor release authority.
+
+Exact scratch close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-2 (33936456 bytes)
+Evidence: evidence/validation-2/ (76 files, 161.7 KiB)
+```

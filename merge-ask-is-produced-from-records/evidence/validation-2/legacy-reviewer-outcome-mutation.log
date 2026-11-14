@@ -1,0 +1,21 @@
+test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards) ... FAIL
+
+======================================================================
+FAIL: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3476, in test_contract_examples_supply_the_forms_required_by_the_shared_guards
+    self.assertEqual(gate.unstated_second_reviewers(examples), [])
+AssertionError: Lists differ: ['copilot'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'copilot'
+
+- ['copilot']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

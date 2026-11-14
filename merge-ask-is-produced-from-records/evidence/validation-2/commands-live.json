@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "/Users/kent/.local/bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Inspect the public PR observations and their limitations?\n",
+      "--artifact",
+      "$TASK_SCRATCH/repair-final-live-complete-state/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"7818dd08adaae8adb28008635be17ca8052b089a\"\n  ],\n  \"captain_steps\": null,\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SKIPPED\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    },\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 0,\n  \"head\": \"7818dd08adaae8adb28008635be17ca8052b089a\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#865\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1\",\n  \"required_checks\": [\n    {\n      \"bucket\": \"pass\"\n    },\n    {\n      \"bucket\": \"pass\"\n    }\n  ],\n  \"result\": {\n    \"exit\": 1,\n    \"problems\": 2,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": null,\n      \"exit\": 4,\n      \"head\": \"7818dd08adaae8adb28008635be17ca8052b089a\",\n      \"outcome\": \"pending\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 4,\n      \"head\": \"7818dd08adaae8adb28008635be17ca8052b089a\",\n      \"outcome\": \"pending\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"7818dd08adaae8adb28008635be17ca8052b089a\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"scope_disclosure\": {\n    \"cited\": 0,\n    \"mark\": \"\\uff08\\u672a\\u5c0d\\u904e\\u7d00\\u9304\\uff09\",\n    \"marked\": 0\n  },\n  \"time\": \"2026-11-14T03:26:30Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"7818dd08adaae8adb28008635be17ca8052b089a\",\n    \"position\": \"ahead\",\n    \"trunk\": \"c2f035b6612f5edb42220576b3414e993531ffd6\"\n  },\n  \"unchecked_counts\": 0,\n  \"validation\": {\n    \"dispatch\": \"validation-1.md\",\n    \"report_sha256\": \"b102613f332ae377168e551561f35ffc83b519d5b01549120fef5d1c6d455863\",\n    \"rounds\": 1,\n    \"verdict\": \"not-observed\"\n  },\n  \"workflow_runs\": [\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43539041802,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43539041800,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43539041649,\n      \"status\": \"completed\"\n    },\n    {\n      \"conclusion\": \"success\",\n      \"id\": 43539041625,\n      \"status\": \"completed\"\n    }\n  ]\n}\n",
+      "--reference",
+      "$TASK_SCRATCH/repair-final-live-complete-state/workflow/.spacedock-state/task/merge/observation-1.json",
+      "--workflow-dir",
+      "$TASK_SCRATCH/repair-final-live-complete-state/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-live-complete-state/prepare.log"
+  }
+]

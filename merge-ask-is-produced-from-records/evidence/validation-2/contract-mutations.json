@@ -1,0 +1,22 @@
+[
+  {
+    "name": "producer omits contract field ci",
+    "detected": true,
+    "failures": 1,
+    "output": "contract-field-mutation.log"
+  },
+  {
+    "name": "documented command typo --record-factz",
+    "detected": true,
+    "parser_exit": 2,
+    "errors": 2,
+    "output": "record-factz-mutation.log"
+  },
+  {
+    "name": "documented command typo --facts-rekord",
+    "detected": true,
+    "parser_exit": 2,
+    "errors": 2,
+    "output": "facts-rekord-mutation.log"
+  }
+]

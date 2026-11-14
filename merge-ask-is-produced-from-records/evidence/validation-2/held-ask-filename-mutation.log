@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit (delivery_tests.ObservedFactsTests.test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3573, in test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit
+    self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
+AssertionError: [PosixPath('$TASK_SCRATCH/tmp/tmpyp88dcle/task/merge/ask-1.json')] is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.185s
+
+FAILED (failures=1)

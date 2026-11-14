@@ -1,0 +1,24 @@
+{
+  "cases": [
+    {
+      "pr": "iamcxa/kc-claude-plugins#854",
+      "before": 4,
+      "after": 2,
+      "duplicate_read_unchanged": true
+    },
+    {
+      "pr": "iamcxa/kc-claude-plugins#856",
+      "before": 3,
+      "after": 1,
+      "duplicate_read_unchanged": true
+    },
+    {
+      "pr": "iamcxa/kc-claude-plugins#861",
+      "before": 3,
+      "after": 1,
+      "duplicate_read_unchanged": true
+    }
+  ],
+  "rule": "distinct (reviewer, head, evidence) among saved scope=pr outcomes clean/answered/findings; local jobs/refusals excluded",
+  "limit": "Historical remote ids are FO-recorded inputs; calculation does not authenticate their old API origin."
+}

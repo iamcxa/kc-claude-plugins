@@ -1,0 +1,35 @@
+{
+  "lines": [
+    "Second reviewer: copilot because this delivery changes review policy.",
+    "External rounds: 1",
+    "Copilot review:123.",
+    "Captain steps: captain-steps/1.md"
+  ],
+  "placement": {
+    "facts_route": {
+      "question": [
+        "Second reviewer: copilot because this delivery changes review policy."
+      ],
+      "external_rounds_line": "Do not write a factual summary. The delivery check writes external_rounds in the facts record from qualifying saved PR-scope observations.",
+      "reviewer_outcome_line": "Do not copy the legacy Copilot review:123. line as a factual summary. The delivery check writes reviewer observations in the facts record. If the saved observation is answered or findings, the question additionally requires a Review decision line; the scenario does not supply the observation outcome or the human judgment needed to complete it.",
+      "captain_steps_line": "Do not write a factual summary. The delivery check binds the Captain-step source in captain_steps in the facts record.",
+      "artifact_summary": "Bind the committed successful facts record JSON bytes unchanged as the native gate artifact summary and --reference."
+    },
+    "legacy_separate_summary_route": {
+      "summary_file": [
+        "Second reviewer: copilot because this delivery changes review policy.",
+        "External rounds: 1",
+        "Copilot review:123.",
+        "Captain steps: captain-steps/1.md"
+      ],
+      "format": "Keep these lines top-level and outside fences. There must be exactly one second-reviewer declaration and exactly one External rounds line.",
+      "check_input": "Legacy check takes question plus summary together in --text-file.",
+      "question_input": "Legacy question takes the question in --text-file and these summary lines in --summary-file. When --summary-file is omitted, use combined text."
+    }
+  },
+  "questions": [
+    "The scenario says review 123 was read, but does not identify the saved adapter outcome or the reader's judgment. Is the observation clean, answered, or findings, and what is the disposition? For answered or findings the facts-route question requires Review decision: <reviewer> <evidence> disposed: <judgment>; answered may instead use clean: after reading. I cannot truthfully complete that additional line from this scenario.",
+    "For a facts-route Review decision line, what exact evidence token was saved for review 123? The document gives the legacy spelling Copilot review:123. but does not explicitly establish the facts-record evidence token for that review.",
+    "The legacy section also requires an exit-0 review heading to be quoted. What is the actual heading, and what exact quoted-heading form should be written? The supplied three-line legacy example contains only the review identity, and the scenario supplies neither exit status nor heading. I have not invented a quote or an additional format."
+  ]
+}

@@ -1,0 +1,21 @@
+test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards) ... FAIL
+
+======================================================================
+FAIL: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3477, in test_contract_examples_supply_the_forms_required_by_the_shared_guards
+    self.assertEqual(gate.summary_round_problems(examples), [])
+AssertionError: Lists differ: ['summary needs one top-level External rounds: N line (nonnegative integer)'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'summary needs one top-level External rounds: N line (nonnegative integer)'
+
+- ['summary needs one top-level External rounds: N line (nonnegative integer)']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

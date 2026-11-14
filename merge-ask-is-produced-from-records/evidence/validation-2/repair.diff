@@ -1,0 +1,128 @@
+diff --git a/kc-dev-flow-2/references/delivery-record.md b/kc-dev-flow-2/references/delivery-record.md
+index 9207d9b40..760a00cae 100644
+--- a/kc-dev-flow-2/references/delivery-record.md
++++ b/kc-dev-flow-2/references/delivery-record.md
+@@ -14,8 +14,10 @@ Captain's requested steps; a stored digest does not prove execution.
+ 
+ The delivery check is the writer. It saves observations in `<task>/merge/`:
+ `ask-N.json` for exit 0, `observation-N.json` for a hold, sharing one increasing
+-sequence. Nonzero holds delivery. Private or unknown repository visibility
+-returns exit 2 without saving; private adopters retain the legacy text route.
++sequence. Nonzero holds delivery. Records are saved only when
++`gh repo view --json visibility` returns `visibility: PUBLIC`. Any other or
++missing visibility returns exit 2 without saving; private adopters retain the
++legacy text route.
+ The field allowlist below excludes repository content: no title, body, diff,
+ review prose, logs, question text or human reasons. No private content belongs
+ in this record or its public state branch.
+@@ -64,6 +66,17 @@ Both commands apply the shared reviewer declaration/profile guards. The text
+ summary and facts readers feed one `question` guard sequence, which rereads current
+ reviewer configuration. Merge questions need a valid head token.
+ 
++When the workflow README configures `second-reviewer:`, FO supplies exactly one
++`Second reviewer: <name> because <trigger>` declaration. The name must match the
++configured reviewer (`codex` or `copilot`); the trigger is FO's nonempty judgment
++under the workflow's trigger rules. Put the line outside fences in the question
++for the facts route, or in the summary for legacy `--summary-file` callers
++(combined text when that option is omitted). For example, with Copilot configured:
++
++```text
++Second reviewer: copilot because this delivery changes review policy.
++```
++
+ List an unread reviewer in the question when the record cannot establish its
+ status; the Captain decides. An untriggered conditional second reviewer is
+ exempt: FO may write `Second reviewer: not triggered` except for structured
+@@ -86,7 +99,25 @@ warnings neither hold the ask nor certify the claims.
+ 
+ ### Legacy text route
+ 
+-Existing text commands retain their checks. The observer compares the reference
++Existing text commands retain their checks. Legacy `check` takes question plus
++summary together in `--text-file`; `question` can take the summary separately:
++
++`python3 <package>/scripts/delivery_gate.py question <task> --text-file <question> --summary-file <summary>`
++
++The summary (combined text when `--summary-file` is omitted) carries exactly one
++top-level `External rounds: N` line with a nonnegative integer, the configured
++second reviewer's outcome, and `Captain steps: captain-steps/<N>.md` with positive
++N. The step record must pass the question/latest-validation checks at a latest
++dispatched candidate. For example, after reading Copilot review 123 and recording
++the Captain steps in captain-steps/1.md, the additional lines are:
++
++```text
++External rounds: 1
++Copilot review:123.
++Captain steps: captain-steps/1.md
++```
++
++The observer compares the reference
+ digest/head and its `sufficiency`/`necessity` against the first 200 cleaned clause
+ characters in question plus summary (`delivery_gate.clean`/`clause`); report
+ those judgments from the record, or `can't tell` if neither key exists.
+@@ -115,7 +146,7 @@ permitted. Nested descriptions name the source or the meaning a reader may use.
+     "schema": {"const": "delivery-facts/v1", "description": "Format version; incompatible shapes require a new version."},
+     "tool_version": {"type": "string", "description": "Producing package version, not a source commit."},
+     "time": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "description": "UTC observation time; not authenticated ordering proof."},
+-    "public": {"const": true, "description": "Repository visibility verified before saving."},
++    "public": {"const": true, "description": "Repository visibility is PUBLIC, verified before saving."},
+     "pr": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+#[0-9]+$", "description": "Public repository-qualified PR identity."},
+     "head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$", "description": "Observed PR head, unavailable on reader failure."},
+     "candidate": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "description": "Latest dispatched candidates equal to the observed head."},
+diff --git a/kc-dev-flow-2/scripts/delivery_gate.py b/kc-dev-flow-2/scripts/delivery_gate.py
+index 6781854ac..8d8c6ab7e 100644
+--- a/kc-dev-flow-2/scripts/delivery_gate.py
++++ b/kc-dev-flow-2/scripts/delivery_gate.py
+@@ -689,7 +689,7 @@ def check(args):
+ 
+     if observed:
+         try:
+-            if json.loads(gh("repo", "view", repo, "--json", "isPrivate"))["isPrivate"] is not False:
++            if json.loads(gh("repo", "view", repo, "--json", "visibility"))["visibility"] != "PUBLIC":
+                 emit("facts not saved: public repository visibility required")
+                 return 2
+         except (RuntimeError, ValueError, KeyError) as error:
+diff --git a/kc-dev-flow-2/scripts/test_delivery_gate.py b/kc-dev-flow-2/scripts/test_delivery_gate.py
+index e38e9b778..10d7dc947 100644
+--- a/kc-dev-flow-2/scripts/test_delivery_gate.py
++++ b/kc-dev-flow-2/scripts/test_delivery_gate.py
+@@ -83,7 +83,7 @@ if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
+     sys.stderr.write(os.environ.get("STUB_GH_FAIL", ""))
+     sys.exit(1)
+ if a[:2] == ["repo", "view"]:
+-    print('{{"isPrivate": false}}')
++    print('{{"visibility": "PUBLIC"}}')
+ elif a[:2] == ["pr", "view"]:
+     own = os.path.join(d, "pr-" + a[2] + ".json")
+     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
+@@ -3464,6 +3464,19 @@ class ScopeDisclosureTests(unittest.TestCase):
+ 
+ 
+ class ObservedFactsTests(unittest.TestCase):
++    def test_contract_examples_supply_the_forms_required_by_the_shared_guards(self):
++        examples = "\n".join(re.findall(r"^```text\n(.*?)^```", CONTRACT.read_text(), re.M | re.S))
++        with tempfile.TemporaryDirectory() as d:
++            task = Path(d, "task.md")
++            task.write_text(TASK)
++            captain_record(task)
++            problems, _ = gate.reviewer_problems(task, TASK.replace("profile: pilot", "profile: prod"),
++                                                examples, "copilot", {"codex", "copilot"})
++            self.assertEqual(problems, [])
++            self.assertEqual(gate.unstated_second_reviewers(examples), [])
++            self.assertEqual(gate.summary_round_problems(examples), [])
++            self.assertEqual(gate.captain_step_problems(task, "Review this candidate.", examples), [])
++
+     def test_documented_delivery_commands_use_the_tools_argument_parser(self):
+         root = CONTRACT.parents[1]
+         for path in (CONTRACT, root / "references/sd/workflow.md", root / "skills/observer/SKILL.md",
+@@ -3474,8 +3487,8 @@ class ObservedFactsTests(unittest.TestCase):
+                         stack.enter_context(mock.patch.object(gate, handler, return_value=0))
+                     self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+ 
+-    def test_private_or_unknown_visibility_saves_no_record(self):
+-        for visibility in ({"isPrivate": True}, {}):
++    def test_nonpublic_or_unknown_visibility_saves_no_record(self):
++        for visibility in ({"visibility": "PRIVATE"}, {}, {"visibility": "INTERNAL", "isPrivate": False}):
+             with self.subTest(visibility=visibility), tempfile.TemporaryDirectory() as d:
+                 task, question = Path(d, "task.md"), Path(d, "question")
+                 task.write_text(TASK)

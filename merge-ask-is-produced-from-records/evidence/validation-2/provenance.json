@@ -1,0 +1,36 @@
+{
+  "candidate": "a5657edd6531916cd01f659b888feaa021219ead",
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "prior_validation_head": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "product_status": "clean",
+  "export": "git archive of candidate, no git worktree created",
+  "product_paths": [
+    "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+    "kc-dev-flow-2/references/delivery-record.md",
+    "kc-dev-flow-2/references/sd/workflow.md",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/lint-skills.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "kc-dev-flow-2/skills/observer/SKILL.md"
+  ],
+  "repair_paths": [
+    "kc-dev-flow-2/references/delivery-record.md",
+    "kc-dev-flow-2/scripts/delivery_gate.py",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py"
+  ],
+  "matching_worktree_export_sha256": {
+    "kc-dev-flow-2/extensions/copilot/EXTENSION.md": "e9c405b76affaff5d0989a8915b7a05b94f1c3a5c016fb7cec88ef562c1d6a77",
+    "kc-dev-flow-2/references/delivery-record.md": "a52ca470f98a35b2b6d13d46a16099949d6d61d6f730766b70bd7205246454f8",
+    "kc-dev-flow-2/references/sd/workflow.md": "0d658e36943a2c8e988f1df1bf158905aafbbc861a38157e5b4590a9b885ae57",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "781429bf4a58285225ce11f37db2e0b6c8ec6b690ffd8b5dd05a0d515e0f0f8f",
+    "kc-dev-flow-2/scripts/lint-skills.py": "d4c15ecbad5205e60b776095f0973fd6da5ad2df7687b3d1e996de316001bc54",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "8c1dddfd390549355331aaf920f388163ad69458faea266a798a481a823a2c36",
+    "kc-dev-flow-2/scripts/test_poc_readme.py": "4018706d0bc15cbc28d699ba40b6600a44c08cd03900fc3a6d7effe2cac5ed30",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "640edd6b33a56ab59266ff5d7578efe874311fcdf188de5512b91da93f112e12",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "54ccdcf6d7ec25fdad35fd3688d4449fe3555a91b5e1f41e5ea7ce0d1c24e546"
+  },
+  "state_commit_before_report": "6ab81cca47e3c3408614b1f59739c5c5cc214a9f"
+}

@@ -1,0 +1,45 @@
+usage: delivery_gate.py [-h] {check,question,merge-run,steps} ...
+delivery_gate.py: error: unrecognized arguments: --record-factz
+Eusage: delivery_gate.py [-h] {check,question,merge-run,steps} ...
+delivery_gate.py: error: unrecognized arguments: --record-factz
+E
+======================================================================
+ERROR: test_documented_delivery_commands_use_the_tools_argument_parser (test_delivery_gate.ObservedFactsTests.test_documented_delivery_commands_use_the_tools_argument_parser) (path='delivery-record.md', command='check <task> --pr <owner/repo>#<N> --text-file <question> --record-factz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3488, in test_documented_delivery_commands_use_the_tools_argument_parser
+    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/delivery_gate.py", line 1437, in main
+    args = parser.parse_args(argv[:cut])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+======================================================================
+ERROR: test_documented_delivery_commands_use_the_tools_argument_parser (test_delivery_gate.ObservedFactsTests.test_documented_delivery_commands_use_the_tools_argument_parser) (path='workflow.md', command='check <task> --pr <owner/repo>#<N> --text-file <question> --record-factz')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3488, in test_documented_delivery_commands_use_the_tools_argument_parser
+    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "$TASK_SCRATCH/candidate/kc-dev-flow-2/scripts/delivery_gate.py", line 1437, in main
+    args = parser.parse_args(argv[:cut])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 1877, in parse_args
+    self.error(msg % ' '.join(argv))
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2640, in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+  File "/Users/kent/.pyenv/versions/3.11.14/lib/python3.11/argparse.py", line 2627, in exit
+    _sys.exit(status)
+SystemExit: 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (errors=2)

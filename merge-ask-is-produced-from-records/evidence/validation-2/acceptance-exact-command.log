@@ -1,0 +1,27 @@
+Exported a5657edd6531916cd01f659b888feaa021219ead
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 11.365s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 2.012s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-2/acceptance.i0VHjW/.tmp/tmp7jt7yy6m/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5996 of 5996 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+ACCEPTANCE PASSED

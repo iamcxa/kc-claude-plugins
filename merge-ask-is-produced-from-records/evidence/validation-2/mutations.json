@@ -1,0 +1,56 @@
+[
+  {
+    "name": "review-judgment",
+    "test": "test_review_findings_need_the_fo_decision_missing_from_observations",
+    "status": "passed",
+    "observed_test_failures": 2,
+    "observed_test_errors": 0,
+    "output": "mutation-review-judgment.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  },
+  {
+    "name": "quota-disclosure",
+    "test": "test_known_quota_refusal_needs_unread_and_retry_in_question",
+    "status": "passed",
+    "observed_test_failures": 1,
+    "observed_test_errors": 0,
+    "output": "mutation-quota-disclosure.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  },
+  {
+    "name": "quoted-profile",
+    "test": "test_configured_trigger_guard_includes_quoted_prod_profiles",
+    "status": "passed",
+    "observed_test_failures": 1,
+    "observed_test_errors": 0,
+    "output": "mutation-quoted-profile.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  },
+  {
+    "name": "head-token",
+    "test": "test_merge_head_token_must_be_nonempty_and_bounded",
+    "status": "passed",
+    "observed_test_failures": 1,
+    "observed_test_errors": 0,
+    "output": "mutation-head-token.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  },
+  {
+    "name": "config-reread",
+    "test": "test_question_reloads_current_reviewer_configuration",
+    "status": "passed",
+    "observed_test_failures": 1,
+    "observed_test_errors": 0,
+    "output": "mutation-config-reread.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  },
+  {
+    "name": "computed-disclosures",
+    "test": "test_computed_disclosures_are_record_fields_without_question_mutation",
+    "status": "passed",
+    "observed_test_failures": 1,
+    "observed_test_errors": 0,
+    "output": "mutation-computed-disclosures.log",
+    "mutation_scope": "isolated in-memory module; no product bytes changed"
+  }
+]

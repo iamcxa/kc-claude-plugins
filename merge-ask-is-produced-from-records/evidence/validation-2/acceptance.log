@@ -1,0 +1,29 @@
+2026-11-14 11:25:40.268 xcodebuild[83550:581662707]  DVTFilePathFSEvents: Failed to start fs event stream.
+2026-11-14 11:25:40.599 xcodebuild[83550:581662703] [MT] DVTDeveloperPaths: Failed to get length of DARWIN_USER_CACHE_DIR from confstr(3), error = Error Domain=NSPOSIXErrorDomain Code=5 "Input/output error". Using NSCachesDirectory instead.
+Exported a5657edd6531916cd01f659b888feaa021219ead
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 9.097s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 1.947s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ $TASK_SCRATCH/tmp/tmp8ljagqjq/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5996 of 5996 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+ACCEPTANCE PASSED

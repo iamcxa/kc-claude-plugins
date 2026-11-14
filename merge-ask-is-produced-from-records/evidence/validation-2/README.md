@@ -1,0 +1,7 @@
+# Independent validation cycle 2
+
+Candidate a5657edd6531916cd01f659b888feaa021219ead; base c2f035b6612f5edb42220576b3414e993531ffd6; prior rejected candidate 5e9afd496a6901cc788252a77d84f355acbf0015. See ../../validation/report-2.md. Public metadata and synthetic/aggregate results only; raw archived task/report/reviewer bodies and exported repositories are not retained.
+
+Run ../../validation/acceptance-2.sh in a fresh bash shell for the four-step acceptance. For detailed reproduction, copy these .py files to a new assigned scratch root; run run_checks.sh after exporting this candidate there as candidate/. Its dependencies and absolute local source/state paths are declared. round2_probe.py live additionally requires read-only GitHub access and the named Spacedock binary; it creates only isolated local repositories/gate transport fixtures. The reused replay helper reads the two public archived inputs from the state checkout. Replays use controlled provider/reviewer observations, never authenticate old provider truth. Original evidence helpers were reused; blind_validate.py is the small independent reader-output guard check.
+
+The independent blind reader received only the shipped delivery-record.md and synthetic scenario. Three questions concern missing observed/human facts; each has a disposition. Output paths in logs/JSON are normalized to $TASK_SCRATCH. Hosted-pr metadata was read through gh after one sandbox network denial; narrow network retry succeeded. No product bytes or external review/gate/PR state were changed.

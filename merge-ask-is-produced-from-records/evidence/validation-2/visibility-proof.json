@@ -1,0 +1,11 @@
+{
+  "controls": "Existing PRIVATE, missing and one added INTERNAL/isPrivate=false case all exit 2 and save no record; existing PUBLIC record test saves and binds observations.",
+  "added_cases": 1,
+  "added_test_methods": 0,
+  "reverse_mutation": "Restore isPrivate false as the public criterion in an isolated in-memory module.",
+  "reverse_mutation_failures": 1,
+  "reverse_mutation_errors": 0,
+  "public_control": "test_question_only_records_observed_facts_and_no_manual_summary",
+  "negative_control": "test_nonpublic_or_unknown_visibility_saves_no_record",
+  "limits": "Repository API responses use the existing gh test double; no live provider or publication action was performed."
+}

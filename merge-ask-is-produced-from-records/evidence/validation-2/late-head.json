@@ -1,0 +1,8 @@
+{
+  "initial_question": 0,
+  "changed_live_head": "ffffffffffffffffffffffffffffffffffffffff",
+  "dispatched_head": "ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8",
+  "later_check": 1,
+  "old_record_question_after_later_hold": 1,
+  "limit": "Mocked provider counterexample; no live PR push/merge. Workflow final --match-head-commit also pins GitHub merge; not executed."
+}
