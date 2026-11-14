@@ -1,7 +1,7 @@
 ---
 id:
 title: The extracted package says five rules that already worked, each once, where its reader loads it
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -75,9 +75,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item A from the reform session, Paseo messages c1a822fa-6db2-4b56-9815-785546bdf255 and e8c00c89-65b0-415e-ad01-8a55c37fbee6
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T12:18:22Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T14:04:30Z
+archived: 2026-11-14T14:04:30Z
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
