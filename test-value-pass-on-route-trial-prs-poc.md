@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-test-value-pass-on-route-trial-prs-poc
-pr:
+pr: local-merge:c2f035b6612f5edb42220576b3414e993531ffd6
 gates:
     version: 1
     records:
@@ -52,6 +52,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-11-14T02:35:14Z
+mod-block: merge:pr-merge
 ---
 
 The package holds 1,455 test functions in 24,684 test lines against 10,728 product lines; 258 use mocks or fakes and 21 are text containment; two tasks were blocked by text-shape assertions in one file in one evening (brief C3, figures from test-audit.md and proposal.md, not re-measured here). Nothing at write time asks whether a new test fails when the behaviour breaks.
