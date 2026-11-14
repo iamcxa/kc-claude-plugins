@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:method-reading-code-and-tables-on-the-private-remote-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile poc with the outcome, non-goals, stop condition, acceptance criteria and a budget of 1 implementation and 1 validation cycles as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave.",
+  "artifacts": [
+    {
+      "id": "artifact:method-reading-code-and-tables-on-the-private-remote-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/675a3fa47663c91051a9867035e8d4763d68f52c/method-reading-code-and-tables-on-the-private-remote-poc.md",
+      "rev": "sha256:b0f434099485d1357c655c4ac37dfd6f05e3fb2f8a0e769a45d4b71e0abe4ae8",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: profile poc; the reform session ordered it because the day's main result has no backup; outcome, Non-goals, Stop condition, AC-1 and AC-2 as filed; Budget 1 implementation and 1 validation cycles; FO alignment not needed before implementation."
+    }
+  ]
+}

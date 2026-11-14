@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:method-reading-code-and-tables-on-the-private-remote-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:method-reading-code-and-tables-on-the-private-remote-poc-backlog-1
+              briefing:
+                id: briefing:method-reading-code-and-tables-on-the-private-remote-poc:backlog:attempt-1:revision-1
+                digest: sha256:125693f82a1edae00b251f22e6788ba7575120b39c7a03d48948b97c8f9e7a9f
+                room-ref: ./method-reading-code-and-tables-on-the-private-remote-poc/review/backlog/briefing-1
 ---
 
 The day's main result, two readings of whether an agent given the method does better than one given the task in plain words, exists on one machine only: its cell, grader changes, readings and final tables were committed after the push that carried the earlier code, and live on a laptop-only branch beside the raw runs.
