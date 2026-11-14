@@ -211,9 +211,11 @@ def added_bytes(root, before, after):
     data = git(root, 'cat-file', 'blob', after.decode())
     if data.startswith(b'\x1f\x8b'):
         try:
+            contents = [data]
             while data.startswith(b'\x1f\x8b'):
                 data = gzip.decompress(data)
-            return data
+                contents.append(data)
+            return b'\n'.join(contents)
         except (OSError, EOFError):
             raise ValueError('changed gzip blob cannot be decompressed') from None
     try:

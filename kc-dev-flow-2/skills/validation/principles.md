@@ -60,7 +60,10 @@ himself: three to six steps, five minutes or less, each naming the action and th
 expected observation, written for someone outside this session — an exact command
 or URL, no internal identifier to look up, no secret in the text. FO runs it as
 written before the gate, so it runs unchanged in a fresh shell and names any checkout
-or install it needs. State what it
+or install it needs. It writes a path under the home directory as `~/…`, an unquoted
+word of its own, and names no private repository; a retained script takes its paths
+as arguments rather than holding them, because sealing rewrites the home directory
+inside it. State what it
 does not cover, so a pass is not mistaken for proof of the whole change. When the
 change has no user-visible surface, the script says so and substitutes the
 smallest observable command whose output he can read, rather than being
