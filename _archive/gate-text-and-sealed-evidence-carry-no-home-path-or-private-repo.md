@@ -1,7 +1,7 @@
 ---
 id:
 title: Sealed evidence and the delivery gate's own text can be written without a home-directory path or a private repository name, so the state guard can refuse those two classes
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -75,8 +75,11 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 item 3 from the reform session, stop ruling in Paseo message 6bc7ea41-57b4-42cb-bcd9-9ba4398b8b1c
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T09:53:13Z
+verdict: REJECTED
+completed: 2026-11-14T12:40:09Z
+archived: 2026-11-14T12:40:09Z
 ---
 
 The state guard merged in pull request 871 is installed with private task slugs and tailnet hostnames refusing, and private repository names, the email and the home directory only warning. Two of the warning classes cannot move to refuse today, because a refusal there has no legitimate way forward: a home path or a private repository name can sit inside sealed worker evidence, and the delivery gate's own form demands an absolute acceptance command in the gate summary and in the Captain-steps record.
