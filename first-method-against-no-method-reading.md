@@ -18,6 +18,20 @@ gates:
                 id: briefing:first-method-against-no-method-reading:backlog:attempt-1:revision-1
                 digest: sha256:7d2315e407bed6fe9152c8649add12156e82643aa362eaea82f2b9ef5f139855
                 room-ref: ./first-method-against-no-method-reading/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:first-method-against-no-method-reading:backlog:1
+                briefing: briefing:first-method-against-no-method-reading:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T09:52:19.823901Z"
+                decision: approve
+                reason: Inside scope 2 given by the reform session under the Captain's grant (message fa01bfc1); profile pilot justified in the Scope; seed check exit 0; admission involves no public merge, outward action, outcome-definition change or suspected key.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 items-1-and-2 from the reform session, Paseo message fa01bfc1-0e7d-4197-9636-a25f2818c562
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Two readings of one cell on the operator's laptop (archived task behaviour-baseline-first-cell) could not include a no-method arm: an installed copy of the package was one skill call away, and all three control runs loaded it. The question the Captain asks first, 「該怎麼知道用我的工作方法，確實比沒用較好？」 (outcome 零 of the reform's approved outcomes, as recorded in `.context/dev2-reform/結果定義.md`), is still unanswered by any run.
