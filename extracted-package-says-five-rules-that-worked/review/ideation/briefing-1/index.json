@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extracted-package-says-five-rules-that-worked:ideation:attempt-1:revision-1",
+  "question": "Approve the design as its last pass states it (five rules placed once each, both halves of the stop rule in the package text, the First Officer's reading 21 words longer, three removals with their risks as fresh-reader scenarios) and move to implementation? Not asked of the Captain as a gate: decided by FO under his standing grant; the two decisions that were his are recorded as Captain amendment 1.",
+  "artifacts": [
+    {
+      "id": "artifact:extracted-package-says-five-rules-that-worked:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/954a0d8fda51e56b77290730a54df7c7fc72ce2e/extracted-package-says-five-rules-that-worked.md",
+      "rev": "sha256:b7230eb8951b250b36c52c87dcb13222c6480d2b720ba3015482a3f4c88f8a7c",
+      "mediaType": "text/markdown",
+      "summary": "Ideation, three passes by one worker. Placement and fresh-reader proof confirmed by the reform session. Last pass wins: workflow text +73 words, peers extension -14, dev skill -38, First Officer total +21, workers +27 to +30. Captain amendment 1 holds his first-hand confirmation of both halves and of accepting the longer text on the condition that it comes out if the fresh-reader check fails or real use shows it is not followed. Decision 3 by the reform session: no new record; minutes to first report stays not recorded. Not run: the fresh-reader proof (designed only). Finding, not fixed: the package's word lint counts the workflow text alone."
+    }
+  ]
+}

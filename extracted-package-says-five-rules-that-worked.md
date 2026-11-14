@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:extracted-package-says-five-rules-that-worked:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:extracted-package-says-five-rules-that-worked-ideation-1
+              briefing:
+                id: briefing:extracted-package-says-five-rules-that-worked:ideation:attempt-1:revision-1
+                digest: sha256:5a0887d0e6863fadfbd2740ac22ae43bd57c7db5e2886b3d522c173a8db4754c
+                room-ref: ./extracted-package-says-five-rules-that-worked/review/ideation/briefing-1
 started: 2026-11-14T12:18:22Z
 ---
 
