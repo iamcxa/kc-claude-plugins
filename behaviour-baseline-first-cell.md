@@ -40,6 +40,20 @@ gates:
                 id: briefing:behaviour-baseline-first-cell:ideation:attempt-1:revision-1
                 digest: sha256:9a3e4f21c2dfbc53d2e78f9dd0496eb5da10265d776a02899bdf5cc7090ea12f
                 room-ref: ./behaviour-baseline-first-cell/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:behaviour-baseline-first-cell:ideation:1
+                briefing: briefing:behaviour-baseline-first-cell:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T05:05:55.363147Z"
+                decision: approve
+                reason: 'Design check exit 0; the design reuses the package''s replay builder, keeps case and run content off the public branch, stays inside the 18-run cap and the admitted scope; FO verified by git grep that the rule under test is present at the candidate and absent at the release. D1 (credential) is not decided here: it is the Captain''s and no paid run starts before he answers.'
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item C from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-14T04:43:45Z
 ---
 
