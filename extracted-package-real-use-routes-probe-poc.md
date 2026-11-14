@@ -18,6 +18,20 @@ gates:
                 id: briefing:extracted-package-real-use-routes-probe-poc:backlog:attempt-1:revision-1
                 digest: sha256:1f5a3a54febbff33d51a1a54505fee39d1a478bcaea3c95a0067c72569d2ed82
                 room-ref: ./extracted-package-real-use-routes-probe-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extracted-package-real-use-routes-probe-poc:backlog:1
+                briefing: briefing:extracted-package-real-use-routes-probe-poc:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T12:16:04.05381Z"
+                decision: approve
+                reason: Inside scope 3 given by the reform session under the Captain's grant; no public merge, outward action, outcome-definition change or suspected key is involved in admission.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 from the reform session, Paseo message 6dd41248-d90d-4c35-ba36-bc70f9e033d7
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Nine of the sixteen approved outcomes can only be measured in real use, and nobody uses the extracted package yet. The next real task of the reform should be run by a First Officer and workers that load the extracted package, not the installed one, with its task state in a private place from the first commit.
