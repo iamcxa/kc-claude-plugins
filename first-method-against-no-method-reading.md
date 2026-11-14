@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:first-method-against-no-method-reading:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:first-method-against-no-method-reading-ideation-1
+              briefing:
+                id: briefing:first-method-against-no-method-reading:ideation:attempt-1:revision-1
+                digest: sha256:908391b70013edc638938d8515d32023cb62a98a3b527f560b2c93fe3da49561
+                room-ref: ./first-method-against-no-method-reading/review/ideation/briefing-1
 started: 2026-11-14T09:53:07Z
 ---
 

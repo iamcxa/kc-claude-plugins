@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:first-method-against-no-method-reading:ideation:attempt-1:revision-1",
+  "question": "Approve this design for the reading and its run plan, with the reform session's one change to the decision patterns and its rulings on the run mode and arm N's prompt? Not asked of the Captain: decided by FO under his standing grant inside the reform session's scope; approving starts implementation and merges nothing public.",
+  "artifacts": [
+    {
+      "id": "artifact:first-method-against-no-method-reading:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fa8133ff4df63e3d2c9e6ce6a2f94934df76ec79/first-method-against-no-method-reading.md",
+      "rev": "sha256:f5c65314ede0bf16d0dd1c3a9261c3d49cb65f14113eec4e21c9203a47a6bcc8",
+      "mediaType": "text/markdown",
+      "summary": "Design gate under the Captain's grant; design check exit 0 (FO run 2026-11-14). The reading: arm N gets the task in plain words with one prompt written in the design; both arms are graded on what they wrote, markup stripped; a silent run is not a pass and has its own column; ten synthetic falsifier fixtures and three mutation proofs; contamination names host paths and excludes the package files inside the run's own tree. Run plan: folders built on the laptop and carried; 6 counted launches, 2 spares, all in the mode the smoke ran in. Push: a new branch from the private remote's main with allowlisted files, scanned to zero first; today's premise scan found 12 lines to rewrite. Confirmed by the reform session with one change (message 984e93a3), carried to the implementation dispatch: arm N 3 with arm M 3 reads no measurable benefit of the method on this case (both at ceiling), arm N 3 with arm M 2 reads method not better, and cannot discriminate is kept for unreliable grading only. Its rulings: the non-asking mode for all six with a secret-path scan of every transcript before any grading; arm N's prompt keeps the sentence on how each criterion will be checked. Time risk named by the design: the independent check and the push may not fit before the scope's end; neither is cut."
+    }
+  ]
+}
