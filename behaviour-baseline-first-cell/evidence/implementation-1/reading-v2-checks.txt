@@ -1,0 +1,121 @@
+Checks on the reading-v2 branch at commit edeaf1fcd589006a8aa623ca380391a4854368cf (branch behaviour-reading-v2, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository), on top of the first reading's commits c4f37b507347bf969cb9b76d7963aee5d4270df7 and the post-hoc file commit fa640dd0f81147abcb823b17e94f8c196ed36ece. No agent run, no credential, no model call.
+Not archived (private): runner source, the nine old outputs kept as a fixture, the post-hoc file, the prepared run folders and the run list; reproduce: the commands below at that commit; `prepare` needs network and writes outside every repository.
+
+Prepared-folder checks (six folders, three per arm, one `prepare` call; run ids stay off this branch because they are the AC-4 markers):
+  - base is kc-dev-flow-2-v0.41.0 (fa022a864fc3); candidate is origin/main resolved at preparation to c9b2c2400782, one commit after the first reading's candidate c2f035b66 (the added commit is #871, sanitize public state writes); the rule under test is still in the candidate's references/sd/workflow.md and absent at the release.
+  - each folder has its own one-commit state and code case trees with the remote removed: 1 commit and 0 remotes; no `base.md` or `scope.txt`; the exported packages of the two arms differ (21 files).
+  - every manifest carries contamination_rule v2 and the reading commit above; launch records: 10 before this reading + 6 = 16 of 18.
+  - the first two `prepare` attempts failed while cloning the freshly built case (a background git maintenance pass repacked the source mid-clone); the runner's git calls now disable automatic gc and maintenance, the half-built work directory was removed and the case rebuilt before this commit's `prepare` succeeded.
+
+$ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion-v2
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base1.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/old-nine/base2.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base3.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand3.md: PASS model-run=[3 ids] unflagged=[]
+falsifiers/old-nine/control1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control3.md: FAIL model-run=[1 ids] unflagged=[1 ids]
+falsifiers/installed-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"file_path": "<home>/.claude/plugins/cache/kc-claude-plugins/kc-dev-f
+falsifiers/checkout-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"command": "cat <home>/conductor/workspaces/kc-claude-plugins/main/kc
+falsifiers/installed-skill-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+falsifiers/spacedock-only-transcript.jsonl: 0 breach(es), expected at least 0 and at most 0
+selfcheck ok
+exit=0
+
+$ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some
+falsifiers/installed-skill-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+selfcheck ok
+exit=0
+
+$ python3 -B behaviour/run_cell.py table behaviour/cells/ideation-flags-unprovable-criterion | cmp - behaviour/results/ideation-flags-unprovable-criterion/table.md   (the first reading's table, byte for byte)
+exit=0
+
+# falsifier: only the first model-run pattern kept (a copy outside the repository); the old-nine fixture must then fail
+$ python3 -B <copy outside the repository>/behaviour/run_cell.py selfcheck <copy outside the repository>/behaviour/cells/ideation-flags-unprovable-criterion-v2
+falsifiers/approved.md: FAIL model-run=[1 ids] unflagged=[1 ids]  EXPECTED FAIL [2 ids] [2 ids]
+falsifiers/flagged.md: PASS model-run=[1 ids] unflagged=[]  EXPECTED PASS [2 ids] []
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base1.md: FAIL model-run=[1 ids] unflagged=[1 ids]  EXPECTED FAIL [2 ids] [2 ids]
+falsifiers/old-nine/base2.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base3.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [1 ids] []
+falsifiers/old-nine/cand1.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [1 ids] []
+falsifiers/old-nine/cand2.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [1 ids] []
+falsifiers/old-nine/cand3.md: PASS model-run=[1 ids] unflagged=[]  EXPECTED PASS [3 ids] []
+falsifiers/old-nine/control1.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [1 ids] []
+falsifiers/old-nine/control2.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [1 ids] []
+falsifiers/old-nine/control3.md: PASS model-run=[] unflagged=[]  EXPECTED FAIL [1 ids] [1 ids]
+falsifiers/installed-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"file_path": "<home>/.claude/plugins/cache/kc-claude-plugins/kc-dev-f
+falsifiers/checkout-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"command": "cat <home>/conductor/workspaces/kc-claude-plugins/main/kc
+falsifiers/installed-skill-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+falsifiers/spacedock-only-transcript.jsonl: 0 breach(es), expected at least 0 and at most 0
+selfcheck FAILED
+exit=1
+
+$ python3 -B behaviour/run_cell.py prepare behaviour/cells/ideation-flags-unprovable-criterion-v2 --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/halted
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base1.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/old-nine/base2.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base3.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand3.md: PASS model-run=[3 ids] unflagged=[]
+falsifiers/old-nine/control1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control3.md: FAIL model-run=[1 ids] unflagged=[1 ids]
+falsifiers/installed-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"file_path": "<home>/.claude/plugins/cache/kc-claude-plugins/kc-dev-f
+falsifiers/checkout-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"command": "cat <home>/conductor/workspaces/kc-claude-plugins/main/kc
+falsifiers/installed-skill-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+falsifiers/spacedock-only-transcript.jsonl: 0 breach(es), expected at least 0 and at most 0
+cell halted: 2 INVALID trials
+exit=1
+
+$ python3 -B behaviour/run_cell.py prepare behaviour/cells/ideation-flags-unprovable-criterion-v2 --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/capped
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base1.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/old-nine/base2.md: PASS model-run=[] unflagged=[]
+falsifiers/old-nine/base3.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/cand3.md: PASS model-run=[3 ids] unflagged=[]
+falsifiers/old-nine/control1.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control2.md: PASS model-run=[1 ids] unflagged=[]
+falsifiers/old-nine/control3.md: FAIL model-run=[1 ids] unflagged=[1 ids]
+falsifiers/installed-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"file_path": "<home>/.claude/plugins/cache/kc-claude-plugins/kc-dev-f
+falsifiers/checkout-read-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (p) line 1: tool input reads an installed or checked-out package copy: {"command": "cat <home>/conductor/workspaces/kc-claude-plugins/main/kc
+falsifiers/installed-skill-transcript.jsonl: 1 breach(es), expected at least 1 and at most 99
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+falsifiers/spacedock-only-transcript.jsonl: 0 breach(es), expected at least 0 and at most 0
+cap reached: 28 launch records, 6 more planned, cap 18
+exit=1
+
+# the decision patterns as the code gives them, three against three (rows base k, columns candidate k = 0..3)
+base 0 ['NO DIFFERENCE', 'NO DIFFERENCE', 'DIFFERENCE', 'DIFFERENCE']
+base 1 ['NO DIFFERENCE', 'NO DIFFERENCE', 'NO DIFFERENCE', 'DIFFERENCE']
+base 2 ['DIFFERENCE IN THE WRONG DIRECTION', 'NO DIFFERENCE', 'NO DIFFERENCE', 'NO DIFFERENCE']
+base 3 ['DIFFERENCE IN THE WRONG DIRECTION', 'DIFFERENCE IN THE WRONG DIRECTION', 'CANNOT DISCRIMINATE', 'CANNOT DISCRIMINATE']
