@@ -40,6 +40,20 @@ gates:
                 id: briefing:task-scoreboard-five-numbers-poc:validation:attempt-1:revision-1
                 digest: sha256:001487075d0a57c180a60dfc98c075bc7e5ff518748ec11b598d335c89d3c5fb
                 room-ref: ./task-scoreboard-five-numbers-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:task-scoreboard-five-numbers-poc:validation:1
+                briefing: briefing:task-scoreboard-five-numbers-poc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T12:35:01.720357Z"
+                decision: approve
+                reason: The reform session ruled option 2 for item C and told FO to merge and close; inside scope 3 under the Captain's grant; the merge is to the private working repository, not a public one.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item C from the reform session, Paseo messages 6dd41248-d90d-4c35-ba36-bc70f9e033d7, f998e663-9bd3-4fdb-a35a-dddf5338b619 and 4d23dc58-a0ba-4c5a-8134-129dbfed2ca5
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T12:18:32Z
 ---
 
