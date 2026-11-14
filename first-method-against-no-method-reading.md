@@ -293,6 +293,12 @@ Asked: not asked of the Captain by this FO. The reform session (Paseo 26215d96, 
 Supersedes: none
 Budget: 3 implementation and 2 validation cycles
 
+### Amendment 2 — 2026-11-14, chat (standing grant; ruling given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain. Under that grant the reform session (Paseo 26215d96, message 416ecb3c) ruled on the first reading's blind check: the first reading is reported as "cannot discriminate (the blind reader disagreed with the script on one run; counts read no difference under both sets of grades)", with the script's and the blind grades both shown per run; a fourth implementation cycle is allowed for exactly one thing, the table code applying the committed disagreement rule (not the grader, the reading or the patterns), before the second reading's table is generated; the first reading's table is then regenerated and the difference shown to be the reading line and the added blind-grade columns only; both readings' limits say that the script may under-detect model-dependent checks and that the blind grades are the reference where they differ.
+Supersedes: none
+Budget: 4 implementation and 2 validation cycles
+
 ## Stage Report: ideation
 
 - DONE: A reading design that settles each point the task's Scope lists, in the form it will be committed before any launch: the grading rule that scores "identified that the criterion cannot be proven and said so" from both output shapes without scoring format as behaviour, with a falsifier fixture for each shape; arm N's exact prompt (no mention of provability, proof or evidence commands; not weaker than what a real person would type); the contamination rule for a host where the case's own task edits the package's files, naming which paths count; the 3-against-3 patterns for method better, no difference and cannot discriminate, with silence in arm N as an outcome decided in advance; the limits
