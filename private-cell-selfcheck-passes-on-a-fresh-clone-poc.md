@@ -5,7 +5,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-private-cell-selfcheck-passes-on-a-fresh-clone-poc
 pr:
 gates:
     version: 1
@@ -32,6 +32,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-11-14T11:33:09Z
 ---
 
 The clean branch pushed to the private working repository's remote on 2026-11-14 carries a cell whose `selfcheck` exits 1 on a fresh clone: nine of its fixture entries point at raw laptop outputs that are deliberately not carried. A check that fails on a fresh clone is a trap for whoever clones it next.
