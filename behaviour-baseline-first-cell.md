@@ -1,7 +1,7 @@
 ---
 id:
 title: One local command runs a real agent on a rebuilt stage dispatch at the released and the candidate package, for one cell, and reports what each arm did
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -249,6 +249,13 @@ Budget: 4 implementation and 2 validation cycles
 Superseded text:
 **AC-3**: Each run was isolated: no read of an installed copy of the skill or of personal configuration appears in its transcript.
 Verified by: `python3 behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion` exits 0 and prints one line per run: (a) the stream's init event lists no plugin but the run's own exported Spacedock copy, no skill outside it and no MCP server; (b) no tool input or tool result in the transcript names the operator's home directory, an installed plugin cache, a user-level `CLAUDE.md`, `MEMORY.md`, settings or skills directory; (c) it lists each read of a package `skills/` or `references/` path other than the arm's own export, and a control run with one is labelled `control (read skill)`. Falsifier: the same scan over a stored fixture transcript that reads an installed skill copy exits 1 naming that line.
+
+### Amendment 4 — 2026-11-14, chat (standing grant; ruling given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain. Under that grant the reform session (Paseo 26215d96, message 8691ee5c) ruled after the first reading: the committed reading stands and is reported as it is (cannot discriminate, first reading, non-hermetic); post-hoc analysis of the nine runs is allowed when labelled "post-hoc, exploratory, not a result"; a reading v2 is committed before any further launch, with the grader's patterns corrected (shown against the nine old outputs only as a fixture that includes the misfire case), contamination defined as a run reading or invoking the installed package instead of the ref it was given, and the arms reduced to two, the last released tag and the candidate, the no-method control arm deferred to the isolation environment with the table saying so and why; then six fresh launches, three per arm, same model and effort, the two remaining launches of the 18 as spares for invalid runs only; an independent worker checks the grading of the six; if v2 also reads cannot discriminate or no difference the cell closes, no v3; both readings are reported together.
+Supersedes: none
+Design: the `### First cell` arms and control-arm paragraphs
+Budget: 5 implementation and 2 validation cycles
 
 ## Stage Report: ideation
 
