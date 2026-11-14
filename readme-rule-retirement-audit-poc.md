@@ -1,7 +1,7 @@
 ---
 id:
 title: Which README rule sentences does a check already enforce whole (read-only retirement audit; a list for the Captain's ruling)
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
