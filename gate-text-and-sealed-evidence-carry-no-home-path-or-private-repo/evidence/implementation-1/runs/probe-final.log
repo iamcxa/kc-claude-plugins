@@ -1,0 +1,46 @@
+{
+  "candidate": "d8ce3421219a8ff6112628de7cbf5f46274c634a",
+  "AC1": {
+    "steps_exit": 0,
+    "question_exit": 0,
+    "gate_prepare_exit": 0,
+    "clean_commit_exit": 0,
+    "committed_blob_hits": {
+      "home": 0,
+      "private-repo": 0
+    },
+    "fresh_shells": {
+      "bash": 0,
+      "zsh": 0
+    },
+    "absolute_commit_exit": 1
+  },
+  "AC2": {
+    "sealed_refused_exit": 1,
+    "private_printed": false,
+    "corrected_commit_exit": 0,
+    "stale_manifest_entry": false
+  },
+  "AC4": [
+    {
+      "flag": 8,
+      "refused_exit": 1,
+      "name_printed": false
+    },
+    {
+      "flag": 16,
+      "refused_exit": 1,
+      "name_printed": false
+    },
+    {
+      "flag": 4,
+      "refused_exit": 1,
+      "name_printed": false
+    }
+  ],
+  "AC5": {
+    "seal": "Evidence: evidence/validation-1/ (2 files, 0.3 KiB)",
+    "argument_exit": 0,
+    "literal_exit": 1
+  }
+}

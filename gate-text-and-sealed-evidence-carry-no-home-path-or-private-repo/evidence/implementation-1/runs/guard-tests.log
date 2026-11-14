@@ -1,0 +1,165 @@
+..FFFFFFFF...........
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=8, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=8, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=16, nested=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=16, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=16, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=4, nested=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=4, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+======================================================================
+FAIL: test_gzip_header_identifiers_refuse_and_clean_gzip_commits (__main__.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits) (flag=4, nested=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 119, in test_gzip_header_identifiers_refuse_and_clean_gzip_commits
+    self.commit('evidence.gz')
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : On branch spacedock-state/test
+nothing to commit, working tree clean
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 36.534s
+
+FAILED (failures=8)

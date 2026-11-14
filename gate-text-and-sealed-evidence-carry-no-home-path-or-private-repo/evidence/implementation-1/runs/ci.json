@@ -1,0 +1,80 @@
+[
+  {
+    "name": "python3 kc-dev-flow-2/scripts/lint-skills.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-01.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_lint_skills.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-02.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-03.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-04.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_poc_readme.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-05.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-06.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_number_guards.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-07.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-08.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-09.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-10.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-11.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-12.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-13.log"
+  }
+]

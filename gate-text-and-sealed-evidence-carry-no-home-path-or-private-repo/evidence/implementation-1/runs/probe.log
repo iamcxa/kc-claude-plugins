@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/evidence/implementation-1/proto/probe.py", line 111, in <module>
+    prepare = run([binary, 'gate', 'prepare', 'probe', '--question', message,
+                   '--artifact', artifact, '--summary', summary.read_text(), '--workflow-dir', workflow])
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/evidence/implementation-1/proto/probe.py", line 41, in run
+    assert p.returncode == expected, commands[-1]
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'argv': ['~/.local/bin/spacedock', 'gate', 'prepare', 'probe', '--question', 'Accept this public fixture? Run this command:\n\n```sh\npython3 ~/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/argument.py ~/product\n```\n', '--artifact', '<fixture-home>/product/docs/dev2/.spacedock-state/probe/review.md', '--summary', 'Unchecked counts: 0\nSufficiency: the public acceptance command works.\nNecessity: the validator supplies a runnable gate step.\nExternal rounds: 0\nCaptain steps: captain-steps/1.md\n', '--workflow-dir', '<fixture-home>/product/docs/dev2'], 'exit': 1, 'stdout': '', 'stderr': 'Error: --artifact <fixture-home>/product/docs/dev2/.spacedock-state/probe/review.md: selected source is not the exact committed file; commit the exact source before preparation\n'}

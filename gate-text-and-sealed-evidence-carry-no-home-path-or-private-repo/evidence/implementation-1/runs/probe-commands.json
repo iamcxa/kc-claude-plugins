@@ -1,0 +1,656 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "<fixture-home>/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "init",
+      "-q",
+      "--bare",
+      "<scratch>/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "remote",
+      "add",
+      "origin",
+      "<scratch>/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "add",
+      ".gitignore",
+      "docs/dev2/README.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "worktree",
+      "add",
+      "--detach",
+      "<fixture-home>/product/docs/dev2/.spacedock-state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 2b44b2b test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 2b44b2b)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/dev2"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/dev2'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm '.gitignore'\nrm 'docs/dev2/README.md'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: seed state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "push",
+      "origin",
+      "spacedock-state/dev2"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To <scratch>/remote.git\n * [new branch]      spacedock-state/dev2 -> spacedock-state/dev2\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "--refuse",
+      "home,private-repo"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=warn, private-repo=refuse, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "<fixture-home>/product/docs/dev2/.spacedock-state"
+    ],
+    "exit": 0,
+    "stdout": "state guard: guarded (email=warn, home=refuse, private-repo=refuse, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "python3 ~/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/argument.py ~/product"
+    ],
+    "exit": 0,
+    "stdout": "PASS\n",
+    "stderr": "python3: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead\n"
+  },
+  {
+    "argv": [
+      "zsh",
+      "-f",
+      "-c",
+      "python3 ~/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/argument.py ~/product"
+    ],
+    "exit": 0,
+    "stdout": "PASS\n",
+    "stderr": "python3: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead\n"
+  },
+  {
+    "argv": [
+      "zsh",
+      "-f",
+      "-c",
+      "python3 ~/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/literal.py"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "python3: warning: confstr() failed with code 5: couldn't get path of DARWIN_USER_TEMP_DIR; using /tmp instead\nTraceback (most recent call last):\n  File \"<fixture-home>/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/literal.py\", line 2, in <module>\n    assert pathlib.Path('~/product').is_dir()\nAssertionError\n"
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/delivery_gate.py",
+      "steps",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/captain-steps/1.md",
+      "--text-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/question.md"
+    ],
+    "exit": 0,
+    "stdout": "captain steps complete: 1 steps, 0 left to him\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe.md",
+      "--text-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/question.md",
+      "--summary-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/summary.md",
+      "--workflow-dir",
+      "<fixture-home>/product/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: commit gate source before preparation",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "<spacedock>",
+      "gate",
+      "prepare",
+      "probe",
+      "--question",
+      "Accept this public fixture? Run this command:\n\n```sh\npython3 ~/product/docs/dev2/.spacedock-state/probe/evidence/validation-1/argument.py ~/product\n```\n",
+      "--artifact",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/review.md",
+      "--summary",
+      "Unchecked counts: 0\nSufficiency: the public acceptance command works.\nNecessity: the validator supplies a runnable gate step.\nExternal rounds: 0\nCaptain steps: captain-steps/1.md\n",
+      "--workflow-dir",
+      "<fixture-home>/product/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "room=<fixture-home>/product/docs/dev2/.spacedock-state/probe/review/validation/briefing-1\nbriefing=briefing:probe:validation:attempt-1:revision-1\ndigest=sha256:cfc202eb37c8d343ed6028f2755de2a93ff4616d3c6a9d7bad408951d79db372\nstate=open\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: clean gate",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "push",
+      "origin",
+      "spacedock-state/dev2"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To <scratch>/remote.git\n   0ca47d9..e741ee7  spacedock-state/dev2 -> spacedock-state/dev2\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "e741ee7a93151a0be60f48df7b7a667eb3b1a767\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "ls-tree",
+      "-r",
+      "e741ee7a93151a0be60f48df7b7a667eb3b1a767"
+    ],
+    "exit": 0,
+    "stdout": "100644 blob 3b3e10ad1090f3e47631bb5cf2ab91eaa222c81a\tprobe.md\n100644 blob b778c7b90e35c1319768b133aba0c9346f179f9f\tprobe/captain-steps/1.md\n100644 blob bc543606093c1449399688128f0c3d285049827a\tprobe/dispatch/validation-1.md\n100644 blob bf0fe84712cca2cf39b7039c6445b812a65181a2\tprobe/evidence/validation-1/SHA256SUMS\n100644 blob 677c4761f8c8c79aa9818c12cd2db0bb77809276\tprobe/evidence/validation-1/argument.py\n100644 blob 18b87f21c04546aa5d6749653d8f79f17af2816e\tprobe/question.md\n100644 blob 5edc18604c40457751f22f6572f1812fc91aa68f\tprobe/review.md\n100644 blob c38711928a56e5f620f747008864049f0cacac01\tprobe/review/validation/briefing-1/index.json\n100644 blob 38f4b698a46d5404b6ee5cdd850a4f52beaaa810\tprobe/summary.md\n100644 blob bf08a6125f07e3a3853486dc4385c10cb57e292d\tseed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe.md",
+      "--text-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/question.md",
+      "--summary-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/summary.md",
+      "--workflow-dir",
+      "<fixture-home>/product/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: absolute gate refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe.md\" adds a home identifier\nstate guard: refused; \"probe/captain-steps/1.md\" adds a home identifier\nstate guard: refused; \"probe/question.md\" adds a home identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/delivery_gate.py",
+      "question",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe.md",
+      "--text-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/question.md",
+      "--summary-file",
+      "<fixture-home>/product/docs/dev2/.spacedock-state/probe/summary.md",
+      "--workflow-dir",
+      "<fixture-home>/product/docs/dev2"
+    ],
+    "exit": 1,
+    "stdout": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nCaptain steps record fails: message S5: unrecorded command or link 'python3 <fixture-home>/prod'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: sealed private evidence refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe/evidence/validation-1/private.log.gz\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: private reproduction refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe.md\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: drop private evidence and record reproduction",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "push",
+      "origin",
+      "spacedock-state/dev2"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To <scratch>/remote.git\n   e741ee7..a98cb6b  spacedock-state/dev2 -> spacedock-state/dev2\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: header refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe/evidence/validation-1/header.gz\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: header refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe/evidence/validation-1/header.gz\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "commit",
+      "-qm",
+      "test: header refused",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"probe/evidence/validation-1/header.gz\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<fixture-home>/product/docs/dev2/.spacedock-state",
+      "add",
+      "--",
+      "probe.md",
+      "probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]
