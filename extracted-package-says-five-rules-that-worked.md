@@ -1,7 +1,7 @@
 ---
 id:
 title: The extracted package says five rules that already worked, each once, where its reader loads it
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -31,7 +31,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 from the reform session, Paseo message 6dd41248-d90d-4c35-ba36-bc70f9e033d7
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
