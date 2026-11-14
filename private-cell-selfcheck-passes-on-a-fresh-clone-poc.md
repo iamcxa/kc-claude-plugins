@@ -18,6 +18,20 @@ gates:
                 id: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:attempt-1:revision-1
                 digest: sha256:d60d609f5b565d908092d85bb63baf775817973bdd48819fbc7e1119c62fb6ac
                 room-ref: ./private-cell-selfcheck-passes-on-a-fresh-clone-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:1
+                briefing: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T11:32:29.518367Z"
+                decision: approve
+                reason: Ordered by the reform session under the Captain's grant as the first step after the two-hour scope; small, private-repository maintenance; no public merge or outward action.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 as continued by the reform session, Paseo messages c998ccf1-0e7d-4197-9636-a25f2818c562 and c271575d-82b3-4a1b-a945-c7df85cea4da
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The clean branch pushed to the private working repository's remote on 2026-11-14 carries a cell whose `selfcheck` exits 1 on a fresh clone: nine of its fixture entries point at raw laptop outputs that are deliberately not carried. A check that fails on a fresh clone is a trap for whoever clones it next.
