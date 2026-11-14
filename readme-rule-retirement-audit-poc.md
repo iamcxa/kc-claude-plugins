@@ -18,6 +18,17 @@ gates:
                 id: briefing:readme-rule-retirement-audit-poc:backlog:attempt-1:revision-1
                 digest: sha256:0e62448bb281717e4e31d7bca8d6a18995600e61e95bf496539dcbb2bc6afbb5
                 room-ref: ./readme-rule-retirement-audit-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:readme-rule-retirement-audit-poc:backlog:1
+                briefing: briefing:readme-rule-retirement-audit-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-14T02:33:28.14605Z"
+                decision: approve
+                reason: 'Captain 「三張都准入，預算照你的提議」 (chat with this FO, 2026-11-14) to the bound backlog question: selects profile poc and accepts outcome, Non-goals, Stop condition, AC-1 and the Budget of 1 implementation and 1 validation cycles as filed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The README grew from 10 KB to 41 KB in 58 days, with about 63 mandatory steps per default task and 12 repeating per dispatch; 44 tasks cite an observer finding as the reason for a new form check, and no step removes a rule (brief C2, figures from proposal.md "Measured", not re-measured here).
