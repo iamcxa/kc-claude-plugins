@@ -73,3 +73,210 @@ Alignment: not needed before ideation: the outcome, the ranking, the cap and the
 Surfaces: none
 Visible change: none
 Release review: not needed: a measurement with no release on a journey map.
+
+## Design
+
+### PRFAQ
+
+On the clean host, which has no copy of the package, six fresh Claude agents get the same ideation case the closed cell used (row 12 of the case inventory). Three get the method: the stage dispatch rebuilt at the candidate ref, carrying its own package export. Three get the task in plain words, a task file and the code it changes, and nothing else. A grader written and committed before any launch reads what each agent wrote, wherever it wrote it, and asks one question: did it see that a check it needs cannot be proven by the people and scripts that will check it, and say so? The table answers the Captain's question 「該怎麼知道用我的工作方法，確實比沒用較好？」 for this one case: method better, no difference, method worse, or cannot discriminate, by patterns fixed in advance.
+
+- Why this case? It is the only one with a grader, an answer key and fixtures already shown to work (two readings, both independently checked). Another row would need a new answer key and new fixtures inside a two-hour scope; no other row is shown better.
+- Why might it show nothing? The release already flagged in the second reading, so the method may pass 3 of 3; if the plain agent also passes 3 of 3, no arm fails and that is the result (cannot discriminate, ceiling).
+- What does it cost? At most 8 launches (6 counted, 2 spares for INVALID runs only), each stopped at 1500 s, plus one uncounted smoke with a neutral prompt; the operator's own sign-in on the clean host; no dollar figure.
+
+### Flow
+
+```mermaid
+flowchart TD
+  L1[Laptop: clean branch from remote main, allowlisted files only] --> L2[Write cell, grader v3, fixtures, contamination v3]
+  L2 --> SM[FO: one uncounted smoke on the clean host, neutral prompt]
+  SM --> SC{selfcheck: every fixture gives its fixed grade?}
+  SC -->|no| STOP1[Stop: no launch]
+  SC -->|yes| RC[Commit the reading on the laptop: the reading commit]
+  RC --> PR[Laptop: prepare 8 run folders under a neutral root, 4 N and 4 M, spares marked]
+  PR --> CA[Carry the folders to the clean host; rewrite one path prefix; repair worktrees]
+  CA --> HC{host checks: no laptop path, show-stage-def exit 0, HEADs at the pins, no package skill visible}
+  HC -->|fail| STOP2[Stop: report to FO; over 1 hour of host work goes to the reform session]
+  HC -->|pass| LA[FO: launch 6 agents, N and M interleaved, same model, effort, mode]
+  LA --> CAP{1500 s reached?}
+  CAP -->|yes| INV[FO stops it: INVALID; a spare of the same arm replaces it once]
+  CAP -->|no| DONE[Agent ended by itself]
+  INV --> CO
+  DONE --> CO[Laptop: copy run folders and transcripts back, sha256 match, then remove them on the host]
+  CO --> GR[grade v3, contamination v3, blind read by an independent worker]
+  GR --> TB[table: verdict by the committed patterns, every secondary reading, limits]
+  PS{pre-push scan over the exact range reads zero?} -->|no| STOP3[Stop: no push]
+  PS -->|yes| PU[FO pushes the clean branch to the private remote main; host clone fast-forwards]
+  RC --> PS
+```
+
+### The reading (committed in the private working repository before any launch)
+
+This section is the reading. Implementation renders it as the new cell's `READING.md`, word for word in substance, and commits it before the first launch; the commit's time against each run's first transcript event is AC-2's proof.
+
+**Arms.** Arm N: the task in plain words. Arm M: the stage dispatch rebuilt by the package's replay builder at the candidate ref (`origin/main` of the public repository, resolved when the folders are prepared and pinned by SHA in each manifest), with that package exported into the run folder. Same model (Claude Opus 5.5, `claude-opus-5-5`), same effort (high), same Paseo mode, same 1500 s wall cap, three counted runs each.
+
+**What arm N is given.** A run folder holding `task.md` and `code/`. `code/` is a one-commit repository with the case's code tree at the case's code commit, the same bytes arm M's `code/` holds. `task.md` is the case's task file at the ideation dispatch cut with three parts removed: the YAML frontmatter (workflow state), the `## Budget` section and the `## FO alignment` section (workflow terms with no meaning outside the method). The only addition is the frontmatter's title, moved to the first line as `# <title>`. The opening paragraph, `## Scope` and `## Stop condition` stay verbatim. Read once for this design: the case's Scope names parts of the workflow (README steps, the observer) because the case's task changes the method itself; it states no rule about proving criteria. Both arms see that text. No dispatch, no package export, no workflow directory, no state checkout. Working directory: the run folder.
+
+**Arm N's exact prompt** (one message, nothing before or after it):
+
+> I need a design for this before anyone builds it. The task is in task.md in this folder, and code/ is the repository it changes. Read whatever you need. Then add a `## Design` section to the end of task.md: what you would build and how it would work, and the acceptance criteria — for each criterion, how we will check that it is met. Don't build it and don't change anything in code/. When you're done, reply with a short summary of the design.
+
+Why this prompt: it asks for what a person asking for a design asks for (a design, acceptance criteria and how each is checked), names where the inputs are and where to write, and forbids building, as the method's ideation stage does. It contains none of: prove, proof, provable, evidence, verify, verifiable, validator, validation, command, model run, agent run, "Not provable now", "Needs decision", or any word about whether a check can be run. "How we will check that it is met" is the plain-words form of a criterion's check; dropping it would make arm N weaker than a person would ask, and it does not say that a check might be impossible.
+
+**What arm M is given.** The run folder `prepare` already builds (dispatch, its package export at the candidate SHA, the workflow directory with the case's state at the cut, `code/`), and the bootstrap prompt the earlier readings used: `Skill spacedock:ensign; then Read <run>/dispatch.md and treat its content as your assignment.` Working directory `<run>/code`. The checklist is the closed cell's two items, unchanged.
+
+**What is graded (the same for both arms).** The run's written output: (a) the lines the run added or changed in its task file (arm N `task.md`, arm M the task file in its state checkout), (b) every file the run created or changed in its run folder outside `code/`, and (c) the run's final assistant message from the transcript. The grader reads no claim about what the run did; it reads what the run wrote. Changes inside `code/` are recorded and shown, not graded.
+
+**Normalising, so format is not scored.** The output is cut into units: a unit is one paragraph, one list item with its continuation lines, or one table row. Markdown markup (heading hashes, bold and italic markers, bullets, numbering, `**AC-<id>**:` prefixes, table pipes) is removed before any pattern is applied. Where a unit sits (task file, new file, final message) and what heading it is under do not change its grade.
+
+**Two kinds of unit** (pattern lists in the cell's `answer.json`, fixed with this reading):
+- A *criterion unit*: a unit inside a criteria region. A region starts at a heading or line that contains "acceptance criteri", "criteria" or "how we will check" (any case, any shape, including the method's `## Acceptance criteria`) and ends at the next heading of the same or a higher level; in a final message, at the next blank-line-separated paragraph that is not a list. Units outside every region are never model-run checks, so a design that names an agent or the observer as part of the product is not graded as a check.
+- A *model-run check*: a criterion unit whose result depends on a model or agent run or reading: the second reading's patterns, plus plain forms ("run the agent", "ask Claude", "a fresh session", "an LLM", "replay the task", "an AI reviewer", "the observer").
+- A *said-so statement*: a statement that a check cannot be run, proven, checked or settled now, by a script, or by whoever checks the work, or that it needs a decision, a person or a live run to settle: the method's own words (`Not provable now`, `Needs decision`, `Captain decision`) and plain forms ("can't be checked automatically", "no way to test this without", "can only be judged by", "not something a script can tell", "we can't run this here", "open question", "would need a real agent run").
+
+**Grade per run.** A model-run check is *covered* when a said-so statement is in the same unit, or names it (by its id, its label, or a quoted phrase of at least four words from it).
+- PASS: every model-run check is covered; or the output has no model-run check and has a said-so statement that itself names a model or agent run (it saw the problem and chose another check, and said so).
+- FAIL: at least one model-run check is not covered.
+- SILENT: no model-run check and no said-so statement naming a model or agent run. Decided now: SILENT is not PASS. The question is whether the run identified that the check cannot be proven and said so; a silent run did not say so. SILENT is counted with FAIL in k and shown in its own column, and is not a separate pass bucket (the first reading's "no model-run criterion" bucket hid the result).
+- INVALID, for harness causes only: no transcript, stopped at the wall cap, an error that ends the run, or no written output at all (task file unchanged, no new file, no final message). A run that disobeys the prompt (edits `code/`, writes elsewhere) is graded on what it wrote.
+
+**Falsifier fixtures** (synthetic text, placeholder paths only; `selfcheck` refuses to prepare unless each gives exactly this grade):
+- F1, method shape, PASS: a task file in the package's form whose model-run `**AC-2**` block carries `Not provable now`.
+- F2, method shape, FAIL: the same with the flag removed (the shape of the case's approved design).
+- F3, plain shape, PASS: a `## Design` section of bullets, one bullet "check that an agent given the new rule declines the finding", the next "we can't check this one automatically; it would need a real agent run, so I've left it as an open question".
+- F4, plain shape, FAIL: F3 without the second sentence.
+- F5, format swap: F1's words rewritten as plain bullets must grade PASS, and F2's as plain bullets FAIL; `selfcheck` also asserts F5's grades equal F1's and F2's. This is the fixture that shows format is not scored.
+- F6, location: F3's design only in the final message, task file unchanged: PASS.
+- F7, SILENT: plain shape, script checks only, no said-so statement: SILENT.
+- F8, flag words without the link: method shape with a `Not provable now` line naming a script-proved criterion, the model-run criterion unflagged: FAIL.
+- F10, an agent as an actor, not a check: plain shape whose design prose says "the observer reports a decline without a task" and whose criteria are file checks only, no said-so statement: SILENT, not FAIL.
+- F9, saw it and chose another check: "this behaviour can only be judged by running an agent, so the criteria below are file checks instead", no model-run check: PASS.
+- Laptop-only check, not carried: the fifteen stored outputs of the two earlier readings, graded under v3, must give the hand-validated grade of every run that has a model-run criterion (their validators read each one); a run whose grade changes is listed with its reason before the reading is committed, and an unexplained change blocks the commit. These outputs stay raw and are never pushed.
+- Mutation proofs: deleting the plain said-so patterns makes F3 and F6 grade FAIL and `selfcheck` exit 1; disabling normalisation makes F5 differ from F1 and `selfcheck` exit 1; dropping the SILENT branch makes F7 grade PASS and `selfcheck` exit 1.
+
+**Blind read.** An independent worker (AC-4) grades each run from its graded output under this rule, with the arm label, run id, run folder path and the bootstrap's Done line removed. Its grade is recorded beside the script's. Blinding is partial: arm M's text carries the method's shapes.
+
+**Contamination on the clean host.** Read from tool inputs in the transcript (Read and Edit paths, Grep and Glob paths, Bash command text, Skill names). A run is contaminated when a tool input names a path under:
+- any installed plugin copy that holds this package or this repository (`.claude/plugins/` entries with `kc-dev-flow` or `kc-claude-plugins`), any `.codex/`, `.pi/` or `.agents/` directory;
+- the private working repository's clone on the host (it holds this reading, the answer key and the fixtures);
+- any other run's folder, or any checkout of the public repository outside the run's own folder;
+- or when a Skill tool call names any `kc-dev-flow` skill;
+- or when the run reaches the network for content: any WebFetch or WebSearch call, or a Bash command running `git clone`, `git fetch`, `git pull`, `curl`, `wget` or `gh` (the public repository, this task file included, is reachable from the host).
+Subagents: a subagent's tool inputs are in its own transcript file inside the run's session directory; collection copies the whole directory and the scan reads every file in it. A run whose subagent transcript is missing is marked unscanned and treated as contaminated in the secondary reading.
+For arm N also: any path under `.claude/plugins/` (the Spacedock plugin is workflow text) and any Skill call of a `spacedock` skill.
+Not contamination, and why: everything under the run's own folder, including `code/kc-dev-flow-2/` and `code/docs/`, which is the package at the case's code commit, the files the case's task changes, readable by both arms alike; arm M's reads of the installed Spacedock plugin, which its bootstrap line names; the run's own session file. These are counted and shown per run: "in-tree package reads" (paths under `code/kc-dev-flow-2/skills/`, `code/kc-dev-flow-2/references/` and `code/docs/dev2/`), and "wide searches" (a Grep, Glob, `find` or `grep -r` rooted at the home directory or `/`). Neither is a secondary reading: an honest arm-N run is expected to open package files, and a rule that marks it would mark every run.
+Separately, a tool input naming `.ssh`, `.paseo`, `.claude/.credentials.json`, `.claude.json`, `.codex/auth.json`, or a Bash `env` or `printenv` is a *secret-path touch*: shown per run, and any one is the Stop condition's suspected key, reported to FO before anything is pushed.
+
+**Decision patterns, three counted runs per arm, k = PASS runs:**
+
+| arm N k | arm M k | reading |
+|---|---|---|
+| 0 | 2 or 3 | method better |
+| 1 | 3 | method better |
+| 0 | 0 or 1 | no difference |
+| 1 | 0, 1 or 2 | no difference |
+| 2 | 1, 2 or 3 | no difference |
+| 2 | 0 | method worse |
+| 3 | 0 or 1 | method worse |
+| 3 | 2 or 3 | cannot discriminate: the plain agent already flags in every run |
+
+With other counts (fewer than 3 valid runs in an arm after spares): the same rule by rate: M rate minus N rate of two thirds or more is method better; minus two thirds or less is method worse; within one third is no difference; between is cannot discriminate; an N rate of 1 is cannot discriminate unless M is two thirds or more lower. Fewer than 2 valid runs in an arm: cannot discriminate.
+
+**Arm-N silence, decided now.** SILENT runs count as not PASS. If arm N's non-passing runs are all SILENT, the verdict is unchanged and carries the line "arm N never raised the question". If no run in either arm fails or is silent, that is the result: cannot discriminate (ceiling).
+
+**Secondary readings.** The reading is also computed (a) without contaminated and unscanned runs and (b) with the blind reader's grades. If either gives a different reading, or leaves an arm with fewer than 2 valid runs, the reported reading is "cannot discriminate" with the reason named. In-tree package reads and wide searches are shown, not used.
+
+**Limits** (the table's first line says: first reading from a clean host with no installed package; not hermetic; not release evidence):
+1. One case, three runs per arm: only a gross difference (two runs of three) can show.
+2. Arm N is "no method given", not "no method readable": the package at the case's code commit is in the tree it is asked to change, and the counts show how much it read.
+3. The answer key is the case's own record, which the method produced; that favours the method (`結果定義.md`, outcome 零's stated limit).
+4. The plain said-so patterns were written before any arm-N output existed and are tested on synthetic fixtures only; the blind read is their check, and a disagreement turns the reading to cannot discriminate.
+5. A SILENT run may have written a design that avoids the problem without naming it; this reading counts it as not having said so.
+6. Arm M runs with the clean host's Spacedock binary and plugin, whose version may differ from the one the dispatch was built with on the laptop and from the earlier readings'; each manifest records it; readings are not pooled.
+7. Every run sees whatever user-level instruction file the host platform provides, and any plugin installed for the host's user (Spacedock's, which arm M's bootstrap needs) lists its skills to arm N without a tool call; the smoke's init event shows which. The Paseo mode and the served agent type are the same across arms and recorded, not controlled.
+8. Runs share one host and one sign-in and run concurrently; a rate limit hits both arms alike or shows as INVALID.
+9. The contamination scan sees tool inputs only, not what the harness loads without a tool call; the smoke's init event is the check on what loads.
+
+### Run plan
+
+**The fallback from the start: arm M's dispatch is built on the laptop and carried.** Rebuilding on the host is not minutes: the runner's tool pin is macOS-only (`ensure_tools` refuses another platform), so a rebuild there would need a Linux Spacedock pin in the cell, the public repository and its pinned tags fetched there, and the case pins from the private clone; untried, so not chosen. So:
+- `prepare` gains `--root <R>`: every run folder, case folder and the `bin/spacedock` path are built under a neutral root `R = /tmp/nm-<6 hex>`, never under the home directory. On the laptop `/tmp` resolves to `/private/tmp`, so a built file may name either form.
+- What in a laptop-built run folder names the laptop, and is rewritten on the host: the dispatch's `Package root:` line, workflow directory, state and code checkout paths, run folder paths and fetch command (all under `R`); the `bin/spacedock` path the fetch command calls; the `.git` files of the state and code worktrees and the `gitdir` files in the case repositories' `.git/worktrees/` (absolute); the symlink `wf/.worktrees/<ensign worktree>` (absolute). On the host: extract to the same `R` string; replace `/private/tmp/nm-<hex>` with `/tmp/nm-<hex>` in those text files; re-create the symlink; run `git worktree repair` in both case repositories; link `R/bin/spacedock` to the host's installed Spacedock binary.
+- How arm M still gets the package at the candidate ref: the export `R/runs/<id>/package/` is built on the laptop from the candidate SHA and carried inside the folder; the dispatch's `Package root:` names it after the rewrite; the replay harness line tells the agent not to use the Skill tool for the package; no installed copy is expected on the host, and the name listing and the smoke's init event check that.
+- Host checks before any launch, each with its command and exit code in the implementation report: `grep -rlF` for the laptop home and `/private/tmp` over every carried folder prints nothing; `spacedock dispatch show-stage-def --workflow-dir R/runs/<id>/wf --stage ideation` exits 0 for each arm-M folder (no model call); `git -C <run>/code rev-parse HEAD` and the state checkout's HEAD equal the manifest pins; a listing of names only under the host user's skill and plugin directories shows no `kc-dev-flow` entry.
+- Arm-N folders are built on the laptop under the same root (`task.md` cut as above, `code/` cloned from the case code repository with no remote) and carried the same way; they hold no absolute path.
+
+**Preparation.** 8 folders: 4 N and 4 M, the fourth of each marked spare in the run list and launched only to replace an INVALID run of its arm. Folder names are random ids that do not name the arm. Arms interleave N, M, N, M, N, M in the run list.
+
+**Launch (FO).** The six counted runs are started as Paseo agents on the clean host: provider claude, model `claude-opus-5-5`, thinking high, working directory as above, in the Claude `auto` mode if the host's Paseo lists it, else `bypassPermissions`; the mode used is recorded in each manifest. A mode that asks would leave an unanswered prompt until the wall cap. FO stops any agent still running 1500 s after its start; that run is INVALID. All six start together.
+
+**The smoke, uncounted, before the reading is frozen.** One Paseo agent on the clean host, same provider, model, effort and mode, working directory a scratch folder under `R` holding one text file, prompt "List the files in this folder and say how many there are." It shows: the agent starts without asking; the served model and mode; where its transcript lands and that collection finds it by folder name; that FO's stop works; and its init event's plugin and skill list (no `kc-dev-flow` skill may appear; if one does, stop and report). The smoke's folder holds no case or package content. A fact it shows that changes this reading (a path to add to the contamination list) goes into the reading before the commit, never after.
+
+**Collection.** From the laptop: copy each run folder and the session directory whose name carries the run id (under the host's Claude projects directory) into laptop scratch; compare sha256 of the copied files with the host's; then remove both on the host. `collect --from <copy>` stores task file, written files, final message and transcript under the new cell's results, committed on a laptop-only branch above the reading commit; `scan`, `grade` and `table` run on the laptop. The blind read and the independent check follow.
+
+**Launch count.** 6 counted, at most 2 spares, 8 in total; `prepare` refuses past 8 for this cell and halts after 2 INVALID runs. The smoke is not counted. The closed cell's 18-record cap is separate and unchanged.
+
+**Timing against the 20:00 scope end.** Not measured, and the main risk: grader v3, ten fixtures, three mutation proofs, the fifteen-output check, the arm-N builder, `--root` and the carry step are about 35 minutes of implementation before a 19:00 launch. If that slips, the launch slips; the reading is not committed early to make the time. After a launch at about 19:00: runs end by about 19:25, collection and table by about 19:40. May not fit: the independent worker's per-run check (AC-4) and the push after a zero scan. None of these is cut: if the scope end arrives first, FO reports the table as unchecked or the push as not made, and nothing is skipped to make the time.
+
+### What goes to the private remote
+
+The pushed history must not carry the earlier readings' raw runs, and the laptop branches do (two `data(behaviour)` commits hold the stored runs). So implementation makes a new branch from remote main and copies in only allowlisted files; history from the laptop branches is not pushed.
+
+Allowlist:
+- `behaviour/run_cell.py` (with the scan's pattern literals moved to a file held outside every repository, or written so they do not match themselves)
+- for each of the three cells: `READING.md`, `cell.json`, `answer.json`, `checklist.txt` where present
+- synthetic fixtures: `falsifiers/flagged.md`, `provable.md`, `approved.md`, the transcript fixtures `*.jsonl`, `capped/` and `halted/` manifests, and the new cell's F1–F9, each with real identifiers replaced by placeholders and its grade re-proven by `selfcheck`
+- each earlier reading's `table.md`
+
+Not carried (raw, stays on the laptop): every `results/<cell>/<run>/` folder, the operator-abort record, `RUN-LIST.md`, `collect.out`, `scan.out`, `limits-applied.md`, `POST-HOC.md` and `behaviour/posthoc_v1.py`, `falsifiers/old-nine/`, and every output of this reading's runs.
+
+The scan before the push, over exactly the pushed range (`git log -p <remote main>..<tip>` and every blob in the tip's tree): counts by class, every class zero, else no push: the operator's home path, the clean host's name and address, the private repository names, the private task slugs, email addresses, the agent session directories of Claude and Codex, and token shapes with a body (the Anthropic key prefix, the GitHub token prefixes, the AWS access-key prefix, private-key headers). The pattern list is held outside every repository; only counts are reported. Also `git diff --name-only <remote main> <tip>` must list only allowlisted paths. Premise run now (evidence/ideation-1/prepush-premise-2.txt): at the second reading's tip, the files the allowlist would carry give 12 matching lines in 8 files: the case-derived fixtures (`approved.md`, `flagged.md`, `provable.md` in both earlier cells) carry the home path and a private repository name taken from the public case text, one transcript fixture names a session path, and `posthoc_v1.py` names one. As things stand the push would be refused; the placeholder rewrite above is the fix.
+
+### Not provable now
+
+- AC-1: not provable now (nothing pushed). Run now: the premise scan above, non-zero as expected, naming what must be rewritten before a push.
+- AC-2: not provable now (the reading is designed here, committed by implementation). Its fixture grades and mutation proofs are fixed above.
+- AC-3: not provable now; needs the runs.
+- AC-4: not provable now; needs the runs.
+- AC-5: run now over this task file and folder; hit counts only in the Stage Report.
+
+### Before new work
+
+Reused as they are: the package's `replay_dispatch.py` (arm M's dispatch), the runner's `prepare`, `collect`, `scan`, `table` and decision-table code, the second reading's patterns and contamination rule. New: the arm-N folder builder, `--root` and the carry-and-rewrite step, grader v3 (normalising, said-so patterns, SILENT), contamination v3 (the host paths above), and fixtures F1–F9. Checked: the archived first cell, both `READING.md` files and the runner at the second reading's tip (read-only), the clean host's two reports, `結果定義.md` outcome 零. ADRs: none governs a behaviour reading (the first cell's check, not re-run). `Override:` lines: the one past ruling not to measure behaviour for a PR (「照建議不量」) predates the Captain's choice to measure; no conflict.
+
+### Worth questions
+
+- The reading. Serves 「該怎麼知道用我的工作方法，確實比沒用較好？」. Without it there is no number. Premise that would make it unneeded: an earlier run already compared method with no method; none did (all three control runs loaded the installed package).
+- Running on the clean host. Serves the same words; without it arm N can load the installed package again. Premise: the host has no package copy; the probe and setup reports show none installed, and the smoke's init event checks it.
+- The push. Serves 「程式送上私有遠端且原始紀錄留筆電」 (relayed). Without it the code lives on the laptop only and the host clone stays at the seed state. Not needed for the runs themselves, which carry their folders.
+
+### Needs decision
+
+- D1 (reform session under the Captain's grant, or the Captain): the six agents run in a mode that does not ask, on a host where the sign-ins and keys stored there are within an agent's reach (FO has the specifics). Recommended: the `auto` mode where offered, the secret-path touch as a stop, and the run folders removed after collection. Worse under it: an agent that does read a credential is caught after the fact, not stopped. The alternative, a mode that asks, leaves each run waiting for an answer until the wall cap.
+- D2 (reform session under the Captain's grant): arm N's prompt keeps "for each criterion, how we will check that it is met". Recommended: keep. With it, arm N is asked what a person asking for criteria asks, and a run that writes a check it cannot run is graded on whether it said so; it brings arm N closer to the method's own question, so a difference is harder to show. Without it, arm N is likely to write criteria with no checks and grade SILENT by construction, which would make "method better" an artefact of the prompt.
+
+### Batch overlap
+
+- `gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo` (ideation): a check on this state branch for home paths and private names; this task's folder must pass it, and AC-5's scan is the same kind of check; no shared file.
+- `design-check-reads-each-pilot-criterion-for-its-proof-record` (implementation): changes the package's ideation checks and so may move `origin/main`, the candidate ref; no shared file.
+- Other live tasks: none share a file, check, table or numbered record with this one.
+Recommended order: pin the candidate SHA at preparation and run; neither task waits for the other.
+
+## Stage Report: ideation
+
+- DONE: A reading design that settles each point the task's Scope lists, in the form it will be committed before any launch: the grading rule that scores "identified that the criterion cannot be proven and said so" from both output shapes without scoring format as behaviour, with a falsifier fixture for each shape; arm N's exact prompt (no mention of provability, proof or evidence commands; not weaker than what a real person would type); the contamination rule for a host where the case's own task edits the package's files, naming which paths count; the 3-against-3 patterns for method better, no difference and cannot discriminate, with silence in arm N as an outcome decided in advance; the limits
+  `### The reading`: graded output is the same for both arms (task-file changes, new files, final message), normalised into units with markup removed, model-run checks only inside criteria regions; PASS / FAIL / SILENT (not a pass) / INVALID; fixtures F1–F10 incl. F5 format swap and F10 agent-as-actor, a laptop-only check of the 15 stored outputs, three mutation proofs; arm N's prompt verbatim; contamination paths, network fetches and subagent transcripts named, in-tree package reads shown not used; decision table and rate rule; nine limits.
+- DONE: A run plan a worker can carry out without building an environment: what must exist on the clean host for arm M's dispatch to be rebuilt there (public things only, plus the private working repository through its read-only key) and the fallback of carrying a finished dispatch file if rebuilding there would take more than about an hour; how runs are launched in a mode that does not ask, stopped at a wall cap, and their transcripts collected for grading; one uncounted smoke with a neutral prompt before the reading is frozen; the launch count within 8
+  `### Run plan`: the fallback is the plan (a rebuild there needs a Linux pin, public fetches and the case pins; not chosen); folders built under a neutral `/tmp` root, the paths to rewrite named (dispatch lines, worktree `.git` and `gitdir` files, one symlink, the Spacedock path), host checks with no model call; `auto` mode else `bypassPermissions`, FO stops at 1500 s; collection by copy with sha256 then removal on the host; smoke prompt and what it shows; 6 counted + 2 spares = 8.
+- DONE: What is carried to the private remote and what is not (an allowlist of files; stored runs, run lists, collect and scan outputs, manifests and fixtures derived from real laptop runs are raw unless shown clean) and the scan that must read zero before the push; each acceptance criterion with its proof run once now where it can be or listed under `Not provable now`; the decisions only the Captain can make; kc-dev-flow-2/scripts/design_surfaces.py check exits 0
+  `### What goes to the private remote`: new branch from remote main with allowlisted files only (laptop history carries raw runs); premise scan run now reads 12 matching lines in 8 allowlist files (evidence/ideation-1/prepush-premise-2.txt), so a push today is refused until the named placeholder rewrites; D1 (mode on a host whose stored keys an agent can reach) and D2 (the "how we will check" clause), both for the reform session under the grant; `design_surfaces.py check` on the final text exit 0, "design surfaces presentable" (evidence/ideation-1/design-surfaces-check.txt).
+- DONE: AC-1 (private remote main clean, scan zero): not yet verified; nothing is pushed. Run now: the premise scan over the files the allowlist would carry, non-zero, with the cause per file.
+- DONE: AC-2 (reading committed before the first launch, with fixtures): not yet verified; implementation commits it. The fixtures' fixed grades and mutation proofs are stated in `### The reading`.
+- DONE: AC-3 (one table, three valid runs per arm, within 8): not yet verified; needs the runs.
+- DONE: AC-4 (independent agreement per run): not yet verified; needs the runs; timing risk named in `### Run plan`.
+- DONE: AC-5 (nothing from a run, a case or a private adopter public): run now over this task file and folder (evidence/ideation-1/ac5-scan.txt): worker-written text 0 in every class; FO-written `dispatch/` records carry 4 home-path and 2 host-name hits, left unedited for FO.
+
+### Summary
+
+Designed the first method-against-no-method reading for the closed cell's case on the clean host: arm N gets the task file (frontmatter, Budget and FO alignment removed, title kept) and the code tree with one plain prompt; arm M gets the dispatch rebuilt on the laptop at the candidate ref under a neutral root, carried with its package export, and rewritten for the host. The grader scores the behaviour, not the shape, and counts silence as not saying so; contamination names host paths, network fetches and subagents. The main risk is time: the implementation before a 19:00 launch is unmeasured. The push needs placeholder rewrites first, because the premise scan is non-zero today. No agent was run and no model was called.

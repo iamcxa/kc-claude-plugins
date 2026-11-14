@@ -1,0 +1,19 @@
+Pre-push scan premise, 2026-11-14T10:00:19Z, tip of the second reading's branch in the private working repository, files outside results/<run>/, old-nine/, RUN-LIST, collect.out, scan.out, POST-HOC, limits-applied; counts of matching lines per class per file; patterns are a draft (implementation owns the final list)
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/approved.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/approved.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/checkout-read-transcript.jsonl
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/flagged.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/installed-read-transcript.jsonl
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/provable.md
+home-path 2 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/spacedock-only-transcript.jsonl
+temp-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/spacedock-only-transcript.jsonl
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/approved.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/approved.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/flagged.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/leaky-transcript.jsonl
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/provable.md
+home-path 1 behaviour/run_cell.py
+token-shape 1 behaviour/run_cell.py
+files scanned: 64

@@ -1,0 +1,13 @@
+Pre-push scan premise, second pass, 2026-11-14T10:00:45Z: operator-specific identifiers (the real home, host, private repository names, session paths), any email shape, token shapes with a body; same file set; counts per class per file; draft patterns, not the final list
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/approved.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/approved.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/provable.md
+private-slug-or-session 1 behaviour/cells/ideation-flags-unprovable-criterion-v2/falsifiers/spacedock-only-transcript.jsonl
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/approved.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/approved.md
+home-path 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/flagged.md
+private-repo 1 behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/provable.md
+private-slug-or-session 1 behaviour/posthoc_v1.py

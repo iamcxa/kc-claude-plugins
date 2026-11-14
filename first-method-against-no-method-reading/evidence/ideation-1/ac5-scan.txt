@@ -1,0 +1,10 @@
+AC-5 scan, 2026-11-14T10:06:56Z, over the task file and its folder; hit counts only, by class and by writer
+home: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=4
+host: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=2
+private-repo: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+case-slug: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+case-pins: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+session-path: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+email: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+token: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
+host-facts: worker-written (task file, evidence)=0; FO-written (dispatch/, review/)=0
