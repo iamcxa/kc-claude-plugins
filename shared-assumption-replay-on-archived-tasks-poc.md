@@ -1,7 +1,7 @@
 ---
 id:
 title: Would naming the shared assumption after two failed fixes have found the later cause on 5 archived tasks (read-only replay)
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: 'Captain 「三張都准入，預算照你的提議」 (chat with this FO, 2026-11-14) to the bound backlog question: selects profile poc and accepts outcome, Non-goals, Stop condition, AC-1 and the Budget of 1 implementation and 1 validation cycles as filed.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Archived tasks reached 16, 14 and 9 implementation dispatches; 77 of 136 tasks had a repeat validation dispatch and 19 of 30 rejections showed no code defect (brief C6, figures from time-baseline.md and proposal.md, not re-measured here). The trial rule that stops before a third dispatch asks what the two attempts showed; it does not require a diagnosis, so the Captain gets a stop without a hypothesis.
