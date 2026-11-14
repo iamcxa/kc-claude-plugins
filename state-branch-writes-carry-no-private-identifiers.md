@@ -40,6 +40,20 @@ gates:
                 id: briefing:state-branch-writes-carry-no-private-identifiers:ideation:attempt-1:revision-1
                 digest: sha256:2985ea4f9eafc2a37f77734e7c6f84d171456d8ee4e0dabfe6ebc395e107e4d0
                 room-ref: ./state-branch-writes-carry-no-private-identifiers/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:state-branch-writes-carry-no-private-identifiers:ideation:1
+                briefing: briefing:state-branch-writes-carry-no-private-identifiers:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T05:11:35.492612Z"
+                decision: approve
+                reason: Design check exit 0; writers traced in code and prototyped on a throwaway checkout; the design keeps existing records valid and private names out of every repository; the reform session agreed with deferring D1 and D2 to the Captain at the merge ask (message ea099e94); nothing is installed on the live clone under this gate.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item D from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e, a8df76d7-63cb-4352-9c4b-f44b6004d7f5 and ea099e94-9369-49c1-bbeb-d6078ac0cfe8
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-14T04:43:29Z
 ---
 
