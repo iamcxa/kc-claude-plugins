@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:first-method-against-no-method-reading:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:first-method-against-no-method-reading-validation-1
+              briefing:
+                id: briefing:first-method-against-no-method-reading:validation:attempt-1:revision-1
+                digest: sha256:20e3f832cb91a8004bb46f3d2b7baf12f5ca7641ddbd0177f9870d5aca10fec5
+                room-ref: ./first-method-against-no-method-reading/review/validation/briefing-1
 started: 2026-11-14T09:53:07Z
 ---
 

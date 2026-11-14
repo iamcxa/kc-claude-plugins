@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:first-method-against-no-method-reading:validation:attempt-1:revision-1",
+  "question": "Close this task on the record as it stands, as a delivered reading that cannot discriminate, with no third validation cycle? (decided by FO under the Captain's grant on the reform session's ruling; nothing is merged into this repository; raw runs stay on the laptop)",
+  "artifacts": [
+    {
+      "id": "artifact:first-method-against-no-method-reading:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/992efcbcc75ff40557586cda7054c6e2483f4323/first-method-against-no-method-reading.md",
+      "rev": "sha256:6cdac8cf3aa37925e1356e86f86f0ea586ab9aeb7551229eded93500c157138b",
+      "mediaType": "text/markdown",
+      "summary": "Closing under the Captain's grant on the reform session's ruling (message c271575d). What the task delivered: two readings from a clean host with no installed package, each committed before its six launches, reported side by side and not pooled. First reading: script arm N 0 of 3, arm M 1 of 3; blind reader N 0, M 1; reported cannot discriminate (the blind reader and the script differ on one run; counts read no difference under both). Second reading, rule corrected to the approved outcome's text with the placement fixed by an adjudicator who saw neither the runs nor which rule changed any grade: script N 1 of 3, M 2 of 3; blind N 0, M 2; reported cannot discriminate (they differ on one run; the blind grades alone would read method better, which is not the reported reading). This is not a pass in any sense that suggests the method was shown better or not better. Both validations ended REJECTED as a settled claim of no difference; each finding was that the table must report what the committed rule requires; the final tables do that, and the second validator entered its grades through the repaired table code and saw the same output. No validator read the final commit as a commit. Findings: the instrument's own grading (script against blind reader, one run per round, both in arm N) is the present limit, ahead of sample size; the first rule rewarded saying a check cannot be run and gave no credit for running it; method runs did run real checks during design and linked the criterion to the result nowhere; descriptively, arm M is ahead by one or two runs of three in all four sets of grades. Safety: both scans zero for all twelve runs. Launches 12 of 14. Usage: arm M wrote about 2.0 to 2.4 times arm N's output. Code is on the private working repository's remote main (pushed after two zero scans of the range); raw runs and the final tables are pinned by commit e966906cb6183110ff655004f6415b314beab332 on a laptop-only branch. AC-1 to AC-5 as the validation reports state them; the push's fresh-clone scan was FO's and the worker's, not a validator's."
+    }
+  ]
+}
