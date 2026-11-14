@@ -1,0 +1,19 @@
+{
+  "candidate": "a5657edd6531916cd01f659b888feaa021219ead",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "repair_base": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+  "state_input_commit": "fe789f8b1205659f7b9a01b6908f1033e2148c1f",
+  "repair_numstat": "5\t3\tkc-dev-flow-2/references/delivery-record.md\n1\t1\tkc-dev-flow-2/scripts/delivery_gate.py\n3\t3\tkc-dev-flow-2/scripts/test_delivery_gate.py\n",
+  "full_task_numstat": "7\t16\tkc-dev-flow-2/extensions/copilot/EXTENSION.md\n180\t0\tkc-dev-flow-2/references/delivery-record.md\n10\t17\tkc-dev-flow-2/references/sd/workflow.md\n277\t73\tkc-dev-flow-2/scripts/delivery_gate.py\n2\t0\tkc-dev-flow-2/scripts/lint-skills.py\n277\t6\tkc-dev-flow-2/scripts/test_delivery_gate.py\n45\t58\tkc-dev-flow-2/scripts/test_poc_readme.py\n7\t12\tkc-dev-flow-2/scripts/test_sd_dispatch.py\n5\t11\tkc-dev-flow-2/skills/observer/SKILL.md\n",
+  "product_sha256": {
+    "kc-dev-flow-2/scripts/delivery_gate.py": "781429bf4a58285225ce11f37db2e0b6c8ec6b690ffd8b5dd05a0d515e0f0f8f",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "8c1dddfd390549355331aaf920f388163ad69458faea266a798a481a823a2c36",
+    "kc-dev-flow-2/references/delivery-record.md": "a52ca470f98a35b2b6d13d46a16099949d6d61d6f730766b70bd7205246454f8"
+  },
+  "workflow_words": 5996,
+  "ci_cost_per_pr": "not measured",
+  "new_test_methods": 0,
+  "new_cases": 1,
+  "profile": "pilot; bounded fail-closed repair",
+  "publication": "none; product/state remain local"
+}

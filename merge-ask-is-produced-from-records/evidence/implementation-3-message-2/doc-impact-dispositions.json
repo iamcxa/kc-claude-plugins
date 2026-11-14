@@ -1,0 +1,34 @@
+[
+  {
+    "path": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "disposition": "unaffected: Legacy optional-summary input and reviewer/confirmation checks are unchanged; only the record-route visibility gate is narrowed."
+  },
+  {
+    "path": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "disposition": "unaffected: External-round presence/form checks are unchanged; a non-PUBLIC observation now stops before saving any record."
+  },
+  {
+    "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "disposition": "unaffected: Quoted-question approval and merge authority remain unchanged; verified public visibility grants no authority."
+  },
+  {
+    "path": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "disposition": "unaffected: Newest-record/head/clause/reference bindings remain unchanged; the producer now refuses non-PUBLIC inputs before creating a record."
+  },
+  {
+    "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "disposition": "unaffected: Quantity disclosure and saved-output joins remain unchanged after the public visibility gate."
+  },
+  {
+    "path": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "disposition": "unaffected: Trunk/merge-result command/result joins and not-run placement remain unchanged."
+  },
+  {
+    "path": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+    "disposition": "unaffected: Effect-claim marking and scope/count disclosures remain unchanged; private adopters keep the existing legacy route."
+  },
+  {
+    "path": "kc-dev-flow-2/references/delivery-record.md",
+    "disposition": "updated: producer instructions and public field description now require visibility exactly PUBLIC; every other or missing value saves nothing."
+  }
+]

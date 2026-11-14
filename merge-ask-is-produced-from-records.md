@@ -621,3 +621,28 @@ Canonical close output (exit 0; new message evidence is separately manifested):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (35716 bytes)
 Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Make the record route fail closed on repository visibility, saving only when visibility equals PUBLIC, and align the contract.
+  Candidate a5657edd6531916cd01f659b888feaa021219ead requests visibility instead of isPrivate; every non-PUBLIC value or missing field exits 2 before saving. Producer instructions and public schema-field description match; legacy callers are unchanged (implementation/repair-3-message-2.md).
+- DONE: Adjust the existing visibility test/fixture for the new field, adding at most one non-public/non-private case.
+  PUBLIC fixture updated; PRIVATE/missing controls retained and exactly one INTERNAL/isPrivate=false subcase added. No extra test method. Red before repair; all three negatives save nothing, existing PUBLIC record/binding control passes, and the old boolean reverse mutation fails with one failure/zero errors (visibility-red.log; visibility-proof.json).
+- DONE: Rerun repository lint, full delivery and POC suites and comment ratio; commit locally and update the stage report.
+  All four commands exit 0 at a5657edd6: delivery 243 passes/one optional skip, POC nine passes, lint 5996/5996, comments 3/562=0.5% against 5%. Three product paths +9/-7; all seven doc-impact references have dispositions (checks.json; provenance.json; doc-impact-dispositions.json).
+- DONE: Retain evidence, update prepared PR text and close the owned scratch root.
+  evidence/implementation-3-message-2 has 20 normalized public/synthetic files with SHA256SUMS; canonical close exits 0 and rechecks the earlier implementation-3 evidence. Current PR text preserves the separate pin-deletion paragraph and distinguishes prior 29-command evidence from current checks.
+- SKIPPED: Push product/state, run RoboRev/hosted CI/full 29-command suite or independent validation, request review, mark ready or merge.
+  FO owns publication and later checks; no delegated clean result is claimed. No new ADR/version/CI definition/workflow budget change; CI cost per PR remains not measured.
+
+### Summary
+
+Only explicit PUBLIC visibility now permits a record; the authorized INTERNAL counterexample and restored-old-criterion mutation establish the fail-closed repair at a5657edd6531916cd01f659b888feaa021219ead. This complete report supersedes earlier implementation assurance for the delivered candidate and preserves prior evidence/limits; the four requested checks pass, with no live-provider, hosted or independent-validation claim.
+
+Canonical close output (exit 0; message evidence separately manifested):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (20965 bytes)
+Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
+```

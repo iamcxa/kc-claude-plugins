@@ -1,0 +1,15 @@
+test_nonpublic_or_unknown_visibility_saves_no_record (test_delivery_gate.ObservedFactsTests.test_nonpublic_or_unknown_visibility_saves_no_record) ... 
+  test_nonpublic_or_unknown_visibility_saves_no_record (test_delivery_gate.ObservedFactsTests.test_nonpublic_or_unknown_visibility_saves_no_record) (visibility={'visibility': 'INTERNAL', 'isPrivate': False}) ... FAIL
+
+======================================================================
+FAIL: test_nonpublic_or_unknown_visibility_saves_no_record (test_delivery_gate.ObservedFactsTests.test_nonpublic_or_unknown_visibility_saves_no_record) (visibility={'visibility': 'INTERNAL', 'isPrivate': False})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3498, in test_nonpublic_or_unknown_visibility_saves_no_record
+    self.assertEqual(gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"]), 2)
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 1 test in 0.131s
+
+FAILED (failures=1)
