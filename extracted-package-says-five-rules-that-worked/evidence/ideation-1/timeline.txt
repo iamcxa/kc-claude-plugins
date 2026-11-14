@@ -1,0 +1,10 @@
+task: extracted-package-says-five-rules-that-worked
+  backlog: 2026-11-14T12:15:47Z -> 2026-11-14T12:15:50Z  0.1 min (before gate 0.0, Captain wait 0.1, after gate 0.0); dispatches 0, repeats 0
+    asks outside a gate: not recorded
+    gate attempt 1: opened 2026-11-14T12:15:47Z, closed 2026-11-14T12:15:50Z, approve
+  ideation: 2026-11-14T12:18:23Z -> running  10.0 min (before gate 10.0, Captain wait 0, after gate 0.0); dispatches 1, repeats 0
+    round 1: 2026-11-14T12:18:23Z -> running  10.0 min; running
+    asks outside a gate: not recorded
+  done: -
+  asks outside a gate: not recorded (no asks.jsonl); withdrawn gate attempts: 0; revise decisions: 0; amendments outside a gate: 0
+exit 0
