@@ -1,7 +1,7 @@
 ---
 id:
 title: Sealed evidence and the delivery gate's own text can be written without a home-directory path or a private repository name, so the state guard can refuse those two classes
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -53,7 +53,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 item 3 from the reform session, Paseo messages fa01bfc1-0e7d-4197-9636-a25f2818c562 and 77b18f0b-34ca-4f2f-9607-d1ebcba63eca
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-14T09:53:13Z
 ---
 
