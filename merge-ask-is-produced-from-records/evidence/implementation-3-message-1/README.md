@@ -1,0 +1,17 @@
+# Implementation 3, feedback message 1
+
+Candidate: 4652caa3a2f2c28bf4e395f2473b6ca00786834a.
+Repair base: 5e9afd496a6901cc788252a77d84f355acbf0015.
+Scope: validation-1 F1 and the authorized rule-move recheck; no publication.
+
+The contract now teaches the configured second-reviewer's positive name/because/nonempty-trigger declaration, with FO ownership and exact placement for both readers. The rule-move recheck found two other removed literal forms missing from the contract's legacy branch: External rounds: N and Captain steps: captain-steps/<N>.md. Their count/path constraints, the legacy separate-summary command and an explicit configured-reviewer outcome example now live in that same contract. All 20 rule groups are accounted for in rule-moves-recheck.json; no further missing removed guard-required form or sentence was found within those source moves. Workflow, observer, extension and guard bytes stay unchanged.
+
+One cheap new test feeds the contract's examples to the real declaration, outcome, round-count and Captain-step guards. contract-forms-red.log records its failure before the contract repair. The final delivery suite includes its passing result. contract-form-mutations.json and the four mutation logs show that removing each required example form makes this same test fail, with no errors or product mutation. missing-declaration-fixed.json reproduces both routes holding 1/1 when omitted and passing 0/0 using the actual contract example.
+
+checks.json binds the four requested commands to the exact final candidate, exit and log: repository lint, complete delivery suite, complete POC suite and installed comment_ratio.py. Delivery: 244 cases, 243 pass and one optional skip. POC: nine pass. Workflow text/budget: 5996/5996. Added-comment ratio: 3/562 (0.5%, maximum 5%). Owned package caches were cleared; commands use python3 -B, PYTHONDONTWRITEBYTECODE=1 and task-owned TMPDIR. No full 29-command rerun, RoboRev, hosted CI or independent revalidation is claimed.
+
+The first mutation harness exposed an empty-fence extraction error in the single new test; its extraction was fixed without adding another test. The preliminary four-command run completed its commands but refused its completion assertion because the candidate changed during that correction. Its log is retained; checks-final-run.log and checks.json are the complete final-candidate rerun. Initial probe output is retained separately from the successful mutation run.
+
+Reproduce by setting PRODUCT_WORKTREE to the candidate, PACKAGE_ROOT to the assigned kc-dev-flow-2 0.41.0 package and WORKFLOW_DIR to the adopted docs/dev2 workflow. Put these scripts in task-owned scratch, with TMPDIR there and PYTHONDONTWRITEBYTECODE=1; run python3 -B run_repair_checks.py and python3 -B contract_forms_probe.py. The latter uses the repository's existing paired fixtures and changes only the contract read in memory. Public source diff and the immutable implementation-2 rule-moves.json are the audit inputs. Absolute local paths are normalized in retained logs; no private body, reviewer prose, credential or personal data is archived.
+
+No product/state push, PR write, review request, ready transition, merge, version bump, new ADR or CI-definition change. Cost per PR was not measured. FO owns publication, RoboRev, hosted CI and independent revalidation. The existing pin-deletion experiment remains separate in implementation/pr.md.

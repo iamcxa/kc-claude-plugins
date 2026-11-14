@@ -1,0 +1,22 @@
+test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards) ... FAIL
+
+======================================================================
+FAIL: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3475, in test_contract_examples_supply_the_forms_required_by_the_shared_guards
+    self.assertEqual(problems, [])
+AssertionError: Lists differ: ['second reviewer declaration missing or d[64 chars]red'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'second reviewer declaration missing or duplicated: require exactly one configured reviewer or not triggered'
+
++ []
+- ['second reviewer declaration missing or duplicated: require exactly one '
+-  'configured reviewer or not triggered']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)

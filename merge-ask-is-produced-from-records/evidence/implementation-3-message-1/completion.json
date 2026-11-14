@@ -1,0 +1,15 @@
+{
+  "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+  "required_commands": 4,
+  "all_exit": 0,
+  "delivery_cases": 244,
+  "delivery_passed": 243,
+  "delivery_optional_skips": 1,
+  "poc_passed": 9,
+  "new_test_methods": 1,
+  "form_mutations_caught": 4,
+  "workflow_words": 5996,
+  "comment_ratio": "3/562 = 0.5%; maximum 5%",
+  "completed_at": "2026-11-14T03:01:13.644294+00:00",
+  "ci_cost_per_pr": "not measured"
+}

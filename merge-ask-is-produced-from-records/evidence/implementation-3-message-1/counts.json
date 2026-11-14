@@ -1,0 +1,10 @@
+{
+  "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "repair_base": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "repair_numstat": "30\t1\tkc-dev-flow-2/references/delivery-record.md\n13\t0\tkc-dev-flow-2/scripts/test_delivery_gate.py\n",
+  "workflow_words": 5996,
+  "workflow_unchanged": true,
+  "code_guard_unchanged": true,
+  "new_test_methods": 1
+}

@@ -594,3 +594,30 @@ Exact scratch close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-1 (34004801 bytes)
 Evidence: evidence/validation-1/ (68 files, 154.5 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Repair F1 by defining the positive second-reviewer declaration in delivery-record.md, moving the rule rather than restoring its workflow copy.
+  Candidate 4652caa3a2f2c28bf4e395f2473b6ca00786834a defines name/because/nonempty-trigger syntax, configured-name matching, FO ownership and both input placements; the actual contract example makes both routes check/question 0/0, versus 1/1 when omitted (missing-declaration-fixed.json).
+- DONE: Recheck implementation-2's rule-moves.json against the contract for other removed forms or guard-required sentences, report the result and repair them in the same home.
+  All 20 groups are accounted for; additionally restored legacy External rounds: N and Captain steps: captain-steps/<N>.md forms/constraints, with the separate-summary command and explicit reviewer outcome example. No further missing removed form/sentence found within these source moves (rule-moves-recheck.json).
+- DONE: Add no test beyond one cheap check that fails when the contract lacks a required form.
+  One new method feeds contract examples to existing declaration/outcome/round-count/Captain-step guards; red before the edit, green now, and each of four in-memory form deletions fails that same method with zero errors (contract-forms-red.log; contract-form-mutations.json).
+- DONE: Rerun repository lint, complete delivery and POC suites and comment ratio; commit locally and update the stage report.
+  All four commands exit 0 at 4652caa3a: delivery 243 passes/one optional skip, POC nine passes, lint 5996/5996, ratio 3/562=0.5% against 5%. Product commits 8dde371dd and 4652caa3a change two paths +43/-1; installed doc-impact lists no additional document (checks.json; counts.json).
+- DONE: Retain evidence, update prepared PR text and close the owned scratch root.
+  evidence/implementation-3-message-1 has 28 normalized public/synthetic files plus SHA256SUMS; close exits 0 and rechecks canonical implementation-3 evidence. implementation/pr.md retains the separate pin-deletion paragraph (implementation/repair-3-message-1.md; repair-3-message-1-close.txt).
+- SKIPPED: Push product/state, run RoboRev/hosted CI, claim full-suite or independent revalidation, or send an FO progress message through the messaging tool.
+  FO owns publication and revalidation; this repair reran only its requested checks. No guard/workflow/observer/Copilot/version/ADR/CI-definition bytes changed, no budget raise; CI cost per PR remains not measured.
+
+### Summary
+
+F1 and the additional legacy count/step literal forms found by the bounded rule-move audit are repaired in the one contract; the single new check detects removal of all four required example forms. This complete repair report supersedes earlier implementation assurance for candidate 4652caa3a2f2c28bf4e395f2473b6ca00786834a while retaining prior validation limits; the initial mutation harness exposed an empty-fence extraction error and a preliminary run refused completion after HEAD moved, both corrected before the final four-command rerun. FO owns the independent revalidation and publication.
+
+Canonical close output (exit 0; new message evidence is separately manifested):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (35716 bytes)
+Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
+```

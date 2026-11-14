@@ -1,0 +1,21 @@
+test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards) ... FAIL
+
+======================================================================
+FAIL: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3478, in test_contract_examples_supply_the_forms_required_by_the_shared_guards
+    self.assertEqual(gate.captain_step_problems(task, "Review this candidate.", examples), [])
+AssertionError: Lists differ: ['gate text needs one Captain steps: <record path> line'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'gate text needs one Captain steps: <record path> line'
+
+- ['gate text needs one Captain steps: <record path> line']
++ []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,48 @@
+[
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/comment_ratio.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "HEAD",
+      "--workflow-dir",
+      "<user-home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "candidate": "8dde371dd94eda9469376c5de0da01b5689d751c",
+    "exit": 0,
+    "status": "passed",
+    "output": "comments.log",
+    "tests": null,
+    "skipped": 0
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "candidate": "8dde371dd94eda9469376c5de0da01b5689d751c",
+    "exit": 0,
+    "status": "passed",
+    "output": "lint.log",
+    "tests": null,
+    "skipped": 0
+  },
+  {
+    "name": "poc",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "candidate": "8dde371dd94eda9469376c5de0da01b5689d751c",
+    "exit": 0,
+    "status": "passed",
+    "output": "poc.log",
+    "tests": 9,
+    "skipped": 0
+  }
+]

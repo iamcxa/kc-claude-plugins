@@ -1,0 +1,15 @@
+{
+  "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+  "repair_base": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "state_input_commit": "e9239231aa402c3d41438f42745a474c97f55505",
+  "feedback": "validation-1 F1; Feedback Cycle 1; dispatch/implementation-3-message-1.md",
+  "guard_sha256": "4bad61c18edfa65cec5aed5198ceb959f89c334223b169ac819bef9c054b91af",
+  "product_sha256": {
+    "kc-dev-flow-2/references/delivery-record.md": "ff5d4e588bf2a1630c0a0cf2e6fd4423f8decfadf91b9b333ce3d07608a176d9",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "0009fdf52ef63ff5606d765760185daa0ff9a8946a0a13749b465db931a87142"
+  },
+  "ci_cost_per_pr": "not measured",
+  "publication": "no product/state push, PR write, review request, ready transition or merge",
+  "profile": "pilot; repair of an accepted contract move, no expanded authority or profile change"
+}

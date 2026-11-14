@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "<scratch>/contract_forms_probe.py", line 29, in <module>
+    assert len(result.failures) == 1 and not result.errors, log.getvalue()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards) ... ERROR
+
+======================================================================
+ERROR: test_contract_examples_supply_the_forms_required_by_the_shared_guards (test_delivery_gate.ObservedFactsTests.test_contract_examples_supply_the_forms_required_by_the_shared_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/delivery_gate.py", line 416, in reviewer_problems
+    printed = saved.read_text()
+              ^^^^^^^^^^^^^^^^^
+  File "<scratch>/contract_forms_probe.py", line 23, in read
+    return damaged if path == tests.CONTRACT else original_read(path, *args, **kwargs)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<user-home>/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<user-home>/.pyenv/versions/3.11.14/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '<scratch>/tmpbxnrt146/task/review/copilot-not-run.txt'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3473, in test_contract_examples_supply_the_forms_required_by_the_shared_guards
+    problems, _ = gate.reviewer_problems(task, TASK.replace("profile: pilot", "profile: prod"),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/delivery_gate.py", line 418, in reviewer_problems
+    raise OSError(f"cannot read saved Copilot output {saved}: {error}; save the reader's exit-5 stdout there") from error
+OSError: cannot read saved Copilot output <scratch>/tmpbxnrt146/task/review/copilot-not-run.txt: [Errno 2] No such file or directory: '<scratch>/tmpbxnrt146/task/review/copilot-not-run.txt'; save the reader's exit-5 stdout there
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+FAILED (errors=1)
+

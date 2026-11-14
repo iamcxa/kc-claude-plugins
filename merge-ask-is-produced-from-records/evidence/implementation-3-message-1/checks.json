@@ -1,0 +1,62 @@
+[
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/comment_ratio.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "HEAD",
+      "--workflow-dir",
+      "<user-home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+    "exit": 0,
+    "status": "passed",
+    "output": "comments.log",
+    "tests": null,
+    "skipped": 0
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+    "exit": 0,
+    "status": "passed",
+    "output": "lint.log",
+    "tests": null,
+    "skipped": 0
+  },
+  {
+    "name": "poc",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+    "exit": 0,
+    "status": "passed",
+    "output": "poc.log",
+    "tests": 9,
+    "skipped": 0
+  },
+  {
+    "name": "delivery",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+    "exit": 0,
+    "status": "passed",
+    "output": "delivery.log",
+    "tests": 244,
+    "skipped": 1
+  }
+]

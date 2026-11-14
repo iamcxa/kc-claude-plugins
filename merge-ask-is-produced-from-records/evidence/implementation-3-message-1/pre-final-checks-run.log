@@ -1,0 +1,5 @@
+2026-11-14 10:56:31.269 xcodebuild[50658:581088295]  DVTFilePathFSEvents: Failed to start fs event stream.
+2026-11-14 10:56:31.515 xcodebuild[50658:581088292] [MT] DVTDeveloperPaths: Failed to get length of DARWIN_USER_CACHE_DIR from confstr(3), error = Error Domain=NSPOSIXErrorDomain Code=5 "Input/output error". Using NSCachesDirectory instead.
+comments 0
+lint 0
+poc 0

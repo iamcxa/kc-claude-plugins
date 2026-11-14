@@ -1,0 +1,156 @@
+{
+  "input": "evidence/implementation-2/rule-moves.json",
+  "input_sha256": "cdc9ed1cc5c81e616002e4531b6b9c8d0d915a90c7b2a8908f047a853b937293",
+  "candidate": "4652caa3a2f2c28bf4e395f2473b6ca00786834a",
+  "checked_sources": [
+    "c2f035b6612f5edb42220576b3414e993531ffd6..5e9afd496a6901cc788252a77d84f355acbf0015: workflow/observer/Copilot deletions",
+    "current delivery-record.md",
+    "reviewer_problems, unstated_second_reviewers, summary_round_problems and captain_step_problems",
+    "retained legacy delivery_gate.py help"
+  ],
+  "moves": [
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "FO authors question/unobservable judgments, not factual summary",
+      "status": "retained",
+      "evidence": "Producer and preparation: FO writes judgments and the decision question; JSON is bound unchanged."
+    },
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "check/question recipe; nonzero holds; unchanged committed summary/reference",
+      "status": "repaired",
+      "evidence": "Producer and preparation retains the record recipe/hold/binding; Legacy text route now explicitly names --summary-file, External rounds: N and the reviewer outcome example."
+    },
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "public-only observations; private legacy route",
+      "status": "retained",
+      "evidence": "Producer and preparation refuses private/unknown visibility and retains legacy for private adopters."
+    },
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "delivery record names Captain-step source",
+      "status": "repaired",
+      "evidence": "Fields retain captain_steps source/digest; Legacy text route now also names Captain steps: captain-steps/<N>.md, a positive N and the candidate/report coverage guard."
+    },
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "unread reviewer disclosure and Captain decision",
+      "status": "retained",
+      "evidence": "Readers and limits names unread status and the Captain decision."
+    },
+    {
+      "source": "references/sd/workflow.md",
+      "rule": "conditional trigger judgment and untriggered reviewer exemption",
+      "status": "repaired",
+      "evidence": "Readers and limits now supplies the positive name/because/nonempty-trigger form, FO ownership, configured name and input placement; the untriggered prod/db exception remains."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "merge-head question selects context ask reference at committed revision",
+      "status": "retained",
+      "evidence": "Readers and limits selects the context Reference /merge/ask-N.json at the briefing revision; observer retains git-root reading command."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "reference digest/head comparison and id/time/head evidence",
+      "status": "retained",
+      "evidence": "Readers and limits compares SHA-256/rev/head/question/summary and quotes reference id/time/head."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "missing reference follows event-time requirement",
+      "status": "retained",
+      "evidence": "Readers and limits reports violation only when the event-time workflow required a reference."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "pre-reference time fallback; absent/later observations are cannot-tell",
+      "status": "retained",
+      "evidence": "Readers and limits retains highest-numbered ask no later than briefing commit, absent/later cannot-tell and time evidence."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "legacy 200-character cleaned clause comparisons",
+      "status": "retained",
+      "evidence": "Legacy text route retains clean/clause 200-character sufficiency/necessity comparisons."
+    },
+    {
+      "source": "skills/observer/SKILL.md",
+      "rule": "FO sufficiency/necessity judgment reporting",
+      "status": "retained",
+      "evidence": "Readers and limits reports record-route question judgments; Legacy text route reports saved clauses, or cannot-tell."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "after deliberately unrepeated push name unread status and last reviewed head",
+      "status": "retained",
+      "evidence": "Readers and limits names unread status and last reviewed commit after an unrepeated request."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "requested unanswered review holds merge ask",
+      "status": "retained",
+      "evidence": "Readers and limits says an unanswered requested review holds the ask."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "configuration-error reporting",
+      "status": "retained",
+      "evidence": "Readers and limits forbids exit-2 clean; Legacy text route supplies copilot not run: configuration error: <reason>."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "non-review answer is no round, never clean, no wait",
+      "status": "retained",
+      "evidence": "Readers and limits retains all three exit-5 limits."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "no re-request until Captain says quota restored; offer retry",
+      "status": "retained",
+      "evidence": "Readers and limits retains the Captain quota condition and exact retry sentence."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "legacy saved stdout/refusal quote/answer identity/retry text",
+      "status": "retained",
+      "evidence": "Legacy text route retains saved review/copilot-not-run.txt, quote/answer identity and exact retry line."
+    },
+    {
+      "source": "extensions/copilot/EXTENSION.md",
+      "rule": "legacy round heading quote and observer clean-reading comparison",
+      "status": "retained",
+      "evidence": "Legacy text route retains the heading quote and observer comparison; the restored example makes the required configured-reviewer outcome token explicit."
+    },
+    {
+      "source": "scripts/delivery_gate.py help",
+      "rule": "record format/ownership/recipe/visibility descriptions",
+      "status": "retained",
+      "evidence": "Contract title, Producer and preparation, Readers and limits and Fields own this boundary; legacy help was retained, not deleted."
+    }
+  ],
+  "other_removed_forms_repaired": [
+    "External rounds: N with a nonnegative count",
+    "Captain steps: captain-steps/<N>.md at the dispatched candidate"
+  ],
+  "other_reader_details_restored": [
+    "Legacy --summary-file command/combined-text placement",
+    "Configured-reviewer outcome sentence illustrated by Copilot review:123."
+  ],
+  "retained_in_source": [
+    {
+      "rule": "second-reviewer trigger conditions",
+      "status": "retained in owning workflow or Copilot extension, not recopied"
+    },
+    {
+      "rule": "Copilot request eligibility, clean-reading criteria and severity",
+      "status": "retained in owning workflow or Copilot extension, not recopied"
+    },
+    {
+      "rule": "FO step execution and finding dispositions",
+      "status": "retained in owning workflow or Copilot extension, not recopied"
+    }
+  ],
+  "result": "All 20 rule groups accounted for. F1 and the additional legacy count/step literal forms are now in the contract; no further removed guard-required form or sentence was found in these bounded source moves. No guard, workflow, observer or extension bytes changed."
+}
