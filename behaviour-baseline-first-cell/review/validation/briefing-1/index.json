@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:behaviour-baseline-first-cell:validation:attempt-1:revision-1",
+  "question": "Close this task at its re-cut endpoint, two readings of one cell delivered, with the cell closed as the reading committed in advance requires? (decided by FO under the Captain's grant; nothing is merged into this repository and nothing leaves the private working repository)",
+  "artifacts": [
+    {
+      "id": "artifact:behaviour-baseline-first-cell:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/364b076ca085c6f1d8077225ee25b37054d4dee5/behaviour-baseline-first-cell.md",
+      "rev": "sha256:98c353da24f07b488a4f39c235c4686d240c562c066cef6241133bd29f111afb",
+      "mediaType": "text/markdown",
+      "summary": "Closing under the Captain's grant at the endpoint the reform session re-cut (amendments 3 and 4). First reading, nine ordinary agents in three arms, committed rule: CANNOT DISCRIMINATE (contamination changes the reading); over all valid runs base 2 of 3, candidate 3 of 3, control 2 of 3. Second, confirmatory reading, six agents in two arms, with grader, contamination rule and decision patterns committed before its runs: NO DIFFERENCE with and without contaminated runs; base 2 of 3, candidate 3 of 3, 0 of 6 contaminated, none invalid. By the rule committed in advance the cell closes; no third version. Observation beside the result, not a change to it: the one base FAIL explained the unprovable criterion without naming its id, so in substance base is 3 of 3. Neither reading is release evidence: non-hermetic place, the operator's configuration present in every arm, agents served as a sandboxed Claude in a permission-bypass mode FO did not ask for, one case, three trials per arm, the candidate one commit later in the second reading. Both gradings independently checked (validation-1 and validation-2, Codex Astra, PASSED: tables regenerate byte for byte, each grade agreed, reading commits precede every run); FO ran the second check's offline acceptance in a fresh shell 2026-11-14, exit 0, five PASS lines, zero privacy marker hits in this task's folder. Launches: 16 of the cap of 18, one of them the operator abort. Deliverable pinned by commit in the private working repository: 02fcf256d8ca2aa4f4d44edd64d7162e3c049b1d; the launch-and-kill layer stays on its own branch there, unmerged, with the engineering reviewer's hold findings beside it. AC-3 superseded by amendment 3; AC-4's scan covers this task's folder, not a fresh public clone."
+    }
+  ]
+}

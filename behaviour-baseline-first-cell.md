@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:behaviour-baseline-first-cell:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:behaviour-baseline-first-cell-validation-1
+              briefing:
+                id: briefing:behaviour-baseline-first-cell:validation:attempt-1:revision-1
+                digest: sha256:f456f7c3e6799a148423d68b74db607d256468a8b3a334b8ad21104fc8b865ee
+                room-ref: ./behaviour-baseline-first-cell/review/validation/briefing-1
 started: 2026-11-14T04:43:45Z
 ---
 
