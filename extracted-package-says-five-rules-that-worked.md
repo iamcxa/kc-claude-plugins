@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-extracted-package-says-five-rules-that-worked
-pr:
+pr: local-merge:17a4ff133f24da0d57fe4a395e96867516957250
 gates:
     version: 1
     records:
@@ -77,6 +77,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-11-14T12:18:22Z
+mod-block: merge:pr-merge
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
