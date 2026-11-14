@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:private-cell-selfcheck-passes-on-a-fresh-clone-poc-backlog-1
+              briefing:
+                id: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:attempt-1:revision-1
+                digest: sha256:d60d609f5b565d908092d85bb63baf775817973bdd48819fbc7e1119c62fb6ac
+                room-ref: ./private-cell-selfcheck-passes-on-a-fresh-clone-poc/review/backlog/briefing-1
 ---
 
 The clean branch pushed to the private working repository's remote on 2026-11-14 carries a cell whose `selfcheck` exits 1 on a fresh clone: nine of its fixture entries point at raw laptop outputs that are deliberately not carried. A check that fails on a fresh clone is a trap for whoever clones it next.

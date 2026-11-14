@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile poc with the outcome, non-goals, stop condition, acceptance criteria and a budget of 1 implementation and 1 validation cycles as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave.",
+  "artifacts": [
+    {
+      "id": "artifact:private-cell-selfcheck-passes-on-a-fresh-clone-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b69c4c620fc0134e47de43a41cc643bbee7e4676/private-cell-selfcheck-passes-on-a-fresh-clone-poc.md",
+      "rev": "sha256:695bf83554318649b45993b2967dfd0c99094ece8d8d0091158d302591eab099",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: profile poc; the reform session ordered this as the first step after the two-hour scope; outcome, Non-goals, Stop condition, AC-1 and AC-2 as filed; Budget 1 implementation and 1 validation cycles; FO alignment not needed before implementation."
+    }
+  ]
+}
