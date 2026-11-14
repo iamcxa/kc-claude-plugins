@@ -241,6 +241,10 @@ D1 and D2 are independent; D1 is the one this task needs.
 PR 869 (open, the other First Officer): no shared file (list above). Live tasks whose task file names a file this design changes (named there, not confirmed as their change): `design-check-reads-each-pilot-criterion-for-its-proof-record` (implementation; `dispatch_records.py`, `dispatch_stage.py`); `merge-guard-stops-unasked-merges` (validation; `dispatch_records.py`); `adoption-asks-which-extensions`, `comment-check-reaches-delivery-gate`, `dispatch-carries-reserved-adr-number`, `seed-check-requires-alignment-result`, `step-back-answer-has-a-record-line` (ideation; `dispatch_records.py`); `delivery-gate-s4-skips-removed-scratch` (ideation; `scratch.py`). Shared numbered record: one ADR number from FO's reservation list. The test files `test_dispatch_records.py` and `test_dispatch_stage.py` are the likeliest textual conflicts.
 Recommended order: after `design-check-reads-each-pilot-criterion-for-its-proof-record` merges (the only one past ideation that changes both scripts), and independent of PR 869.
 
+## Number guards
+
+ADR: 0087
+
 ## Stage Report: ideation
 
 - DONE: The writers verified against the code at origin/main, each with the line that writes the identifier class and whether it reaches the state branch, including a trace of whether the paths `spacedock dispatch build` makes absolute land there; a writer that is Spacedock's own is reported, not designed around
