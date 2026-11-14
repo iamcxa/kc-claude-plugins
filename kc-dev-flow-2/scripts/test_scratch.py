@@ -78,6 +78,37 @@ class ScratchTests(unittest.TestCase):
         with self.assertRaises((EOFError, OSError)):
             gzip.decompress(restored[:-8])
 
+    def test_new_text_rewritten_before_digest_and_gzip_but_old_and_binary_unchanged(self):
+        home = str(Path.home()).encode()
+        plain = b'cwd: ' + home + b'/public\n'
+        large = plain * (256 * 1024 // len(plain) + 10000)
+        binary = b'\0' + plain
+        old_gzip = gzip.compress(plain, mtime=123)
+        files = {'new.txt': plain, 'large.txt': large, 'binary.bin': binary, 'old.txt': plain,
+                 'supplied.gz': gzip.compress(plain, mtime=123), 'archived.txt.gz': old_gzip}
+        for name, data in files.items():
+            (self.evidence / name).write_bytes(data)
+        manifest = self.evidence / 'SHA256SUMS'
+        manifest.write_text(hashlib.sha256(plain).hexdigest() + '  old.txt\n' +
+                            hashlib.sha256(plain).hexdigest() + '  archived.txt\n')
+        self.close()
+        self.assertEqual((self.evidence / 'new.txt').read_bytes(), b'cwd: ~/public\n')
+        retained_large = gzip.decompress((self.evidence / 'large.txt.gz').read_bytes())
+        self.assertNotIn(home, retained_large)
+        self.assertGreater(len(large), 256 * 1024)
+        self.assertEqual(gzip.decompress((self.evidence / 'supplied.gz').read_bytes()), b'cwd: ~/public\n')
+        self.assertEqual((self.evidence / 'binary.bin').read_bytes(), binary)
+        self.assertEqual((self.evidence / 'old.txt').read_bytes(), plain)
+        self.assertEqual((self.evidence / 'archived.txt.gz').read_bytes(), old_gzip)
+        for line in manifest.read_text().splitlines():
+            expected, name = line.split('  ', 1)
+            path = self.evidence / name
+            actual = path.read_bytes() if path.exists() else gzip.decompress(path.with_name(name + '.gz').read_bytes())
+            self.assertEqual(hashlib.sha256(actual).hexdigest(), expected)
+        before = {p.name: p.read_bytes() for p in self.evidence.iterdir()}
+        self.close()
+        self.assertEqual(before, {p.name: p.read_bytes() for p in self.evidence.iterdir()})
+
     def test_compression_collision_refuses_before_changes_and_retry_keeps_digests(self):
         originals = {'a.txt': b'a' * (256 * 1024 + 1), 'z.txt': b'z' * (256 * 1024 + 1)}
         for name, data in originals.items():

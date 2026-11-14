@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
-non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
+non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute or ~/ path inside Scope notes, a scope-notes
 line naming `main` as the completion recipient (or the final-reply line when the README lists paseo), and a checklist that is not only pointer lines (a record name plus only
 words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
 "Reuse the checklist of implementation-2.", passes.
@@ -80,8 +80,8 @@ PARTS = {
     "a 'Model:' line": re.compile(r"^Model:[ \t]*\S", re.M),
     "a non-empty '## Checklist' section": re.compile(r"^## Checklist[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
-    "a 'Package root:' line with an absolute path in its scope notes":
-        re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
+    "a 'Package root:' line with an absolute or ~/ path in its scope notes":
+        re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*(?:/|~/)\S", re.M),
     COMPLETION_PART:
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
@@ -93,7 +93,8 @@ SCANNED = re.compile(r"^## (?:Checklist|Scope notes)[ \t]*$")
 INSTRUCTION = re.compile(r"^- \*\*Instruction FO adds to the scope notes:\*\*(.*?)(?=^- \*\*|\Z)", re.M | re.S)
 JOINS = re.compile(r"^- \*\*Joins:\*\*[ \t]*(\w+)", re.M)
 PACKAGE_PATH = re.compile(r"<package>/(extensions/[\w-]+/[\w.-]+\.py)")
-ROOT = re.compile(r"^Package root:[ \t]*(/\S+)", re.M)
+# see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md
+ROOT = re.compile(r"^Package root:[ \t]*((?:/|~/)\S+)", re.M)
 SCOPE_INSTRUCTION = re.compile(r'^Add to scope notes:[ \t]*"([^"]+)', re.M | re.I)
 ACCEPTANCE_INSTRUCTION = re.compile(r'^- \*\*Acceptance task\'s implementation scope notes:\*\*[^\n]*\n[ \t]*"([^"]+)', re.M)
 SPAWN_RECORD = re.compile(r"^(ideation|implementation|validation)-[1-9][0-9]*\.md$")

@@ -255,11 +255,13 @@ class DispatchStageTests(unittest.TestCase):
         record = self.record("engineering-reviewer")
         self.assert_committed(record, f"state: update {self.slug}")
         text = record.read_text()
-        self.assertTrue(text.startswith(f"# engineering-reviewer-1\nDispatched: {dispatched} "
+        expected = (f"# engineering-reviewer-1\nDispatched: {dispatched} "
                          "(workflow checkout, role fixture)\nModel: opus\nRoster: fixture roster\n\n"
-                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}"))
+                         f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}")
+        self.assertTrue(text.startswith(expected.replace(str(Path.home()) + '/', '~/')))
         self.assertEqual(sum(line.startswith('Scratch: /tmp/dev2/') for line in text.splitlines()), 1)
-        self.assertEqual(result.stdout.encode(), record.read_bytes())
+        self.assertEqual(result.stdout.encode().replace(os.fsencode(Path.home()) + b'/', b'~/'), record.read_bytes())
+        self.assertIn(self.notes.read_text(), result.stdout)
         self.assertNotIn('failed', result.stderr)
         self.call([sys.executable, "-B", CHECKER, self.folder])
         self.call([sys.executable, "-B", CHECKER, "--names", "--strict", record])
@@ -295,7 +297,7 @@ class DispatchStageTests(unittest.TestCase):
         self.assertEqual(record.read_bytes(), pending)
         self.call([BINARY, "state", "commit", self.slug, "--workflow-dir", self.workflow])
         result = self.role()
-        self.assertEqual(result.stdout.encode(), pending)
+        self.assertEqual(result.stdout.encode().replace(os.fsencode(Path.home()) + b'/', b'~/'), pending)
         self.assert_committed(record, f"state: update {self.slug}")
         self.assertFalse(self.record("engineering-reviewer", 2).exists())
 
@@ -372,8 +374,10 @@ class DispatchStageTests(unittest.TestCase):
         expected = (f"# {kind}-1\nDispatched: {dispatched} (workflow checkout)\nModel: opus\n"
                     + ("" if role else "Budget: not recorded\n") + "\n"
                     "## Checklist\n").encode("utf-8") + checklist + b"\n## Scope notes\n" + notes
+        public_notes = notes.replace(os.fsencode(Path.home()) + b'/', b'~/')
+        expected = expected.replace(os.fsencode(Path.home()) + b'/', b'~/')
         self.assertIn(checklist, disk)
-        self.assertIn(notes, disk)
+        self.assertIn(public_notes, disk)
         self.assertTrue(disk.startswith(expected))
         self.assertEqual(sum(line.startswith(b'Scratch: /tmp/dev2/') for line in disk.splitlines()), 1)
         committed = subprocess.run(["git", "-C", str(self.state), "show",
@@ -381,11 +385,12 @@ class DispatchStageTests(unittest.TestCase):
                                    env=self.env, check=True, capture_output=True).stdout
         self.assertEqual(committed, disk)
         if role:
-            self.assertEqual(result.stdout, disk)
+            self.assertIn(notes, result.stdout)
+            self.assertEqual(result.stdout.replace(os.fsencode(Path.home()) + b'/', b'~/'), disk)
             retry = subprocess.run(list(map(str, command)), cwd=self.base, env=self.env,
                                    capture_output=True, timeout=30)
             self.assertEqual(retry.returncode, 0, retry.stderr)
-            self.assertEqual(retry.stdout, disk)
+            self.assertEqual(retry.stdout, result.stdout)
             self.assertFalse(self.record(kind, 2).exists())
 
     def test_role_crlf_inputs_keep_raw_bytes(self):
@@ -417,7 +422,10 @@ class DispatchStageTests(unittest.TestCase):
     def test_scratch_in_record_and_real_dispatch_artifact_without_changing_input(self):
         original = self.notes.read_bytes()
         result = self.build()
+        self.assertIn('state guard: unguarded:', result.stderr)
         record = self.record().read_text()
+        self.assertNotIn(str(Path.home()) + '/', record)
+        self.assertIn(str(ROOT).replace(str(Path.home()) + '/', '~/'), record)
         expected = f'Scratch: /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1'
         self.assertEqual(record.splitlines().count(expected), 1)
         artifact = Path(json.loads(result.stdout)['dispatch_file_path']).read_text()
@@ -427,6 +435,29 @@ class DispatchStageTests(unittest.TestCase):
         self.assertIn('Not archived (private): <what>; reproduce: <command>', artifact)
         self.assertIn(str(ROOT / 'scripts/scratch.py') + ' close ', artifact)
         self.assertEqual(self.notes.read_bytes(), original)
+
+    def test_home_record_rewrite_keeps_the_real_path_in_the_worker_prompt(self):
+        actual = str(Path.home() / 'invented-public-fixture')
+        self.notes.write_text(self.notes.read_text() + f'Read {actual}\n')
+        before = self.notes.read_bytes()
+        built = self.build()
+        prompt = Path(json.loads(built.stdout)['dispatch_file_path']).read_bytes()
+        committed = self.git(self.state, 'show', f'HEAD:{self.record().relative_to(self.state)}')
+        self.assertIn('Read ~/invented-public-fixture', committed)
+        self.assertNotIn(actual, committed)
+        self.assertIn(actual.encode(), prompt)
+        self.assertEqual(self.notes.read_bytes(), before)
+
+    def test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt(self):
+        actual = str(Path.home() / 'invented-role-fixture')
+        self.notes.write_text(self.notes.read_text() + f'Read {actual}\n')
+        before = self.notes.read_bytes()
+        built = self.role()
+        saved = self.record('engineering-reviewer').read_bytes()
+        self.assertNotIn(actual.encode(), saved)
+        self.assertIn(b'Read ~/invented-role-fixture', saved)
+        self.assertIn(actual, built.stdout)
+        self.assertEqual(self.notes.read_bytes(), before)
 
     def test_next_validation_accepts_its_own_scratch_path_and_retries(self):
         self.set_stage('validation')
@@ -471,7 +502,7 @@ class DispatchStageTests(unittest.TestCase):
     def test_scope_notes_inside_scratch_are_kept(self):
         self.notes.write_text(self.notes.read_text() + f'Use /tmp/dev2/{self.scratch_namespace}/{self.slug}/ideation-1/checkout\n')
         self.build()
-        self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
+        self.assertIn(self.notes.read_bytes().replace(os.fsencode(Path.home()) + b'/', b'~/'), self.record().read_bytes())
 
     def test_foreign_root_owner_refuses_before_build_or_notes_write(self):
         root = scratch.claim_root(self.repo, self.folder, 'ideation-1')
@@ -506,7 +537,7 @@ class DispatchStageTests(unittest.TestCase):
             section = text.split(f"## {heading}\n", 1)[1].split("\n## ", 1)[0]
             for line in source.read_text().splitlines():
                 if line.strip():
-                    self.assertIn(line, section)
+                    self.assertIn(line.replace(str(Path.home()) + '/', '~/'), section)
                     self.assertIn(line, received)
 
     def test_incomplete_record_does_not_build_or_change_state(self):
@@ -626,7 +657,7 @@ class DispatchStageTests(unittest.TestCase):
     def test_failed_stamp_removes_uncommitted_record_and_passes_error(self):
         self.set_stage("backlog")
         held = self.build(expected=1)
-        self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
+        self.assertIn("dispatch build --stamp:", held.stderr)
         self.assertFalse(self.record().exists())
         self.assertEqual(held.stdout, "")
 
@@ -649,7 +680,7 @@ class DispatchStageTests(unittest.TestCase):
                            "print('fixture staged then failed', file=sys.stderr)\nsys.exit(7)\n")
         failing.chmod(0o755)
         held = self.build(extra=("--spacedock", failing), expected=7)
-        self.assertEqual(held.stderr, "fixture staged then failed\n")
+        self.assertIn("fixture staged then failed\n", held.stderr)
         self.assertFalse(self.record().exists())
         self.assertEqual(self.git(self.state, "status", "--porcelain"), "")
 

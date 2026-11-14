@@ -14,6 +14,7 @@ from design_surfaces import task_folder
 from number_guards import Misconfigured, frontmatter
 from role_triggers import budget_text, rank
 from scratch import claim_root, notes_for
+from state_guard import rewrite_home
 
 SCRIPTS = Path(__file__).resolve().parent
 
@@ -99,7 +100,7 @@ def check_task_scope(state, scope):
             refuse(name, "untracked non-ignored task file")
 
 
-def record_text(args, number, dispatched, checklist, notes):
+def record_text(args, number, dispatched, checklist, notes, public=True):
     notes = notes_for(args.workflow_dir, task_folder(args.entity_path),
                       f"{args.stage}-{number}", notes, SCRIPTS.parent)
     annotation = "workflow checkout" + (f", {args.note}" if args.note else "")
@@ -112,7 +113,9 @@ def record_text(args, number, dispatched, checklist, notes):
     header += [f"Candidate: {sha}" for sha in args.candidate]
     if args.symptom:
         header.append(f"Symptom: {args.symptom}")
-    return "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
+    # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md
+    text = "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
+    return rewrite_home(text) if public else text
 
 
 def select_record(args, folder, dispatched, checklist, notes):
@@ -240,6 +243,10 @@ def main(argv=None):
         return 1
     for line in dict.fromkeys(line for check in checks for line in check.stderr.splitlines(keepends=True)):
         sys.stderr.write(line)
+    guard = subprocess.run([sys.executable, "-B", str(SCRIPTS / "state_guard.py"), "check", str(state)],
+                           capture_output=True, text=True)
+    if guard.returncode:
+        sys.stderr.write(guard.stdout + guard.stderr)
     try:
         scratch = claim_root(args.workflow_dir, folder, path.stem)
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
@@ -260,7 +267,8 @@ def main(argv=None):
         if commit.returncode:
             sys.stderr.write(commit.stdout)
             return 1
-        sys.stdout.buffer.write(path.read_bytes())
+        number = int(path.stem.rsplit('-', 1)[1])
+        sys.stdout.buffer.write(record_text(args, number, dispatched, checklist, notes, public=False).encode('utf-8'))
         return 0
     command = [args.spacedock, "dispatch", "build", "--advance" if args.advance else "--stamp"]
     scoped = scratch / "scope-notes.md"
