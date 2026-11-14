@@ -1,0 +1,15 @@
+Question: is the bare skill `schedule`, added by a login, shipped by the CLI itself and tied to the login, not to operator configuration?
+Evidence (Claude Code 2.1.323, read-only `strings` of the installed binary, 2026-11-14; no model call):
+  - The binary defines the skill itself: a bundled-skill registration with menu text "Create and manage routines: cloud agents on a schedule", description "Create, update, list, or run scheduled cloud agents (routines) that execute on a cron schedule.", userInvocable, and an isEnabled gate.
+  - Its prompt builder opens with a login check: "You need to authenticate with a claude.ai account first. API accounts are not supported. Run /login, then try /schedule again."
+  - The no-login smoke (empty home, no token) lists 18 bare skills and not `schedule`; the operator's credentialed init lists the same plus `schedule` (FO's record of the refused check).
+  - The isolated run has an empty home and config directory and the case tree holds no project-level skills or commands directory (`git ls-tree` of the case commit: 0 entries), so no personal or project configuration can supply it.
+Reading: `schedule` is a CLI-bundled skill that appears only with a claude.ai login. It is added to the cell as a login-only entry (`login_only_skills`); every other unexpected skill, plugin or MCP server stays a breach.
+Which tool the skill acts through is not established from the binary (the minified names are not resolvable), so the launch denies by name instead of relying on that.
+
+How a worker is kept from using it to act outside the run (cell.json `disallowed_tools`, `--disallowedTools` on the launch):
+  - Denied tools: RemoteTrigger, CronCreate, CronDelete, CronList, and the rule Skill(schedule), beside WebFetch, WebSearch and Agent.
+  - Shown without a login: the init tool list has CronCreate, CronDelete, CronList without the deny list and none of them with it (22 tools to 19). RemoteTrigger is not in the no-login list at all; it can appear only with a login, so the credentialed init is where it would show.
+  - The credential is removed from tool subprocesses: the worker environment sets CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1, a switch the binary reads, with CLAUDE_CODE_OAUTH_TOKEN in its scrub list (binary strings).
+  - Detective check: scan counts any RemoteTrigger or Cron* tool call, or a Skill call for schedule, as breach (d), which records the run INVALID. Shown on a stored fixture transcript: exit 1, two (d) lines (unpaid-checks.txt).
+Not verified without a credentialed run: that the Skill(schedule) deny rule blocks the skill at run time, that RemoteTrigger is removed from a logged-in tool list, and that the scrub switch hides the token from a Bash call. Breach (d) and the secret search in scan are the backstop for each.
