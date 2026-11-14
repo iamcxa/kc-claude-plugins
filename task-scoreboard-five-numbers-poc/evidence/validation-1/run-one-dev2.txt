@@ -1,0 +1,8 @@
+task: state-branch-writes-carry-no-private-identifiers
+  1 minutes to first Captain-facing report: 28.1
+  2 dispatches per stage: backlog 0, ideation 1, implementation 1, validation 1
+  3 criterion changed after design approval: no: 5 criteria unchanged since ideation approval
+  4 questions put to the Captain: 3 gate briefings; asks outside a gate: 1
+  5 minutes: 203.5 total = 178.9 machine + 24.6 waiting
+  Read with care: "first report" is the first gate briefing opened after a dispatch, not the first message the Captain saw; "waiting" includes gates the First Officer resolved under a grant. Neither is the Captain's experience.
+exit 0

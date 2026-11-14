@@ -1,0 +1,23 @@
+== method-reading-code-and-tables-on-the-private-remote-poc
+2026-11-14T19:51:34+08:00 gate: record method-reading-code-and-tables-on-the-private-remote-poc backlog approve
+2026-11-14T19:51:37+08:00 gate: consume method-reading-code-and-tables-on-the-private-remote-poc -> implementation
+2026-11-14T19:51:42+08:00 dispatch: method-reading-code-and-tables-on-the-private-remote-poc entering implementation
+2026-11-14T20:00:12+08:00 dispatch: method-reading-code-and-tables-on-the-private-remote-poc entering validation
+2026-11-14T20:04:34+08:00 gate: record method-reading-code-and-tables-on-the-private-remote-poc validation approve
+2026-11-14T20:04:41+08:00 archive method-reading-code-and-tables-on-the-private-remote-poc (merge guard)
+== readme-rule-retirement-audit-poc
+2026-11-14T10:33:28+08:00 gate: record readme-rule-retirement-audit-poc backlog approve
+2026-11-14T10:33:30+08:00 gate: consume readme-rule-retirement-audit-poc -> implementation
+2026-11-14T10:35:03+08:00 dispatch: readme-rule-retirement-audit-poc entering implementation
+2026-11-14T12:59:04+08:00 dispatch: readme-rule-retirement-audit-poc entering validation
+2026-11-14T13:04:05+08:00 gate: record readme-rule-retirement-audit-poc validation approve
+2026-11-14T13:04:11+08:00 archive readme-rule-retirement-audit-poc (merge guard)
+== state-branch-writes-carry-no-private-identifiers
+2026-11-14T12:42:30+08:00 gate: record state-branch-writes-carry-no-private-identifiers backlog approve
+2026-11-14T12:42:33+08:00 gate: consume state-branch-writes-carry-no-private-identifiers -> ideation
+2026-11-14T12:43:29+08:00 dispatch: state-branch-writes-carry-no-private-identifiers entering ideation
+2026-11-14T13:11:35+08:00 gate: record state-branch-writes-carry-no-private-identifiers ideation approve
+2026-11-14T13:11:38+08:00 gate: consume state-branch-writes-carry-no-private-identifiers -> implementation
+2026-11-14T13:12:04+08:00 dispatch: state-branch-writes-carry-no-private-identifiers entering implementation
+2026-11-14T14:28:52+08:00 dispatch: state-branch-writes-carry-no-private-identifiers entering validation
+2026-11-14T16:00:54+08:00 gate: record state-branch-writes-carry-no-private-identifiers validation approve

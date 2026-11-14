@@ -1,0 +1,4 @@
+usage: task_scoreboard.py [-h] [--since SINCE] [--table] [--json]
+                          state [tasks ...]
+task_scoreboard.py: error: unrecognized arguments: readme-rule-retirement-audit-poc
+exit 2

@@ -1,0 +1,23 @@
+state: spacedock-state/dev2 @ 010a6b7bd532; read 2026-11-14T12:31:56Z
+Read with care: "first report" is the first gate briefing opened after a dispatch, not the first message the Captain saw; "waiting" includes gates the First Officer resolved under a grant. Neither is the Captain's experience.
+
+| task | 1 first report (min) | 2 dispatches | 3 criterion changed | 4 questions | 5 minutes |
+|---|---|---|---|---|---|
+| architecture-documents-have-a-layout-and-each-fact-one-home | not recorded | backlog 0 | not recorded | 1 gate briefings; asks outside a gate: not recorded | 4.9 total = 0.0 machine + 4.9 waiting (running) |
+| behaviour-baseline-first-cell | 20.8 | backlog 0, ideation 1, implementation 1, validation 2 | yes: AC-3 differ since ideation approval | 3 gate briefings; asks outside a gate: 2 | 263.6 total = 263.4 machine + 0.2 waiting |
+| captain-question-outside-a-gate-is-an-open-record | 27.6 | backlog 0, ideation 1, implementation 1, validation 2 | yes: AC-6, AC-9 differ since ideation approval | 3 gate briefings; asks outside a gate: not recorded | 521.8 total = 134.5 machine + 387.3 waiting |
+| extracted-package-says-five-rules-that-worked | not recorded | backlog 0, ideation 1 | yes: AC-1, AC-3 differ since backlog approval | 1 gate briefings; asks outside a gate: not recorded | 13.7 total = 13.6 machine + 0.1 waiting (running) |
+| first-method-against-no-method-reading | 16.4 | backlog 0, ideation 1, implementation 1, validation 2 | no: 5 criteria unchanged since ideation approval | 3 gate briefings; asks outside a gate: not recorded | 98.8 total = 98.5 machine + 0.3 waiting |
+| gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo | 29.2 | backlog 0, ideation 1, implementation 1, validation 1 | no: 5 criteria unchanged since ideation approval | 2 gate briefings; asks outside a gate: not recorded | 158.9 total = 158.7 machine + 0.2 waiting (running) |
+| state-branch-writes-carry-no-private-identifiers | 28.1 | backlog 0, ideation 1, implementation 1, validation 1 | no: 5 criteria unchanged since ideation approval | 3 gate briefings; asks outside a gate: 1 | 203.5 total = 178.9 machine + 24.6 waiting |
+
+Not recorded:
+- architecture-documents-have-a-layout-and-each-fact-one-home: minutes to the first Captain-facing report: no worker dispatch recorded; record needed: a gate briefing or an asks.jsonl entry after a worker dispatch record
+- architecture-documents-have-a-layout-and-each-fact-one-home: criterion changed after design approval: no `**AC-n**` block under `## Acceptance criteria`; record needed: the approval's gate-record commit and an AC block in the task file
+- architecture-documents-have-a-layout-and-each-fact-one-home: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- captain-question-outside-a-gate-is-an-open-record: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- extracted-package-says-five-rules-that-worked: minutes to the first Captain-facing report: no gate briefing or ask after the first dispatch; record needed: a gate briefing or an asks.jsonl entry after a worker dispatch record
+- extracted-package-says-five-rules-that-worked: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- first-method-against-no-method-reading: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+exit 0

@@ -1,0 +1,18 @@
+state: spacedock-state/dev2-poc @ 9fed3682138c; read 2026-11-14T12:31:35Z
+Read with care: "first report" is the first gate briefing opened after a dispatch, not the first message the Captain saw; "waiting" includes gates the First Officer resolved under a grant. Neither is the Captain's experience.
+
+| task | 1 first report (min) | 2 dispatches | 3 criterion changed | 4 questions | 5 minutes |
+|---|---|---|---|---|---|
+| readme-rule-retirement-audit-poc | 149.0 | backlog 0, implementation 2, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 154.6 total = 149.1 machine + 5.5 waiting |
+| shared-assumption-replay-on-archived-tasks-poc | 125.0 | backlog 0, implementation 1, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 130.7 total = 125.1 machine + 5.6 waiting |
+| method-reading-code-and-tables-on-the-private-remote-poc | 12.8 | backlog 0, implementation 1, validation 1 | no: 2 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 13.1 total = 12.9 machine + 0.2 waiting |
+| private-cell-selfcheck-passes-on-a-fresh-clone-poc | 17.7 | backlog 0, implementation 1, validation 1 | no: 2 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 17.9 total = 17.7 machine + 0.2 waiting |
+| test-value-pass-on-route-trial-prs-poc | 124.4 | backlog 0, implementation 1, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 130.4 total = 124.7 machine + 5.7 waiting |
+
+Not recorded:
+- readme-rule-retirement-audit-poc: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- shared-assumption-replay-on-archived-tasks-poc: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- method-reading-code-and-tables-on-the-private-remote-poc: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- private-cell-selfcheck-passes-on-a-fresh-clone-poc: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+- test-value-pass-on-route-trial-prs-poc: asks outside a gate: no asks.jsonl; record needed: asks.jsonl written when the FO asks outside a gate
+exit 0
