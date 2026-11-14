@@ -1,7 +1,7 @@
 ---
 id:
 title: A dispatch, its record and sealed evidence reach the public state branch without personal or private identifiers, and a hook refuses a push that carries one
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -53,7 +53,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item D from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e, a8df76d7-63cb-4352-9c4b-f44b6004d7f5 and ea099e94-9369-49c1-bbeb-d6078ac0cfe8
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-14T04:43:29Z
 ---
 
