@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.42.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.41.0...kc-dev-flow-2-v0.42.0) (2026-11-14)
+
+
+### Features
+
+* **kc-dev-flow-2:** count ideation budgets and report each round ([#868](https://github.com/iamcxa/kc-claude-plugins/issues/868)) ([1c3e714](https://github.com/iamcxa/kc-claude-plugins/commit/1c3e714ff6752b8c84a490064639baf0d0ef3c9c))
+* **kc-dev-flow-2:** keep Captain questions open until their answers are recorded ([#870](https://github.com/iamcxa/kc-claude-plugins/issues/870)) ([c2f035b](https://github.com/iamcxa/kc-claude-plugins/commit/c2f035b6612f5edb42220576b3414e993531ffd6))
+* **kc-dev-flow-2:** sanitize public state writes and add opt-in git guards ([#871](https://github.com/iamcxa/kc-claude-plugins/issues/871)) ([c9b2c24](https://github.com/iamcxa/kc-claude-plugins/commit/c9b2c240078238b66c98179c4ddc686eac0e3918))
+* **kc-dev-flow-2:** try Pilot designs on a local probe ([#864](https://github.com/iamcxa/kc-claude-plugins/issues/864)) ([6a1eaf8](https://github.com/iamcxa/kc-claude-plugins/commit/6a1eaf837bd6087cd0b8b665dc19beaed3c44dff))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** request Codex review when marking ready ([#867](https://github.com/iamcxa/kc-claude-plugins/issues/867)) ([bfc53d8](https://github.com/iamcxa/kc-claude-plugins/commit/bfc53d82510006b52baf41569c1e25176e99d87a))
+
 ## [0.41.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.40.0...kc-dev-flow-2-v0.41.0) (2026-11-13)
 
 
