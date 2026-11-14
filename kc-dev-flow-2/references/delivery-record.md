@@ -64,6 +64,17 @@ Both commands apply the shared reviewer declaration/profile guards. The text
 summary and facts readers feed one `question` guard sequence, which rereads current
 reviewer configuration. Merge questions need a valid head token.
 
+When the workflow README configures `second-reviewer:`, FO supplies exactly one
+`Second reviewer: <name> because <trigger>` declaration. The name must match the
+configured reviewer (`codex` or `copilot`); the trigger is FO's nonempty judgment
+under the workflow's trigger rules. Put the line outside fences in the question
+for the facts route, or in the summary for legacy `--summary-file` callers
+(combined text when that option is omitted). For example, with Copilot configured:
+
+```text
+Second reviewer: copilot because this delivery changes review policy.
+```
+
 List an unread reviewer in the question when the record cannot establish its
 status; the Captain decides. An untriggered conditional second reviewer is
 exempt: FO may write `Second reviewer: not triggered` except for structured
@@ -86,7 +97,25 @@ warnings neither hold the ask nor certify the claims.
 
 ### Legacy text route
 
-Existing text commands retain their checks. The observer compares the reference
+Existing text commands retain their checks. Legacy `check` takes question plus
+summary together in `--text-file`; `question` can take the summary separately:
+
+`python3 <package>/scripts/delivery_gate.py question <task> --text-file <question> --summary-file <summary>`
+
+The summary (combined text when `--summary-file` is omitted) carries exactly one
+top-level `External rounds: N` line with a nonnegative integer, the configured
+second reviewer's outcome, and `Captain steps: captain-steps/<N>.md` with positive
+N. The step record must pass the question/latest-validation checks at a latest
+dispatched candidate. For example, after reading Copilot review 123 and recording
+the Captain steps in captain-steps/1.md, the additional lines are:
+
+```text
+External rounds: 1
+Copilot review:123.
+Captain steps: captain-steps/1.md
+```
+
+The observer compares the reference
 digest/head and its `sufficiency`/`necessity` against the first 200 cleaned clause
 characters in question plus summary (`delivery_gate.clean`/`clause`); report
 those judgments from the record, or `can't tell` if neither key exists.

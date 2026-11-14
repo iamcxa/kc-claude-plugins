@@ -3464,6 +3464,19 @@ class ScopeDisclosureTests(unittest.TestCase):
 
 
 class ObservedFactsTests(unittest.TestCase):
+    def test_contract_examples_supply_the_forms_required_by_the_shared_guards(self):
+        examples = "\n".join(re.findall(r"```text\n(.*?)\n```", CONTRACT.read_text(), re.S))
+        with tempfile.TemporaryDirectory() as d:
+            task = Path(d, "task.md")
+            task.write_text(TASK)
+            captain_record(task)
+            problems, _ = gate.reviewer_problems(task, TASK.replace("profile: pilot", "profile: prod"),
+                                                examples, "copilot", {"codex", "copilot"})
+            self.assertEqual(problems, [])
+            self.assertEqual(gate.unstated_second_reviewers(examples), [])
+            self.assertEqual(gate.summary_round_problems(examples), [])
+            self.assertEqual(gate.captain_step_problems(task, "Review this candidate.", examples), [])
+
     def test_documented_delivery_commands_use_the_tools_argument_parser(self):
         root = CONTRACT.parents[1]
         for path in (CONTRACT, root / "references/sd/workflow.md", root / "skills/observer/SKILL.md",
