@@ -1,7 +1,7 @@
 ---
 id:
 title: One local command runs a real agent on a rebuilt stage dispatch at the released and the candidate package, for one cell, and reports what each arm did
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -75,9 +75,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item C as re-cut by the reform session, Paseo messages 734da3e8-63cb-4352-9c4b-f44b6004d7f5, 8691ee5c-fbe4-42c7-b567-e618d4da63de and bc65ce97-eea3-41d3-9e2c-ca38681e3c3f
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T04:43:45Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T09:07:26Z
+archived: 2026-11-14T09:07:26Z
 ---
 
 The package has no check that runs a model and looks at what its instructions cause. An earlier attempt (task validation-reads-pr-review-comments) had 7 valid runs of 12, two runs at the 1800-second cap, and a base that already passed 3 of 3, so it could show nothing (figures from `.context/dev2-reform/改革總計劃.md`, not re-measured here).
