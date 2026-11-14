@@ -62,6 +62,17 @@ gates:
                 id: briefing:state-branch-writes-carry-no-private-identifiers:validation:attempt-1:revision-1
                 digest: sha256:3c8789b3fa592c98bde1f56acb62470f4139ae00783dcabc118bd4ebd34dbbe5
                 room-ref: ./state-branch-writes-carry-no-private-identifiers/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:state-branch-writes-carry-no-private-identifiers:validation:1
+                briefing: briefing:state-branch-writes-carry-no-private-identifiers:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-14T08:00:53.812938Z"
+                decision: approve
+                reason: 'Captain 「合併 #871」 (chat with the second dev2 FO, 2026-11-14) answering the bound delivery question: merge accepted with what the question says it gives and does not give; D1 and D2 are asked after the merge; the Codex P2 decline stands.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T04:43:29Z
 ---
 
