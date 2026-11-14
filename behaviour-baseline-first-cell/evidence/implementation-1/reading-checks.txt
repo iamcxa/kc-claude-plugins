@@ -1,0 +1,75 @@
+Checks on the first-reading branch at commit b5489642f9ce99392f43ed52029ffd0d333bd38d (branch behaviour-first-reading, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository). No agent run, no credential, no model call.
+Parked launch layer: branch behaviour-first-cell at 9bd323c2e0cbe3a8e7414a395258662601730125 (carries the reviewer's findings as behaviour/LAUNCH-LAYER-HOLD.md).
+Not archived (private): runner source, case fixtures, the run list and the prepared run folders; reproduce: the commands below at that commit; `prepare` needs network and writes outside every repository.
+
+Prepared-folder checks (nine folders, three per arm, one `prepare` call; run ids are kept off this branch because they are the AC-4 markers):
+  - each folder has its own one-commit state and code case trees, cloned locally with the remote removed: 1 commit and 0 remotes in each.
+  - base and candidate dispatches differ only in the run path (diff after replacing the path printed nothing); the exported packages differ (15 files).
+  - the control folder has no package directory, its dispatch holds no `kc-dev-flow` text and no harness line, and its workflow README is cut to its frontmatter (1110 bytes).
+  - a first pass left `base.md` and `scope.txt` in each folder (the control's `scope.txt` still named the package and the harness text); the runner now deletes both after the build, and the nine folders were rebuilt at the commit above (the first nine, never started, were removed with their records).
+  - `prepare` refuses while the private repository has tracked changes, so every manifest carries the commit it was prepared from.
+
+$ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 (b) breach(es)
+  (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some
+falsifiers/installed-skill-transcript.jsonl: 1 (e) breach(es)
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+selfcheck ok
+exit=0
+
+# falsifier: answer.json with the model-run patterns deleted (a copy outside the repository)
+$ python3 -B <copy outside the repository>/behaviour/run_cell.py selfcheck <copy outside the repository>/behaviour/cells/ideation-flags-unprovable-criterion
+falsifiers/approved.md: PASS model-run=[] unflagged=[]  EXPECTED FAIL [2 ids] [2 ids]
+falsifiers/flagged.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [2 ids] []
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 (b) breach(es)
+  (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some
+falsifiers/installed-skill-transcript.jsonl: 1 (e) breach(es)
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+selfcheck FAILED
+exit=1
+
+$ python3 -B behaviour/run_cell.py prepare behaviour/cells/ideation-flags-unprovable-criterion --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/capped
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 (b) breach(es)
+  (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some
+falsifiers/installed-skill-transcript.jsonl: 1 (e) breach(es)
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+cap reached: 18 launch records, 9 more planned, cap 18
+exit=1
+
+$ python3 -B behaviour/run_cell.py prepare behaviour/cells/ideation-flags-unprovable-criterion --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/halted
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 (b) breach(es)
+  (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some
+falsifiers/installed-skill-transcript.jsonl: 1 (e) breach(es)
+  (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+cell halted: 2 INVALID trials
+exit=1
+
+$ python3 -B behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/leaky-transcript.jsonl
+breach (b) line 4: tool input reaches personal configuration or an installed copy: {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+read line 4: <home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md
+exit=1
+
+$ python3 -B behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/installed-skill-transcript.jsonl
+breach (e) line 1: installed package skill invoked through the Skill tool: {"skill": "kc-dev-flow-2:ideation"}
+exit=1
+
+# the reading rule on nine arm-count cases (base, cand, control as passes/valid)
+candidate leads 3/3 over 0/3, control 0/3  -> THE CANDIDATE'S RULE CHANGES IDEATION BEHAVIOUR
+candidate 2/3 over 0/3, control 1/3        -> THE CANDIDATE'S RULE CHANGES IDEATION BEHAVIOUR
+control passes as often (3/3)              -> CANNOT DISCRIMINATE (the no-skill control flags as often as the candidate)
+release passes 3/3                         -> CANNOT DISCRIMINATE (the release already flags in every run; nothing for the rule to change)
+candidate 2/3 over 1/3                     -> NO DIFFERENCE
+no arm flags                               -> NO DIFFERENCE
+candidate 0/3 under release 2/3            -> DIFFERENCE IN THE WRONG DIRECTION (the candidate flags less than the release)
+an arm has 1 valid run                     -> CANNOT DISCRIMINATE (an arm has fewer than 2 valid runs)
+2-run arms 0/2 and 1/2                     -> CANNOT DISCRIMINATE (the arms differ by more than one run but by less than two thirds)
