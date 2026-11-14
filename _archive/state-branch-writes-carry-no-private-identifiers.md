@@ -1,7 +1,7 @@
 ---
 id:
 title: A dispatch, its record and sealed evidence reach the public state branch without personal or private identifiers, and a hook refuses a push that carries one
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -72,8 +72,11 @@ gates:
                 reason: 'Captain 「合併 #871」 (chat with the second dev2 FO, 2026-11-14) answering the bound delivery question: merge accepted with what the question says it gives and does not give; D1 and D2 are asked after the merge; the Codex P2 decline stands.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T04:43:29Z
+verdict: PASSED
+completed: 2026-11-14T08:06:50Z
+archived: 2026-11-14T08:06:51Z
 ---
 
 The workflow state branch of this public repository receives new personal and private identifiers with every dispatch from two First Officers. An audit on 2026-11-14 (`.context/dev2-reform/phase1-version-and-path-audit.md` Part B, a research output; its counts are not re-measured here) reports a home-directory prefix in 4,646 files, names of private adopter repositories in up to 1,055 files each, private task slugs in 488, a personal email in 25 and tailnet hostnames in 6, and no token-like hit for the patterns it ran.
