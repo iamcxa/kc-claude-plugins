@@ -3,7 +3,7 @@ title: A question to the Captain outside a gate is one record in the task's stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'The Captain chose 「合併 #870」 (chat, 2026-11-14), answering 「決定：合併 #870（FO 在關卡以外問你的每個問題都留一筆紀錄：誰在等、卡住什麼、選項和建議；你回答後記上你的原話；一個指令列出所有還在等你的事）嗎？建議合併。同意即接受：和主線上未發版的改動一起等下個版本，發版並同步之前這條規則不會生效；啟動時要讀的說明句從 25 個字變成 41 個字；Codex 對這一版有一個中等發現我婉拒在這張修：你的修正裡照抄的問題如果本身含有引號（例如「某某任務」），檢查只會比對第一段引號裡的字，會把合格的修正擋下來，我的問題幾乎都有引號所以發版後一定會遇到，我另開一張任務在發版前修掉；它經過一次退回和兩次驗證，預算已用完，要在這張修就得再加一次驗證；Copilot 因額度不足沒有審；還沒有任何真實問題用新格式記錄過，等待時間的計算只用模擬資料驗過。 Squash merge with --match-head-commit 0b620345b538b67f4c6522d8b97028038f1ec17d, and removing its clean, pushed worktree. Approval also covers later external-review rounds on this PR, unless he says he merges or holds.」; Recommendation: followed.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-13T16:37:26Z
 worktree: .worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record
 pr: pr-merge:870
+verdict: PASSED
+completed: 2026-11-14T01:14:21Z
+archived: 2026-11-14T01:14:21Z
 ---
 
 ## Scope
