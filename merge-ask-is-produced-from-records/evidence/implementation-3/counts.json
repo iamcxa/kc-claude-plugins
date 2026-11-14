@@ -1,0 +1,61 @@
+{
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "candidate": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "merge": "57f796175985d1f5e0bab90cbffe96614ead17c6",
+  "files": [
+    {
+      "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+      "added": 7,
+      "removed": 16
+    },
+    {
+      "path": "kc-dev-flow-2/references/delivery-record.md",
+      "added": 149,
+      "removed": 0
+    },
+    {
+      "path": "kc-dev-flow-2/references/sd/workflow.md",
+      "added": 10,
+      "removed": 17
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/delivery_gate.py",
+      "added": 277,
+      "removed": 73
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/lint-skills.py",
+      "added": 2,
+      "removed": 0
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+      "added": 264,
+      "removed": 6
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_poc_readme.py",
+      "added": 45,
+      "removed": 58
+    },
+    {
+      "path": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "added": 7,
+      "removed": 12
+    },
+    {
+      "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+      "added": 5,
+      "removed": 11
+    }
+  ],
+  "added": 766,
+  "removed": 193,
+  "workflow_words": {
+    "c2f035b6612f5edb42220576b3414e993531ffd6": 6113,
+    "ad41870b72f19d8ad141efaa67cda3afb23f1d4d": 5982,
+    "5e9afd496a6901cc788252a77d84f355acbf0015": 5996
+  },
+  "branch": "spacedock-ensign/merge-ask-is-produced-from-records",
+  "repair_numstat": "3\t2\tkc-dev-flow-2/references/delivery-record.md\n77\t91\tkc-dev-flow-2/scripts/delivery_gate.py\n14\t7\tkc-dev-flow-2/scripts/test_delivery_gate.py\n"
+}

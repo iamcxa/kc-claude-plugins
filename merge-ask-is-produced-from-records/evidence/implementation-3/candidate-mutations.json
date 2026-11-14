@@ -1,0 +1,30 @@
+[
+  {
+    "mutation": "summary fields",
+    "detected": true,
+    "failures": 1,
+    "errors": 0,
+    "output": "summary-fields-mutation.log"
+  },
+  {
+    "mutation": "held ask filename",
+    "detected": true,
+    "failures": 1,
+    "errors": 0,
+    "output": "held-ask-filename-mutation.log"
+  },
+  {
+    "mutation": "dispatched head",
+    "case": "design-surfaces-task-dir-crash",
+    "control_exit": 0,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps Candidate ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8 differs from latest dispatched Candidate ffffffffffffffffffffffffffffffffffffffff\nfacts record cannot be bound: missing, changed or held evidence\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  },
+  {
+    "mutation": "dispatched head",
+    "case": "held-and-closed-tasks-leave-the-design-queue",
+    "control_exit": 0,
+    "exit": 1,
+    "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps Candidate 5859c3ccd25a86c79df3b36cafdda9762bd8142e differs from latest dispatched Candidate ffffffffffffffffffffffffffffffffffffffff\nfacts record cannot be bound: missing, changed or held evidence\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+  }
+]

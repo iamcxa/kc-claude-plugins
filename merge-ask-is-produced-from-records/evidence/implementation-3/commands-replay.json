@@ -1,0 +1,76 @@
+[
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/report-read.log"
+  },
+  {
+    "command": [
+      "<scratch>/sd-bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Review the saved validation report. Deliver the observed candidate? Squash merge with --match-head-commit ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8, and removing its clean, pushed worktree, unless he says he merges or holds.\nCopilot not read: Archive-input fixture; Captain decides whether to proceed unread.\nCopilot retry: available when the Captain confirms quota is back.\n",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/2.md\",\n    \"sha256\": \"90243a42e60fc5f254c0a0ba7289ae513fd42d16b7a282b24f0950e53f996116\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#860\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"691c0c45ed615e531e44d749b3b929e89038fca0aee46a11ae26d2800f54823c\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6832190961@ef9aaffcb\",\n      \"exit\": 0,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"scope_disclosure\": {\n    \"cited\": 0,\n    \"mark\": \"\\uff08\\u672a\\u5c0d\\u904e\\u7d00\\u9304\\uff09\",\n    \"marked\": 0\n  },\n  \"time\": \"2026-11-14T02:14:21Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"ef9aaffcbc48d6f17dd2e1dd744c4ffb5862d0f8\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"unchecked_counts\": 0,\n  \"validation\": {\n    \"dispatch\": \"validation-1.md\",\n    \"report_sha256\": \"2279a17f061ea76e58a9343c1c5fd1d251189810e242319e050a958063bba151\",\n    \"rounds\": 1,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/prepare.log"
+  },
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/report-read.log"
+  },
+  {
+    "command": [
+      "<scratch>/sd-bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "Review the saved validation report. Deliver the observed candidate? Squash merge with --match-head-commit 5859c3ccd25a86c79df3b36cafdda9762bd8142e, and removing its clean, pushed worktree, unless he says he merges or holds.\nCopilot not read: Archive-input fixture; Captain decides whether to proceed unread.\nCopilot retry: available when the Captain confirms quota is back.\n",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md",
+      "--summary",
+      "{\n  \"candidate\": [\n    \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\"\n  ],\n  \"captain_steps\": {\n    \"candidate_matches\": true,\n    \"path\": \"captain-steps/2.md\",\n    \"sha256\": \"2ce76d4b01c110417d7b323200faf843a376803805d63732ec0a90a5932b5662\"\n  },\n  \"ci\": [\n    {\n      \"conclusion\": \"SUCCESS\",\n      \"state\": null,\n      \"status\": \"COMPLETED\"\n    }\n  ],\n  \"external_rounds\": 1,\n  \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n  \"merge_result\": null,\n  \"pr\": \"iamcxa/kc-claude-plugins#856\",\n  \"pr_state\": {\n    \"baseRefName\": \"main\",\n    \"isDraft\": false,\n    \"mergeable\": \"MERGEABLE\"\n  },\n  \"public\": true,\n  \"question_sha256\": \"082b79270667929253f79f43f99c59af2434ee0610152a112b694e2b3b2260dd\",\n  \"required_checks\": [],\n  \"result\": {\n    \"exit\": 0,\n    \"problems\": 0,\n    \"unreadable\": 0\n  },\n  \"reviewers\": [\n    {\n      \"evidence\": \"summary:6844239189@5859c3ccd\",\n      \"exit\": 0,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"clean\",\n      \"reviewer\": \"codex\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"exit\": 5,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-run\",\n      \"reviewer\": \"copilot\",\n      \"scope\": \"pr\"\n    },\n    {\n      \"evidence\": null,\n      \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n      \"outcome\": \"not-observed\",\n      \"reviewer\": \"roborev\",\n      \"scope\": \"local\"\n    }\n  ],\n  \"role_calls\": {\n    \"exit\": 0\n  },\n  \"round_scope\": \"distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history\",\n  \"schema\": \"delivery-facts/v1\",\n  \"scope_disclosure\": {\n    \"cited\": 0,\n    \"mark\": \"\\uff08\\u672a\\u5c0d\\u904e\\u7d00\\u9304\\uff09\",\n    \"marked\": 0\n  },\n  \"time\": \"2026-11-14T02:14:23Z\",\n  \"tool_version\": \"0.41.0\",\n  \"trunk\": {\n    \"head\": \"5859c3ccd25a86c79df3b36cafdda9762bd8142e\",\n    \"position\": \"ahead\",\n    \"trunk\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"\n  },\n  \"unchecked_counts\": 0,\n  \"validation\": {\n    \"dispatch\": \"validation-3.md\",\n    \"report_sha256\": \"5ef3ca071162d13ca421483263b345a1a216b11750192d1e4578e2439c4a2376\",\n    \"rounds\": 3,\n    \"verdict\": \"PASSED\"\n  },\n  \"workflow_runs\": []\n}\n",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/prepare.log"
+  }
+]

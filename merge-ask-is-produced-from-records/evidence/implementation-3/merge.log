@@ -1,0 +1,23 @@
+commit 57f796175985d1f5e0bab90cbffe96614ead17c6
+Merge: ad41870b7 c2f035b66
+Author:     Kent <iamcxa@gmail.com>
+AuthorDate: Sat Nov 14 10:07:02 2026 +0800
+Commit:     Kent <iamcxa@gmail.com>
+CommitDate: Sat Nov 14 10:07:02 2026 +0800
+
+    merge: integrate main before shared question guards
+
+ ...on-rounds-and-the-timeline-prints-each-round.md |  75 ++++
+ ...ion-outside-a-gate-stays-open-until-answered.md |  64 ++++
+ .../references/captain-question-records.md         | 201 +++++++++++
+ kc-dev-flow-2/references/sd/workflow.md            |   8 +-
+ kc-dev-flow-2/scripts/design_surfaces.py           |  86 ++++-
+ kc-dev-flow-2/scripts/dispatch_stage.py            |  10 +-
+ kc-dev-flow-2/scripts/lint-skills.py               |   4 +
+ kc-dev-flow-2/scripts/role_triggers.py             |  44 ++-
+ kc-dev-flow-2/scripts/task_timeline.py             | 389 +++++++++++++++++++--
+ kc-dev-flow-2/scripts/test_design_surfaces.py      |  98 ++++++
+ kc-dev-flow-2/scripts/test_dispatch_stage.py       |  42 ++-
+ kc-dev-flow-2/scripts/test_role_triggers.py        |  11 +-
+ kc-dev-flow-2/scripts/test_task_timeline.py        | 262 +++++++++++++-
+ 13 files changed, 1234 insertions(+), 60 deletions(-)

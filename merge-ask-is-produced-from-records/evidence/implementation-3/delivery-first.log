@@ -1,0 +1,41 @@
+.........F..................................................................................................s.............................................................................................................................E........
+======================================================================
+ERROR: test_summary_boundaries_have_mutation_falsifiers (__main__.SummaryTests.test_summary_boundaries_have_mutation_falsifiers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3265, in test_summary_boundaries_have_mutation_falsifiers
+    self.assertEqual(self.ask(summary, text="Copilot review:18.", module=mutant)[0], 0)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3191, in ask
+    return self.run_cli("question", summary=summary, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3021, in run_cli
+    code = (module or gate).main(argv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/delivery_gate.py", line 1435, in main
+    return {"question": question, "check": check, "steps": steps, "merge-run": merge_run}[args.command](args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/delivery_gate.py", line 1294, in question
+    source = (read_facts_question if facts else read_summary_question)(task, args, question_text)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/delivery_gate.py", line 1265, in read_summary_question
+    reviewer_text = "\n".join(outside_fences(summary))
+                    ^^^^^^^^^
+NameError: name 'gate_text' is not defined
+
+======================================================================
+FAIL: test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head (__main__.CaptainGateTests.test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 2141, in test_relay_412_holds_without_record_or_at_later_head_and_passes_at_dispatched_head
+    no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 477, in variant_of
+    assert SOURCE.count(old) == 1, old
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)
+
+----------------------------------------------------------------------
+Ran 243 tests in 129.420s
+
+FAILED (failures=1, errors=1, skipped=1)

@@ -1,0 +1,98 @@
+[
+  {
+    "path": "docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0049-special-roles-and-stage-defaults-follow-one-model-table.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0051-the-merge-ask-check-requires-the-round-count.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0052-fo-answers-its-own-paseo-workers-permission-requests.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0062-a-gate-approval-grants-what-its-quoted-bound-question-says.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0064-a-round-three-declined-finding-becomes-a-backlog-task-only-with-a-bite.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0078-a-merge-ask-on-a-moved-trunk-carries-a-test-run-on-the-merge-result.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0080-stage-times-come-from-state-records-and-outside-gate-questions-are-recorded-when-asked.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0082-existing-item-effect-claims-cite-output-or-carry-a-tool-mark.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/adr/0084-pilot-ideation-builds-a-throwaway-probe-on-a-local-branch.md",
+    "disposition": "unaffected: no ruling text changes; its protected guard or budget/model rule remains in force. Text-summary fields and facts-record digests remain explicit format differences under the accepted task amendments."
+  },
+  {
+    "path": "docs/dev2-poc/README.md",
+    "disposition": "unaffected: adopter workflow sync is outside this package-only task; existing legacy command compatibility remains covered, with record-route adoption separately owned."
+  },
+  {
+    "path": "docs/dev2/README.md",
+    "disposition": "unaffected: adopter workflow sync is outside this package-only task; existing legacy command compatibility remains covered, with record-route adoption separately owned."
+  },
+  {
+    "path": "kc-dev-flow-2/README.md",
+    "disposition": "unaffected: public skill/extension/maintenance entrypoints and their arguments remain valid; this refactor changes no install, role or test command."
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/adoption.md",
+    "disposition": "unaffected: extension selection, install and adoption recipe did not change."
+  },
+  {
+    "path": "kc-dev-flow-2/skills/maintain-flow/SKILL.md",
+    "disposition": "unaffected: the same repository lint command enforces the combined workflow steps; no maintenance route change."
+  },
+  {
+    "path": "learning.md",
+    "disposition": "unaffected: repository lint/native-dispatch checks continue to exercise the cited practices; no learning rule is added or changed."
+  },
+  {
+    "path": "kc-dev-flow-2/references/delivery-record.md",
+    "disposition": "updated: one delivery-record contract owns the field/recipe/reader rules; workflow, observer and Copilot retain unique duties and reference it. The contract now names the shared question guard sequence."
+  },
+  {
+    "path": "kc-dev-flow-2/references/sd/workflow.md",
+    "disposition": "updated: one delivery-record contract owns the field/recipe/reader rules; workflow, observer and Copilot retain unique duties and reference it. The contract now names the shared question guard sequence."
+  },
+  {
+    "path": "kc-dev-flow-2/extensions/copilot/EXTENSION.md",
+    "disposition": "updated: one delivery-record contract owns the field/recipe/reader rules; workflow, observer and Copilot retain unique duties and reference it. The contract now names the shared question guard sequence."
+  },
+  {
+    "path": "kc-dev-flow-2/skills/observer/SKILL.md",
+    "disposition": "updated: one delivery-record contract owns the field/recipe/reader rules; workflow, observer and Copilot retain unique duties and reference it. The contract now names the shared question guard sequence."
+  }
+]

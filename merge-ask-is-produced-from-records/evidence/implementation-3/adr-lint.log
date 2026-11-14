@@ -1,0 +1,2 @@
+0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md: kc-dev-flow-2/scripts/delivery_gate.py has no pointer; add a comment line 'see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md'
+0071-the-merge-question-carries-its-delivery-check-record.md: kc-dev-flow-2/scripts/delivery_gate.py has no pointer; add a comment line 'see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md'

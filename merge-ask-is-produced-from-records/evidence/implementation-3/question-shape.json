@@ -1,0 +1,13 @@
+{
+  "candidate": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "source_sha256": "4bad61c18edfa65cec5aed5198ceb959f89c334223b169ac819bef9c054b91af",
+  "question_returns": 1,
+  "separate_facts_question": false,
+  "shared_calls": {
+    "reviewer_config": 1,
+    "text_problems": 1,
+    "reviewer_problems": 1,
+    "captain_step_problems": 1,
+    "merge_head_matches": 1
+  }
+}

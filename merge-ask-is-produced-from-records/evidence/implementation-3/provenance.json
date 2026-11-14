@@ -1,0 +1,30 @@
+{
+  "candidate": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "prior_candidate": "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+  "state_input_commit": "a7d6091d1de7516d9a85dccb37de6958f5be1ecb",
+  "source_sha256": "4bad61c18edfa65cec5aed5198ceb959f89c334223b169ac819bef9c054b91af",
+  "sd_plugin_commit": "4d158a484ec73e184861067f8ed1e20087fdc26a",
+  "sd_mod_sha256": "162f152b4573f51eb7e745a557cd06bfe53ff3390cddd9947c1bc80bdab9991a",
+  "sd_binary_sha256": "86974bf3eb974087bf47ab2fee5a5a026405651744ccf1a34a8525891be8050a",
+  "sd_version": "spacedock 0.27.2\nOS: darwin/arm64\nChannel: stable (spacedock@spacedock)\nRuntime: codex (CODEX_THREAD_ID)\nSandbox: none (safehouse available)\ncontract 3\n",
+  "ci_cost_per_pr": "not measured",
+  "publication": "none; no product/state push or PR mutation",
+  "progress_message": "One requested progress tool call after merge was rejected (user rejected MCP tool call); no retry or alternate send was attempted.",
+  "cache_policy": "Owned package __pycache__ directories cleared; final commands use python3 -B and PYTHONDONTWRITEBYTECODE=1 with task-owned TMPDIR",
+  "merge_parents": [
+    "ad41870b72f19d8ad141efaa67cda3afb23f1d4d",
+    "c2f035b6612f5edb42220576b3414e993531ffd6"
+  ],
+  "product_sha256": {
+    "kc-dev-flow-2/extensions/copilot/EXTENSION.md": "e9c405b76affaff5d0989a8915b7a05b94f1c3a5c016fb7cec88ef562c1d6a77",
+    "kc-dev-flow-2/references/delivery-record.md": "70c66ca7007a8a5f1987e89419c765df440106533fd57fbd45144e154353a392",
+    "kc-dev-flow-2/references/sd/workflow.md": "0d658e36943a2c8e988f1df1bf158905aafbbc861a38157e5b4590a9b885ae57",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "4bad61c18edfa65cec5aed5198ceb959f89c334223b169ac819bef9c054b91af",
+    "kc-dev-flow-2/scripts/lint-skills.py": "d4c15ecbad5205e60b776095f0973fd6da5ad2df7687b3d1e996de316001bc54",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "2215e8148f351f100aa4f743b8ae229557c882f7d811aae877f52db68c52eda8",
+    "kc-dev-flow-2/scripts/test_poc_readme.py": "4018706d0bc15cbc28d699ba40b6600a44c08cd03900fc3a6d7effe2cac5ed30",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "640edd6b33a56ab59266ff5d7578efe874311fcdf188de5512b91da93f112e12",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "54ccdcf6d7ec25fdad35fd3688d4449fe3555a91b5e1f41e5ea7ce0d1c24e546"
+  }
+}

@@ -1,0 +1,24 @@
+..F...
+======================================================================
+FAIL: test_known_quota_refusal_needs_unread_and_retry_in_question (test_delivery_gate.RecordRouteParityTests.test_known_quota_refusal_needs_unread_and_retry_in_question)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<product-worktree>/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3644, in test_known_quota_refusal_needs_unread_and_retry_in_question
+    self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+AssertionError: Lists differ: [0, 1] != [1, 1]
+
+First differing element 0:
+0
+1
+
+- [0, 1]
+?  ^
+
++ [1, 1]
+?  ^
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 7.797s
+
+FAILED (failures=1)

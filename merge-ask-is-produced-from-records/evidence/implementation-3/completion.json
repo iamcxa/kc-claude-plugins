@@ -1,0 +1,16 @@
+{
+  "candidate": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "commands": 29,
+  "unit_cases": 1493,
+  "unit_passed": 1482,
+  "optional_skips": 11,
+  "non_unittest_scripts": [
+    "lint-skills",
+    "test_sd_dispatch",
+    "test_observer_recovery"
+  ],
+  "complete_at": "2026-11-14T02:27:06.132241+00:00",
+  "all_commands_exit": 0,
+  "ci_cost_per_pr": "not measured",
+  "hosted_ci": "not run; FO-owned"
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "task": "design-surfaces-task-dir-crash",
+    "base_exit": 1,
+    "probe_exit": 0,
+    "failure": "baseline requires the missing hand-written confirmation and round fields"
+  },
+  {
+    "task": "held-and-closed-tasks-leave-the-design-queue",
+    "base_exit": 1,
+    "probe_exit": 0,
+    "failure": "baseline requires the missing hand-written confirmation and round fields"
+  }
+]

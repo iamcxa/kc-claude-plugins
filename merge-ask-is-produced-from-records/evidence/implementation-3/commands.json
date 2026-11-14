@@ -1,0 +1,222 @@
+[
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/report-read.log"
+  },
+  {
+    "command": [
+      "<scratch>/sd-bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:691c0c45ed615e531e44d749b3b929e89038fca0aee46a11ae26d2800f54823c>",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:24dac259a55770ec14fc5c03c699fafaa0dac5179d4fde2eba7de259fb3889c5>",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-design-surfaces-task-dir-crash/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-design-surfaces-task-dir-crash/prepare.log"
+  },
+  {
+    "command": [
+      "bash",
+      "--noprofile",
+      "--norc",
+      "-c",
+      "exec \"$@\"",
+      "fixture",
+      "python3",
+      "-B",
+      "-c",
+      "from pathlib import Path; import sys; print(len(Path(sys.argv[1]).read_bytes()))",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/report-read.log"
+  },
+  {
+    "command": [
+      "<scratch>/sd-bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:082b79270667929253f79f43f99c59af2434ee0610152a112b694e2b3b2260dd>",
+      "--artifact",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:ab9ad984c36d99d27efc9e7da066541cd7863aee7878bb8cd217713a66794d35>",
+      "--reference",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow/.spacedock-state/task/merge/ask-1.json",
+      "--workflow-dir",
+      "<scratch>/repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/workflow"
+    ],
+    "exit": 0,
+    "output": "repair-final-replay-complete-held-and-closed-tasks-leave-the-design-queue/prepare.log"
+  },
+  {
+    "command": [
+      "<scratch>/sd-bin/spacedock",
+      "gate",
+      "prepare",
+      "task",
+      "--question",
+      "<omitted body; sha256:c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1>",
+      "--artifact",
+      "<scratch>/live-complete-state/workflow/.spacedock-state/task.md",
+      "--summary",
+      "<omitted body; sha256:217519369b6b36b20b3105ed1e523ad1ab441eafc057c2f1860eef419668e3a5>",
+      "--reference",
+      "<scratch>/live-complete-state/workflow/.spacedock-state/task/merge/observation-1.json",
+      "--workflow-dir",
+      "<scratch>/live-complete-state/workflow"
+    ],
+    "exit": 0,
+    "output": "live-complete-state/prepare.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "c2f035b6612f5edb42220576b3414e993531ffd6"
+    ],
+    "exit": 0,
+    "output": "adr-lint-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "<user-home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "<state>/merge-ask-is-produced-from-records.md"
+    ],
+    "exit": 0,
+    "output": "number-guards-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/comment_ratio.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "HEAD",
+      "--workflow-dir",
+      "<user-home>/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "comment-ratio-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/design_surfaces.py",
+      "check",
+      "<state>/merge-ask-is-produced-from-records.md"
+    ],
+    "exit": 0,
+    "output": "design-surfaces.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/doc_impact.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "HEAD"
+    ],
+    "exit": 0,
+    "output": "doc-impact.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<package>/scripts/role_triggers.py",
+      "<state>",
+      "merge-ask-is-produced-from-records"
+    ],
+    "exit": 0,
+    "output": "role-triggers-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<scratch>/shared_guards.py"
+    ],
+    "exit": 0,
+    "output": "shared-guards-final.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<scratch>/goal_and_mutation.py"
+    ],
+    "exit": 0,
+    "output": "goal-current-base.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<scratch>/candidate_mutations.py"
+    ],
+    "exit": 0,
+    "output": "candidate-mutations-run.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "kc-dev-flow-2/scripts",
+      "-p",
+      "test_delivery_gate.py",
+      "-k",
+      "RecordRouteParityTests"
+    ],
+    "exit": 0,
+    "output": "parity-final-3.log"
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "<scratch>/run_ci.py"
+    ],
+    "exit": 0,
+    "output": "ci-final-run.log",
+    "detail": "29 command/exit/log joins in ci-tests-final.json"
+  }
+]

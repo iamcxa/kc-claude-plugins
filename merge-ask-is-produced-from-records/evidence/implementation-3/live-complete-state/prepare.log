@@ -1,0 +1,4 @@
+room=<scratch>/live-complete-state/workflow/.spacedock-state/task/review/validation/briefing-1
+briefing=briefing:task:validation:attempt-1:revision-1
+digest=sha256:5c62f47acba864d1d68cd7cf91a6c0962631dec666aab8c6c4cff958506ffd39
+state=open

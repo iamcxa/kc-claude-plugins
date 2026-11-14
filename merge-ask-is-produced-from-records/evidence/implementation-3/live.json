@@ -1,0 +1,145 @@
+{
+  "pr": 865,
+  "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+  "check_exit": 1,
+  "question_unchanged": true,
+  "record": {
+    "candidate": [
+      "7818dd08adaae8adb28008635be17ca8052b089a"
+    ],
+    "captain_steps": null,
+    "ci": [
+      {
+        "conclusion": "SUCCESS",
+        "state": null,
+        "status": "COMPLETED"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "state": null,
+        "status": "COMPLETED"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "state": null,
+        "status": "COMPLETED"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "state": null,
+        "status": "COMPLETED"
+      },
+      {
+        "conclusion": "SKIPPED",
+        "state": null,
+        "status": "COMPLETED"
+      },
+      {
+        "conclusion": "SUCCESS",
+        "state": null,
+        "status": "COMPLETED"
+      }
+    ],
+    "external_rounds": 0,
+    "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+    "merge_result": null,
+    "pr": "iamcxa/kc-claude-plugins#865",
+    "pr_state": {
+      "baseRefName": "main",
+      "isDraft": false,
+      "mergeable": "MERGEABLE"
+    },
+    "public": true,
+    "question_sha256": "c8394114cb7401e160a8f272d1e495093e011ff28552cfbb8fe62fce81163af1",
+    "required_checks": [
+      {
+        "bucket": "pass"
+      },
+      {
+        "bucket": "pass"
+      }
+    ],
+    "result": {
+      "exit": 1,
+      "problems": 2,
+      "unreadable": 0
+    },
+    "reviewers": [
+      {
+        "evidence": null,
+        "exit": 4,
+        "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+        "outcome": "pending",
+        "reviewer": "codex",
+        "scope": "pr"
+      },
+      {
+        "evidence": null,
+        "exit": 4,
+        "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+        "outcome": "pending",
+        "reviewer": "copilot",
+        "scope": "pr"
+      },
+      {
+        "evidence": null,
+        "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+        "outcome": "not-observed",
+        "reviewer": "roborev",
+        "scope": "local"
+      }
+    ],
+    "role_calls": {
+      "exit": 0
+    },
+    "round_scope": "distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history",
+    "schema": "delivery-facts/v1",
+    "scope_disclosure": {
+      "cited": 0,
+      "mark": "\uff08\u672a\u5c0d\u904e\u7d00\u9304\uff09",
+      "marked": 0
+    },
+    "time": "2026-11-14T02:17:29Z",
+    "tool_version": "0.41.0",
+    "trunk": {
+      "head": "7818dd08adaae8adb28008635be17ca8052b089a",
+      "position": "ahead",
+      "trunk": "c2f035b6612f5edb42220576b3414e993531ffd6"
+    },
+    "unchecked_counts": 0,
+    "validation": {
+      "dispatch": "validation-1.md",
+      "report_sha256": "b102613f332ae377168e551561f35ffc83b519d5b01549120fef5d1c6d455863",
+      "rounds": 1,
+      "verdict": "not-observed"
+    },
+    "workflow_runs": [
+      {
+        "conclusion": "success",
+        "id": 43539041802,
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "id": 43539041800,
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "id": 43539041649,
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "id": 43539041625,
+        "status": "completed"
+      }
+    ]
+  },
+  "question_exit": 1,
+  "prepare_exit": 0,
+  "bound_summary_sha256": "217519369b6b36b20b3105ed1e523ad1ab441eafc057c2f1860eef419668e3a5",
+  "record_sha256": "217519369b6b36b20b3105ed1e523ad1ab441eafc057c2f1860eef419668e3a5",
+  "reference_count": 1,
+  "limit": "Actual unmocked read-only public GitHub calls. Nonzero check/question hold the delivery route. Native prepare was called directly only as a local JSON-binding experiment, not a passing delivery preflight or real gate. No product validation or approval is claimed."
+}

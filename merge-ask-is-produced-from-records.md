@@ -518,3 +518,34 @@ Canonical close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-2 (1674771 bytes)
 Evidence: evidence/implementation-2/ (89 files, 138.7 KiB)
 ```
+
+
+## Stage Report: implementation
+
+- DONE: Merge origin/main into the assigned branch with a merge commit, preserve PRs 864, 867, 868 and 870, and recount workflow words and lint steps.
+  Merge 57f796175985d1f5e0bab90cbffe96614ead17c6 joins prior ad41870b7 to c2f035b6612f5edb42220576b3414e993531ffd6; only lint steps conflicted. Both task cuts and both main steps remain; lint is 5996/5996 (merge.log; counts.json).
+- DONE: Consolidate the two question routes into one question function with one mandatory guard sequence and one final result, fed by text-summary and facts-record readers.
+  Candidate 5e9afd496a6901cc788252a77d84f355acbf0015 removes facts_question/early return, retains format-specific fields/digests, and adds no question-time PR reread (question-shape.json; implementation/repair-3.md).
+- DONE: Run the six paired cases through both inputs and show that mutating any one shared guard fails both routes.
+  All six confirmed classes pass; eight isolated shared-guard omissions each make both unsafe inputs pass after passing producer controls, detecting the same omission in both routes (parity-final-3.log; shared-guard-mutations.json).
+- DONE: Every acceptance criterion green with its named evidence and each falsifier run with python3 -B after caches were cleared.
+  AC-6: two public archive-input replays pass check/question/native binding with unchanged question/JSON digests; current-main question-only controls hold. Summary/local-round/held-filename/head mutations are caught. Live public check/question hold 1/1; direct native prepare 0 proves transport only (replays.json; goal-check.json; mutation.json; candidate-mutations.json; live.json).
+- DONE: Run all 29 CI-listed commands, repository lint, installed ADR lint, number guards, comment ratio, design/role checks and document-impact review.
+  At 5e9afd496: 1482 unit passes, 11 optional skips, two native scripts and lint pass; ratio 3/550=0.5%, max 5%. Every listed document has a disposition. Initial failures/network limits and final passing reruns are retained (ci-tests-final.json; commands.json; doc-impact-dispositions.json).
+- DONE: Commit locally on the assigned branch, stay within the nine product paths plus merge imports, retain the pin-deletion experiment, update prepared PR text, and report measurements.
+  Product commits 57f796175, 7bf17127f and 5e9afd496; implementation/pr.md preserves the separate pin paragraph. Nine task paths +766/-193; consolidation three +94/-100; workflow current main 6113 to 5996. No new ADR/version/CI change/budget raise; CI cost per PR not measured.
+- DONE: Retain public evidence, close the owned scratch root and prepare the path-scoped state commit.
+  evidence/implementation-3 has 104 normalized public/synthetic files with SHA256SUMS; canonical close exits 0 (implementation/repair-3-close.txt). The requested post-merge progress send was attempted once and rejected, not delivered; no alternate send.
+- SKIPPED: Push product/state, update the remote Draft PR, run RoboRev/hosted CI, request review, mark ready, merge or claim independent validation.
+  FO owns these actions. Readback of existing PR 869 is OPEN/Draft at ad41870b72f19d8ad141efaa67cda3afb23f1d4d; this candidate remains local. Human truth/waiver authority, private rollout, downstream adoption and green live delivery remain unproven.
+
+### Summary
+
+Main is merged and both question inputs use one guard sequence; the complete final suite and all bounded falsifiers pass at 5e9afd496a6901cc788252a77d84f355acbf0015. This complete report supersedes earlier implementation assurance for the delivered candidate, preserving prior runs and their limits; first attempts exposed stale mutation anchors, a legacy fixture-location difference and required ADR pointers, all corrected before the final full run. FO publication, RoboRev, hosted CI and independent validation remain owed.
+
+Canonical close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (17793646 bytes)
+Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
+```
