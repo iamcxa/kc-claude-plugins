@@ -101,6 +101,24 @@ class StateGuardTests(unittest.TestCase):
         self.assert_private_output_absent(result.stderr)
         self.assertEqual(before, self.git(self.state, 'ls-remote', 'origin').stdout)
 
+    def test_gzip_header_identifiers_refuse_and_clean_gzip_commits(self):
+        self.install('--refuse', 'private-repo,home')
+        token = (self.private + '42').encode()
+        clean = gzip.compress(b'public evidence\n', mtime=0)
+        for flag, field in ((8, token + b'\0'), (16, token + b'\0'),
+                            (4, len(token).to_bytes(2, 'little') + token)):
+            header = clean[:3] + bytes([flag]) + clean[4:10] + field + clean[10:]
+            for layer, packed in enumerate((header, clean + header, gzip.compress(header, mtime=0))):
+                with self.subTest(flag=flag, layer=layer):
+                    path = self.state / 'evidence.gz'
+                    path.write_bytes(packed)
+                    refused = self.commit('evidence.gz', expected=1)
+                    self.assertIn('"evidence.gz" adds a private-repo identifier', refused.stderr)
+                    self.assert_private_output_absent(refused.stderr)
+                    path.write_bytes(gzip.compress(f'public evidence {flag} {layer}\n'.encode(), mtime=0))
+                    self.commit('evidence.gz')
+        self.git(self.state, 'push', 'origin', 'spacedock-state/test')
+
     def test_no_hunk_changed_text_refuses_commit_and_push(self):
         cases = (('size', b'public old\n' * 16, None, 64),
                  ('attribute', b'public old\n', '* -diff\n', None),
