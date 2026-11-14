@@ -1,0 +1,18 @@
+# per-reader word counts; commands: wc -w over the FO file list; 'spacedock dispatch show-stage-def --workflow-dir <dir with README.md> --stage <stage> | wc -w'
+base=7e0f9c2 candA=cff6d61 candB=728cb8d
+base FO    11722
+base ideation      694
+base implementation     1371
+base validation     1525
+base references/sd/workflow.md     6113
+base peers     1348
+base skills/dev/SKILL.md      801
+cand FO    11743
+cand ideation      724
+cand implementation     1398
+cand validation     1552
+cand references/sd/workflow.md     6186
+cand peers     1334
+cand skills/dev/SKILL.md      763
+candB FO    11756
+candB references/sd/workflow.md     6199
