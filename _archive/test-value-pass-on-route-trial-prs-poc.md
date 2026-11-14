@@ -1,7 +1,7 @@
 ---
 id:
 title: Does a test-value pass flag tests that give false confidence in the tests of PRs 858 to 861 plus one (read-only findings)
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -50,9 +50,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item A from the reform session, Paseo message 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T02:35:14Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T04:39:58Z
+archived: 2026-11-14T04:39:59Z
 ---
 
 The package holds 1,455 test functions in 24,684 test lines against 10,728 product lines; 258 use mocks or fakes and 21 are text containment; two tasks were blocked by text-shape assertions in one file in one evening (brief C3, figures from test-audit.md and proposal.md, not re-measured here). Nothing at write time asks whether a new test fails when the behaviour breaks.
