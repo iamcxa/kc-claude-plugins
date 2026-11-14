@@ -115,6 +115,12 @@ Asked: 「要不要給這張第二次實作派工？ 同意即接受：合併檢
 Supersedes: none
 Budget: 2 implementation and 2 validation cycles
 
+### Amendment 4 — 2026-11-14, chat
+Captain: 「合併檢查存紀錄那張預算改成 3 implementation and 2 validation cycles：新 worker 解衝突並把兩套提問檢查合成一套」 (chat, 2026-11-14)
+Asked: 「#869 合併檢查存紀錄：要不要給第三輪實作」 「建議選第一項。新 worker 為了解衝突本來就得讀懂這段程式，順手把兩套提問檢查合成一套，可以在驗證前把「一直漏檢查」的病根拿掉；這張只有 2 次驗證額度。**變差的是**：改動比較大，我估多 30 到 40 分鐘（估計，沒量過），而且這張已經遠超過一般任務的 2.5 到 3 小時。」 with FO's recommended option 「給第三輪：解衝突＋合成一套檢查（建議）」
+Supersedes: none
+Budget: 3 implementation and 2 validation cycles
+
 ## Not provable now
 
 - **AC-1:** independent generation for the nine event-time deliveries; complete compatible source captures do not currently exist in a common contract. Authenticated historical provider fetches and new real delivery observations were outside the probe grant.
