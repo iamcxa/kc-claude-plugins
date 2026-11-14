@@ -991,6 +991,8 @@ def exercise(base, binary, sd_root):
         run(["python3", "-B", checker, "check", "--seed", template_seed], repo)
 
         def parity(body, extra=""):
+            body = re.sub(r"(\*\*AC-[^*]+\*\*[^\n]*)",
+                          r"\1 Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.", body)
             entity.write_text(header + "\n## Design\n\n### Worth questions\nAsked: fixture request; without: count absent; premise: count varies, inspect one fixture.\n" + body + report + extra)
             scanned = run([binary, "status", "--workflow-dir", repo, "--read", entity.stem, "--ac-scan", "--json"],
                           repo, expected=None)

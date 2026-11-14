@@ -143,7 +143,7 @@ class DispatchStageTests(unittest.TestCase):
     def test_worth_requirement_uses_native_stage_for_yaml_status_values(self):
         original = self.entity.read_text()
         design = ("\n## PRFAQ\nA bounded CLI result.\n\n## Acceptance criteria\n"
-                  "**AC-1** Bounded result. Evidence: one CLI run.\n")
+                  "**AC-1** Bounded result. Evidence command: `python3 check.py`; exit 0; `evidence/result.log`.\n")
         for path in (self.entity, self.folder / "index.md"):
             path.parent.mkdir(exist_ok=True)
             for status in ("ideation", "ideation # ready for review", "'ideation' # review", '"ideation" # review'):

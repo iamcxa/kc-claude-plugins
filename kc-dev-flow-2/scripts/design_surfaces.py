@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Check a dev2 task file: the FO-alignment record, the artifacts its Surfaces: line owes, its acceptance criteria and any Captain amendments; exit 1 on any violation.
 
+An unapproved Pilot design in ideation needs a command, observed exit and output path per criterion, or a named reason under 'Not provable now'.
+
 While the task's frontmatter says `status: ideation` it also holds a `## Scope` line (the first such heading outside a code fence) added or removed after the backlog gate closed.
 The baseline is the task file at the commit that added the newest `### Amendment N — <date>` dated on or after the backlog approval
 (the working copy when that heading is uncommitted), else at the sha the backlog briefing binds (`git-root://state/<sha>/<path>`);
@@ -188,6 +190,54 @@ def check_criteria(name, lines, errors):
     if not declared:
         errors.append(f"{name}: '## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)")
     return declared
+
+
+PROOF_EXIT = re.compile(r"\bexit(?:ed| code)?\s*[:=]?\s*-?\d+", re.I)
+PROOF_PATH = re.compile(r"[\w.<>~-]*/[\w./<>-]*\w|\b[\w-]+(?:\.[\w-]+)*\.(?:log|json|jsonl|txt|md|out|err|stdout|stderr|diff|xml|csv|html|png)\b")
+PROOF_COMMAND = re.compile(r"\bcommand\b|`[^`\n]+`", re.I)
+FALSIFIER_PART = re.compile(r"Falsifiers?\b:?.*?(?=Current evidence:|Evidence(?: command)?:|$)", re.S | re.I)
+UNPROVABLE_HEADING = re.compile(r"^[ \t]*#{2,4}[ \t]*Not provable now\b", re.I)
+
+
+def unprovable_entries(lines):
+    named, inside, level = {}, False, 0
+    for line in unfenced(lines):
+        head = re.match(r"^[ \t]*(#{1,6})[ \t]", line)
+        if UNPROVABLE_HEADING.match(line):
+            inside, level = True, len(head.group(1))
+            continue
+        if inside and head and len(head.group(1)) <= level:
+            inside = False
+        if inside:
+            for found in AC_ID.findall(line):
+                if len(words_of(AC_ID.sub("", line))) >= 3:
+                    named[found] = line.strip()
+    return named
+
+
+def proof_gaps(lines):
+    body = section(lines, AC_HEADING) or []
+    unprovable = unprovable_entries(lines)
+    gaps = []
+    for key, block in criterion_blocks(unfenced(body)).items():
+        claim = FALSIFIER_PART.sub(" ", block)
+        missing = [field for field, rx in (("command", PROOF_COMMAND), ("exit", PROOF_EXIT), ("output path", PROOF_PATH))
+                   if not rx.search(DECLARATION_LINE.sub("", claim, count=1) if field == "command" else claim)]
+        if missing and key not in unprovable:
+            gaps.append((key, missing))
+    return gaps
+
+
+def pilot_ideation(front):
+    return all(re.search(rf"""^{key}:[ \t]*(?:{value}|'{value}'|"{value}")(?:[ \t]+#[^\n]*)?[ \t]*$""",
+                         front, re.M)
+               for key, value in (("profile", "pilot"), ("status", "ideation")))
+
+
+def design_approved(text):
+    fm, _ = decision_ledger.split_task(text)
+    return any(e["kind"] == "resolution" and e["stage"] == "ideation" and e.get("decision") == "approve"
+               for e in decision_ledger.gate_entries(fm or []))
 
 
 def declarations(lines):
@@ -1288,6 +1338,11 @@ def check_task(path, seed=False, notes=None):
                 errors.append(f"{path.name}: cannot read stage for Worth questions: {exc}")
         if needed:
             errors.append(f"{path.name}: design needs '### Worth questions': Captain words served, what breaks without each part, and the premise's cheap test")
+    if front and pilot_ideation(front.group(1)) and not design_approved(text):
+        for key, missing in proof_gaps(lines):
+            errors.append(f"{path.name}: Pilot criterion {key} has no {', '.join(missing)} in its proof record "
+                          "(command, observed exit <n>, output path; Falsifier text does not count) and is not named "
+                          "with a reason under a 'Not provable now' heading")
     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
         summary = check_security(path, plain, declared, errors)
         if summary and notes is not None:
