@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:readme-rule-retirement-audit-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:readme-rule-retirement-audit-poc-validation-1
+              briefing:
+                id: briefing:readme-rule-retirement-audit-poc:validation:attempt-1:revision-1
+                digest: sha256:f933ebfe242e33b618fb0f90c0ae73ff7f485ff272dc0161601a5b7948282450
+                room-ref: ./readme-rule-retirement-audit-poc/review/validation/briefing-1
 started: 2026-11-14T02:35:03Z
 ---
 

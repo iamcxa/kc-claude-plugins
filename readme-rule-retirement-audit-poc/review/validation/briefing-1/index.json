@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:readme-rule-retirement-audit-poc:validation:attempt-1:revision-1",
+  "question": "Close this read-only POC with its validated list delivered for the Captain's ruling? (decided by FO under the Captain's grant; no merge, no pull request, nothing deleted)",
+  "artifacts": [
+    {
+      "id": "artifact:readme-rule-retirement-audit-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e4e23dcfeb7ae832be82e1e6c977eb62369aada1/readme-rule-retirement-audit-poc.md",
+      "rev": "sha256:99958f6019b60a59e620a9a0922b05133d7f6750aeb4e34dd7aa7bdbe61ed082",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED with limits (Claude Sonnet, independent of the Codex author): 93 rule sentences in six README sections, M=1 covered whole (row 71, a migration freeze enforced by the number-guards check; confirmed on the validator's own fixture), K=68 bytes; range M 0 to 2 depending on how covered whole is read (row 86 arguable, 108 bytes). Four of six sections re-counted and matching; all 146 probe exits reproduced with the author's harness, which is not an independent check. Not verified: two sections' sentence counts, the nine form-check families, the covered-part and uncovered tallies beyond a sample of eight, and that removing a sentence changes no behaviour. Reading: in these sections the README is not restating enforced checks; removal by coverage would free at most 176 bytes. No product file changed; no pull request."
+    }
+  ]
+}
