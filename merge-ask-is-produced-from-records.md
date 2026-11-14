@@ -130,6 +130,10 @@ Budget: 3 implementation and 2 validation cycles
 - **AC-5:** total dynamic words per lifecycle moment, elapsed-time savings, production integration, hosted CI, release/adoption and public-evidence classification for private consumers. No CI definition changed; cost per PR was not measured.
 - Mermaid rendered layout: source/prose semantics were checked, rendering was not run.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-11-14): validation-1 on #869 head 5e9afd496 recommended REJECTED with one Material finding (kind doc): F1 the positive second-reviewer declaration form was removed from the workflow text and is not defined in the delivery record contract, so a reader of the contract cannot write the line both question inputs require (blind reader question 11). The shared guard sequence, the six classes and AC-6 passed. FO authorises the repair to the implementation-3 worker: define the form in the contract; validation-2 rechecks; a second rejection stops the task.
+
 ## Design
 
 ### Outcome and PRFAQ
