@@ -1,0 +1,10 @@
+Checks on the stored reading-v2 runs at commit 02fcf256d8ca2aa4f4d44edd64d7162e3c049b1d (branch behaviour-reading-v2, private working repository); exit codes only, no run content.
+Not archived (private): the stored runs, their transcripts, the table and the limits file; reproduce: the commands below in the private working repository at that commit.
+
+$ table behaviour/cells/ideation-flags-unprovable-criterion-v2 | cmp - table.md : exit=0
+$ first reading's table | cmp - its table.md : exit=0
+$ scan behaviour/cells/ideation-flags-unprovable-criterion-v2 : exit=0
+$ selfcheck behaviour/cells/ideation-flags-unprovable-criterion-v2 : exit=0
+suspected-key lines in the stored files: 0
+manifests: v2 6, first reading 10; launch records 16 of 18
+tracked files changed: 0
