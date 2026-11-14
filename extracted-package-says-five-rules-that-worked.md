@@ -62,6 +62,20 @@ gates:
                 id: briefing:extracted-package-says-five-rules-that-worked:validation:attempt-1:revision-1
                 digest: sha256:a6be7836697361519513da244558c44adff0603aee4cfa0b307a874630bfd863
                 room-ref: ./extracted-package-says-five-rules-that-worked/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extracted-package-says-five-rules-that-worked:validation:1
+                briefing: briefing:extracted-package-says-five-rules-that-worked:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T14:04:22.254135Z"
+                decision: approve
+                reason: Closing gate inside scope 3 under the Captain's grant; the reform session ruled merge after a passing validation and the host step past the box; the merge is to the private working repository, not a public one.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item A from the reform session, Paseo messages c1a822fa-6db2-4b56-9815-785546bdf255 and e8c00c89-65b0-415e-ad01-8a55c37fbee6
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T12:18:22Z
 ---
 
