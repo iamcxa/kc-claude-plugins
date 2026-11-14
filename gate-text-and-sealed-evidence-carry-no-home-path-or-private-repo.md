@@ -40,6 +40,20 @@ gates:
                 id: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:attempt-1:revision-1
                 digest: sha256:ada38ecbe7b84eb3b3fac33923eff2307eac2534c444ff85a55ae7e2da247b8f
                 room-ref: ./gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:1
+                briefing: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T10:22:30.536549Z"
+                decision: approve
+                reason: Design check exit 0; the design corrects the task's premise with evidence and is three files with no overlap; the reform session confirmed it and ruled D2; D1 stays the Captain's; nothing is installed or flipped by this gate.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 item 3 from the reform session, Paseo messages fa01bfc1-0e7d-4197-9636-a25f2818c562 and 77b18f0b-34ca-4f2f-9607-d1ebcba63eca
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-14T09:53:13Z
 ---
 
