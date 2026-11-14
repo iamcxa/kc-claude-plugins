@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-11-13T16:37:26Z
 worktree: .worktrees/spacedock-ensign-captain-question-outside-a-gate-is-an-open-record
-pr: iamcxa/kc-claude-plugins#870
+pr: pr-merge:870
 ---
 
 ## Scope
