@@ -6,3 +6,13 @@ profiles/prod.md line 29); none asks a Pilot design to run each criterion's proo
 Changes between the release and the candidate under skills/ideation (git diff kc-dev-flow-2-v0.41.0 origin/main):
   profiles/pilot.md gains a `## Probe` section (falsify the riskiest assumption first, record each hypothesis and result);
   principles.md drops one sentence. scripts/design_surfaces.py changes by 86 lines.
+
+Second check, case-time package against the release, on every path an ideation worker reads or runs:
+  git diff --stat kc-dev-flow-2-v0.35.0 kc-dev-flow-2-v0.41.0 -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/skills/ideation kc-dev-flow-2/scripts/design_surfaces.py kc-dev-flow-2/references/profiles/pilot.md
+  -> 4 files, 253 insertions, 43 deletions (workflow.md 50, design_surfaces.py 228, ideation principles.md 9, profiles/pilot.md 9).
+  Added lines matching criteri|evidence|falsif|proof|provable|verified|model run|live|replay: budgets and Symptom counting,
+  dispatch_stage.py use, gate-content wording, delivery_gate.py question, and design_surfaces.py checks on amendment
+  markers and the Captain ask form. None asks that a criterion's proof be run before approval or that an unrunnable one be flagged.
+Case clone check (scratch, before close): a full clone of the public repository reaches the case's superseding amendment
+  commit (`git cat-file -e` succeeded), carries 170 tags, and the code tree at the case's code commit holds kc-dev-flow-2/,
+  CLAUDE.md and AGENTS.md. The design therefore builds each case repository from the single pinned tree, with no history.
