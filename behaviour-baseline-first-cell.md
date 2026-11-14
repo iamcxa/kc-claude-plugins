@@ -1,7 +1,7 @@
 ---
 id:
 title: One local command runs a real agent on a rebuilt stage dispatch at the released and the candidate package, for one cell, and reports what each arm did
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -53,7 +53,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item C from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-14T04:43:45Z
 ---
 
