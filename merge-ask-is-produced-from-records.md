@@ -549,3 +549,44 @@ Canonical close output (exit 0):
 Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/implementation-3 (17793646 bytes)
 Evidence: evidence/implementation-3/ (104 files, 185.8 KiB)
 ```
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #869 head 5e9afd49 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at 5e9afd496a6901cc788252a77d84f355acbf0015: active AC-6 behavior passes, but amendment 2 unique-rule preservation fails F1; full verdict and limits in validation/report.md, primary output in evidence/validation-1/.
+- FAILED: Preserve each unique delivery rule when replacing workflow, observer and Copilot copies with one shared boundary contract
+  F1: the positive second-reviewer declaration form was removed from workflow.md but not defined in delivery-record.md; blind question 11 and missing-declaration.json reproduce both routes holding 1/1 without it and passing 0/0 with it.
+- DONE: Have a blind reader, given only kc-dev-flow-2/references/delivery-record.md as shipped, produce a conforming record for one passing and one held delivery and return every question it had to ask; record dispositions
+  Fresh blind subagent produced two schema-valid synthetic records; all 22 questions/assumptions have dispositions in blind-reader-dispositions.json, including F1. Structural conformance does not certify a production delivery.
+- DONE: Confirm the one shared question guard sequence and the six confirmed regression classes
+  Six paired tests pass and six owning mutations fail (mutations.json); eight isolated common-guard omissions make both unsafe routes pass after both producer controls pass (shared-guard-mutations.json). One question/one return, no facts_question.
+- SKIPPED: Claim that the count/scope warning class refuses both inputs
+  The dispatch wording conflicts with the accepted non-holding warning contract: class 6 accepts both and emits equivalent disclosures; removing them fails its regression. Cases 1–5 reject both unsafe inputs; no product behavior changed to force a refusal.
+- DONE: Rerun AC-6's replay, rounds, live observation, base comparison and named falsifiers
+  replays.json: two archive-input check/question/native preparations 0/0/0 with unchanged question/JSON digests; live.json: check/question 1/1, separate prepare 0 is transport only. Summary, local-round, held-filename and changed-dispatch-head falsifiers fail as intended.
+- DONE: Judge the pin-deletion experiment paragraph in implementation/pr.md as stated, without repairing it
+  Its one historical flag-typo case was unguarded by retained static pins/lint, not proven invisible to all tests; contract-mutations.json now catches both documented-command typos via parser exit 2. Captain's deletion ruling remains pending; no new pin or repair.
+- DONE: Say whether a later step of the delivery route holds a changed head, respecting FO's declined question-time freshness finding
+  late-head.json: passing question 0, changed provider head later check 1, older record subsequent question 1; final match-head merge pin remains in workflow. Provider counterexample is mocked, no real push/merge; the settled freshness concern is not reopened.
+- DONE: Read hosted CI on PR 869 at this head instead of rerunning the whole list
+  hosted-pr.json: exact candidate, OPEN/Draft, five SUCCESS and one SKIPPED deploy. Focused independent tests/probes supplement this; no whole-suite rerun or live green delivery claim.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; installed adr_lint.py docs/adr --since <base> with its exit code; verdict with Review-finding disposition
+  validation/acceptance.sh has four steps; both fresh-shell runs exit 0 (13 delivery + 9 POC tests/lint; acceptance-exact-command.log). ADR lint exit 0, 79 records; script's green behavior does not clear Material F1.
+- DONE: Check stage/profile, prior dispatch ownership, document impact, role/design/number guards, added comments and exact candidate preservation
+  Pilot; 12 dispatch records complete; all 20 document dispositions reviewed; governance exits 0. Comments 3/550=0.5%; workflow 5996/5996. Initial network warning and wrong-cwd retry retained, then exact-head number check passes. provenance.json confirms clean unchanged product/export hashes.
+- DONE: Retain cited public evidence, close scratch and commit the path-scoped state report
+  validation/close.txt records exit 0; 68 retained files, 154.5 KiB. No product changes/PR writes/real gate changes; state-only commit/push follows under the dispatch's explicit authority.
+
+### Summary
+
+Recommendation REJECTED at 5e9afd496a6901cc788252a77d84f355acbf0015 for one Material contract-documentation finding. AC-6's bounded behavior and shared-guard checks pass, but a required positive declaration instruction was lost during deduplication; FO owns disposition and any repair dispatch. Existing limits remain in validation/report.md; no merge/release/adoption authority is inferred.
+
+- F1 Material: A configured, triggered second-reviewer user follows the new contract but cannot obtain the required positive declaration form there; both normal inputs hold until the missing instruction is supplied. Boundary: captain-ruling[2026-11-13] amendment 2, preserve unique rules when moving to one owning contract. Trigger/evidence: blind-reader question 11, missing-declaration.json, removed workflow form and contract lines 62–70. Full four-field classification: evidence/validation-1/findings.json.
+
+Exact scratch close output (exit 0):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-1 (34004801 bytes)
+Evidence: evidence/validation-1/ (68 files, 154.5 KiB)
+```

@@ -1,0 +1,30 @@
+[
+  {
+    "case": "contract omits positive declaration",
+    "declaration": "",
+    "routes": {
+      "legacy": {
+        "check": 1,
+        "question": 1
+      },
+      "record": {
+        "check": 1,
+        "question": 1
+      }
+    }
+  },
+  {
+    "case": "existing required declaration",
+    "declaration": "Second reviewer: copilot because review rules.\n",
+    "routes": {
+      "legacy": {
+        "check": 0,
+        "question": 0
+      },
+      "record": {
+        "check": 0,
+        "question": 0
+      }
+    }
+  }
+]

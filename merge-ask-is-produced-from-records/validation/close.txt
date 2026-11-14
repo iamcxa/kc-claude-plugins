@@ -1,0 +1,2 @@
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-1 (34004801 bytes)
+Evidence: evidence/validation-1/ (68 files, 154.5 KiB)

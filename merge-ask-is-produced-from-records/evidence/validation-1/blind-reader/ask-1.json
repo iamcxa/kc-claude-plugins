@@ -1,0 +1,79 @@
+{
+  "schema": "delivery-facts/v1",
+  "tool_version": "0.0.0-fixture",
+  "time": "2026-11-14T00:00:00Z",
+  "public": true,
+  "pr": "example/public-fixture#1",
+  "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "candidate": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  ],
+  "pr_state": {
+    "isDraft": false,
+    "mergeable": "MERGEABLE",
+    "baseRefName": "main"
+  },
+  "ci": [
+    {
+      "status": "COMPLETED",
+      "conclusion": "SUCCESS",
+      "state": null
+    }
+  ],
+  "workflow_runs": [
+    {
+      "id": 1,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "required_checks": [
+    {
+      "bucket": "pass"
+    }
+  ],
+  "trunk": {
+    "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "trunk": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "position": "ahead"
+  },
+  "merge_result": null,
+  "validation": {
+    "verdict": "PASSED",
+    "rounds": 1,
+    "report_sha256": "b36f99bf79da6c767f73e6c2cf048920b51a3c96d1cce89b71bf6a9d73c65c10",
+    "dispatch": "validation-1.md"
+  },
+  "reviewers": [
+    {
+      "reviewer": "codex",
+      "head": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "exit": 0,
+      "outcome": "clean",
+      "evidence": "review:1",
+      "scope": "pr"
+    }
+  ],
+  "external_rounds": 1,
+  "round_scope": "Distinct saved PR-scope observations only; unobserved review history excluded.",
+  "captain_steps": {
+    "path": "captain-steps/1.md",
+    "sha256": "425c45ce2904bc419042eee96ba1f6b5000eb1f0ed2a848d848b8b794055bc9e",
+    "candidate_matches": true
+  },
+  "question_sha256": "cbe21ff437cbee72b12ed8d251c1f7de1c40a887677278526a943fde6d2dd4fa",
+  "unchecked_counts": 0,
+  "scope_disclosure": {
+    "cited": 0,
+    "marked": 0,
+    "mark": "（未對過紀錄）"
+  },
+  "role_calls": {
+    "exit": 0
+  },
+  "result": {
+    "exit": 0,
+    "problems": 0,
+    "unreadable": 0
+  }
+}

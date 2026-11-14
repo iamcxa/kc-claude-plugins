@@ -1,0 +1,19 @@
+{
+  "head": "5e9afd496a6901cc788252a77d84f355acbf0015",
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "state_input_commit": "7af9ca4fc1d779cdafc436421f9f3b8c44764b76",
+  "product_files": {
+    "kc-dev-flow-2/extensions/copilot/EXTENSION.md": "e9c405b76affaff5d0989a8915b7a05b94f1c3a5c016fb7cec88ef562c1d6a77",
+    "kc-dev-flow-2/references/delivery-record.md": "70c66ca7007a8a5f1987e89419c765df440106533fd57fbd45144e154353a392",
+    "kc-dev-flow-2/references/sd/workflow.md": "0d658e36943a2c8e988f1df1bf158905aafbbc861a38157e5b4590a9b885ae57",
+    "kc-dev-flow-2/scripts/delivery_gate.py": "4bad61c18edfa65cec5aed5198ceb959f89c334223b169ac819bef9c054b91af",
+    "kc-dev-flow-2/scripts/lint-skills.py": "d4c15ecbad5205e60b776095f0973fd6da5ad2df7687b3d1e996de316001bc54",
+    "kc-dev-flow-2/scripts/test_delivery_gate.py": "2215e8148f351f100aa4f743b8ae229557c882f7d811aae877f52db68c52eda8",
+    "kc-dev-flow-2/scripts/test_poc_readme.py": "4018706d0bc15cbc28d699ba40b6600a44c08cd03900fc3a6d7effe2cac5ed30",
+    "kc-dev-flow-2/scripts/test_sd_dispatch.py": "640edd6b33a56ab59266ff5d7578efe874311fcdf188de5512b91da93f112e12",
+    "kc-dev-flow-2/skills/observer/SKILL.md": "54ccdcf6d7ec25fdad35fd3688d4449fe3555a91b5e1f41e5ea7ce0d1c24e546"
+  },
+  "export_matches_worktree": true,
+  "worktree_clean": true,
+  "execution": "Candidate tests and probes ran from git archive export; diff/governance checks ran read-only in assigned git worktree. No product edits or commits."
+}

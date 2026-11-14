@@ -1,0 +1,15 @@
+{
+  "method": "jsonschema.Draft202012Validator; schema extracted only from assigned contract",
+  "results": [
+    {
+      "name": "ask-1.json",
+      "status": "passed",
+      "errors": []
+    },
+    {
+      "name": "observation-2.json",
+      "status": "passed",
+      "errors": []
+    }
+  ]
+}

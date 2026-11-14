@@ -1,0 +1,27 @@
+Exported 5e9afd496a6901cc788252a77d84f355acbf0015
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 9.148s
+
+OK
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 2.028s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ <system-temp>
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5996 of 5996 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+ACCEPTANCE PASSED

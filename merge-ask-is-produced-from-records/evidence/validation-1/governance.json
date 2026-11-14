@@ -1,0 +1,83 @@
+[
+  {
+    "name": "adr-lint",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "c2f035b6612f5edb42220576b3414e993531ffd6"
+    ],
+    "exit": 0,
+    "output": "adr-lint.log"
+  },
+  {
+    "name": "doc-impact",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "5e9afd496a6901cc788252a77d84f355acbf0015"
+    ],
+    "exit": 0,
+    "output": "doc-impact.log"
+  },
+  {
+    "name": "comments",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "c2f035b6612f5edb42220576b3414e993531ffd6",
+      "5e9afd496a6901cc788252a77d84f355acbf0015",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "comments.log"
+  },
+  {
+    "name": "dispatch",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "<task>"
+    ],
+    "exit": 0,
+    "output": "dispatch.log"
+  },
+  {
+    "name": "design",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/design_surfaces.py",
+      "check",
+      "<task>.md"
+    ],
+    "exit": 0,
+    "output": "design.log"
+  },
+  {
+    "name": "numbers",
+    "command": [
+      "python3",
+      "/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "<task>.md"
+    ],
+    "exit": 0,
+    "output": "numbers.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "output": "lint.log"
+  }
+]

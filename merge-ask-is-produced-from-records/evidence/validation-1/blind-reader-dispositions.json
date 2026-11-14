@@ -1,0 +1,156 @@
+[
+  {
+    "number": 1,
+    "question": "What is the complete field set and which fields can be null?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "Used the embedded schema, including all required top-level fields and no extra record fields.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 2,
+    "question": "How are successful versus held records named and ordered?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "Used `ask-1.json` then `observation-2.json`; one increasing sequence; later hold supersedes earlier success.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 3,
+    "question": "What produces a deterministic hold without unknown reviewer behavior?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "Nonzero special-role reader exit holds. Used `role_calls.exit = 1`.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 4,
+    "question": "What exact problem count results from that special-role exit?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed one problem for the one selected failure; aggregation rules and source diagnostics are not specified.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 5,
+    "question": "Does schema validity prove that a successful record is possible?",
+    "reader_classification": "Contract-defined limitation; guard details need other context",
+    "reader_assumption": "No. Schema allows result 0, but does not encode all behavioral checks or cross-field invariants. Synthetic passing means structurally valid with reported pass.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 6,
+    "question": "What package version and repository/head/time should be used?",
+    "reader_classification": "Needs runtime context",
+    "reader_assumption": "Used explicit fixture values; document defines meaning and formats, not current observations. Public visibility is assumed only within this fiction.",
+    "validator_disposition": "Runtime fixture input, not a missing record-field definition; synthetic assumptions cannot establish live readiness."
+  },
+  {
+    "number": 7,
+    "question": "What are the valid mergeability, CI, workflow-run, required-check bucket, and trunk-position vocabularies/casing?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Schema permits arbitrary strings. Chose `MERGEABLE`, `COMPLETED`/`SUCCESS`, `completed`/`success`, `pass`, and `ahead`. Their checker acceptance cannot be established from this document.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 8,
+    "question": "What candidate dispatch inventory establishes the candidate array?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed one latest dispatch matching the fabricated observed head. Dispatch naming and selection rules beyond the brief description are unspecified.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 9,
+    "question": "When is a merge-result record owed, and what filename format does it use?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed no owed result and used null. Document explains null and `not run`, but does not define the triggering rule or filename format.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 10,
+    "question": "What is a valid validation dispatch filename and report format?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Used illustrative `validation-1.md` and a synthetic report string. Only field type and report digest shape are supplied, not a dispatch naming/report-content contract.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 11,
+    "question": "Which reviewers must be configured and what declaration/profile guards apply?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed only Codex is required and observed clean. Shared guards and current reviewer configuration are referenced but absent.",
+    "validator_disposition": "F1 Material: missing positive declaration form is a removed unique instruction. Profile and reviewer configuration themselves remain external inputs."
+  },
+  {
+    "number": 12,
+    "question": "What form must reviewer evidence take, and what exit represents a clean Codex review?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Used illustrative `review:1` and exit 0. Schema accepts these; reviewer-specific success mappings/evidence grammar are not defined.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 13,
+    "question": "How should external rounds be counted?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "One distinct `(codex, head, review:1)` PR-scope clean observation gives one saved round. No claim about unobserved history.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 14,
+    "question": "Are there mandatory minimum rounds or a conditional second-reviewer trigger?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed one sufficient configured reviewer and no triggered second reviewer. Structured production/database trigger rules and reviewer minima are not included.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 15,
+    "question": "What contents and header grammar make a Captain-step source candidate-bound?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Filename and digest format are defined, but source grammar is not. Used illustrative source bytes and assumed `candidate_matches = true`; no execution claim.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 16,
+    "question": "How are quantity claims and existing-item effect claims identified and matched to evidence?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed zero claims in synthetic question and imaginary PR body. The document refers to text-route readers but does not define their extraction/matching grammar.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 17,
+    "question": "Which special-role readers must run and how is their aggregate exit calculated?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Assumed aggregate exit 0 in passing fixture and 1 in held fixture. Role inventory and aggregation are unspecified.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 18,
+    "question": "What exact question content makes a native gate question valid?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "The synthetic question is hash input only. It is not claimed to satisfy declaration/profile guards, sufficiency/necessity judgment requirements, or native gate formatting.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 19,
+    "question": "Are human sufficiency/necessity/disposition judgments fields in the record?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "They belong in the question, not new JSON fields. Clean synthetic review does not require the findings/answered disposition line.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 20,
+    "question": "How are absent sources represented when a digest field cannot be null?",
+    "reader_classification": "Needs other context",
+    "reader_assumption": "Not exercised: used available synthetic bytes. `validation.report_sha256` and `question_sha256` require 64 hex characters even though some observations may be unavailable; unavailable-source digest convention is not stated.",
+    "validator_disposition": "Accepted bounded dependency: the checker is the sole producer; workflow, dispatch/Captain-step formats and reviewer adapters retain their own semantics. No independent producer or full workflow replacement is promised. Reopen if a consumer needs to implement those semantics from this file alone."
+  },
+  {
+    "number": 21,
+    "question": "May fixture caveats and explanations be embedded in these JSON records?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "No additional record fields; explanations stay in this separate file. Human reasons and question/source text are excluded from records.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  },
+  {
+    "number": 22,
+    "question": "Can these records establish approval, execution, reviewer completeness, or future CI/trunk state?",
+    "reader_classification": "Contract-defined",
+    "reader_assumption": "No; the document explicitly excludes those conclusions.",
+    "validator_disposition": "Resolved by this contract; no new finding. Structural conformance is not runtime acceptance."
+  }
+]

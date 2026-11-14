@@ -1,0 +1,16 @@
+[
+  {
+    "id": "F1",
+    "classification": "Material",
+    "severity": "medium",
+    "title": "The positive second-reviewer declaration was deleted from the workflow but not defined in the shared contract",
+    "file": "kc-dev-flow-2/references/delivery-record.md",
+    "line": 62,
+    "released_user_and_normal_workflow": "FO follows the updated public Pilot delivery recipe with a configured, triggered second reviewer. The workflow now sends this user to the shared contract.",
+    "observable_harm": "The only documented literal declaration is Second reviewer: not triggered. The positive required name/because/nonempty-trigger form has disappeared from the workflow and is not supplied by the contract. A reader must discover it by a failed command or inspect code. In the existing paired fixture omission holds check/question at 1/1 on both routes; restoring the prior documented form makes both 0/0.",
+    "affected_boundary": "captain-ruling[2026-11-13] amendment 2 makes this one boundary contract and removes copies; the implementation checklist explicitly requires no unique obligation lost in the move.",
+    "trigger_evidence": "blind-reader/questions-and-assumptions.md question 11; missing-declaration.json; candidate diff removes workflow former lines 588-590; candidate contract lines 62-70 names guards and only not-triggered syntax.",
+    "fix": "Restore the positive reviewer declaration form and its ownership in the one contract, preserving the reference-only consumers. Route repair through FO; no repair made.",
+    "status": "open"
+  }
+]

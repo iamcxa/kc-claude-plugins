@@ -1,0 +1,4 @@
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base c2f035b6612f head 5e9afd496a69 merge-base c2f035b6612f
+warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible

@@ -1,0 +1,21 @@
+test_configured_trigger_guard_includes_quoted_prod_profiles (test_delivery_gate.RecordRouteParityTests.test_configured_trigger_guard_includes_quoted_prod_profiles) ... FAIL
+
+======================================================================
+FAIL: test_configured_trigger_guard_includes_quoted_prod_profiles (test_delivery_gate.RecordRouteParityTests.test_configured_trigger_guard_includes_quoted_prod_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/candidate/kc-dev-flow-2/scripts/test_delivery_gate.py", line 3657, in test_configured_trigger_guard_includes_quoted_prod_profiles
+    self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+AssertionError: Lists differ: [0, 0] != [1, 1]
+
+First differing element 0:
+0
+1
+
+- [0, 0]
++ [1, 1]
+
+----------------------------------------------------------------------
+Ran 1 test in 1.793s
+
+FAILED (failures=1)

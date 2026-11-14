@@ -1,0 +1,570 @@
+[
+  {
+    "name": "reviewer declaration",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpg3rp6br_`, then run `gate prepare` with `--reference <scratch>/tmp/tmpg3rp6br_/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpcp8_4wsn/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nsecond reviewer declaration missing or duplicated: require exactly one configured reviewer or not triggered\nnext: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nsecond reviewer declaration missing or duplicated: require exactly one configured reviewer or not triggered\nnext: hold the ask; record the FO review decision or unread/retry decision in the question.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmplv99xapg`, then run `gate prepare` with `--reference <scratch>/tmp/tmplv99xapg/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpn0g2l0sw/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "prod trigger",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpmembs8pf`, then run `gate prepare` with `--reference <scratch>/tmp/tmpmembs8pf/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpzzl6q8vm/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nsecond reviewer not triggered contradicts the structured prod/db trigger\nnext: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nsecond reviewer not triggered contradicts the structured prod/db trigger\nnext: hold the ask; record the FO review decision or unread/retry decision in the question.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmp6zzw483r`, then run `gate prepare` with `--reference <scratch>/tmp/tmp6zzw483r/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmp347_06n6/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "merge head",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmplbkse7s1`, then run `gate prepare` with `--reference <scratch>/tmp/tmplbkse7s1/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmp61ysygii/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nthe newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses\nnext: hold preparation; run delivery_gate.py check on this question and summary, then this check again.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ndelivery is held or the merge head differs\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmp4zprvj9m`, then run `gate prepare` with `--reference <scratch>/tmp/tmp4zprvj9m/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpu22xl_oe/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "current configuration",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpvswxc3j1`, then run `gate prepare` with `--reference <scratch>/tmp/tmpvswxc3j1/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpur1zg941/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 2,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 2,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncannot read input: second-reviewer must name a listed remote reviewer with another remote reviewer listed\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nfacts record cannot be bound: missing, changed or held evidence\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmph337jtvw`, then run `gate prepare` with `--reference <scratch>/tmp/tmph337jtvw/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpmgn1s9jw/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "Captain steps",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmponb9txi5`, then run `gate prepare` with `--reference <scratch>/tmp/tmponb9txi5/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpvswcjh_f/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nCaptain steps record fails: record needs one Candidate: <40-hex head, or none> line\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nCaptain steps record fails: record needs one Candidate: <40-hex head, or none> line\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpwyouarcm`, then run `gate prepare` with `--reference <scratch>/tmp/tmpwyouarcm/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpt70d23fp/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "merge hold clause",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmp96w43iwn`, then run `gate prepare` with `--reference <scratch>/tmp/tmp96w43iwn/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpe7o6xpcw/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nthe gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'\nnext: hold the gate; add the clause that lets him keep the merge, then run this check again.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'\nnext: hold the gate; add the clause that lets him keep the merge, then run this check again.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpmwuppy3s`, then run `gate prepare` with `--reference <scratch>/tmp/tmpmwuppy3s/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmp9uq9kw2x/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "worktree removal",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmp5w5ebh5m`, then run `gate prepare` with `--reference <scratch>/tmp/tmp5w5ebh5m/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpyrkn2cei/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nthe gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree\nnext: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree\nnext: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpyaa7hrm0`, then run `gate prepare` with `--reference <scratch>/tmp/tmpyaa7hrm0/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpwmwh2b5g/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  },
+  {
+    "name": "merge-result disclosure",
+    "status": "passed",
+    "controls": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmpl2szt8cv`, then run `gate prepare` with `--reference <scratch>/tmp/tmpl2szt8cv/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmpmy93k7_1/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "negative": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 1,
+        "record": 1
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nthe question itself needs Merge result: not run: <reason>\nnext: hold preparation; put the merge-result not-run line in the question the Captain reads.\n"
+        },
+        {
+          "route": "record",
+          "exit": 1,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\nthe question itself needs Merge result: not run: <reason>\nnext: hold preparation; put the merge-result not-run line in the question the Captain reads.\n"
+        }
+      ]
+    },
+    "mutation": {
+      "check": {
+        "legacy": 0,
+        "record": 0
+      },
+      "question": {
+        "legacy": 0,
+        "record": 0
+      },
+      "logs": [
+        {
+          "route": "legacy",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nnext: run `spacedock state commit task --workflow-dir <scratch>/tmp/tmprq4894fj`, then run `gate prepare` with `--reference <scratch>/tmp/tmprq4894fj/task/merge/ask-1.json`.\n"
+        },
+        {
+          "route": "record",
+          "exit": 0,
+          "output": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ngate text complete\nnext: before gate prepare, write the question the Captain answers: one decision; its first sentence says what he decides and what you recommend; plain words before ids and paths, and any term he has not seen expanded in eight words or fewer; one sentence saying what approving accepts. Show him this bound question verbatim and record his answer as `answering \u300c<that question>\u300d`.\nreference: <scratch>/tmp/tmphalrnv50/task/merge/ask-1.json\nsummary: use the saved JSON bytes unchanged; FO writes no factual summary.\n"
+        }
+      ]
+    },
+    "scope": "Only the shared question guard is disabled after a passing producer; facts digests are refreshed to isolate that guard. No product bytes changed."
+  }
+]
