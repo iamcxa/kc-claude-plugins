@@ -1,7 +1,7 @@
 ---
 id:
 title: Which README rule sentences does a check already enforce whole (read-only retirement audit; a list for the Captain's ruling)
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -50,9 +50,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item B from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T02:35:03Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T05:04:11Z
+archived: 2026-11-14T05:04:11Z
 ---
 
 The README grew from 10 KB to 41 KB in 58 days, with about 63 mandatory steps per default task and 12 repeating per dispatch; 44 tasks cite an observer finding as the reason for a new form check, and no step removes a rule (brief C2, figures from proposal.md "Measured", not re-measured here).
