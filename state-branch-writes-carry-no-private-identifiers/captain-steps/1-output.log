@@ -1,0 +1,4 @@
+1 PASS: exact candidate and clean product worktree
+2 PASS: real dispatch and sealed remote bytes; compatibility unchanged with one known old digest mismatch
+3 PASS: refused and accepted pushes, repaired diff/path cases, unguarded detection and mode isolation
+4 PASS: required decision record; throwaways removed on exit
