@@ -32,6 +32,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-11-14T09:53:13Z
 ---
 
 The state guard merged in pull request 871 is installed with private task slugs and tailnet hostnames refusing, and private repository names, the email and the home directory only warning. Two of the warning classes cannot move to refuse today, because a refusal there has no legitimate way forward: a home path or a private repository name can sit inside sealed worker evidence, and the delivery gate's own form demands an absolute acceptance command in the gate summary and in the Captain-steps record.
