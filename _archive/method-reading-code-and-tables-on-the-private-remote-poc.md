@@ -1,7 +1,7 @@
 ---
 id:
 title: Tonight's method-against-no-method cell, both readings and both final tables are on the private working repository's remote, with the raw runs left on the laptop
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -53,9 +53,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 as continued by the reform session, Paseo messages 94ecfb61-4305-4483-8e9c-e321382c5ac2 and f0fa5dae-d010-4cf3-a168-c47d79e3c7e1
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T11:51:42Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T12:04:40Z
+archived: 2026-11-14T12:04:41Z
 ---
 
 The day's main result, two readings of whether an agent given the method does better than one given the task in plain words, exists on one machine only: its cell, grader changes, readings and final tables were committed after the push that carried the earlier code, and live on a laptop-only branch beside the raw runs.
