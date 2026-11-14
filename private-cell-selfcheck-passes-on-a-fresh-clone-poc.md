@@ -40,6 +40,20 @@ gates:
                 id: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:attempt-1:revision-1
                 digest: sha256:3512521790d628800ff1d0b85860a902ab3a0a13165fbbbd70645b06ee0993a7
                 room-ref: ./private-cell-selfcheck-passes-on-a-fresh-clone-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:1
+                briefing: briefing:private-cell-selfcheck-passes-on-a-fresh-clone-poc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T11:50:52.460808Z"
+                decision: approve
+                reason: Independent fresh-clone validation passed both criteria and FO's own fresh-clone run of its acceptance script agrees; the reform session confirmed the close (message 94ecfb61).
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 as continued by the reform session, closing confirmed in Paseo message 94ecfb61-4305-4483-8e9c-e321382c5ac2
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T11:33:09Z
 ---
 
