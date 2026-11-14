@@ -1,7 +1,7 @@
 ---
 id:
 title: A dispatch, its record and sealed evidence reach the public state branch without personal or private identifiers, and a hook refuses a push that carries one
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -31,7 +31,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item D from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 The workflow state branch of this public repository receives new personal and private identifiers with every dispatch from two First Officers. An audit on 2026-11-14 (`.context/dev2-reform/phase1-version-and-path-audit.md` Part B, a research output; its counts are not re-measured here) reports a home-directory prefix in 4,646 files, names of private adopter repositories in up to 1,055 files each, private task slugs in 488, a personal email in 25 and tailnet hostnames in 6, and no token-like hit for the patterns it ran.
