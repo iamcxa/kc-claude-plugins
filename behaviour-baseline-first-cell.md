@@ -103,6 +103,7 @@ Visible change: none
 Release review: not needed: package tooling with no release on a journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-14 — after the fix, can the agent outlive the runner or its caps on any exit path, and may a paid run be asked of the Captain again? (run and attack the six stub proofs; record dispatch/engineering-reviewer-1.md)
 Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-14 — the same question, second call: the first stopped before any stub ran because its sandbox had no network for the pinned release download (record dispatch/engineering-reviewer-2.md)
+Reviewer: kc-dev-flow-2:engineering-reviewer claude-opus-5-5 2026-11-14 — the same question, third call: the second stopped because its sandbox denies process listing; a Claude reviewer by the reform session's ruling under the Captain's grant, same-family exception recorded in the dispatch record (record dispatch/engineering-reviewer-3.md)
 
 ## Design
 
