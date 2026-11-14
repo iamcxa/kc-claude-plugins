@@ -1256,6 +1256,7 @@ def matching_delivery_record(task, text):
 
 
 def read_summary_question(task, args, text):
+    # see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md
     reviewer_text = None
     summary = None
     if args.summary_file is not None:
@@ -1307,6 +1308,7 @@ def question(args):
         problems += missing
         if missing:
             nexts.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
+        # see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md
         if facts:
             candidates, dispatch = dispatched_candidates(task)
             known = [(int(m[1]), p) for p in (task_folder(task) / "merge").glob("*.json")
