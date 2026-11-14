@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:state-branch-writes-carry-no-private-identifiers:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:state-branch-writes-carry-no-private-identifiers-validation-1
+              briefing:
+                id: briefing:state-branch-writes-carry-no-private-identifiers:validation:attempt-1:revision-1
+                digest: sha256:3c8789b3fa592c98bde1f56acb62470f4139ae00783dcabc118bd4ebd34dbbe5
+                room-ref: ./state-branch-writes-carry-no-private-identifiers/review/validation/briefing-1
 started: 2026-11-14T04:43:29Z
 ---
 
