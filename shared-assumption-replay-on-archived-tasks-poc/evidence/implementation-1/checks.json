@@ -1,0 +1,22 @@
+[
+  {
+    "name": "comment-ratio",
+    "exit_code": 0,
+    "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+  },
+  {
+    "name": "doc-impact",
+    "exit_code": 0,
+    "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  {
+    "name": "design-surfaces",
+    "exit_code": 1,
+    "output": "shared-assumption-replay-on-archived-tasks-poc.md: '## FO alignment' needs a non-empty 'Surfaces:' line\nshared-assumption-replay-on-archived-tasks-poc.md: '## FO alignment' needs a 'Visible change:' line\nscope check not run: stage is implementation, not ideation\n"
+  },
+  {
+    "name": "number-guards",
+    "exit_code": 0,
+    "output": "warning: state fetch failed; reading local origin/spacedock-state/* refs only; reservations may be stale or invisible\nmigration guard skipped: no migrations-path declared\nPASS: no findings\nbase c2f035b6612f head c2f035b6612f merge-base c2f035b6612f\n"
+  }
+]

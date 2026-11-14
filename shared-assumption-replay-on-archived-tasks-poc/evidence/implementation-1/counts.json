@@ -1,0 +1,13 @@
+{
+  "counted_task_count": 5,
+  "literal_causal_matches": 2,
+  "independent_blind_predictions_demonstrated": 0,
+  "excluded_contaminated_task_count": 1,
+  "matched_tasks": [
+    "dev2-laws-check",
+    "delivery-gate-verdict-form"
+  ],
+  "stop_threshold": 2,
+  "stop_triggered_by_literal_count": false,
+  "interpretation": "The literal k is the specified causal-quote comparison count. The independent-blind figure is evidence coverage, not measured predictive accuracy. It cannot establish that the prompt would reduce rework."
+}

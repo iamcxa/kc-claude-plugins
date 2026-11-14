@@ -1,0 +1,12 @@
+[
+  {
+    "control": "wrong-hypothesis",
+    "exit_code": 1,
+    "rejected_with": "ValueError: hypothesis changed after freeze: fo-lifecycle-mod"
+  },
+  {
+    "control": "wrong-quote",
+    "exit_code": 1,
+    "rejected_with": "ValueError: third-dispatch quote differs: fo-lifecycle-mod"
+  }
+]

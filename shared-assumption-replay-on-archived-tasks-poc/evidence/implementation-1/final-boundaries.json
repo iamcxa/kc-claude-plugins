@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-11-14T02:59:19.521695+00:00",
+  "code_root": ".context/dev2-poc-route/.worktrees/spacedock-ensign-shared-assumption-replay-on-archived-tasks-poc",
+  "code_head": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "code_branch": "spacedock-ensign/shared-assumption-replay-on-archived-tasks-poc",
+  "code_status": "",
+  "archive_status_for_six_inspected_tasks": "",
+  "task_status": "implementation",
+  "task_read_command_exit": 0,
+  "task_read_total_lines": [
+    "57"
+  ],
+  "product_pr_opened": false,
+  "product_push": false,
+  "final_report_commit_owner": "FO per direction received before final-five freeze",
+  "open_prs_global_inventory": "not checked; no closable claim",
+  "other_agents_inventory": "not checked; FO handoff remains live"
+}

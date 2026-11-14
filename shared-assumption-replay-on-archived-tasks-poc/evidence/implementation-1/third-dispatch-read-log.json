@@ -1,0 +1,47 @@
+[
+  {
+    "task": "fo-lifecycle-mod",
+    "stage": "implementation",
+    "ordinal": 3,
+    "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod/dispatch/implementation-3.md",
+    "opened_at": "2026-11-14T02:50:14.799391+00:00",
+    "sha256": "21450cd082056f76258f08361ff0ffcdca502d930912626ae6dbf4c76d6b1e85",
+    "freeze_commit_verified_before_open": "c24854032f31aa6281810d7d0c492ebb206d1f6d"
+  },
+  {
+    "task": "merge-gatekeeper",
+    "stage": "implementation",
+    "ordinal": 3,
+    "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper/dispatch/implementation-3.md",
+    "opened_at": "2026-11-14T02:50:14.800274+00:00",
+    "sha256": "4403302e5c393c162ee2236a52f681a72c3b5f3fa75fca9a9614be47c5e92a27",
+    "freeze_commit_verified_before_open": "c24854032f31aa6281810d7d0c492ebb206d1f6d"
+  },
+  {
+    "task": "prod-security-review-gates",
+    "stage": "implementation",
+    "ordinal": 3,
+    "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates/dispatch/implementation-3.md",
+    "opened_at": "2026-11-14T02:50:14.800839+00:00",
+    "sha256": "20c9b7b90dc51be008a8629230641e053ebe7bc7b99d2e195dce1437a9af9141",
+    "freeze_commit_verified_before_open": "c24854032f31aa6281810d7d0c492ebb206d1f6d"
+  },
+  {
+    "task": "dev2-laws-check",
+    "stage": "implementation",
+    "ordinal": 3,
+    "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check/dispatch/implementation-3.md",
+    "opened_at": "2026-11-14T02:50:14.801434+00:00",
+    "sha256": "35bc080f56ebb19f78e456dace5516c285bbb5dfce866df8b44577296a4b76c8",
+    "freeze_commit_verified_before_open": "c24854032f31aa6281810d7d0c492ebb206d1f6d"
+  },
+  {
+    "task": "delivery-gate-verdict-form",
+    "stage": "implementation",
+    "ordinal": 3,
+    "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/delivery-gate-verdict-form/dispatch/implementation-3.md",
+    "opened_at": "2026-11-14T02:50:14.801980+00:00",
+    "sha256": "584c0a4e7b5991d83e91505f526e286a576d3ec709aabb038ccec0ff37240593",
+    "freeze_commit_verified_before_open": "c24854032f31aa6281810d7d0c492ebb206d1f6d"
+  }
+]

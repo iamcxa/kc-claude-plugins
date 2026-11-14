@@ -1,0 +1,31 @@
+{
+  "two_failed_fixes_same_check_count": 0,
+  "rows": [
+    {
+      "task": "fo-lifecycle-mod",
+      "two_failed_fixes_same_check": false,
+      "reason": "Dispatch 1 requests an initial build with a prerequisite check; report 1 stops before code. Dispatch 2 applies a Captain amendment; report 2 has a different word-bound miss."
+    },
+    {
+      "task": "merge-gatekeeper",
+      "two_failed_fixes_same_check": false,
+      "reason": "Dispatch 2 is an in-flight review message with two distinct security fixes; both are already included in report 1. Report 2 concerns a separate CI pin repair."
+    },
+    {
+      "task": "prod-security-review-gates",
+      "two_failed_fixes_same_check": false,
+      "reason": "Dispatch 2 reserves an ADR number, not a second fix. Report 1 internally contains brief-revision attempts; dispatch ordinals do not identify them."
+    },
+    {
+      "task": "dev2-laws-check",
+      "two_failed_fixes_same_check": false,
+      "reason": "Dispatch 2 reserves an ADR number, not a second fix. Report 2 is a later external-review repair."
+    },
+    {
+      "task": "delivery-gate-verdict-form",
+      "two_failed_fixes_same_check": false,
+      "reason": "Dispatch 2 is read-only investigation and explicitly forbids candidate changes until FO authorization, not a second attempted fix."
+    }
+  ],
+  "limit": "Manual reading of the permitted dispatches/reports, not a rework-rate measurement."
+}

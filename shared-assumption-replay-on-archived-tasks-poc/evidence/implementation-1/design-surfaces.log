@@ -1,0 +1,3 @@
+shared-assumption-replay-on-archived-tasks-poc.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+shared-assumption-replay-on-archived-tasks-poc.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: stage is implementation, not ideation

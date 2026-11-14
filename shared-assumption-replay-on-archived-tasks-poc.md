@@ -55,3 +55,40 @@ Verified by: the validator reads the quoted assumption and the dispatch-3 change
 
 Alignment: not needed before implementation: the brief names the inputs, the output table and the count; the backlog gate confirms scope and Budget.
 Release review: not needed: reform measurement with no release.
+
+
+## Stage Report: implementation
+
+- DONE: For each of the 5 named archived tasks: reading only dispatch records 1 and 2 of the repeated stage and the first two worker reports, the shared assumption you would name and the check you would run, committed to the state branch BEFORE you open dispatch 3 or anything later
+  Final counted set uses implementation; FO commit c24854032f31aa6281810d7d0c492ebb206d1f6d freezes implementation/assumptions.md and v2 input records before all five third-dispatch reads (evidence/implementation-1/freeze-receipt-v2.json, third-dispatch-read-log.json). Allowed report leakage is disclosed, not called temporal blindness.
+- DONE: Then, per task, what dispatch 3 actually changed, quoted beside your named assumption, and whether they match
+  implementation/report.md and evidence/implementation-1/comparison.json retain all five frozen hypotheses, dispatch-3 quotes, outcome quotes and causal-match reasons; investigation-only requests are distinguished from later committed repairs.
+- DONE: The count k of 5 with the stop condition applied: k below 2 means the prompt does not help
+  Literal causal-quote k=2/5 (laws historical bytes; verdict qualified labels), so the numeric drop condition does not fire; 0 independent blind predictions demonstrated is evidence coverage, not measured accuracy or efficacy (counts.json, applicability.json).
+- DONE: Keep ui-design-review-in-ideation in the report as contaminated, outside the count of 5, with what exposed it.
+  The required learning.md read exposed its later fence-blind Surfaces/corpus-verdict repair; comparison.json retains the exclusion and the original frozen hypothesis remains unchanged.
+- DONE: Replace it with the next task in rework-round order that has saved dispatch records and that no learning note you have read names: delivery-gate-verdict-form, then extension-instruction-reaches-dispatch, then followup-dispatch-records-checked. Say which you took and why any was skipped.
+  Took the first, delivery-gate-verdict-form, absent from the learning note read; no candidate was skipped and the other two were not reached. Its separate cross-task mention and later-report leakage are disclosed.
+- DONE: The count stays k of 5 over five blind rows; all five named assumptions are committed before any dispatch 3 is opened.
+  Five counted tasks were third-dispatch-file-blind at c2485403; all hypotheses/checks match committed bytes. Historical temporal blindness is not established because permitted report 2 often already contains post-dispatch-2 work; no stronger blind-prediction claim is made.
+- DONE: Verify source integrity, aggregation and product/archive boundaries
+  verify-replay.json passes source hashes, quote lines, freeze bytes, task set, recorded ordering and count consistency; changed-hypothesis and changed-quote scratch controls both fail as expected (integrity-controls.json). Semantic grading is manual; final-boundaries.json shows unchanged clean product c2f035b6612f5edb42220576b3414e993531ffd6 and unchanged inspected archive paths.
+- DONE: Run the applicable exit checks and close scratch
+  comment_ratio.py: code lines 0, comment lines 0, 0.0%, limit not enforced below 20 lines; doc_impact.py: 0 documents; number_guards.py PASS with local-ref-only fetch warning (checks.json). scratch.py close exited 0; stdout below, scratch-removed.txt and evidence/implementation-1/close.log.
+- SKIPPED: Treat the generic design-surfaces seed shape check as an acceptance gate
+  FO explicitly ruled it not applicable to this four-stage POC route; its raw missing-Surfaces/Visible-change exit 1 remains in design-surfaces.log, not reported as clean or repaired.
+- SKIPPED: Product candidate changes, PR text/publication, roborev, live model replay, CI and CI cost measurement
+  Approved read-only boundary: base=candidate c2f035b6612f5edb42220576b3414e993531ffd6 on spacedock-ensign/shared-assumption-replay-on-archived-tasks-poc; no product push/PR. Proposed checks were not executed; historical worker claims were not rerun; CI cost not measured.
+- SKIPPED: Final state commit/sync, independent validation and copying the report beside the study
+  FO owns these per the explicit mid-run direction; the worker runs no further state commit and does not claim delegated checks passed.
+
+### Summary
+
+The read-only replay records literal k=2/5 without activating the k<2 drop condition, but its permitted reports leak later work and do not establish independent predictive benefit. All final five hypotheses were frozen before dispatch 3 was opened; the contaminated UI row is excluded and replaced, the source/product boundaries are unchanged, and scratch is closed. FO commits the final report, validates it independently, and copies it beside the study.
+
+Scratch-close stdout (exact):
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-0a31751399576cc5/shared-assumption-replay-on-archived-tasks-poc/implementation-1 (236113 bytes)
+Evidence: evidence/implementation-1/ (24 files, 74.2 KiB)
+```

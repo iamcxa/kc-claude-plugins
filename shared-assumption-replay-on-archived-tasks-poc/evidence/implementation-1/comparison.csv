@@ -1,0 +1,6 @@
+task,literal_cause_match,independent_blind_prediction_demonstrated,dispatch_3_source,dispatch_3_line
+fo-lifecycle-mod,0,0,.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod/dispatch/implementation-3.md,10
+merge-gatekeeper,0,0,.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper/dispatch/implementation-3.md,8
+prod-security-review-gates,0,0,.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates/dispatch/implementation-3.md,8
+dev2-laws-check,1,0,.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check/dispatch/implementation-3.md,8
+delivery-gate-verdict-form,1,0,.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/delivery-gate-verdict-form/dispatch/implementation-3.md,10

@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "counted_rows": 5,
+  "literal_causal_matches": 2,
+  "freeze_commit": "c24854032f31aa6281810d7d0c492ebb206d1f6d",
+  "third_dispatches_after_freeze": 5,
+  "excluded_contaminated": "ui-design-review-in-ideation",
+  "limit": "Checks source integrity and self-recorded ordering, not semantic match decisions, absence of prior knowledge, or an operating-system read audit."
+}

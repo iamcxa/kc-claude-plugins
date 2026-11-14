@@ -1,0 +1,20 @@
+{
+  "freeze_commit": "c24854032f31aa6281810d7d0c492ebb206d1f6d",
+  "verified_at": "2026-11-14T02:50:03.251081+00:00",
+  "committed_bytes": {
+    "implementation/assumptions.md": "845c8aa3b8c46eb01ac760664e45758771b2b6985ca9b424de3397284b9ec894",
+    "evidence/implementation-1/assumptions-v2.json": "fb2055b056b9a1e95d61c0e43fbe4127b59b663544bb2b812982211b97a8326e",
+    "evidence/implementation-1/first-two-manifest-v2.json": "b4571ae6ee65e3beb3a1a64ffd2eb85bc7ad308e80f4db4638201e564452c9a6"
+  },
+  "origin_tracking_ref": "c24854032f31aa6281810d7d0c492ebb206d1f6d",
+  "five_counted_tasks": [
+    "fo-lifecycle-mod",
+    "merge-gatekeeper",
+    "prod-security-review-gates",
+    "dev2-laws-check",
+    "delivery-gate-verdict-form"
+  ],
+  "dispatch_3_opened_at_verification": false,
+  "fo_receipt": "committed c24854032f31aa6281810d7d0c492ebb206d1f6d",
+  "verification": "FO commit verified byte-identical and synced before first third-dispatch read. This is a Git/read-order receipt, not proof that allowed reports have no hindsight leakage."
+}
