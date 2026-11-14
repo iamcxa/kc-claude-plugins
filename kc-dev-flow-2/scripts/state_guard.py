@@ -200,12 +200,14 @@ def changes(root, commit=None):
         if metadata[4][:1] in (b'R', b'C'):
             name, index = raw[index], index + 1
         before, after = metadata[2:4]
-        if after.strip(b'0') and before != after and metadata[1] != b'160000':
+        if after.strip(b'0') and metadata[1] != b'160000':
             entries.append((name, before, after))
     return entries
 
 
 def added_bytes(root, before, after):
+    if before == after:
+        return b''
     data = git(root, 'cat-file', 'blob', after.decode())
     if data.startswith(b'\x1f\x8b'):
         try:
@@ -227,7 +229,7 @@ def added_bytes(root, before, after):
             in_hunk = True
         elif in_hunk and line.startswith(b'+'):
             added.append(line[1:])
-    return b'\n'.join(added)
+    return b'\n'.join(added) if in_hunk else data
 
 
 def safe_name(name, compiled):
@@ -262,7 +264,7 @@ def scan(args):
     for commit in commits:
         for name, before, after in changes(root, commit):
             data = added_bytes(root, before, after)
-            for kind in sorted({kind for kind, expression in compiled if expression.search(data)}):
+            for kind in sorted({kind for kind, expression in compiled if expression.search(data) or expression.search(name)}):
                 mode = modes[kind]
                 refused |= mode == 'refuse'
                 at = f' commit {commit[:12]};' if commit else ''

@@ -101,6 +101,114 @@ class StateGuardTests(unittest.TestCase):
         self.assert_private_output_absent(result.stderr)
         self.assertEqual(before, self.git(self.state, 'ls-remote', 'origin').stdout)
 
+    def test_no_hunk_changed_text_refuses_commit_and_push(self):
+        cases = (('size', b'public old\n' * 16, None, 64),
+                 ('attribute', b'public old\n', '* -diff\n', None),
+                 ('old-nul', b'public\0old\n', None, None),
+                 ('old-utf16', 'public old\n'.encode('utf-16'), None, None))
+        for case, old, attributes, threshold in cases:
+            for event in ('commit', 'push'):
+                with self.subTest(case=case, event=event):
+                    fixture = type(self)('test_no_hunk_changed_text_refuses_commit_and_push')
+                    try:
+                        fixture.setUp()
+                        if threshold:
+                            fixture.git(fixture.repo, 'config', 'core.bigFileThreshold', str(threshold))
+                        if attributes:
+                            (fixture.state / '.gitattributes').write_text(attributes)
+                            fixture.git(fixture.state, 'add', '--', '.gitattributes')
+                        path = fixture.state / 'payload.txt'
+                        path.write_bytes(old)
+                        fixture.commit('payload.txt')
+                        fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test')
+                        before = fixture.git(fixture.state, 'rev-parse', 'HEAD:payload.txt').stdout.strip()
+                        if event == 'commit':
+                            fixture.install('--refuse', 'private-slug')
+                        path.write_text('public next\n' * 16 + fixture.slug + '\n')
+                        fixture.git(fixture.state, 'add', '--', 'payload.txt')
+                        after = fixture.git(fixture.state, 'rev-parse', ':payload.txt').stdout.strip()
+                        patch = fixture.git(fixture.state, 'diff', '--no-ext-diff', '--no-textconv',
+                                            '--no-color', '-U0', before, after).stdout
+                        self.assertIn('Binary files ', patch)
+                        if event == 'commit':
+                            result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+                        else:
+                            fixture.git(fixture.state, 'commit', '-qm', 'test: changed text before install')
+                            fixture.install('--refuse', 'private-slug')
+                            remote = fixture.git(fixture.state, 'ls-remote', 'origin').stdout
+                            result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+                            self.assertEqual(remote, fixture.git(fixture.state, 'ls-remote', 'origin').stdout)
+                        self.assertIn('private-slug identifier', result.stderr)
+                        fixture.assert_private_output_absent(result.stderr)
+                    finally:
+                        fixture.doCleanups()
+
+    def test_path_identifiers_refuse_new_and_renamed_files(self):
+        for case in ('folder', 'basename', 'rename'):
+            for event in ('commit', 'push'):
+                with self.subTest(case=case, event=event):
+                    fixture = type(self)('test_path_identifiers_refuse_new_and_renamed_files')
+                    try:
+                        fixture.setUp()
+                        if case == 'rename':
+                            (fixture.state / 'public.md').write_text('public content\n')
+                            fixture.commit('public.md')
+                            fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test')
+                        if event == 'commit':
+                            fixture.install('--refuse', 'private-slug')
+                        name = fixture.slug + ('.md' if case == 'basename' else '/public.md')
+                        path = fixture.state / name
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        if case == 'rename':
+                            fixture.git(fixture.state, 'mv', '--', 'public.md', name)
+                            self.assertIn('R100', fixture.git(fixture.state, 'diff', '--cached', '--name-status', '-M').stdout)
+                        else:
+                            path.write_text('public content\n')
+                            fixture.git(fixture.state, 'add', '--', name)
+                        if event == 'commit':
+                            result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+                        else:
+                            fixture.git(fixture.state, 'commit', '-qm', 'test: private path before install')
+                            fixture.install('--refuse', 'private-slug')
+                            remote = fixture.git(fixture.state, 'ls-remote', 'origin').stdout
+                            result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+                            self.assertEqual(remote, fixture.git(fixture.state, 'ls-remote', 'origin').stdout)
+                        self.assertIn('private-slug identifier', result.stderr)
+                        self.assertIn('[private-slug]' + ('.md' if case == 'basename' else '/public.md'), result.stderr)
+                        fixture.assert_private_output_absent(result.stderr)
+                    finally:
+                        fixture.doCleanups()
+
+    def test_public_archive_renames_preserve_old_text_gzip_and_binary_content(self):
+        data = self.slug.encode()
+        for name, content in (('old.txt', data), ('old.gz', gzip.compress(data)), ('old.bin', b'\0' + data)):
+            (self.state / name).write_bytes(content)
+        self.git(self.state, 'add', '--', 'old.txt', 'old.gz', 'old.bin')
+        self.git(self.state, 'commit', '-qm', 'test: old evidence')
+        self.git(self.state, 'push', 'origin', 'spacedock-state/test')
+        self.install('--refuse', 'private-slug')
+        (self.state / 'archive').mkdir()
+        for name in ('old.txt', 'old.gz', 'old.bin'):
+            self.git(self.state, 'mv', '--', name, 'archive/' + name)
+        self.git(self.state, 'commit', '-qm', 'test: archive unchanged evidence')
+        self.git(self.state, 'push', 'origin', 'spacedock-state/test')
+
+    def test_path_warn_mode_and_deletions_preserve_installed_modes(self):
+        self.install()
+        name = self.slug + '.md'
+        (self.state / name).write_text('public content\n')
+        warned = self.commit(name)
+        self.assertIn('warning;', warned.stderr)
+        self.assertIn('[private-slug].md', warned.stderr)
+        self.assert_private_output_absent(warned.stderr)
+        warned = self.git(self.state, 'push', 'origin', 'spacedock-state/test')
+        self.assertIn('private-slug identifier', warned.stderr)
+        self.assert_private_output_absent(warned.stderr)
+        self.install('--refuse', 'private-slug')
+        self.git(self.state, 'rm', '--', name)
+        self.git(self.state, 'commit', '-qm', 'test: remove private path')
+        self.git(self.state, 'push', 'origin', 'spacedock-state/test')
+
     def test_gzip_and_binary_blobs_refuse_and_file_names_are_safe(self):
         self.install('--refuse', 'private-slug,tailnet-host')
         for name, content in (('evidence.gz', gzip.compress(self.host.encode())),
