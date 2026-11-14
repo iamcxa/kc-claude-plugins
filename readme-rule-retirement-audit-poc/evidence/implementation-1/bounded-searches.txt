@@ -1,0 +1,43 @@
+## production-scripts
+Pattern: Team|team-lead|Package root|secret|wrapper|permission|peer|prior reports
+
+kc-dev-flow-2/scripts/dispatch_records.py:3: non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
+kc-dev-flow-2/scripts/dispatch_records.py:10: with `<package>` replaced by that record's `Package root:`. Paseo's unindented `Add to scope notes:` line requires
+kc-dev-flow-2/scripts/dispatch_records.py:83:     "a 'Package root:' line with an absolute path in its scope notes":
+kc-dev-flow-2/scripts/dispatch_records.py:84:         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
+kc-dev-flow-2/scripts/dispatch_records.py:96: ROOT = re.compile(r"^Package root:[ \t]*(/\S+)", re.M)
+kc-dev-flow-2/scripts/learning.py:12: import secrets
+kc-dev-flow-2/scripts/learning.py:390:                       "token": secrets.token_hex(32), "plan": plan, "observation": None, "recovery": None}
+kc-dev-flow-2/scripts/learning.py:393:             require(secrets.compare_digest(record["token"], args.token), "stale or foreign delivery token")
+kc-dev-flow-2/scripts/learning.py:453:                       "owner": args.owner, "token": secrets.token_hex(32), "plan": plan, "observation": observed,
+kc-dev-flow-2/scripts/learning.py:495:             "token": secrets.token_hex(32), "evaluation": None, "proposal": None,
+kc-dev-flow-2/scripts/learning.py:555:             require(secrets.compare_digest(record["token"], args.token), "stale or foreign claim token")
+kc-dev-flow-2/scripts/lint-skills.py:20: PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
+kc-dev-flow-2/scripts/lint-skills.py:37:     dict(delta=1, why="the template ships extensions: [learn, peers], one more token than the empty list",
+kc-dev-flow-2/scripts/lint-skills.py:38:          captain="「那就這樣做，learn+peers預設開啟，其他建議」 (chat, 2026-10-25), after his peers question",
+kc-dev-flow-2/scripts/lint-skills.py:47:     dict(delta=144, why="one Team bullet carries the worker collaboration and early handback rule",
+kc-dev-flow-2/scripts/lint-skills.py:83:     dict(delta=66, why="Pilot ideation carries probe permission, local bounds, criterion proof runs and a third-dispatch hold instead of the blanket write ban",
+kc-dev-flow-2/scripts/lint-skills.py:181:             errors.append(f"skills/{folder.name}/SKILL.md: uses <package> but has no 'Package root:' line")
+kc-dev-flow-2/scripts/pr_watch.py:229:                   "that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO "
+kc-dev-flow-2/scripts/pr_watch.py:230:                   "is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it."]
+kc-dev-flow-2/scripts/replay_dispatch.py:34:              "`team-lead` is not registered here).")
+kc-dev-flow-2/scripts/replay_dispatch.py:89:     scope = [f"Package root: {pkg}"]
+kc-dev-flow-2/scripts/scratch.py:107:             "Never archive private repository evidence, secrets or personal data; instead write "
+## tests
+Pattern: assert_team|completion_recipient|package_root_line|secret|permission request|Team loss
+
+kc-dev-flow-2/scripts/test_dispatch_records.py:293:     def test_the_completion_recipient_line_is_judged_by_its_recipient_and_its_section(self):
+kc-dev-flow-2/scripts/test_dispatch_records.py:343:     def test_the_package_root_line_must_be_absolute_and_inside_the_scope_notes(self):
+kc-dev-flow-2/scripts/test_dispatch_stage.py:426:             self.assertIn('Never archive private repository evidence, secrets or personal data', emitted)
+kc-dev-flow-2/scripts/test_laws_check.py:1187:             "operator-secret-hardening.md": ("a2c115e3416132f1050b88d42211e5fb1a22130f6f562aea807224fb9ec1958b", 2),
+kc-dev-flow-2/scripts/test_poc_readme.py:10: from test_sd_dispatch import TEAM_RULE, assert_team
+kc-dev-flow-2/scripts/test_poc_readme.py:113:         assert_team(derived)
+kc-dev-flow-2/scripts/test_replay_dispatch.py:99:     def test_a_default_build_names_main_as_the_completion_recipient_in_a_form_the_validator_accepts(self):
+kc-dev-flow-2/scripts/test_sd_dispatch.py:44:   own or your reviewers' permission requests; route them to FO. FO coordinates
+kc-dev-flow-2/scripts/test_sd_dispatch.py:48: def assert_team(text):
+kc-dev-flow-2/scripts/test_sd_dispatch.py:878:                 assert_team(definition)
+kc-dev-flow-2/scripts/test_sd_dispatch.py:908:                 assert_team(run(shlex.split(reused["fetch_commands"][0]), repo).stdout)
+kc-dev-flow-2/scripts/test_sd_dispatch.py:915:             "permission": "Never answer your\n  own or your reviewers' permission requests; route them to FO.",
+kc-dev-flow-2/scripts/test_sd_dispatch.py:940:                 assert_team(fetched)
+kc-dev-flow-2/scripts/test_sd_dispatch.py:944:                 raise AssertionError(f"Team loss control was accepted: {name}")
+kc-dev-flow-2/scripts/test_sd_dispatch.py:1363:         print(f"PASS ({version}): 10 route/stage/host fresh and reused dispatch handoffs; 10 Team loss controls; wrong-stage and missing-stage refusals")

@@ -56,3 +56,24 @@ Verified by: the validator re-runs a sample of the recorded violating inputs aga
 
 Alignment: not needed before implementation: the brief names the inputs, the output table and the count; the backlog gate confirms scope and Budget.
 Release review: not needed: reform measurement with no release.
+
+## Stage Report: implementation
+
+- SKIPPED: One table covering every rule sentence of the six named sections of docs/dev2/README.md at origin/main: rule (quoted) / enforcing check (script or test, quoted) / exit code on a violating input you constructed and ran in a throwaway copy / verdict (covered whole, covered part, uncovered)
+  The approved stop condition fired after the first 15 sentences; implementation/report.md contains their single quoted table and explicitly marks the other five sections unexamined, not uncovered.
+- DONE: The counts N examined, M covered whole with a nonzero exit on the violation, and K README bytes that would go if the M were removed; a verdict of covered whole without a recorded exit code does not count
+  N=15, M=0, K=0 bytes at source/base/unchanged candidate c2f035b6612f5edb42220576b3414e993531ffd6; evidence/implementation-1/summary.json, rows.json and runs.json retain the counts, exact inputs and all 21 commands/exits.
+- DONE: The stop condition applied and reported: after 15 rule sentences, fewer than 3 covered whole stops the audit
+  Sentence 15 completed Dispatch facts with 0 whole, 4 part and 11 uncovered in the searched boundary; implementation/report.md states the prescribed stop conclusion and its sample limit.
+- DONE: Prove the narrower checks with constructed violations and retain replayable public evidence
+  Recipient, relative-root and bare-script controls each exited 1; the unassigned absolute script and all 15 inert behavior witnesses exited 0. Changing a control to exit 0 falsifies its partial-coverage claim; none establishes whole actor enforcement.
+- DONE: Preserve product bytes and close the assigned scratch allocation
+  Product branch spacedock-ensign/readme-rule-retirement-audit-poc remained clean at c2f035b6612f5edb42220576b3414e993531ffd6; scratch.py close exited 0, removed 2855269 bytes, retained 51 public files (60.5 KiB), with exact output in implementation/report.md and a SHA256SUMS manifest.
+- SKIPPED: Product implementation, product commit, push, PR and prepared PR text
+  The accepted read-only measurement forbids product changes/publication and expects no PR; code-change checks, document-impact checks and ADR/migration guards are not an owed product-change proof here. Installed role_triggers.py preflight exited 0; no task Number guards section exists.
+- SKIPPED: roborev not run: read-only measurement with no code candidate to review
+  No code candidate or delegated clean result is claimed; independent validation, the study-side report copy and the Captain's ruling remain FO-owned.
+
+### Summary
+
+Completed the bounded read-only audit by its approved early stop: N=15, M=0, K=0, with no README deletion or product mutation. The report distinguishes narrow record-format enforcement from whole worker behavior and leaves the other five sections unexamined; evidence and a portable pinned-source replay script are in this task folder. FO can now dispatch the single independent validation cycle and copy the report beside the study.

@@ -1,0 +1,170 @@
+[
+  {
+    "id": "baseline",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/baseline/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/baseline/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "baseline-names",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/baseline-names/sample/dispatch/implementation-1.md",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "input": "fixtures/baseline-names/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "wrong-recipient",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/wrong-recipient/sample",
+    "exit_code": 1,
+    "stdout": "implementation-1.md: needs a scope-notes line naming main as the completion recipient\n",
+    "stderr": "",
+    "input": "fixtures/wrong-recipient/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "relative-root",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/relative-root/sample",
+    "exit_code": 1,
+    "stdout": "implementation-1.md: needs a 'Package root:' line with an absolute path in its scope notes\n",
+    "stderr": "",
+    "input": "fixtures/relative-root/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "bare-script",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/bare-script/sample/dispatch/implementation-1.md",
+    "exit_code": 1,
+    "stdout": "fixtures/bare-script/sample/dispatch/implementation-1.md:6: bare package script name adr_lint.py\n",
+    "stderr": "",
+    "input": "fixtures/bare-script/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "arbitrary-absolute-script",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --names --strict fixtures/arbitrary-absolute-script/sample/dispatch/implementation-1.md",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "input": "fixtures/arbitrary-absolute-script/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-01",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-01/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-01/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-02",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-02/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-02/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-03",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-03/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-03/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-04",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-04/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-04/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-05",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-05/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-05/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-06",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-06/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-06/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-07",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-07/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-07/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-08",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-08/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-08/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-09",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-09/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-09/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-10",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-10/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-10/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-11",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-11/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-11/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-12",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-12/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-12/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-13",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-13/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-13/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-14",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-14/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-14/sample/dispatch/implementation-1.md"
+  },
+  {
+    "id": "rule-15",
+    "command": "python3 -B snapshot/kc-dev-flow-2/scripts/dispatch_records.py --readme fixtures/README.md fixtures/rule-15/sample",
+    "exit_code": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": "",
+    "input": "fixtures/rule-15/sample/dispatch/implementation-1.md"
+  }
+]

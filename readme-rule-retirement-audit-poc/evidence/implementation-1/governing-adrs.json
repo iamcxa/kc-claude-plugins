@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs/adr/0003-secret-reads-are-enforced-by-the-adopter.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "sha256": "3eeba405980c060537b5972beefc08d57cf1a7b6ffb2900e9c68ecbf86871c3a",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0024-chat-only-fo-rules-are-listed-not-judged.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "sha256": "fe7475b7dc41a77fcfd015de3b9c1deb9235eb2b2cfe114b99c2a7efd9a3a696",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "sha256": "978f2731eda46ecb8351e435bed023d77620e25714c9b6defe5f0fbd962a6029",
+    "status": "Accepted"
+  },
+  {
+    "path": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "sha256": "97f14773e680927e218eb3f866bd733f232d607134f37ecda344de9244187953",
+    "status": "Accepted"
+  }
+]

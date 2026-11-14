@@ -1,0 +1,23 @@
+{
+  "commit": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "branch": "spacedock-ensign/readme-rule-retirement-audit-poc",
+  "source": "docs/dev2/README.md",
+  "readme_bytes": 41076,
+  "readme_sha256": "284e9c88cb38a0a5b183fa7c66784d1a41b1ea78a2cbfe252d4965aa243a9f8c",
+  "examined": 15,
+  "covered_whole": 0,
+  "covered_part": 4,
+  "uncovered": 11,
+  "removable_readme_bytes": 0,
+  "stop_applied": true,
+  "sections_not_examined": [
+    "Review-finding disposition",
+    "FO steps: review findings",
+    "Number guards",
+    "FO steps: number guards",
+    "Decision records"
+  ],
+  "worktree_status_before": "clean",
+  "worktree_status_after": "clean",
+  "source_tracking_ref": "origin/main (local tracking ref; no fetch)"
+}
