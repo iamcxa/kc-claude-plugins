@@ -1,4 +1,4 @@
-Unpaid checks on the runner at candidate 758cdd90140c37e394ebc527137ee42842641ae5 (branch behaviour-first-cell, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository).
+Unpaid checks on the runner at candidate ba8857895701fcab9f60d2dc8ddd85155330f2e4 (branch behaviour-first-cell, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository). Supersedes the run at 758cdd90140c37e394ebc527137ee42842641ae5.
 Run from the repository root, 2026-11-14, no model call, no credential. Case ids in the fixtures are shown as counts. The fixture transcript's home path is a made-up placeholder.
 Not archived (private): runner source, case fixtures, the two stored result folders; reproduce: the commands below at that commit.
 
@@ -68,3 +68,11 @@ falsifiers/leaky-transcript.jsonl: 1 breach(es)
   (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
 refused before any launch: CLAUDE_CODE_OAUTH_TOKEN is not set in the environment
 exit=1
+
+# git hardening (one-off probe, temp repository with a planted core.fsmonitor command and a post-checkout hook)
+plain git status ran the planted fsmonitor command: True
+runner's git status and worktree add ran it: False; ran the planted post-checkout hook: False
+plain git worktree add ran the planted post-checkout hook: True
+# integrity check (real case build in a scratch directory, no model call)
+digest of pinned tools, replay_dispatch.py and the three case repositories' config unchanged after build+cleanup of two arms: True
+digest after one planted config line: changed (True)
