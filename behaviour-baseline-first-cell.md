@@ -62,6 +62,20 @@ gates:
                 id: briefing:behaviour-baseline-first-cell:validation:attempt-1:revision-1
                 digest: sha256:f456f7c3e6799a148423d68b74db607d256468a8b3a334b8ad21104fc8b865ee
                 room-ref: ./behaviour-baseline-first-cell/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:behaviour-baseline-first-cell:validation:1
+                briefing: briefing:behaviour-baseline-first-cell:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T09:07:05.433258Z"
+                decision: approve
+                reason: 'Both readings are delivered and independently checked; the second reads no difference by the patterns committed before its runs, so the cell closes as that reading requires; the reform session acknowledged the closing (message bc65ce97). No excluded matter is involved: nothing merges into a public repository and no outward action is taken.'
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item C as re-cut by the reform session, Paseo messages 734da3e8-63cb-4352-9c4b-f44b6004d7f5, 8691ee5c-fbe4-42c7-b567-e618d4da63de and bc65ce97-eea3-41d3-9e2c-ca38681e3c3f
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T04:43:45Z
 ---
 
