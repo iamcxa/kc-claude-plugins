@@ -1,7 +1,7 @@
 ---
 id:
 title: Sealed evidence and the delivery gate's own text can be written without a home-directory path or a private repository name, so the state guard can refuse those two classes
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
