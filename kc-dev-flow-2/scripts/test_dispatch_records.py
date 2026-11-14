@@ -340,7 +340,7 @@ class DispatchRecordTests(unittest.TestCase):
         self.assertEqual(line[1], PASEO_LINE)
         self.assertEqual(records.PASEO_COMPLETION_LINE, PASEO_LINE)
 
-    def test_the_package_root_line_must_be_absolute_and_inside_the_scope_notes(self):
+    def test_the_package_root_line_must_be_absolute_or_home_relative_and_inside_scope(self):
         moved = COMPLETE.replace("Package root: /abs/kc-dev-flow-2\n", "").replace("## Checklist\n", "Package root: /abs/kc-dev-flow-2\n## Checklist\n")
         for label, text in (
                 ("deleted", COMPLETE.replace("Package root: /abs/kc-dev-flow-2\n", "")),
@@ -349,8 +349,11 @@ class DispatchRecordTests(unittest.TestCase):
             with self.subTest(label):
                 code, out = self.check({"implementation-3.md": text, "validation-1.md": COMPLETE})
                 self.assertEqual(code, 1)
-                self.assertIn("implementation-3.md: needs a 'Package root:' line with an absolute path in its scope notes", out)
+                self.assertIn("implementation-3.md: needs a 'Package root:' line with an absolute or ~/ path in its scope notes", out)
                 self.assertNotIn("validation-1.md", out)
+
+    def test_home_relative_root_passes(self):
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE.replace('/abs/', '~/')})[0], 0)
 
     def test_a_checklist_that_only_names_other_records_fails_but_one_citing_a_sibling_beside_real_lines_passes(self):
         pointer = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\n")
@@ -697,6 +700,14 @@ ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"
 
 
 class ExtensionInstructionTests(unittest.TestCase):
+    def test_home_relative_instruction_stays_bound_to_its_root(self):
+        text = (COMPLETE + f'Run python3 {ROBOREV_PATH}\n').replace('/abs/', '~/')
+        self.assertEqual(self.check({'implementation-1.md': text})[0], 0)
+        moved = text.replace('Package root: ~/kc-dev-flow-2', 'Package root: ~/different-root')
+        code, out = self.check({'implementation-1.md': moved})
+        self.assertEqual(code, 1)
+        self.assertIn('roborev worker instruction is absent', out)
+
     def run_main(self, folder, *flags):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):

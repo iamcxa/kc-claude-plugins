@@ -14,6 +14,8 @@ import shutil
 import subprocess
 import sys
 
+from state_guard import rewrite_home
+
 BASE = Path('/tmp').resolve() / 'dev2'
 RECORD = re.compile(r'[a-z][a-z0-9_-]*-[1-9][0-9]*(?:-message-[1-9][0-9]*)?')
 
@@ -121,7 +123,7 @@ def evidence(folder, record):
     manifest = target / 'SHA256SUMS'
     safe_path(manifest)
     previous = dict(line.split('  ', 1)[::-1] for line in manifest.read_text().splitlines()) if manifest.exists() else {}
-    sums, compress = [], []
+    sums, compress, rewrites = [], [], {}
     for path in (p for p in paths if p.is_file()):
         name = path.relative_to(target).as_posix()
         compressed = name.endswith('.gz') and name[:-3] in previous and not path.with_suffix('').exists()
@@ -130,6 +132,18 @@ def evidence(folder, record):
         digest = hashlib.sha256(data).hexdigest()
         if compressed and digest != previous[original]:
             raise ValueError(f'evidence digest differs: {path}')
+        # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md
+        if not compressed and digest != previous.get(original):
+            packed = data.startswith(b'\x1f\x8b')
+            content = gzip.decompress(data) if packed else data
+            try:
+                text = content.decode('utf-8') if b'\0' not in content else None
+            except UnicodeError:
+                text = None
+            if text is not None and (rewritten := rewrite_home(text).encode('utf-8')) != content:
+                data = gzip.compress(rewritten, mtime=0) if packed else rewritten
+                rewrites[path] = data
+                digest = hashlib.sha256(data).hexdigest()
         sums.append(f'{digest}  {original}\n')
         if not compressed and len(data) > 256 * 1024:
             destination = path.with_name(path.name + '.gz')
@@ -137,6 +151,8 @@ def evidence(folder, record):
                 raise ValueError(f'evidence compression would overwrite {destination}')
             compress.append(path)
     target.mkdir(parents=True, exist_ok=True)
+    for path, data in rewrites.items():
+        path.write_bytes(data)
     manifest.write_text(''.join(sums))
     for path in compress:
         destination = path.with_name(path.name + '.gz')
