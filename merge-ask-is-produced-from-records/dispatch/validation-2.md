@@ -1,0 +1,25 @@
+# validation-2
+Dispatched: 88f86f2749dadb6f4ef0cf9aa089c1827096865b (workflow checkout, kc-dev-flow-2 0.41.0 README; merge-front batch, 2026-11-13)
+Model: gpt-6-astra (Codex via Paseo, thinking xhigh; repo roster .dev2/model-roster.json validation row)
+Budget: 3 implementation and 2 validation cycles
+Roster: source=repository; role=validation; provider=codex; model=gpt-6-astra; effort=xhigh; host=paseo; digest=sha256:c34a62cb3a56f3eded8c398ed469a2e43b69c95a84528aa7ab998ddb482f66a1; commit=88f86f2749dadb6f4ef0cf9aa089c1827096865b
+Candidate: a5657edd6531916cd01f659b888feaa021219ead
+Symptom: validation-1 REJECTED at 5e9afd496: F1 second-reviewer declaration form lost in the move to the contract
+
+## Checklist
+Independent verdict on PR #869 head a5657edd against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+- Second and last validation cycle, scaled to the repair (5e9afd496..a5657edd6: the contract, one guard line, tests): recheck F1 of evidence/validation-1 with its original trigger and rerun the blind read over kc-dev-flow-2/references/delivery-record.md as shipped (a reader holding only the contract writes the second-reviewer declaration, the external rounds line and the Captain steps line that the guards accept); check the visibility change (only PUBLIC saves a record); rerun your four-step acceptance script in a fresh shell; confirm nothing that passed in validation-1 regressed. FO declined two local review findings, judge neither as a defect of this candidate unless you find harm: job 1859 (no live pull-request reread at question time; shared with the base) and job 1863 (the record route does not require Sufficiency and Necessity labels; the approved design removes that presence test, see What is removed in the task's Design). Hosted CI on PR 869 at this head is green; read it, do not rerun the whole list.
+A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+
+## Scope notes
+Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0
+
+Profile: pilot. Start in the assigned worktree; verify pwd and git root before edits. Candidate: iamcxa/kc-claude-plugins PR #869, head a5657edd6531916cd01f659b888feaa021219ead, base origin/main. This task; other PRs may be in flight and are not your candidate. Read and run the candidate from an export, not a git worktree: `git -C <repo> archive <head> | tar -x -C <new directory under /tmp>`, and diff with read-only `git -C <repo> diff <base> <head>`. Do not create or remove a git worktree; its metadata sits outside your sandbox and each one needs a Captain prompt. Commit your stage report with `spacedock state commit merge-ask-is-produced-from-records --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`. Never run `git remote set-url` or any `git config` write in a worktree of this repository. Do not push the product branch, comment on any PR, request reviews or mark ready; the state-branch push that `spacedock state commit` makes is expected and allowed.
+
+Your final reply is your completion message: Paseo delivers it to FO when your turn ends. End your turn with the Done line below as that reply; do not send it with SendMessage or send_agent_prompt.
+Done line: Done: merge-ask-is-produced-from-records completed validation
+
+Roster authors: implementation-1-message-1.md: codex/gpt-6.1-sol xhigh; implementation-1-message-2.md: codex/gpt-6.1-sol xhigh; implementation-1-message-3.md: codex/gpt-6.1-sol xhigh; implementation-1.md: codex/gpt-6.1-sol xhigh; implementation-2-message-1.md: codex/gpt-6.1-sol xhigh; implementation-2-message-2.md: codex/gpt-6.1-sol xhigh; implementation-2-message-3.md: codex/gpt-6.1-sol xhigh; implementation-2.md: codex/gpt-6.1-sol xhigh; implementation-3-message-1.md: codex/gpt-6.1-sol xhigh; implementation-3-message-2.md: codex/gpt-6.1-sol xhigh; implementation-3.md: codex/gpt-6.1-sol xhigh. Family: same-family: openai.
+
+Scratch: /tmp/dev2/kc-claude-plugins-3042bb224e995ded/merge-ask-is-produced-from-records/validation-2
+Put files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/validation-2/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/scratch.py close /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/merge-ask-is-produced-from-records validation-2` and paste its output.
