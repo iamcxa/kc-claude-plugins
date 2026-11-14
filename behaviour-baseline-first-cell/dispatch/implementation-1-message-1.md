@@ -8,6 +8,7 @@ Model: claude-sonnet-5-5 (Claude via Paseo profile 'dev2 worker', thinking high;
 
 - Decide from evidence whether the skill named schedule is a skill the CLI itself ships that appears only with a login (not operator configuration), and say what the evidence is; if it is, add it to the cell's allowed bundled skills as a login-only entry, and keep every other unexpected skill, plugin or MCP server a breach.
 - Make sure a worker in a run cannot use that skill to act outside the run (it creates scheduled cloud agents): state how the launch prevents it, or prevent it.
+- Captain amendment 1 (in the task file) settles decision D1: the credential is a subscription token the Captain makes and keeps himself; the runner still only reads it from the environment.
 - Re-run the unpaid checks (selfcheck, the two dry runs, the leaky-transcript scan) with exit codes; commit on the same branch in the private working repository; report the new candidate SHA. No paid run and no credential handling by you: the operator re-runs the first paid step.
 - Append a complete new stage report that supersedes the earlier one.
 
