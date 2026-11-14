@@ -1,0 +1,15 @@
+{
+  "freeze_commit": "9bc6c6e699def6958069d85e4374bb344b95e4e3",
+  "commit_info": "9bc6c6e699def6958069d85e4374bb344b95e4e3\nf6a561c1d498d70a790e101287b992545360c038\n2026-11-14T10:47:10+08:00\nstate: update shared-assumption-replay-on-archived-tasks-poc",
+  "verified_at": "2026-11-14T02:47:33.858943+00:00",
+  "paths_in_freeze_commit": [
+    "shared-assumption-replay-on-archived-tasks-poc/evidence/implementation-1/assumptions.json",
+    "shared-assumption-replay-on-archived-tasks-poc/evidence/implementation-1/assumptions.md",
+    "shared-assumption-replay-on-archived-tasks-poc/evidence/implementation-1/first-two-manifest.json",
+    "shared-assumption-replay-on-archived-tasks-poc/evidence/implementation-1/precommit-read-boundary.json"
+  ],
+  "origin_tracking_ref": "7c577494f2dcf103d4fa092971de88cc22f8fb7b",
+  "assumptions_sha256": "d1638bf9da42d71691a6e19dca8a89d4c42012bc19f2d7865d7bfcbef04dc3eb",
+  "dispatch_3_opened_at_verification": false,
+  "verification": "All five hypotheses and first-two source manifest are byte-identical to the same task-only commit, which is in the synced state branch."
+}
