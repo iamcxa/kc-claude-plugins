@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:test-value-pass-on-route-trial-prs-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:test-value-pass-on-route-trial-prs-poc-backlog-1
+              briefing:
+                id: briefing:test-value-pass-on-route-trial-prs-poc:backlog:attempt-1:revision-1
+                digest: sha256:972af36056bc1bb6e9b282a445450aeb28a2fa15a197ef3688edc3957f7c9e91
+                room-ref: ./test-value-pass-on-route-trial-prs-poc/review/backlog/briefing-1
 ---
 
 The package holds 1,455 test functions in 24,684 test lines against 10,728 product lines; 258 use mocks or fakes and 21 are text containment; two tasks were blocked by text-shape assertions in one file in one evening (brief C3, figures from test-audit.md and proposal.md, not re-measured here). Nothing at write time asks whether a new test fails when the behaviour breaks.
