@@ -1,6 +1,6 @@
-Unpaid checks on the runner at candidate 6bea0102534dbef98a4be7b4f99a3647f6305c6d (branch behaviour-first-cell, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository). Supersedes the runs at ba8857895701fcab9f60d2dc8ddd85155330f2e4 and 758cdd90140c37e394ebc527137ee42842641ae5.
-Run from the repository root, 2026-11-14, no model call, no credential. Case ids in the fixtures are shown as counts. The fixture transcripts' paths are made-up placeholders.
-Not archived (private): runner source, case fixtures, the two stored result folders; reproduce: the commands below at that commit.
+Unpaid checks and launch proofs at candidate 16af27c27b19a5ece4979454de46a229f2f928cb (branch behaviour-first-cell, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository). Supersedes the earlier runs.
+Run from the repository root, 2026-11-14, no model call, no credential; the proofs use a stub agent and a dummy token. Case ids in the fixtures are shown as counts. The fixture transcripts' paths are made-up placeholders.
+Not archived (private): runner source, case fixtures, the two stored result folders; reproduce: the commands below at that commit (the proofs build the case once under /tmp/behaviour-proof-work and need network).
 
 $ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion
 falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
@@ -79,4 +79,26 @@ falsifiers/leaky-transcript.jsonl: 1 breach(es)
   (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
 falsifiers/schedule-transcript.jsonl: 2 scheduling breach(es)
 refused before any launch: CLAUDE_CODE_OAUTH_TOKEN is not set in the environment
+exit=1
+$ python3 -B behaviour/prove_launch.py ctrlc
+PASS ctrlc: runner exit 130; 5 processes (agent, its background child, guard) gone 0.0s later; recorded operator-abort; counted 1 launch, 0 INVALID
+exit=0
+$ python3 -B behaviour/prove_launch.py sigkill
+PASS sigkill: runner SIGKILLed; guard, agent and background child gone 0.6s later (wall cap 30s); record without end read as ABORT
+exit=0
+$ python3 -B behaviour/prove_launch.py wallcap
+PASS wallcap: wall: stub that never exits stopped after 8.7s (cap 8), all its processes gone; tool-cap: stub that never exits stopped after 0.5s (cap 5 tool calls), all its processes gone
+exit=0
+$ python3 -B behaviour/prove_launch.py progress
+PASS progress: 6 progress lines for base t1 (elapsed and tool calls), after the up-front summary
+exit=0
+$ python3 -B behaviour/prove_launch.py token
+PASS token: the agent saw the token and the scrub switch; the value is in no process argument list and in no file under the results, the work directory or the runner output
+exit=0
+$ python3 -B behaviour/prove_launch.py signalled
+PASS signalled: SIGTERM sent to the guard by another process: recorded 'signalled' and graded INVALID, not operator abort
+exit=0
+# falsifier: guard without its runner-death check (a copy outside the repository)
+$ python3 -B <copy>/behaviour/prove_launch.py sigkill
+FAIL sigkill: still alive after 10s: [47711, 47712, 47713]
 exit=1

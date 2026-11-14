@@ -1,0 +1,14 @@
+The operator's aborted launch (base trial 1; manifest with no end record and a partial stream) read at candidate 16af27c27b19a5ece4979454de46a229f2f928cb, no model call:
+$ python3 -B behaviour/run_cell.py grade <that run folder>
+ABORT (operator abort: counts toward the launch cap, not an INVALID trial)
+$ python3 -B behaviour/run_cell.py run <cell> --dry-run   (summary lines)
+dry run: 1 launch records, 0 INVALID; would launch base t1, cand t1, control t1, base t2, cand t2, control t2, base t3, cand t3, control t3
+will launch 9 runs: base 3, cand 3, control 3
+cap per run: 1500 s wall clock, 150 tool calls
+expected total: not measured yet (no completed run to go on); ceiling 225 min = 9 runs x 25 min
+launch records so far: 1 of 18 (1 operator abort, 0 INVALID; two INVALID halt the cell)
+to stop safely: press Ctrl-C once. The agent and everything it started are killed, and the run is recorded as an operator abort: it counts toward the launch cap, not toward the INVALID trials. Closing the terminal does the same. If the runner is killed outright, its guard process kills the agent within seconds.
+$ python3 -B behaviour/run_cell.py scan <cell>   (first run's line; the stream is a real one from the credentialed launch)
+init=seen ok reads bare-skills=19 
+Reading: the record counts as 1 launch and 1 operator abort, 0 INVALID; base trial 1 is still to run. The scan parsed a real stream: init event seen, no breach, 19 bare skills (the 18 bundled plus schedule).
+Not archived (private): the manifest and stream; reproduce: the commands above in the private working repository.
