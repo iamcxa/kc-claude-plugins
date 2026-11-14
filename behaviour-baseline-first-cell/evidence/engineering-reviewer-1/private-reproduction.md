@@ -1,0 +1,1 @@
+Not archived (private): candidate export and launch-proof output for 16af27c27b19a5ece4979454de46a229f2f928cb; reproduce: `env -i PATH="$PATH" TMPDIR="$SCRATCH/tmp" BEHAVIOUR_WORK="$SCRATCH/work" PYTHONDONTWRITEBYTECODE=1 python3 -B behaviour/prove_launch.py ctrlc`, from an exact candidate export, with SCRATCH set to this dispatch's assigned scratch root.
