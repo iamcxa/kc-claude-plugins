@@ -1,7 +1,7 @@
 ---
 id:
 title: The private working repository's second laptop cell passes its selfcheck on a fresh clone and says which entries it could not check
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -31,7 +31,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 as continued by the reform session, Paseo messages c998ccf1-0e7d-4197-9636-a25f2818c562 and c271575d-82b3-4a1b-a945-c7df85cea4da
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 The clean branch pushed to the private working repository's remote on 2026-11-14 carries a cell whose `selfcheck` exits 1 on a fresh clone: nine of its fixture entries point at raw laptop outputs that are deliberately not carried. A check that fails on a fresh clone is a trap for whoever clones it next.
