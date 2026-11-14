@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:readme-rule-retirement-audit-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:readme-rule-retirement-audit-poc-backlog-1
+              briefing:
+                id: briefing:readme-rule-retirement-audit-poc:backlog:attempt-1:revision-1
+                digest: sha256:0e62448bb281717e4e31d7bca8d6a18995600e61e95bf496539dcbb2bc6afbb5
+                room-ref: ./readme-rule-retirement-audit-poc/review/backlog/briefing-1
 ---
 
 The README grew from 10 KB to 41 KB in 58 days, with about 63 mandatory steps per default task and 12 repeating per dispatch; 44 tasks cite an observer finding as the reason for a new form check, and no step removes a rule (brief C2, figures from proposal.md "Measured", not re-measured here).

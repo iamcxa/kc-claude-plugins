@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:readme-rule-retirement-audit-poc:backlog:attempt-1:revision-1",
+  "question": "准入這三張唯讀 POC 任務嗎：規則退役稽核（C2）、測試價值審查（C3）、共用假設回放（C6）？各自的範圍、不做的事、停止條件照任務檔；預算是我的提議：每張 1 次實作派工加 1 次驗證派工。三張都不改任何產品檔、不刪任何東西，產出是給你裁決的清單與計數。",
+  "artifacts": [
+    {
+      "id": "artifact:readme-rule-retirement-audit-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/da4fafe86bec6fce4c0962d290abf41946da27a5/readme-rule-retirement-audit-poc.md",
+      "rev": "sha256:ba1a13195cf3ce62391b5bcd83c209fc4114d4b85b21597c8c1014f0edfc5b49",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission: profile poc, read-only measurement; outcome, Non-goals, Stop condition and AC-1 as filed from the reform brief; Budget 1 implementation and 1 validation cycles is the FO's proposal; FO alignment not needed before implementation; no product file changes."
+    }
+  ]
+}
