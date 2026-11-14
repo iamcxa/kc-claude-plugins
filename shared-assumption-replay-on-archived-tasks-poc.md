@@ -37,6 +37,20 @@ gates:
                 id: briefing:shared-assumption-replay-on-archived-tasks-poc:validation:attempt-1:revision-1
                 digest: sha256:2311160bba13404f39a55058c5a7275f9b3d9ea222188838558bf57ee1030b65
                 room-ref: ./shared-assumption-replay-on-archived-tasks-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:shared-assumption-replay-on-archived-tasks-poc:validation:1
+                briefing: briefing:shared-assumption-replay-on-archived-tasks-poc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T04:40:17.699229Z"
+                decision: approve
+                reason: 'The measurement AC-1 asks for was delivered and independently validated; its reading is recorded as: the retrospective cannot show the prompt helps; inputs leaked later work. This closes the task, not the mechanism: no pass is claimed for the prompt.'
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item A from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T02:35:18Z
 ---
 
