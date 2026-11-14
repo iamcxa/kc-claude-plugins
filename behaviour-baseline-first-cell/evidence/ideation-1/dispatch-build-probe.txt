@@ -1,0 +1,18 @@
+Probe: replay_dispatch.py build at the release and the candidate package ref, for the first cell's case. No model call.
+Date: 2026-11-14. Pins: replay-cases.tsv line 12 (header is line 1): state commit from its ideation_dispatch_cut column, code commit from its code_commit column, task slug from its slug column. Not archived (private): the pins and the built dispatch text; reproduce: the commands below in a scratch directory.
+replay_dispatch.py: exported with `git show kc-dev-flow-2-v0.41.0:kc-dev-flow-2/scripts/replay_dispatch.py` (not an installed copy).
+Repos: one `git clone --no-checkout` of the public repository into scratch, then `git remote remove origin` (`git remote -v | wc -l` printed 0).
+Adopter README: `git show <code commit>:docs/dev2/README.md`; its sync marker reads `kc-dev-flow-2 0.35.0`, so --readme-base-ref kc-dev-flow-2-v0.35.0.
+Commands (per arm):
+  python3 replay_dispatch.py build --run-dir <scratch>/run-<arm> --package-repo case-repo --package-ref <ref> \
+    --adopter-readme adopter-readme.md --readme-base-ref kc-dev-flow-2-v0.35.0 --state-repo case-repo \
+    --state-commit <row 12 ideation_dispatch_cut> --task <row 12 slug> --code-repo case-repo \
+    --code-commit <row 12 code_commit> --stage ideation --checklist checklist.txt --spacedock <spacedock 0.27.2 binary>
+Results:
+  base ref kc-dev-flow-2-v0.41.0 (fa022a864fc35b74fab53b69b198ae602741965a): exit 0, dispatch 4620 bytes
+  cand ref origin/main c2f035b6612f5edb42220576b3414e993531ffd6: exit 0, dispatch 4620 bytes
+  The two dispatch files differ only in their run-directory paths: diff after replacing each run dir with RUN printed nothing.
+  The exported package trees differ in 15 files (`diff -rq | wc -l`), 2 of them under skills/ideation.
+  One home-directory path appears in the dispatch: the spacedock binary path passed by --spacedock (in its fetch command).
+  The runner therefore copies the binary into the run's bin directory and passes that path.
+Cleanup: replay_dispatch.py cleanup on both run dirs; `git worktree list | wc -l` printed 1 afterwards.

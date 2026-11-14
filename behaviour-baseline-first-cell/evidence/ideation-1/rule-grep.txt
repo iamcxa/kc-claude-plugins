@@ -1,0 +1,8 @@
+Does any arm's package already carry this cell's answer? Public package text only.
+Command, per ref in kc-dev-flow-2-v0.35.0 kc-dev-flow-2-v0.41.0 origin/main (c2f035b66):
+  git grep -n -i -E 'not provable|provable now|proof run|run once now|Needs decision' <ref> -- kc-dev-flow-2/skills/ideation kc-dev-flow-2/references/profiles/pilot.md
+Result: the same four hits at every ref (design-review.md lines 14 and 28, principles.md line 11 on Follow-up proposals,
+profiles/prod.md line 29); none asks a Pilot design to run each criterion's proof before approval or to flag one it cannot run.
+Changes between the release and the candidate under skills/ideation (git diff kc-dev-flow-2-v0.41.0 origin/main):
+  profiles/pilot.md gains a `## Probe` section (falsify the riskiest assumption first, record each hypothesis and result);
+  principles.md drops one sentence. scripts/design_surfaces.py changes by 86 lines.

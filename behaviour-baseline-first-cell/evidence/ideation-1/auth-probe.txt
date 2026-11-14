@@ -1,0 +1,6 @@
+Probe: does an empty home and an empty Claude config directory carry the operator's login or configuration? No model call.
+Command: env -i PATH=/usr/bin:/bin HOME=<scratch>/probe-home CLAUDE_CONFIG_DIR=<scratch>/probe-cfg <claude 2.1.323> auth status
+Output (first fields): "loggedIn": false, "authMethod": "none". Exit 0.
+Reading: nothing from the operator's login reaches such a run, so each run must be given a credential explicitly
+(CLAUDE_CODE_OAUTH_TOKEN, or ANTHROPIC_API_KEY); `--bare` reads only ANTHROPIC_API_KEY (claude --help).
+Token file used by Spacedock's local live runs (<home>/.claude/benchmark-token): absent (`test -f`, value never read).

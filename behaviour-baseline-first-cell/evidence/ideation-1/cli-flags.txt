@@ -1,0 +1,7 @@
+Claude Code 2.1.323, `claude --help`, 2026-11-14:
+  present: --setting-sources, --strict-mcp-config, --plugin-dir, --allowedTools, --disallowedTools, --effort, --model,
+           --output-format, --permission-mode, --add-dir, --no-session-persistence, --bare, --safe-mode, --max-budget-usd
+  absent from help: --max-turns (`claude --help | grep -c max-turns` printed 0), so the runner counts tool calls itself.
+  --safe-mode: disables CLAUDE.md, skills, installed plugins, hooks and MCP servers; auth works normally.
+  --bare: Anthropic auth is strictly ANTHROPIC_API_KEY or apiKeyHelper; OAuth and keychain never read.
+Spacedock binary used for builds: `spacedock --version` printed `spacedock 0.27.2`.
