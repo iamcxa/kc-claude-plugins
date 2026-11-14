@@ -1,7 +1,7 @@
 ---
 id:
 title: One command prints five numbers for a task from its state records, and the table for today's tasks
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
