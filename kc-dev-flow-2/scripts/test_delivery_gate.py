@@ -2138,7 +2138,7 @@ class CaptainGateTests(CaptainStepFixture):
             self.assertEqual(code, 1, out)
             self.assertIn("differs from latest dispatched Candidate", out)
             self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
-        no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
+        no_clause = variant_of('missing = captain_step_problems(task, text, source["steps"])', 'missing = []')
         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
         no_binding = variant_of('if candidate not in candidates:', 'if False:')
         self.assertEqual(self.ask_gate(candidate="e623efd2" + "0" * 32, module=no_binding)[0], 0)
@@ -3258,7 +3258,7 @@ class SummaryTests(unittest.TestCase):
     def test_summary_boundaries_have_mutation_falsifiers(self):
         no_count = variant_of('return ["summary needs one top-level External rounds: N line (nonnegative integer)"]', 'return []')
         mixed = variant_of('reviewer_text = "\\n".join(outside_fences(summary))',
-                           'reviewer_text = gate_text + "\\n" + "\\n".join(outside_fences(summary))')
+                           'reviewer_text = text + "\\n" + "\\n".join(outside_fences(summary))')
         for summary, mutant in ((DECLARATION + "Copilot review:18.\n", no_count),
                                 ("External rounds: 0\n" + DECLARATION, mixed)):
             self.assertEqual(self.ask(summary)[0], 1)
@@ -3607,7 +3607,7 @@ class RecordRouteParityTests(unittest.TestCase):
                     saved, evidence = globals()["refusal"]("Copilot quota limit.", head=HEAD40)
                     source = gate.task_folder(task) / "review/copilot-not-run.txt"
                     source.parent.mkdir(); source.write_text(saved)
-                summary.write_text(CLAUSES + ROUNDS + declaration + evidence + proof)
+                summary.write_text(CLAUSES + ROUNDS + declaration + evidence + proof + (RETRY + "\n" if refusal and RETRY in extra else ""))
                 combined.write_text(question.read_text() + summary.read_text())
                 original = question.read_bytes()
                 with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=rows), contextlib.redirect_stdout(io.StringIO()):
@@ -3630,33 +3630,40 @@ class RecordRouteParityTests(unittest.TestCase):
                 pair = self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n", decisions=False, outcome=False)
                 self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
                 self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
-                self.assertEqual(self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")["record"]["question"], 0)
+                passing = self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")
+                self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
 
     def test_known_quota_refusal_needs_unread_and_retry_in_question(self):
         rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
                 dict(reviewer="copilot", head=HEAD40, exit=5, outcome="not-run", evidence=None, scope="pr")]
         pair = self.paired(rows=rows, refusal=True)
         self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+        self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
         for extra in ("Copilot not read: Captain decides whether to proceed.\n", RETRY + "\n"):
-            self.assertEqual(self.paired(rows=rows, refusal=True, extra=extra)["record"]["question"], 1)
-        self.assertEqual(self.paired(rows=rows, refusal=True, extra="Copilot not read: Captain decides whether to proceed.\n" + RETRY + "\n")["record"]["question"], 0)
+            pair = self.paired(rows=rows, refusal=True, extra=extra)
+            self.assertEqual(pair["record"]["question"], 1)
+        passing = self.paired(rows=rows, refusal=True, extra="Copilot not read: Captain decides whether to proceed.\n" + RETRY + "\n")
+        self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
 
     def test_configured_trigger_guard_includes_quoted_prod_profiles(self):
         for declaration in ("", DECLARATION * 2, "Second reviewer: other because policy.\n", "Second reviewer: copilot because \n"):
             pair = self.paired(declaration=declaration)
             self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
         rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
                 dict(reviewer="copilot", head=HEAD40, exit=3, outcome="pending", evidence=None, scope="pr")]
         for profile in ('"prod"', "'prod'"):
             pair = self.paired(profile=profile, declaration="Second reviewer: not triggered.\n", rows=rows)
             self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
         self.assertEqual(self.paired(declaration="Second reviewer: not triggered.\n", rows=rows)["record"]["question"], 0)
 
     def test_merge_head_token_must_be_nonempty_and_bounded(self):
         for head in ("", "not-a-sha", "a" * 41):
             pair = self.paired(head=head)
             self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
-        self.assertEqual(self.paired(head=HEAD40[:9])["record"]["question"], 0)
+        passing = self.paired(head=HEAD40[:9])
+        self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
 
     def test_question_reloads_current_reviewer_configuration(self):
         pair = self.paired(after_config=True)

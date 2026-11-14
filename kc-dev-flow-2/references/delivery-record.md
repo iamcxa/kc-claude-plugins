@@ -60,8 +60,9 @@ For each `findings` or `answered` observation, the question needs one
 `Review decision: <reviewer> <evidence> disposed: <judgment>`; `answered` may
 instead use `clean:` after FO reads it. These are human judgments, not new
 adapter outcomes or proof of a truthful classification or Captain waiver.
-Both commands apply the shared reviewer declaration/profile guards; `question`
-rereads current reviewer configuration. Merge questions need a valid head token.
+Both commands apply the shared reviewer declaration/profile guards. The text
+summary and facts readers feed one `question` guard sequence, which rereads current
+reviewer configuration. Merge questions need a valid head token.
 
 List an unread reviewer in the question when the record cannot establish its
 status; the Captain decides. An untriggered conditional second reviewer is

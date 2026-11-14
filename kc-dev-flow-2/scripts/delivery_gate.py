@@ -1255,67 +1255,97 @@ def matching_delivery_record(task, text):
     return path
 
 
+def read_summary_question(task, args, text):
+    reviewer_text = None
+    summary = None
+    if args.summary_file is not None:
+        summary = Path(args.summary_file).read_text()
+        text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), text), (Path(args.summary_file), summary)])
+        summary = count_disclosure(task_folder(task), text + "\n" + summary, Path(args.summary_file), summary)
+        reviewer_text = "\n".join(outside_fences(summary))
+        text += "\n" + summary
+    else:
+        text, = scope_disclosure(task_folder(task), [(Path(args.text_file), text)])
+        text = count_disclosure(task_folder(task), text, Path(args.text_file), text)
+    path = matching_delivery_record(task, text) if GRANT.search(text) else None
+    return dict(text=text, reviewer_text=reviewer_text, observations=None, steps=summary if summary is not None else text,
+                path=path, record=json.loads(path.read_text()) if path else None)
+
+
+def read_facts_question(task, args, text):
+    path = Path(args.facts_record)
+    data = json.loads(path.read_text())
+    return dict(text=text, reviewer_text=None, observations=data["reviewers"],
+                steps="Captain steps: " + (data.get("captain_steps") or {}).get("path", ""), path=path, record=data)
+
+
 def question(args):
-    if getattr(args, "facts_record", None):
-        return facts_question(args)
     emit(CLAIM_SOURCE)
+    facts = bool(getattr(args, "facts_record", None))
     task = Path(args.task)
-    if task.is_dir():
-        task = task / "index.md"
+    task = task / "index.md" if task.is_dir() else task
+    code = 0
     try:
-        task_text, gate_text = task.read_text(), Path(args.text_file).read_text()
-        question_text = gate_text
+        task_text, question_text = task.read_text(), Path(args.text_file).read_text()
         workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
         if not workflow_dir:
             raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
         second, extensions = reviewer_config(scalars, lists)
-        # see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md
-        reviewer_text = None
-        if args.summary_file is not None:
-            summary = Path(args.summary_file).read_text()
-            gate_text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text), (Path(args.summary_file), summary)])
-            summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
-            reviewer_text = "\n".join(outside_fences(summary))
-            gate_text += "\n" + summary
-        else:
-            gate_text, = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text)])
-            gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
-        found, wanted = reviewer_problems(task, task_text,
-                                         gate_text if reviewer_text is None else reviewer_text, second, extensions)
+        source = (read_facts_question if facts else read_summary_question)(task, args, question_text)
+        text, reviewer_text, data, path = source["text"], source["reviewer_text"], source["record"], source["path"]
+        problems, nexts = text_problems(task_text, text, at_gate=True, reviewer_text=reviewer_text, confirmations=not facts)
+        found, wanted = reviewer_problems(task, task_text, text if reviewer_text is None else reviewer_text,
+                                         second, extensions, observations=source["observations"])
+        problems += found
+        nexts += wanted
         if reviewer_text is not None:
             missing = summary_round_problems(reviewer_text)
-            found += missing
+            problems += missing
             if missing:
-                wanted.append("next: hold preparation; record the external round count in the summary.")
-        missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)
-        found += missing
+                nexts.append("next: hold preparation; record the external round count in the summary.")
+        missing = captain_step_problems(task, text, source["steps"])
+        problems += missing
         if missing:
-            wanted.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
-    except (OSError, UnicodeDecodeError, ValueError) as error:
-        emit(f"cannot read input: {error}")
-        return 2
-    problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
-    delivery_record = None
-    # see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md
-    if GRANT.search(gate_text):
-        delivery_record = matching_delivery_record(task, gate_text)
-        if delivery_record is None:
+            nexts.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
+        if facts:
+            candidates, dispatch = dispatched_candidates(task)
+            known = [(int(m[1]), p) for p in (task_folder(task) / "merge").glob("*.json")
+                     if (m := re.fullmatch(r"(?:ask|observation)-(\d+)\.json", p.name))]
+            if (data.get("schema") != "delivery-facts/v1" or data.get("public") is not True
+                    or not known or max(known)[1].resolve() != path.resolve()
+                    or data.get("head") not in candidates
+                    or data.get("question_sha256") != hashlib.sha256(Path(args.text_file).read_bytes()).hexdigest()
+                    or data.get("captain_steps") != observed_steps(task, data.get("head"))
+                    or not data.get("captain_steps")
+                    or data.get("validation") != validation_facts(task, task_text, dispatch)
+                    or data.get("result", {}).get("exit") != 0):
+                problems.append("facts record cannot be bound: missing, changed or held evidence")
+        elif GRANT.search(text) and path is None:
             problems.append("the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses")
             nexts.append("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.")
-        elif json.loads(delivery_record.read_text()).get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
+        if GRANT.search(text):
+            if data is not None and not merge_head_matches(data["head"], text):
+                problems.append("delivery is held or the merge head differs")
+            if not WORKTREE_REMOVAL.search(question_text):
+                problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
+                nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
+        if data is not None and data.get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
             problems.append("the question itself needs Merge result: not run: <reason>")
             nexts.append("next: hold preparation; put the merge-result not-run line in the question the Captain reads.")
-    if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
-        problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
-        nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
-    problems += found
-    nexts += wanted
-    emit(*problems, *dict.fromkeys(nexts))
-    if not problems:
-        emit("gate text complete", ASK_FORM)
-        if delivery_record is not None:
-            emit(f"next: run `spacedock state commit {task_folder(task).name} --workflow-dir {workflow_dir}`, then run `gate prepare` with `--reference {delivery_record}`.")
-    return 1 if problems else 0
+        emit(*problems, *dict.fromkeys(nexts))
+        code = 1 if problems else 0
+        if not problems:
+            emit("gate text complete", ASK_FORM)
+            if facts:
+                emit(f"reference: {path}", "summary: use the saved JSON bytes unchanged; FO writes no factual summary.")
+            elif path is not None:
+                emit(f"next: run `spacedock state commit {task_folder(task).name} --workflow-dir {workflow_dir}`, then run `gate prepare` with `--reference {path}`.")
+    except (OSError, UnicodeDecodeError, ValueError, KeyError, TypeError, AttributeError) as error:
+        if not facts and isinstance(error, (KeyError, TypeError, AttributeError)):
+            raise
+        emit("facts record cannot be bound: missing, changed or held evidence" if facts else f"cannot read input: {error}")
+        code = 1 if facts else 2
+    return code
 
 
 
@@ -1370,52 +1400,6 @@ def validation_facts(task, text, dispatch):
     return {"verdict": found[1] if found and bound else "not-observed", "rounds": sum(bool(RECORD.fullmatch(p.name)) for p in (task_folder(task) / "dispatch").glob("validation-*.md")),
             "report_sha256": hashlib.sha256(report.encode()).hexdigest(), "dispatch": dispatch.name if dispatch else None}
 
-
-def facts_question(args):
-    emit(CLAIM_SOURCE)
-    task = Path(args.task)
-    task = task / "index.md" if task.is_dir() else task
-    path = Path(args.facts_record)
-    try:
-        data = json.loads(path.read_text())
-        text = Path(args.text_file).read_text()
-        candidates, _ = dispatched_candidates(task)
-        if data.get("schema") != "delivery-facts/v1" or data.get("public") is not True:
-            raise ValueError("not a public delivery facts record")
-        known = [(int(m[1]), p) for p in (task_folder(task) / "merge").glob("*.json") if (m := re.fullmatch(r"(?:ask|observation)-(\d+)\.json", p.name))]
-        if not known or max(known)[1].resolve() != path.resolve():
-            raise ValueError("facts record is not the newest task record")
-        if data.get("head") not in candidates or data.get("question_sha256") != hashlib.sha256(Path(args.text_file).read_bytes()).hexdigest():
-            raise ValueError("facts record differs from candidate or question")
-        if data.get("captain_steps") != observed_steps(task, data.get("head")):
-            raise ValueError("Captain steps changed since observation")
-        if not data.get("captain_steps") or captain_step_problems(task, text, "Captain steps: " + data["captain_steps"]["path"]):
-            raise ValueError("Captain steps do not cover this question")
-        if data.get("validation") != validation_facts(task, task.read_text(), dispatched_candidates(task)[1]):
-            raise ValueError("validation changed since facts were observed")
-        if data.get("result", {}).get("exit") != 0:
-            raise ValueError("delivery check is held")
-        if GRANT.search(text) and not merge_head_matches(data["head"], text):
-            raise ValueError("delivery is held or the merge head differs")
-        problems, _ = text_problems(task.read_text(), text, at_gate=True, confirmations=False)
-        workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
-        if not workflow_dir:
-            raise ValueError("cannot read current reviewer configuration")
-        second, extensions = reviewer_config(scalars, lists)
-        found, _ = reviewer_problems(task, task.read_text(), text, second, extensions, observations=data["reviewers"])
-        problems += found
-        if GRANT.search(text) and not WORKTREE_REMOVAL.search(text):
-            problems.append("question omits removing its clean, pushed worktree")
-        if data.get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(text))):
-            problems.append("the question itself needs Merge result: not run: <reason>")
-        if problems:
-            emit(*problems)
-            return 1
-    except (OSError, UnicodeDecodeError, ValueError, KeyError, TypeError, AttributeError):
-        emit("facts record cannot be bound: missing, changed or held evidence")
-        return 1
-    emit("gate text complete", f"reference: {path}", "summary: use the saved JSON bytes unchanged; FO writes no factual summary.")
-    return 0
 
 
 def main(argv=None):
