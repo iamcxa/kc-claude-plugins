@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:state-branch-writes-carry-no-private-identifiers:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:state-branch-writes-carry-no-private-identifiers-ideation-1
+              briefing:
+                id: briefing:state-branch-writes-carry-no-private-identifiers:ideation:attempt-1:revision-1
+                digest: sha256:2985ea4f9eafc2a37f77734e7c6f84d171456d8ee4e0dabfe6ebc395e107e4d0
+                room-ref: ./state-branch-writes-carry-no-private-identifiers/review/ideation/briefing-1
 started: 2026-11-14T04:43:29Z
 ---
 

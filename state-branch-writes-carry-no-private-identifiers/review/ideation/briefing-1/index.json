@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:state-branch-writes-carry-no-private-identifiers:ideation:attempt-1:revision-1",
+  "question": "Approve this design for the writers and the state guard, with D1 (which identifier classes refuse at install, and the install on the live clone) and D2 (the email in commit metadata) left to the Captain at the merge ask? Not asked of the Captain: decided by FO under his standing grant inside the reform session's scope; approving starts implementation and installs nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:state-branch-writes-carry-no-private-identifiers:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/949ef770da03d6c4a3f05dcb7778f0b9c2122f08/state-branch-writes-carry-no-private-identifiers.md",
+      "rev": "sha256:0e638e0fb5b654f954efe5f80940a0e1d9a452c4b253ee097f9978d7580e1f92",
+      "mediaType": "text/markdown",
+      "summary": "Design gate under the Captain's grant. kc-dev-flow-2/scripts/design_surfaces.py check: exit 0, design surfaces presentable. Writers verified in code; saved records and sealed text evidence write the home directory as a tilde while the prompt keeps real paths; a new state guard script installs pre-commit and pre-push hooks on one state worktree; the identifier list lives outside every repository; a refusal prints file and class only. The release installs nothing and every class defaults to warn. Measured on the last 200 commits: refusing all five classes would have stopped 75 commits (22 dispatches); private slugs and tailnet hostnames had 0 hits. Carved out for the Captain at the merge ask: D1 and D2. Reported, not fixed here: gate summaries stored verbatim by Spacedock (inferred, 52 briefing files) and the commit-metadata email. Not prototyped: the evidence rewrite. AC-5 added by the design. Overlap checked with the other First Officer: only one test file is shared with a held pull request. ADR number 0087 reserved."
+    }
+  ]
+}
