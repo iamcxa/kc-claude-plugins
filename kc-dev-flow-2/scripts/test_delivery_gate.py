@@ -83,7 +83,7 @@ if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
     sys.stderr.write(os.environ.get("STUB_GH_FAIL", ""))
     sys.exit(1)
 if a[:2] == ["repo", "view"]:
-    print('{{"isPrivate": false}}')
+    print('{{"visibility": "PUBLIC"}}')
 elif a[:2] == ["pr", "view"]:
     own = os.path.join(d, "pr-" + a[2] + ".json")
     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
@@ -3487,8 +3487,8 @@ class ObservedFactsTests(unittest.TestCase):
                         stack.enter_context(mock.patch.object(gate, handler, return_value=0))
                     self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
 
-    def test_private_or_unknown_visibility_saves_no_record(self):
-        for visibility in ({"isPrivate": True}, {}):
+    def test_nonpublic_or_unknown_visibility_saves_no_record(self):
+        for visibility in ({"visibility": "PRIVATE"}, {}, {"visibility": "INTERNAL", "isPrivate": False}):
             with self.subTest(visibility=visibility), tempfile.TemporaryDirectory() as d:
                 task, question = Path(d, "task.md"), Path(d, "question")
                 task.write_text(TASK)

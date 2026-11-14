@@ -689,7 +689,7 @@ def check(args):
 
     if observed:
         try:
-            if json.loads(gh("repo", "view", repo, "--json", "isPrivate"))["isPrivate"] is not False:
+            if json.loads(gh("repo", "view", repo, "--json", "visibility"))["visibility"] != "PUBLIC":
                 emit("facts not saved: public repository visibility required")
                 return 2
         except (RuntimeError, ValueError, KeyError) as error:

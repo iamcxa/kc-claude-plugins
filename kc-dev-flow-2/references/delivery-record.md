@@ -14,8 +14,10 @@ Captain's requested steps; a stored digest does not prove execution.
 
 The delivery check is the writer. It saves observations in `<task>/merge/`:
 `ask-N.json` for exit 0, `observation-N.json` for a hold, sharing one increasing
-sequence. Nonzero holds delivery. Private or unknown repository visibility
-returns exit 2 without saving; private adopters retain the legacy text route.
+sequence. Nonzero holds delivery. Records are saved only when
+`gh repo view --json visibility` returns `visibility: PUBLIC`. Any other or
+missing visibility returns exit 2 without saving; private adopters retain the
+legacy text route.
 The field allowlist below excludes repository content: no title, body, diff,
 review prose, logs, question text or human reasons. No private content belongs
 in this record or its public state branch.
@@ -144,7 +146,7 @@ permitted. Nested descriptions name the source or the meaning a reader may use.
     "schema": {"const": "delivery-facts/v1", "description": "Format version; incompatible shapes require a new version."},
     "tool_version": {"type": "string", "description": "Producing package version, not a source commit."},
     "time": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "description": "UTC observation time; not authenticated ordering proof."},
-    "public": {"const": true, "description": "Repository visibility verified before saving."},
+    "public": {"const": true, "description": "Repository visibility is PUBLIC, verified before saving."},
     "pr": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+#[0-9]+$", "description": "Public repository-qualified PR identity."},
     "head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$", "description": "Observed PR head, unavailable on reader failure."},
     "candidate": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "description": "Latest dispatched candidates equal to the observed head."},
