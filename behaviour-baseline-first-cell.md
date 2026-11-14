@@ -18,6 +18,20 @@ gates:
                 id: briefing:behaviour-baseline-first-cell:backlog:attempt-1:revision-1
                 digest: sha256:b5664e5209c5d2fac6204d5ca3778145ad19aafa70dfdaa2431d11c3afe2a0b8
                 room-ref: ./behaviour-baseline-first-cell/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:behaviour-baseline-first-cell:backlog:1
+                briefing: briefing:behaviour-baseline-first-cell:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T04:42:39.866073Z"
+                decision: approve
+                reason: Inside scope 1 item C given by the reform session under the Captain's grant; profile pilot justified in the Scope; seed check exit 0; no excluded matter (public merge, outward action, outcome definition, suspected key) is involved in admission.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item C from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The package has no check that runs a model and looks at what its instructions cause. An earlier attempt (task validation-reads-pr-review-comments) had 7 valid runs of 12, two runs at the 1800-second cap, and a base that already passed 3 of 3, so it could show nothing (figures from `.context/dev2-reform/改革總計劃.md`, not re-measured here).
