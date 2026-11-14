@@ -60,3 +60,42 @@ Verified by: the candidate's diff and a run that leaves the state checkout uncha
 
 Alignment: not needed before implementation: the five numbers and the reuse are stated in the scope.
 Release review: not needed: package tooling.
+## Stage Report: implementation
+
+- DONE: One command in the extracted package prints five numbers for a task read from a state checkout given as an argument, reuses the timeline script, prints "not recorded" for a number with no record, and writes nothing to the state checkout
+  `scripts/task_scoreboard.py` (223 lines) imports `task_timeline.timeline` and adds only the reading of its result, one `git log` for the approval commit, and one `git show` per task; no timeline code copied. No-write: `find -newer` a pre-run stamp listed no file in either state checkout or git directory; git status unchanged (evidence/implementation-1/falsifier-and-no-write.txt).
+- DONE: The table for the tasks the second dev2 FO ran on 2026-11-14, read from the two public state branches, saved in the candidate and pasted here; the numbers that came out "not recorded" and the record each needs
+  Saved as `docs/scoreboard/2026-11-14.md` (copy: evidence/implementation-1/scoreboard-2026-11-14.md). Read at spacedock-state/dev2-poc @ de67f8c52af7 and spacedock-state/dev2 @ 76fa1cccb514, 2026-11-14T12:23Z. Table pasted below.
+- DONE: A local commit on the assigned branch with the configured git identity unchanged; branch, base and candidate SHA reported; the limits of the numbers
+  Branch `task-scoreboard`, base `2b391a40f926646b6be949cb2cf07466005e277c`, candidate `5e88c9ffe4e49ea3ebc80df45d00d381aee6bd46`; author is the configured identity (no `git config` write); not pushed. Limits are below and in the table file.
+
+Table (unedited command output; the three running rows are measured to the read time):
+
+| task | 1 first report (min) | 2 dispatches | 3 criterion changed | 4 questions | 5 minutes |
+|---|---|---|---|---|---|
+| extracted-package-real-use-routes-probe-poc | not recorded | backlog 0, implementation 1 | no: 2 criteria unchanged since backlog approval | 1 gate briefings; asks outside a gate: not recorded | 3.8 total = 3.7 machine + 0.1 waiting (running) |
+| method-reading-code-and-tables-on-the-private-remote-poc | 12.8 | backlog 0, implementation 1, validation 1 | no: 2 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 13.1 total = 12.9 machine + 0.2 waiting |
+| private-cell-selfcheck-passes-on-a-fresh-clone-poc | 17.7 | backlog 0, implementation 1, validation 1 | no: 2 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 17.9 total = 17.7 machine + 0.2 waiting |
+| readme-rule-retirement-audit-poc | 149.0 | backlog 0, implementation 2, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 154.6 total = 149.1 machine + 5.5 waiting |
+| shared-assumption-replay-on-archived-tasks-poc | 125.0 | backlog 0, implementation 1, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 130.7 total = 125.1 machine + 5.6 waiting |
+| task-scoreboard-five-numbers-poc | not recorded | backlog 0, implementation 1 | no: 2 criteria unchanged since backlog approval | 1 gate briefings; asks outside a gate: not recorded | 3.7 total = 3.6 machine + 0.1 waiting (running) |
+| test-value-pass-on-route-trial-prs-poc | 124.4 | backlog 0, implementation 1, validation 1 | no: 1 criteria unchanged since backlog approval | 2 gate briefings; asks outside a gate: not recorded | 130.4 total = 124.7 machine + 5.7 waiting |
+| state-branch-writes-carry-no-private-identifiers | 28.1 | backlog 0, ideation 1, implementation 1, validation 1 | no: 5 criteria unchanged since ideation approval | 3 gate briefings; asks outside a gate: 1 | 203.5 total = 178.9 machine + 24.6 waiting |
+| gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo | 29.2 | backlog 0, ideation 1, implementation 1, validation 1 | no: 5 criteria unchanged since ideation approval | 2 gate briefings; asks outside a gate: not recorded | 149.2 total = 149.0 machine + 0.2 waiting (running) |
+| extracted-package-says-five-rules-that-worked | not recorded | backlog 0, ideation 1 | no: 3 criteria unchanged since backlog approval | 1 gate briefings; asks outside a gate: not recorded | 4.0 total = 3.9 machine + 0.1 waiting (running) |
+
+Not recorded, with the record each would need:
+- number 4, asks outside a gate: 9 of 10 tasks have no `asks.jsonl`; needed: an `asks.jsonl` entry written when the FO asks outside a gate. Only state-branch-writes-carry-no-private-identifiers has one (1 ask). A task with no file may have had no ask or an unrecorded one; the absence cannot tell which.
+- number 1, first report: three tasks have no gate briefing or ask after their first dispatch yet (extracted-package-real-use-routes-probe-poc, task-scoreboard-five-numbers-poc, extracted-package-says-five-rules-that-worked); needed: nothing new, the briefing is not opened yet.
+
+Difference from the dispatch: the spawn message said every task on the dev2-poc state branch ran today; 26 are on it and 7 started 2026-11-14 (local day, +08:00). The other 19 (one has no stage, 18 started 2026-09-22 to 2026-10-26) are left out of the table. `--since` takes any start if the Captain wants them.
+
+Limits: times come from state-commit author dates and gate resolution timestamps; machine time includes idle time within a stage; a gate the FO resolved under a standing grant counts as waiting, so "waiting" is not always the Captain's time; running rows are measured to the read time; number 3 sees an edit to a `**AC-n**` block, not an amendment that changes a criterion without editing it; number 1 counts a gate briefing opened after a dispatch, so a task whose first report is its validation gate includes the whole implementation.
+
+Checks run: hand check of two numbers on two tasks against the state commit log (method-reading-code-and-tables-on-the-private-remote-poc: implementation dispatch 19:51:42 to validation briefing 20:04:31 = 12.8 min, waiting 0.1 + 0.1 = 0.2; state-branch-writes-carry-no-private-identifiers: ideation dispatch 12:43:29 to ideation briefing 13:11:35 = 28.1 min). Number 3 falsifier: an AC-1 edit in a scratch clone prints "yes: AC-1 differ since backlog approval"; the unedited task prints "no". Not run: roborev (the candidate is in a different private repository), any test suite (none carried; the assignment asked for none beyond trusting the output), validation by someone other than me.
+
+Scratch close: not run (see Summary).
+
+### Summary
+
+One command, `scripts/task_scoreboard.py`, prints the five numbers per task from the existing timeline script's result and the state history, and the 2026-11-14 table is saved in the candidate. The weak number is 4: nine of ten tasks have no `asks.jsonl`, so asks outside a gate print "not recorded". This report is a draft in scratch: both writes into the state checkout (evidence copy, then this report) were denied by the permission classifier, so FO needs to land it.

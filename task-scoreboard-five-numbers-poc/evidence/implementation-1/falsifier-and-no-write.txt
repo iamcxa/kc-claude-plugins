@@ -1,0 +1,8 @@
+candidate 5e88c9ffe4e4 (private working repository, branch task-scoreboard, base 2b391a40f926)
+
+## falsifier: an AC-1 edit in a scratch clone's working tree, committed history untouched
+  3 criterion changed after design approval: yes: AC-1 differ since backlog approval
+same task on the unedited state branch:
+  3 criterion changed after design approval: no: 2 criteria unchanged since backlog approval
+
+## no write: after the command ran on both state checkouts, find -newer a stamp made before the run listed no file in either checkout and none in either git directory; git status of both unchanged.
