@@ -5,7 +5,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers
 pr:
 gates:
     version: 1
