@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo
-pr:
+pr: 872
 gates:
     version: 1
     records:
