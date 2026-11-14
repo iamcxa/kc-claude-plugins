@@ -1,7 +1,7 @@
 ---
 id:
 title: Three or fewer tried ways to run the next real task on the extracted package with private state, each with what it costs the Captain
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
