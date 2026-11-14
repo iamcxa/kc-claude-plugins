@@ -1,0 +1,7 @@
+folder 1 with Package root moved: exit=0 0 instruction errors
+folder 2 with Package root moved: exit=0 0 instruction errors
+folder 3 with Package root moved: exit=0 0 instruction errors
+folder 4 with Package root moved: exit=0 0 instruction errors
+folder 5 with Package root moved: exit=0 0 instruction errors
+folder 6 with Package root moved: exit=0 0 instruction errors
+folder 7 with Package root moved: exit=0 0 instruction errors

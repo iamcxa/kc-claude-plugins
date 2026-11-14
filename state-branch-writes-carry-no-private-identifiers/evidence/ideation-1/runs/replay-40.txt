@@ -1,0 +1,6 @@
+commits scanned: 40 (HEAD~41..HEAD~1); seconds per commit: median 0.13, max 17.63
+home: {'live/state': 9, 'live/dispatch': 6, 'archived/other': 1}
+email: {'live/state': 1}
+private-repo: {'archived/other': 1}
+private-slug: none
+tailnet-host: none

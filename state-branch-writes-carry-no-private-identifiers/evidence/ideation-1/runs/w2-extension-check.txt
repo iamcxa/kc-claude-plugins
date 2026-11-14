@@ -1,0 +1,7 @@
+folder 1: records=6 home-files=6 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 2: records=8 home-files=8 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 3: records=9 home-files=9 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 4: records=8 home-files=8 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 5: records=3 home-files=3 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 6: records=6 home-files=6 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1
+folder 7: records=15 home-files=15 left-after-redaction=0 | main-on-original=0 patched-on-original=0 patched-on-redacted=0 main-on-redacted=1

@@ -1,0 +1,10 @@
+exit=0
+commits scanned: 200 (eda903739~200..eda903739); seconds per commit: median 0.10, max 9.89
+home: {'live/state': 43, 'live/dispatch': 22, 'archived/other': 1, 'live/other': 9}
+email: {'live/state': 1}
+private-repo: {'live/dispatch': 5, 'live/other': 4, 'live/state': 2}
+private-slug: none
+tailnet-host: none
+2026-11-13 16:01:58 +0800
+
+[exited with code 0]

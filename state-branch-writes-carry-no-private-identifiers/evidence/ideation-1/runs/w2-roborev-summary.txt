@@ -1,0 +1,4 @@
+roborev instruction-path check on a redacted real implementation record (Package root and paths as ~/):
+patched on original: 0
+patched on redacted: 0
+patched on redacted with Package root moved: 1 (roborev worker instruction is absent)
