@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_home_relative_instruction_stays_bound_to_its_root (test_dispatch_records.ExtensionInstructionTests.test_home_relative_instruction_stays_bound_to_its_root)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/record-root-binding/scripts/test_dispatch_records.py", line 708, in test_home_relative_instruction_stays_bound_to_its_root
+    self.assertEqual(code, 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.006s
+
+FAILED (failures=1)

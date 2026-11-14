@@ -1,0 +1,25 @@
+F
+======================================================================
+FAIL: test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree (test_state_guard.StateGuardTests.test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/class-refusal-disabled/scripts/test_state_guard.py", line 138, in test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree
+    self.commit('home.txt', expected=1)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/class-refusal-disabled/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/class-refusal-disabled/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/class-refusal-disabled/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : shared-hook-ranstate guard: warning; "home.txt" adds a email identifier
+state guard: warning; "home.txt" adds a home identifier
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.549s
+
+FAILED (failures=1)

@@ -1,0 +1,110 @@
+........FF......F.............F.......F.FF...F.......F...
+======================================================================
+FAIL: test_failed_build_removes_its_staged_record (test_dispatch_stage.DispatchStageTests.test_failed_build_removes_its_staged_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 657, in test_failed_build_removes_its_staged_record
+    self.assertEqual(held.stderr, "fixture staged then failed\n")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'state guard: unguarded: pre-commit missing\nfixture staged then failed\n' != 'fixture staged then failed\n'
+- state guard: unguarded: pre-commit missing
+  fixture staged then failed
+
+
+======================================================================
+FAIL: test_failed_stamp_removes_uncommitted_record_and_passes_error (test_dispatch_stage.DispatchStageTests.test_failed_stamp_removes_uncommitted_record_and_passes_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 634, in test_failed_stamp_removes_uncommitted_record_and_passes_error
+    self.assertTrue(held.stderr.startswith("dispatch build --stamp:"), held.stderr)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : state guard: unguarded: pre-commit missing
+dispatch build --stamp: entity status 'backlog' does not match --stage 'ideation'; --stamp never advances status (that stays owned by gate consume or status --set)
+
+
+======================================================================
+FAIL: test_incomplete_record_does_not_build_or_change_state (test_dispatch_stage.DispatchStageTests.test_incomplete_record_does_not_build_or_change_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 521, in test_incomplete_record_does_not_build_or_change_state
+    self.assertTrue(held.stderr.splitlines()[0].startswith("dispatch_stage: dispatch not built;"))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_role_commits_complete_record_before_printing_exact_inputs (test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 258, in test_role_commits_complete_record_before_printing_exact_inputs
+    self.assertTrue(text.startswith(f"# engineering-reviewer-1\nDispatched: {dispatched} "
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "(workflow checkout, role fixture)\nModel: opus\nRoster: fixture roster\n\n"
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"## Checklist\n{self.checklist.read_text()}\n## Scope notes\n{self.notes.read_text()}"))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_scope_notes_inside_scratch_are_kept (test_dispatch_stage.DispatchStageTests.test_scope_notes_inside_scratch_are_kept)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 479, in test_scope_notes_inside_scratch_are_kept
+    self.assertIn(self.notes.read_bytes(), self.record().read_bytes())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'Package root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\nUse /tmp/dev2/dispatch-code-2bd946cb68b62a24/dispatch-fixture-eb15f135e0114ef3b3cbf980555e05e6/ideation-1/checkout\n' not found in b'# ideation-1\nDispatched: 3a2091dbcba3c58f12069b4c7fb0cd37de7bbb16 (workflow checkout)\nModel: fixture-model\nBudget: not recorded\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\nUse /tmp/dev2/dispatch-code-2bd946cb68b62a24/dispatch-fixture-eb15f135e0114ef3b3cbf980555e05e6/ideation-1/checkout\n\nScratch: /tmp/dev2/dispatch-code-2bd946cb68b62a24/dispatch-fixture-eb15f135e0114ef3b3cbf980555e05e6/ideation-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-9le4y42w/code/docs/dev2/.spacedock-state/dispatch-fixture-eb15f135e0114ef3b3cbf980555e05e6 ideation-1` and paste its output.\n'
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='flat:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 917, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 866, in assert_scope_refusal
+    self.assertTrue(result.stderr.startswith("dispatch_stage: dispatch not built;"), result.stderr)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : state guard: unguarded: pre-commit missing
+dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-00qzgzg_/code/docs/dev2/.spacedock-state/dispatch-fixture-b92843612be04516bf6f4d020442aa22/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.
+
+
+======================================================================
+FAIL: test_scope_preservation_matrix (test_dispatch_stage.DispatchStageTests.test_scope_preservation_matrix) (scenario='folder:fresh:new-record:ignored-existing')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 917, in test_scope_preservation_matrix
+    fixture.assert_scope_refusal(scenario, path, stage, extra)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 866, in assert_scope_refusal
+    self.assertTrue(result.stderr.startswith("dispatch_stage: dispatch not built;"), result.stderr)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : state guard: unguarded: pre-commit missing
+dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-loq_gwxm/code/docs/dev2/.spacedock-state/dispatch-fixture-51107936c79746eab08b4a3da37d0ec5/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.
+
+
+======================================================================
+FAIL: test_stamp_commits_complete_record_and_exact_inputs (test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 514, in test_stamp_commits_complete_record_and_exact_inputs
+    if line.strip():
+        ^^^^^^^^^^^^
+AssertionError: 'Package root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2' not found in 'Package root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-1329ecf2da381833/dispatch-fixture-43b1d5f6a5364e43a7aa5bc42c450cbc/ideation-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/ideation-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-x887ed3q/code/docs/dev2/.spacedock-state/dispatch-fixture-43b1d5f6a5364e43a7aa5bc42c450cbc ideation-1` and paste its output.\n'
+
+======================================================================
+FAIL: test_unsupported_companion_and_dangling_target_are_preserved (test_dispatch_stage.DispatchStageTests.test_unsupported_companion_and_dangling_target_are_preserved) (kind='dangling')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 1057, in test_unsupported_companion_and_dangling_target_are_preserved
+    path.symlink_to(fixture.base / "absent-external-target")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 866, in assert_scope_refusal
+    self.assertNotEqual(result.returncode, 0, "dirty task scope was admitted")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : state guard: unguarded: pre-commit missing
+dispatch_stage: dispatch not built; [Errno 17] File exists: '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-19xfu3pw/code/docs/dev2/.spacedock-state/dispatch-fixture-2956b76322ba4ca78941ccc75cd32907/dispatch/ideation-1.md'. Have the owner preserve and reconcile staged/worktree versions, then intentionally commit them; do not blindly state commit divergent data.
+
+
+----------------------------------------------------------------------
+Ran 56 tests in 249.403s
+
+FAILED (failures=9)

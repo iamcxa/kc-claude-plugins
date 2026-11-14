@@ -1,0 +1,66 @@
+[
+  {
+    "name": "record-home-rewrite",
+    "test": "test_dispatch_stage.DispatchStageTests.test_home_record_rewrite_keeps_the_real_path_in_the_worker_prompt",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "record-home-rewrite.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "role-prompt-redacted",
+    "test": "test_dispatch_stage.DispatchStageTests.test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "role-prompt-redacted.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "record-root-binding",
+    "test": "test_dispatch_records.ExtensionInstructionTests.test_home_relative_instruction_stays_bound_to_its_root",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "record-root-binding.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "evidence-home-rewrite",
+    "test": "test_scratch.ScratchTests.test_new_text_rewritten_before_digest_and_gzip_but_old_and_binary_unchanged",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "evidence-home-rewrite.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "push-newest-only",
+    "test": "test_state_guard.StateGuardTests.test_push_scans_every_commit_even_after_deletion",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "push-newest-only.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "gzip-uninspected",
+    "test": "test_state_guard.StateGuardTests.test_gzip_and_binary_blobs_refuse_and_file_names_are_safe",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "gzip-uninspected.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "class-refusal-disabled",
+    "test": "test_state_guard.StateGuardTests.test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "class-refusal-disabled.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  },
+  {
+    "name": "legacy-root-rejected",
+    "test": "test_dispatch_stage.DispatchStageTests.test_stamp_commits_complete_record_and_exact_inputs",
+    "exit": 1,
+    "status": "passed",
+    "evidence": "legacy-root-rejected.log",
+    "claim": "Mutation causes the behavioral test to fail."
+  }
+]

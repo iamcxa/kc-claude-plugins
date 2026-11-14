@@ -1,0 +1,15 @@
+test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt (test_dispatch_stage.DispatchStageTests.test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt) ... FAIL
+
+======================================================================
+FAIL: test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt (test_dispatch_stage.DispatchStageTests.test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_dispatch_stage.py", line 457, in test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt
+    self.assertIn(actual, built.stdout)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '~/invented-role-fixture' not found in '# engineering-reviewer-1\nDispatched: 586ead3de31628d107285d09173fba1efc832d68 (workflow checkout)\nModel: opus\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\nRead ~/invented-role-fixture\n\nScratch: /tmp/dev2/dispatch-code-74ec2c8cf3dd5c12/dispatch-fixture-391422f004a24005b7668f6b1c633a53/engineering-reviewer-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/engineering-reviewer-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-3c7ay1tv/code/docs/dev2/.spacedock-state/dispatch-fixture-391422f004a24005b7668f6b1c633a53 engineering-reviewer-1` and paste its output.\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.467s
+
+FAILED (failures=1)

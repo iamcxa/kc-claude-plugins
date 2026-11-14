@@ -276,3 +276,99 @@ Evidence: evidence/ideation-1/ (34 files, 17.6 KiB)
 ### Summary
 
 Every writer is traced at origin/main. The design has the package write the home directory as `~` in records and evidence while prompts keep real paths, and adds a per-worktree git guard with a mode for each class. Prototypes on a throwaway checkout proved the record rewrite, the refusals at commit and at push, and unguarded detection. A 200-commit replay showed that only private slugs and tailnet hostnames can refuse at install without stopping in-flight work; that is Captain decision D1.
+
+
+## Stage Report: implementation
+
+- DONE: One candidate (Conventional Commit title scoped to the plugin) on the assigned branch off origin/main (c2f035b6612f5edb42220576b3414e993531ffd6) implementing the approved design and acceptance criteria in the task file: writers W1 to W3 and the guard G1 to G3 in the files the design names and no others; the release installs nothing and every class defaults to warn
+  Candidate `0c68231ca9147a9833846b47a36e2fc27846cf66`, branch `spacedock-ensign/state-branch-writes-carry-no-private-identifiers`, nine approved files, clean product tree; `evidence/implementation-1/source-context.json` pins their hashes and base.
+- DONE: ADR 0087 records the ruling the design names (the task file's ADR draft), quoting the Captain's words from the task file and its gate records
+  `docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md`; records the delegated approval, separate live-install decision, unchanged commit identity and ADR 0003's secret-read boundary.
+- DONE: Acceptance criteria exercised on throwaway checkouts with their own remotes; product mutations actually run with python3 -B and caches absent; real sealing includes evidence over 256 KiB
+  `evidence/implementation-1/acceptance.json`, `commands.json`, `falsifiers.json` and `falsifiers/`: eight product mutations each cause its named test to exit 1; the synthetic artifact mutation exits 1 too. Historical AC-2's pre-existing mismatch is preserved, detailed below.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), kc-dev-flow-2/scripts/adr_lint.py docs/adr --since <base> --require 0087 exit 0; kc-dev-flow-2/scripts/number_guards.py check exit 0; kc-dev-flow-2/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; CI cost measured or stated as not measured
+  All required commands exit 0 at the candidate; `evidence/implementation-1/runs/` retains output. Comment ratio is 1.3%, below 5%; `implementation/pr.md` is prepared, no product publication performed, CI cost per PR not measured and CI configuration unchanged.
+- DONE: AC-1: saved and sealed committed bytes omit identifiers while stage and special-role runtime prompts retain real paths
+  `acceptance.json` scans stamp/seal blobs and remote history (gzip decompressed), zero hits in all five classes; real record checks and seal close exit 0. Removing the record/evidence rewrite or returning the public record as a role prompt makes the named tests fail.
+- DONE: AC-2: historical compatibility compared with the approved baseline without rewriting historical files
+  Seven folders: all record checks exit 0 on baseline and candidate; 3,154 evidence digests checked, one pre-existing mismatch remains in the same archived sample and six samples have none. Matching old evidence stays byte-identical; rejecting legacy roots or disabling home-relative binding fails the falsifiers.
+- DONE: AC-3 and AC-5: real refusals, accepted clean pushes, private refusal output, missing-hook detection and mode/worktree boundaries
+  `commands.json` records slug/hostname commit and push refusals, unchanged refused remote, clean remote history, fresh-clone unguarded detection, home warn/refuse commits and product-worktree isolation. All guard tests pass, including shared-hook chaining, renames, binary and nested gzip; newest-only push or disabled refusal mutations fail.
+- DONE: AC-4: candidate additions, fixtures, task text, PR text and retained evidence scanned with the owner's external list
+  `runs/ac4-sealed.json`: exit 0, zero hits by class. The list itself is not retained. Limit supplied by FO: four adopters' names-only slug lists; the fifth adopter and hostnames outside its pattern are absent. A synthetic listed identifier makes the scan exit 1.
+- DONE: Behavioral regression checks and scratch close-out
+  `test-results.json`: 222 distinct checks, 221 passed and one skipped; the changed role prompt/retry/line-ending seams were rerun. Initial failed runs and the role red-to-green check are retained. The close output below confirms deletion and sealed evidence.
+- SKIPPED: One builder fixture, product push, Draft PR creation, RoboRev and hosted CI review
+  The fixture requires SD_PLUGIN_ROOT (mods/pr-merge.md), not supplied; the real binary dispatch is exercised separately. Publication and RoboRev are delegated to FO, not run by this worker; no live guard installation or git config write occurred on this clone.
+
+### Affected documents
+
+`evidence/implementation-1/doc-verdicts.json` records each output from the candidate's document-impact check:
+- `docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md`: unaffected; ruling order/history predicates unchanged.
+- `docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md`: unaffected; completion/publication boundary unchanged.
+- `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md`: unaffected; write/check/build ordering retained; new representation belongs to ADR 0087.
+- `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md`: unaffected; commit-before-prompt and model floor retained; saved/runtime path distinction belongs to ADR 0087.
+- `docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md`: unaffected; budget header/counters/holds unchanged.
+- `docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md`: unaffected; threshold/cap/retention/old matching digests retained; new text sealing belongs to ADR 0087.
+- `docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md`: unaffected; ideation budget and role predicates unchanged.
+- `docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md`: updated; this ruling.
+- `learning.md`: unaffected; no README shortening or new --names output kind; changed folder-mode wording has no parsed caller.
+
+### Scratch close
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1 (45186974 bytes)
+Evidence: evidence/implementation-1/ (46 files, 211.7 KiB)
+```
+
+### Summary
+
+Implemented new-write home-path rewriting, backward-compatible record checks and an opt-in per-checkout Git guard. Stage and special-role runtime prompts retain original paths; the real persistence, remote refusal and compatibility checks are retained with eight effective product mutations. The candidate is local only; FO owns publication, review and validation, and the Captain's live-install and commit-email decisions remain open.
+
+
+## Stage Report: implementation
+
+- DONE: One candidate (Conventional Commit title scoped to the plugin) on the assigned branch off origin/main (c2f035b6612f5edb42220576b3414e993531ffd6) implementing the approved design and acceptance criteria in the task file: writers W1 to W3 and the guard G1 to G3 in the files the design names and no others; the release installs nothing and every class defaults to warn
+  Candidate `0c68231ca9147a9833846b47a36e2fc27846cf66`, branch `spacedock-ensign/state-branch-writes-carry-no-private-identifiers`, nine approved files, clean product tree; `evidence/implementation-1/source-context.json` pins their hashes and base.
+- DONE: ADR 0087 records the ruling the design names (the task file's ADR draft), quoting the Captain's words from the task file and its gate records
+  `docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md`; records the delegated approval, separate live-install decision, unchanged commit identity and ADR 0003's secret-read boundary.
+- DONE: Acceptance criteria exercised on throwaway checkouts with their own remotes; product mutations actually run with python3 -B and caches absent; real sealing includes evidence over 256 KiB
+  `evidence/implementation-1/acceptance.json`, `commands.json`, `falsifiers.json` and `falsifiers/`: eight product mutations each cause its named test to exit 1; the synthetic artifact mutation exits 1 too. Historical AC-2's pre-existing mismatch is preserved, detailed below.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), kc-dev-flow-2/scripts/adr_lint.py docs/adr --since <base> --require 0087 exit 0; kc-dev-flow-2/scripts/number_guards.py check exit 0; kc-dev-flow-2/scripts/comment_ratio.py within its maximum; commit locally, no push; PR text written for FO; CI cost measured or stated as not measured
+  All required commands exit 0 at the candidate; `evidence/implementation-1/runs/` retains output. Comment ratio is 1.2%, below 5%; `implementation/pr.md` is prepared, no product publication performed, CI cost per PR not measured and CI configuration unchanged.
+- DONE: AC-1: saved and sealed committed bytes omit identifiers while stage and special-role runtime prompts retain real paths
+  `acceptance.json` scans stamp/seal blobs and remote history (gzip decompressed), zero hits in all five classes; real record checks and seal close exit 0. Removing the record/evidence rewrite or returning the public record as a role prompt makes the named tests fail.
+- DONE: AC-2: historical compatibility compared with the approved baseline without rewriting historical files
+  Seven folders: all record checks exit 0 on baseline and candidate; 3,154 evidence digests checked, one pre-existing mismatch remains in the same archived sample and six samples have none. Matching old evidence stays byte-identical; rejecting legacy roots or disabling home-relative binding fails the falsifiers.
+- DONE: AC-3 and AC-5: real refusals, accepted clean pushes, private refusal output, missing-hook detection and mode/worktree boundaries
+  `commands.json` records slug/hostname commit and push refusals, unchanged refused remote, clean remote history, fresh-clone unguarded detection, home warn/refuse commits and product-worktree isolation. All guard tests pass, including shared-hook chaining, renames, binary and nested gzip; newest-only push or disabled refusal mutations fail.
+- DONE: AC-4: candidate additions, fixtures, task text, PR text and retained evidence scanned with the owner's external list
+  `runs/ac4-sealed.json`: exit 0, zero hits by class. The list itself is not retained. Limit supplied by FO: four adopters' names-only slug lists; the fifth adopter and hostnames outside its pattern are absent. A synthetic listed identifier makes the scan exit 1.
+- DONE: Behavioral regression checks and scratch close-out
+  `test-results.json`: 222 distinct checks, 221 passed and one skipped; the changed role prompt/retry/line-ending seams were rerun. Initial failed runs and the role red-to-green check are retained. The close output below confirms deletion and sealed evidence.
+- SKIPPED: One builder fixture, product push, Draft PR creation, RoboRev and hosted CI review
+  The fixture requires SD_PLUGIN_ROOT (mods/pr-merge.md), not supplied; the real binary dispatch is exercised separately. Publication and RoboRev are delegated to FO, not run by this worker; no live guard installation or git config write occurred on this clone.
+
+### Affected documents
+
+`evidence/implementation-1/doc-verdicts.json` records each output from the candidate's document-impact check:
+- `docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md`: unaffected; ruling order/history predicates unchanged.
+- `docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md`: unaffected; completion/publication boundary unchanged.
+- `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md`: unaffected; write/check/build ordering retained; new representation belongs to ADR 0087.
+- `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md`: unaffected; commit-before-prompt and model floor retained; saved/runtime path distinction belongs to ADR 0087.
+- `docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md`: unaffected; budget header/counters/holds unchanged.
+- `docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md`: unaffected; threshold/cap/retention/old matching digests retained; new text sealing belongs to ADR 0087.
+- `docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md`: unaffected; ideation budget and role predicates unchanged.
+- `docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md`: updated; this ruling.
+- `learning.md`: unaffected; no README shortening or new --names output kind; changed folder-mode wording has no parsed caller.
+
+### Scratch close
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1 (45186974 bytes)
+Evidence: evidence/implementation-1/ (46 files, 211.7 KiB)
+```
+
+### Summary
+
+This report supersedes the earlier implementation report and corrects its measured comment ratio to 1.2%. Implemented new-write home-path rewriting, backward-compatible record checks and an opt-in per-checkout Git guard. Stage and special-role runtime prompts retain original paths; the real persistence, remote refusal and compatibility checks are retained with eight effective product mutations. The candidate is local only; FO owns publication, review and validation, and the Captain's live-install and commit-email decisions remain open.

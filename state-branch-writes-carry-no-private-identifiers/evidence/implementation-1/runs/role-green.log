@@ -1,0 +1,14 @@
+test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt (test_dispatch_stage.DispatchStageTests.test_home_role_record_rewrite_keeps_the_real_path_in_the_role_prompt) ... ok
+test_role_commits_complete_record_before_printing_exact_inputs (test_dispatch_stage.DispatchStageTests.test_role_commits_complete_record_before_printing_exact_inputs) ... ok
+test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record (test_dispatch_stage.DispatchStageTests.test_role_commit_failure_withholds_prompt_and_retry_reuses_committed_record) ... ok
+test_role_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_crlf_inputs_keep_raw_bytes) ... ok
+test_role_lf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_role_lf_inputs_keep_raw_bytes) ... ok
+test_role_numbering_is_per_role_and_retries_reuse_the_latest_record (test_dispatch_stage.DispatchStageTests.test_role_numbering_is_per_role_and_retries_reuse_the_latest_record) ... ok
+test_next_role_accepts_its_own_scratch_path_and_retries (test_dispatch_stage.DispatchStageTests.test_next_role_accepts_its_own_scratch_path_and_retries) ... ok
+test_stage_crlf_inputs_keep_raw_bytes (test_dispatch_stage.DispatchStageTests.test_stage_crlf_inputs_keep_raw_bytes) ... ok
+test_home_record_rewrite_keeps_the_real_path_in_the_worker_prompt (test_dispatch_stage.DispatchStageTests.test_home_record_rewrite_keeps_the_real_path_in_the_worker_prompt) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 22.538s
+
+OK

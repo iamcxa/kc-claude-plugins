@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_gzip_and_binary_blobs_refuse_and_file_names_are_safe (test_state_guard.StateGuardTests.test_gzip_and_binary_blobs_refuse_and_file_names_are_safe)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/gzip-uninspected/scripts/test_state_guard.py", line 111, in test_gzip_and_binary_blobs_refuse_and_file_names_are_safe
+    result = self.commit(name, expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/gzip-uninspected/scripts/test_state_guard.py", line 68, in commit
+    return self.git(self.state, 'commit', '-qm', 'test: state', expected=expected)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/gzip-uninspected/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/gzip-uninspected/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+----------------------------------------------------------------------
+Ran 1 test in 1.012s
+
+FAILED (failures=1)

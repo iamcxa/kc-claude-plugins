@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_new_text_rewritten_before_digest_and_gzip_but_old_and_binary_unchanged (test_scratch.ScratchTests.test_new_text_rewritten_before_digest_and_gzip_but_old_and_binary_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/evidence-home-rewrite/scripts/test_scratch.py", line 95, in test_new_text_rewritten_before_digest_and_gzip_but_old_and_binary_unchanged
+    self.assertEqual((self.evidence / 'new.txt').read_bytes(), b'cwd: ~/public\n')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'cwd: ~/public\n' != b'cwd: ~/public\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.330s
+
+FAILED (failures=1)

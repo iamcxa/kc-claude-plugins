@@ -1,0 +1,21 @@
+F
+======================================================================
+FAIL: test_push_scans_every_commit_even_after_deletion (test_state_guard.StateGuardTests.test_push_scans_every_commit_even_after_deletion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/push-newest-only/scripts/test_state_guard.py", line 96, in test_push_scans_every_commit_even_after_deletion
+    result = self.git(self.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/push-newest-only/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/falsifiers-final/push-newest-only/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-umg6hde7/remote.git
+   1476a13..b977bd0  spacedock-state/test -> spacedock-state/test
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.207s
+
+FAILED (failures=1)

@@ -1,0 +1,88 @@
+[
+  {
+    "name": "AC-1 real dispatch and sealed committed bytes",
+    "status": "passed",
+    "stamp": "f670603e7e80384232be6492f14b9102bcbee994",
+    "sealed": "2383b4417ee0eb878d5a8c29ead56454cd8824d8",
+    "blobs": 9,
+    "hits": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    },
+    "prompt_real_paths": true,
+    "large_input_over_256_KiB": true,
+    "source_unchanged": true,
+    "close_exit": 0
+  },
+  {
+    "name": "AC-3 test_real_commit_refusals_keep_staged_bytes_and_clean_push_passes",
+    "status": "passed"
+  },
+  {
+    "name": "AC-3 test_push_scans_every_commit_even_after_deletion",
+    "status": "passed"
+  },
+  {
+    "name": "AC-5 test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree",
+    "status": "passed"
+  },
+  {
+    "name": "AC-2 seven historical task folders",
+    "status": "passed",
+    "samples": [
+      {
+        "sample": 1,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 334,
+        "preexisting_mismatches": 1
+      },
+      {
+        "sample": 2,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 380,
+        "preexisting_mismatches": 0
+      },
+      {
+        "sample": 3,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 519,
+        "preexisting_mismatches": 0
+      },
+      {
+        "sample": 4,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 536,
+        "preexisting_mismatches": 0
+      },
+      {
+        "sample": 5,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 32,
+        "preexisting_mismatches": 0
+      },
+      {
+        "sample": 6,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 340,
+        "preexisting_mismatches": 0
+      },
+      {
+        "sample": 7,
+        "record_exit_baseline": 0,
+        "record_exit_candidate": 0,
+        "digests_checked": 1013,
+        "preexisting_mismatches": 0
+      }
+    ],
+    "limit": "One pre-existing digest mismatch remains; six folders have none. No historical bytes were rewritten."
+  }
+]

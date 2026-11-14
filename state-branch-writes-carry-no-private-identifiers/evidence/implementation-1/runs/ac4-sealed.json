@@ -1,0 +1,11 @@
+{
+  "blobs": 753,
+  "hits": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "list_limit": "Owner list covers four adopters' names-only slug lists; the fifth adopter and hostnames outside its pattern are absent."
+}

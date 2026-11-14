@@ -1,0 +1,170 @@
+[
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/dispatch_stage.py --workflow-dir /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2 --entity-path /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33.md --stage ideation --model fixture-model --checklist-file /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/checklist.txt --scope-notes-file /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/notes.txt --spacedock ~/.local/bin/spacedock --host codex",
+    "exit": 0,
+    "stdout": "{\n  \"schema_version\": 2,\n  \"subagent_type\": \"spacedock:ensign\",\n  \"description\": \"Synthetic dispatch: ideation\",\n  \"fetch_commands\": [\n    \"~/.local/bin/spacedock dispatch show-stage-def --workflow-dir /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2 --stage ideation\"\n  ],\n  \"dispatch_file_path\": \"/tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-05e55c0c042949-ideation.md\",\n  \"prompt\": \"$spacedock:ensign; then Read /tmp/spacedock-dispatch/spacedock-ensign-dispatch-fixture-05e55c0c042949-ideation.md and treat its content as your assignment.\",\n  \"model\": null,\n  \"name\": \"spacedock-ensign-dispatch-fixture-05e55c0c042949-ideation\"\n}\n",
+    "stderr": "state guard: unguarded: pre-commit missing\n[build] declared model 'opus' ignored on host codex: outside codex's dispatch-settable model space; emitting model=null\n"
+  },
+  {
+    "command": "git --literal-pathspecs -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state rev-parse HEAD",
+    "exit": 0,
+    "stdout": "dc5043863fe4258904b01859de7683e5217ce69e\n",
+    "stderr": ""
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/dispatch_records.py /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33",
+    "exit": 0,
+    "stdout": "1 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/dispatch_stage.py --workflow-dir /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2 --entity-path /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33.md --role engineering-reviewer --model opus --checklist-file /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/checklist.txt --scope-notes-file /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/notes.txt --spacedock ~/.local/bin/spacedock",
+    "exit": 0,
+    "stdout": "# engineering-reviewer-1\nDispatched: 02878037f495e696872d68eb8fe1836a88b0d12f (workflow checkout)\nModel: opus\n\n## Checklist\nInspect the real dispatch seam\nKeep the received second checklist line\n\n## Scope notes\nPackage root: ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2\nSend your completion message to `main`.\nKeep this second scope-notes line verbatim.\n\nScratch: /tmp/dev2/dispatch-code-082745191f37f422/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/engineering-reviewer-1\nPut files and checkouts outside the task worktree or state checkout under that folder. Copy cited evidence into evidence/engineering-reviewer-1/ in the task folder. Never archive private repository evidence, secrets or personal data; instead write `Not archived (private): <what>; reproduce: <command>`. Before reporting, run `python3 ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33 engineering-reviewer-1` and paste its output.\n",
+    "stderr": "state guard: unguarded: pre-commit missing\n"
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/scratch.py close /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33 ideation-1",
+    "exit": 0,
+    "stdout": "Scratch removed: /private/tmp/dev2/dispatch-code-082745191f37f422/dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/ideation-1 (1352 bytes)\nEvidence: evidence/ideation-1/ (3 files, 1.8 KiB)\n",
+    "stderr": ""
+  },
+  {
+    "command": "git --literal-pathspecs -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state add -- dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "git --literal-pathspecs -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state commit -m 'test: sealed public evidence'",
+    "exit": 0,
+    "stdout": "[spacedock-state/dev2 aabca8e] test: sealed public evidence\n 5 files changed, 5 insertions(+)\n create mode 100644 dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/evidence/ideation-1/SHA256SUMS\n create mode 100644 dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/evidence/ideation-1/cwd.log\n create mode 100644 dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/evidence/ideation-1/large.log.gz\n create mode 100644 dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/evidence/ideation-1/supplied.gz\n create mode 100644 dispatch-fixture-05e55c0c042949f5bf52ae449cd41a33/scratch-removed.txt\n",
+    "stderr": ""
+  },
+  {
+    "command": "git --literal-pathspecs -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state rev-parse HEAD",
+    "exit": 0,
+    "stdout": "aabca8eec01db30e2fdb2c6d67b708e1fcbba7ed\n",
+    "stderr": ""
+  },
+  {
+    "command": "git --literal-pathspecs -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/code/docs/dev2/.spacedock-state push origin spacedock-state/dev2",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/dispatch-stage-_54j0bnv/dispatch-code.git\n   ad7b3bd..aabca8e  spacedock-state/dev2 -> spacedock-state/dev2\n"
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py install /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state --refuse private-slug,tailnet-host,private-repo",
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py check /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state",
+    "exit": 0,
+    "stdout": "state guard: guarded (email=warn, home=warn, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"slug.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"host.txt\" adds a tailnet-host identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"regex.txt\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/state push origin spacedock-state/test",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/remote.git\n   582ed16..ab2655b  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py check /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-datkhoik/fresh-clone",
+    "exit": 1,
+    "stdout": "state guard: unguarded: pre-commit missing\n",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-ts37jsaf/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-ts37jsaf/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py install /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-ts37jsaf/state --refuse tailnet-host,private-slug",
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-ts37jsaf/state push origin spacedock-state/test",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit a8124b512af0; \"transient.txt\" adds a private-slug identifier\nstate guard: refused; commit a8124b512af0; \"transient.txt\" adds a tailnet-host identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: a8124b512af0 5510559d2725. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-ts37jsaf/remote.git'\n"
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py install /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-rwun7_1s/state",
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-rwun7_1s/state commit -qm 'test: state'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "shared-hook-ranstate guard: warning; \"home.txt\" adds a email identifier\nstate guard: warning; \"home.txt\" adds a home identifier\n"
+  },
+  {
+    "command": "/opt/homebrew/opt/python@3.15/bin/python3.15 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py install /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-rwun7_1s/state --refuse home,email",
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-rwun7_1s/state commit -qm 'test: state'",
+    "exit": 1,
+    "stdout": "",
+    "stderr": "shared-hook-ranstate guard: refused; \"home.txt\" adds a email identifier\nstate guard: refused; \"home.txt\" adds a home identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "command": "git -C /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/tmp/state-guard-rwun7_1s/product commit -qm 'test: product'",
+    "exit": 0,
+    "stdout": "",
+    "stderr": "shared-hook-ran"
+  }
+]

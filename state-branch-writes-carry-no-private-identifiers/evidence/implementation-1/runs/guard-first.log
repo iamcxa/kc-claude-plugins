@@ -1,0 +1,29 @@
+.......EE
+======================================================================
+ERROR: test_shared_install_preserves_hooks_and_skips_nonstate_branch (test_state_guard.StateGuardTests.test_shared_install_preserves_hooks_and_skips_nonstate_branch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_state_guard.py", line 176, in test_shared_install_preserves_hooks_and_skips_nonstate_branch
+    hooks.mkdir(exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: '.git/hooks'
+
+======================================================================
+ERROR: test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree (test_state_guard.StateGuardTests.test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/test_state_guard.py", line 122, in test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree
+    shared.mkdir(exist_ok=True)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.0_1/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py", line 1210, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: '.git/hooks'
+
+----------------------------------------------------------------------
+Ran 9 tests in 8.883s
+
+FAILED (errors=2)

@@ -1,0 +1,17 @@
+{
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "candidate": "0c68231ca9147a9833846b47a36e2fc27846cf66",
+  "branch": "spacedock-ensign/state-branch-writes-carry-no-private-identifiers",
+  "files": {
+    "docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md": "b3a296585754456a96dbd0f6db85565faa4f2f133fb114416f40099229ad02fe",
+    "kc-dev-flow-2/scripts/dispatch_records.py": "d04f833fef90844ffc8a077c741625604567d24be92f8968dac5a4fb6f85a4a6",
+    "kc-dev-flow-2/scripts/dispatch_stage.py": "b7f7074c3b51d53dba0378b00a9bbd817f67c7c653e3d3b7bad6d0c6c6ac5651",
+    "kc-dev-flow-2/scripts/scratch.py": "a53cada8d456accd2ecd785839d864458d5cc3b8d276772e9ae502096e3df662",
+    "kc-dev-flow-2/scripts/state_guard.py": "9bf832ce1effeb37d4c31aec72312302a7e578204d27f9a7a25b050067848a9c",
+    "kc-dev-flow-2/scripts/test_dispatch_records.py": "c42d55dda23527434a3c1e3fec25d7f32cbca59283a3dbcc0c5c294373ffdd0d",
+    "kc-dev-flow-2/scripts/test_dispatch_stage.py": "d9c2b0e0166f85bbbf7495f2b200e6e81ad17d9b184aa42d766d6bcec793e670",
+    "kc-dev-flow-2/scripts/test_scratch.py": "f1c158ed470691cb8ca610bd73a13172cc41548be2594e9fd929ff452d55b951",
+    "kc-dev-flow-2/scripts/test_state_guard.py": "363a839b04b8b8f9df3a1ef26677528b3339c1b3866a34e9ed529d2a9201dcd5"
+  },
+  "product_status": ""
+}
