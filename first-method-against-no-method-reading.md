@@ -62,6 +62,20 @@ gates:
                 id: briefing:first-method-against-no-method-reading:validation:attempt-1:revision-1
                 digest: sha256:20e3f832cb91a8004bb46f3d2b7baf12f5ca7641ddbd0177f9870d5aca10fec5
                 room-ref: ./first-method-against-no-method-reading/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:first-method-against-no-method-reading:validation:1
+                briefing: briefing:first-method-against-no-method-reading:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T11:31:43.158447Z"
+                decision: approve
+                reason: 'The reform session ruled the close under the Captain''s grant: the final tables report exactly what each validator said the committed rule requires; no third validation cycle. Closing accepts the delivered measurement as a reading that cannot discriminate, with its findings and limits; it claims nothing about the method being better or not better.'
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 items 1 and 2 from the reform session, closing ruled in Paseo message c271575d-82b3-4a1b-a945-c7df85cea4da
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T09:53:07Z
 ---
 
