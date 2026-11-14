@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:attempt-1:revision-1",
+  "question": "Close this task as stopped, not delivered, after validation REJECTED the candidate at d8ce3421219a, leaving PR 872 open as a Draft with the finding in its body and no repair cycle? Not asked of the Captain: decided by FO under his standing grant, on the reform session's stop ruling; he has been told and can ask for the repair.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a405412148e7d0a58ac6f4414eb68346ff52922c/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo.md",
+      "rev": "sha256:3da3e36583efd1cdd97abb6614fbc08b191b63f1656de730bb243572980bb2f3",
+      "mediaType": "text/markdown",
+      "summary": "Validation-1 REJECTED at d8ce3421219a: a clean gzip member followed by a doubly nested gzip with a listed identifier in an inner header passes the commit and push guards (fails AC-4 and ADR 0087's refusal before push). The reform session ruled no repair: the guard merged in PR 871 stops accidental writes today, the hole needs a deliberate construction, and the state branch is to be retired. Lost by stopping: the validation-principles sentence about acceptance scripts taking paths as arguments or writing the home directory as a tilde does not ship, so home paths keep arriving from that writer and the home class stays at warn; private-repo stays at warn; raw gzip header scanning and the declined Codex P2 stay open; tailnet-host matching unverified on 11 historical gzip files. PR 872 stays an open Draft with the finding recorded in its body; nothing was merged or installed. Kept as a finding: a candidate that was clean in local review and green in hosted CI had a hole only adversarial validation found."
+    }
+  ]
+}

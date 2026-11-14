@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo-validation-1
+              briefing:
+                id: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:attempt-1:revision-1
+                digest: sha256:264cdad6357db5bf7a1ebbffdd53de65cd3ca60e891ceae240f8866e69082eda
+                room-ref: ./gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/review/validation/briefing-1
 started: 2026-11-14T09:53:13Z
 ---
 
