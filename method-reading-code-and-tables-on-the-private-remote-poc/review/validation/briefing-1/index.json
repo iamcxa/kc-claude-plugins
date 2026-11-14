@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:method-reading-code-and-tables-on-the-private-remote-poc:validation:attempt-1:revision-1",
+  "question": "Close this task as passed, with the validator's two points settled by the reform session's earlier rulings? (decided by FO under the Captain's grant; the change is on the private working repository's remote main; nothing is merged into this repository)",
+  "artifacts": [
+    {
+      "id": "artifact:method-reading-code-and-tables-on-the-private-remote-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b6902b032bf4f649618fb84425f4c2c795adbe67/method-reading-code-and-tables-on-the-private-remote-poc.md",
+      "rev": "sha256:7d3592ff1bb9010b8725d58a53e679f33ea4ee84a46374bc95a274693f7cb5a8",
+      "mediaType": "text/markdown",
+      "summary": "Validation recommends PASSED (Claude Opus, fresh clone of the private remote's main at 2b391a40f926646b6be949cb2cf07466005e277c): both readings' documents and final tables present; four cells' selfcheck exit 0; table-rule fixture exits 0; the pushed range holds no raw run output and scans at zero in every class. Its two points and their disposition: F1, the carried tables are not byte-identical to the laptop tables: the reform session ruled before the push (message f0fa5dae) that the carried form, arm and trial in place of run ids, is right and the laptop form stays on the laptop; FO compared the two forms itself 2026-11-14: six lines differ in each table and only in the first cell, which held a run id; every number, grade and reading line is equal. So AC-1's byte-identity clause is met in the form the ruling allows, not literally. F2, the second reading cites a regression script and output that are not carried: ruled as a right exclusion in the same message (they name real run ids); a reader of the remote cannot follow those two citations, a known limit. FO's own fresh clone before the validation: the same exits, results folders holding only table files, both verdict lines as committed. Route cost: this validation stage checked a copy of already-validated files because the route cannot close without a validation report; about 5 minutes."
+    }
+  ]
+}

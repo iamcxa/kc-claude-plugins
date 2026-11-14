@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:method-reading-code-and-tables-on-the-private-remote-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:method-reading-code-and-tables-on-the-private-remote-poc-validation-1
+              briefing:
+                id: briefing:method-reading-code-and-tables-on-the-private-remote-poc:validation:attempt-1:revision-1
+                digest: sha256:1ffce6a877716c64915a14a2f31423f8d7e2c7f299cae2061efa09eb604dde90
+                room-ref: ./method-reading-code-and-tables-on-the-private-remote-poc/review/validation/briefing-1
 started: 2026-11-14T11:51:42Z
 ---
 
