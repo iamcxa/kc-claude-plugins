@@ -2754,5 +2754,103 @@ class AmendmentHistoricalTests(unittest.TestCase):
         Path(os.environ["DEV2_AMENDMENT_EVIDENCE"], "reading.json").write_text(json.dumps(result, indent=2))
 
 
+class QuestionRecordTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory(prefix="question-records-")
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name)
+        self.code = self.root / "code"
+        self.code.mkdir()
+        self.git(self.code, "init", "-q")
+        self.workflow = self.code / "docs/workflow"
+        self.workflow.mkdir(parents=True)
+        self.readme = self.workflow / "README.md"
+        self.readme.write_text("---\nentity-type: task\nstate: .state\n---\n")
+        self.commit(self.code, "before adoption", "2026-11-13T00:00:00Z")
+        self.readme.write_text(self.readme.read_text() + ds.ASK_SENTENCE + "\n")
+        self.commit(self.code, "adopt question records", "2026-11-14T10:00:00Z")
+        source = self.root / "state-source"
+        source.mkdir()
+        self.git(source, "init", "-q")
+        (source / "init.txt").write_text("state checkout\n")
+        self.commit(source, "state initial", "2026-11-13T00:00:00Z")
+        self.state = self.workflow / ".state"
+        self.git(source, "worktree", "add", "--detach", str(self.state))
+        self.task = self.state / "demo.md"
+        self.task.write_text("---\ntitle: Demo\nstatus: implementation\n---\n\n## FO alignment\nSurfaces: none\nVisible change: none\n\n## Design\n### Worth questions\nAsked: keep question records; without: omission passes; premise: compare missing and present records.\n\n## Acceptance criteria\n**AC-1**: Verified command.\n\n## Captain amendments\n\n### Amendment 1 — 2026-11-14, chat\nCaptain: 「Yes」\nAsked: 「Proceed with this scope?」\nSupersedes: none\n")
+
+    def git(self, path, *args, env=None):
+        return subprocess.run(["git", "-C", str(path), "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                               "-c", "core.hooksPath=/dev/null", *args], env=env, capture_output=True, text=True, check=True).stdout
+
+    def commit(self, path, subject, date):
+        self.git(path, "add", "--all")
+        self.git(path, "commit", "-qm", subject, env={**os.environ, "GIT_AUTHOR_DATE": date, "GIT_COMMITTER_DATE": "2026-11-15T00:00:00Z"})
+
+    def check(self, task=None):
+        return subprocess.run([sys.executable, "-B", str(ROOT / "scripts/design_surfaces.py"), "check", str(task or self.task)],
+                              capture_output=True, text=True)
+
+    def record(self, slug="demo", tasks=None):
+        path = self.state / slug / "asks.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(dict(v=1, event="ask", key=slug + "#1", at="2026-11-14T00:00:00Z",
+                        asked_at=None, asked="Proceed with this scope?", by="test FO", channel="chat", holds="task", tasks=tasks or [])) + "\n")
+
+    def test_missing_record_refuses_and_present_record_passes_in_split_root_worktree(self):
+        self.assertTrue((self.state / ".git").is_file())
+        self.assertEqual(ds.question_adoption(self.task), ("2026-11-14", None))
+        missing = self.check()
+        self.assertEqual(missing.returncode, 1, missing.stdout + missing.stderr)
+        self.assertIn("Amendment 1", missing.stdout)
+        self.assertIn("quoted question has no ask record", missing.stdout)
+        self.record()
+        present = self.check()
+        self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
+
+    def test_shared_record_names_affected_task_and_archived_records_are_read(self):
+        self.record("other", ["demo"])
+        archive = self.state / "_archive"
+        archive.mkdir()
+        (self.state / "other").rename(archive / "other")
+        self.assertEqual(self.check().returncode, 0)
+        self.record("unrelated")
+        (archive / "other/asks.jsonl").unlink()
+        self.assertEqual(self.check().returncode, 1)
+
+    def test_partial_or_recommendation_text_does_not_stand_in_for_the_question(self):
+        self.record()
+        path = self.state / "demo/asks.jsonl"
+        for text in ("Proceed", "Proceed with this scope? Another question"):
+            value = json.loads(path.read_text())
+            value["asked"] = text
+            path.write_text(json.dumps(value) + "\n")
+            self.assertEqual(self.check().returncode, 1)
+
+    def test_pre_adoption_amendment_is_not_newly_refused(self):
+        self.task.write_text(self.task.read_text().replace("2026-11-14, chat", "2026-11-13, chat"))
+        self.assertEqual(self.check().returncode, 0)
+
+    def test_export_absent_sentence_and_shallow_history_skip_once_without_refusal(self):
+        exported = self.root / "export"
+        shutil.copytree(self.workflow, exported, ignore=shutil.ignore_patterns(".git"))
+        run = self.check(exported / ".state/demo.md")
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertEqual(run.stdout.count("question record check not run:"), 1)
+        self.readme.write_text("---\nentity-type: task\n---\n")
+        absent = self.check()
+        self.assertEqual(absent.returncode, 0)
+        self.assertIn("approved ask sentence absent", absent.stdout)
+        self.readme.write_text(self.readme.read_text() + ds.ASK_SENTENCE + "\n")
+        shallow = self.root / "shallow"
+        self.git(self.root, "clone", "-q", "--depth", "1", self.code.as_uri(), str(shallow))
+        target = shallow / "docs/workflow/.state/demo.md"
+        target.parent.mkdir()
+        target.write_text(self.task.read_text())
+        run = self.check(target)
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        self.assertIn("shallow workflow history", run.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()

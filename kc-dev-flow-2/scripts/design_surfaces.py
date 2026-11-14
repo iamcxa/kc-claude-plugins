@@ -1042,6 +1042,7 @@ def check_seed_fields(name, text):
     # see docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md
     if "Budget" in found and not budget_bound(budget_text(body, amendments=False)):
         errors.append(f"{name}: Budget must start with 'N cycles per stage', 'N implementation and M validation cycles', "
+                      "'N ideation, N implementation and M validation cycles', "
                       "'at most N dispatches total' or '最多 N 次派工'; an explicit agent-minutes clause may precede it, but minutes are not counted")
     return errors
 
@@ -1141,6 +1142,86 @@ def check_story_record(path, text, seed):
     return []
 
 
+# see docs/adr/0086-a-captain-question-outside-a-gate-stays-open-until-answered.md
+ASK_SENTENCE = 'Before asking the Captain outside a gate, FO runs `python3 <package>/scripts/task_timeline.py <state> <task> ask "<question>" --holds <task|acceptance|nothing> --by "<session>"` and records each later showing, answer or withdrawal with the command it prints; `python3 <package>/scripts/task_timeline.py <state> --open` lists what waits on him.'
+
+
+def question_adoption(path):
+    from dispatch_records import find_readme
+
+    readme = find_readme(path)
+    if readme is None:
+        return None, "no adopted workflow README"
+    readme = readme.resolve()
+    try:
+        repo = Path(subprocess.run(["git", "-C", str(readme.parent), "rev-parse", "--show-toplevel"],
+                                  capture_output=True, text=True, check=True).stdout.strip())
+        shallow = subprocess.run(["git", "-C", str(repo), "rev-parse", "--is-shallow-repository"],
+                                 capture_output=True, text=True, check=True).stdout.strip()
+        if shallow == "true":
+            return None, "shallow workflow history"
+        if ASK_SENTENCE not in readme.read_text():
+            return None, "approved ask sentence absent"
+        relative = readme.relative_to(repo).as_posix()
+        history = subprocess.run(["git", "-C", str(repo), "log", "--reverse", "--format=%H %aI",
+                                  "-S", ASK_SENTENCE, "--", relative], capture_output=True, text=True, check=True)
+        for line in history.stdout.splitlines():
+            sha, date = line.split(" ", 1)
+            text = subprocess.run(["git", "-C", str(repo), "show", f"{sha}:{relative}"],
+                                  capture_output=True, text=True, check=True).stdout
+            if ASK_SENTENCE in text:
+                return date[:10], None
+        return None, "ask sentence has no introducing commit"
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return None, "workflow git history unavailable"
+
+
+def check_question_records(path, lines, notes):
+    from task_timeline import ask_files, read_asks
+
+    adopted, why = question_adoption(path)
+    if adopted is None:
+        if notes is not None and why != "no adopted workflow README":
+            notes.append(f"{path.name}: question record check not run: {why}")
+        return []
+    entries = [e for e in parse_amendments(lines)[0]
+               if (m := AMENDMENT_DATED.match(e.header)) and m[2] >= adopted]
+    if not entries:
+        return []
+    own = task_folder(path)
+    state = own.parent.parent if own.parent.name == "_archive" else own.parent
+    try:
+        records = []
+        for file in ask_files(state):
+            events = read_asks(file)
+            shared = {e.get("key") for e in events if own.name in (e.get("tasks") or [])}
+            records.extend(e for e in events if file.parent == own or e.get("key") in shared)
+    except (OSError, ValueError) as exc:
+        return [f"{path.name}: cannot read question records: {exc}"]
+    questions = [e["asked"] for e in records if isinstance(e.get("asked"), str)]
+    errors = []
+    for entry in entries:
+        asked = re.search(r"^Asked:[ \t]*(.+)$", entry.prefix, re.M)
+        if not asked or re.fullmatch(r"(?:commit )?[0-9a-f]{7,40}", asked[1].strip()):
+            continue
+        value = asked[1].strip()
+        start, depth, quoted = None, 0, None
+        for i, char in enumerate(value):
+            if char == "「":
+                if depth == 0:
+                    start = i + 1
+                depth += 1
+            elif char == "」" and depth:
+                depth -= 1
+                if depth == 0:
+                    quoted = value[start:i]
+                    break
+        if (quoted if quoted is not None else value) not in questions:
+            errors.append(f"{path.name}: '{entry.header}' quoted question has no ask record; "
+                          "FO: record it, using --late when the asking time is unknown")
+    return errors
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
     try:
@@ -1186,6 +1267,7 @@ def check_task(path, seed=False, notes=None):
     lines = text.split("\n")
     declared = check_criteria(path.name, lines, errors)
     check_amendments(path.name, lines, declared, errors, dispatched_amendments(task_folder(path)))
+    errors.extend(check_question_records(path, lines, notes))
     for title, key in escaped_amendment_lines(lines):
         errors.append(f"{path.name}: '{title}' {key} line holds a backslash-quote copied from JSON; FO writes his words and the question as they were said")
     if notes is not None:
@@ -1244,8 +1326,8 @@ def main(argv=None):
         print(error)
     if not errors:
         print(f"{path.name}: {'seed fields and FO alignment recorded' if args.seed else 'design surfaces presentable'}")
-        for note in notes:
-            print(note)
+    for note in notes:
+        print(note)
     if verdict == "not run":
         print(f"scope check not run: {why}")
     if not errors:

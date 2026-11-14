@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """List the chief-engineer and engineering-reviewer calls a committed task state owes.
 
-Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--review-rounds N [--drift-date YYYY-MM-DD]]
+Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--budget-only] [--review-rounds N [--drift-date YYYY-MM-DD]]
 Reads the task at REV (default HEAD) from committed bytes; live or archived, flat or folder.
 --pending adds one on-disk dispatch record, replacing a committed record of the same name; other inputs stay committed.
 Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one (or, given
@@ -102,6 +102,8 @@ def review_facts(comments):
 
 
 def parse(args):
+    budget_only = "--budget-only" in args
+    args = [arg for arg in args if arg != "--budget-only"]
     options = {"--rev": "HEAD", "--review-rounds": None, "--drift-date": None, "--pending": None}
     for name in options:
         if name in args:
@@ -117,8 +119,9 @@ def parse(args):
     if drift is not None and not re.fullmatch(DATE.pattern, drift):
         raise Unverifiable("usage: --drift-date needs YYYY-MM-DD")
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
-        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--review-rounds N [--drift-date YYYY-MM-DD]]")
-    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift, options["--pending"]
+        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--pending RECORD] [--budget-only] [--review-rounds N [--drift-date YYYY-MM-DD]]")
+    return (Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift, options["--pending"],
+            budget_only)
 
 
 def read_task(state, slug, rev):
@@ -169,6 +172,10 @@ def budget_bound(value):
     per_stage = re.match(rf"^({NUMBER}) cycles? per stage\b", value, re.I)
     if per_stage:
         return dict.fromkeys(("implementation", "validation"), number(per_stage[1]))
+    # see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md
+    rounds = re.match(rf"^({NUMBER}) ideation, ({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
+    if rounds:
+        return dict(zip(("ideation", "implementation", "validation"), map(number, rounds.groups())))
     split = re.match(rf"^({NUMBER}) implementation and ({NUMBER}) validation cycles?\b", value, re.I)
     return {"implementation": number(split[1]), "validation": number(split[2])} if split else None
 
@@ -204,25 +211,30 @@ def budget_dispatches(dispatches):
         not record[3] or (symptom_name(body) and symptom_name(body) != "none"))]
 
 
-def budget_status(text, dispatches, slug):
+def budget_status(text, dispatches, slug, profile=None):
     value = budget_text(text)
     bound = budget_bound(value)
+    default = bool(bound and "ideation" not in bound and profile == "pilot")
+    if default:
+        bound = {**bound, "ideation": 2}
     spent = {stage: max((int(m[2]) for name, _ in dispatches
-                        if (m := DIAGNOSIS_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
-             for stage in ("implementation", "validation")}
+                        if (m := STAGE_RECORD.fullmatch(name)) and m[1] == stage and not m[3]), default=0)
+             for stage in ("ideation", "implementation", "validation")}
     stages = [body for name, body in dispatches if STAGE_RECORD.fullmatch(name)]
     counted = budget_dispatches(dispatches)
     total = len(counted)
     admitted = bool(stages and re.search(r"^Budget:", dispatch_header(stages[0]), re.M))
-    summary = [f"budget: Budget: {value or 'not recorded'}; spent implementation {spent['implementation']}, validation {spent['validation']}"
+    summary = [f"budget: Budget: {value or 'not recorded'}; spent "
+               + (f"ideation {spent['ideation']}{' of 2 by default' if default else ''}, " if bound and "ideation" in bound else "")
+               + f"implementation {spent['implementation']}, validation {spent['validation']}"
                + (f"; total dispatches {total}" if bound and "total" in bound else "")
                + ("" if bound else "; states no cycles")
                + ("; minutes not counted" if MINUTES.search(value) else "")] if value or admitted else []
-    over = (["total"] if total > bound["total"] else []) if bound and "total" in bound else [
-        stage for stage, count in spent.items() if bound and count > bound[stage]]
+    over = [key for key in (bound or {}) if (total if key == "total" else spent[key]) > bound[key]]
     if admitted and over:
         newest = counted[-1][0] if counted else ""
-        record = newest if over == ["total"] else f"{over[0]}-{spent[over[0]]}.md"
+        stage = next((key for key in over if key != "total"), None)
+        record = f"{stage}-{spent[stage]}.md" if stage else newest
         symptom = next((m[1] for name, body in reversed(dispatches)
                         if name == record
                         and (m := re.search(r"^Symptom:[ \t]*(.*)$", dispatch_header(body), re.M))), None)
@@ -390,7 +402,7 @@ def hint(slug, agent, heading):
             "move it under ## FO alignment.")
 
 
-def check(state, slug, rev, rounds=None, drift=None, pending=None):
+def check(state, slug, rev, rounds=None, drift=None, pending=None, budget_only=False):
     text = read_task(state, slug, rev)
     lines = list(outside_fences(text))
     reports, amendments = events(lines)
@@ -407,10 +419,12 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
         except (OSError, UnicodeError) as error:
             raise Unverifiable(f"cannot read pending dispatch record {pending}: {error}") from error
     symptoms = symptom_rounds(dispatches)
-    budget_held, budget_lines, bound = budget_status(text, dispatches, slug)
-    kept = list(alignment(lines))
     front = re.match(r"---\n(.*?)\n---\n", text, re.S)
     profile = FRONT_PROFILE.search(front.group(1)) if front else None
+    budget_held, budget_lines, bound = budget_status(text, dispatches, slug, profile and profile.group(1))
+    if budget_only:
+        return int(budget_held), "\n".join(budget_lines if budget_held or (bound and "ideation" in bound) else [])
+    kept = list(alignment(lines))
     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
     owed, seen, stepped = [], 0, False
     repairs = max(reports - 1, 0)
@@ -481,8 +495,8 @@ def check(state, slug, rev, rounds=None, drift=None, pending=None):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev, rounds, drift, pending = parse(args)
-        code, message = check(state, slug, rev, rounds, drift, pending)
+        state, slug, rev, rounds, drift, pending, budget_only = parse(args)
+        code, message = check(state, slug, rev, rounds, drift, pending, budget_only)
     except Unverifiable as err:
         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
         return 2

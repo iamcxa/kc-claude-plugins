@@ -215,9 +215,13 @@ def main(argv=None):
         print("dispatch_stage: dispatch not built; --role needs the opus model floor or above (astra qualifies)",
               file=sys.stderr)
         return 1
-    if args.stage in ("implementation", "validation"):
-        roles = subprocess.run([sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
-                                str(folder.parent), folder.name, "--pending", str(path)], capture_output=True, text=True)
+    # see docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md
+    if args.stage in ("ideation", "implementation", "validation"):
+        role_args = [sys.executable, "-B", str(SCRIPTS / "role_triggers.py"),
+                     str(folder.parent), folder.name, "--pending", str(path)]
+        if args.stage == "ideation":
+            role_args.append("--budget-only")
+        roles = subprocess.run(role_args, capture_output=True, text=True)
         if roles.returncode:
             remove_uncommitted(path, wrote)
             print(f"dispatch_stage: dispatch not built; {folder.name} budget or special-role check held:", file=sys.stderr)

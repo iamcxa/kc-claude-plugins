@@ -85,6 +85,10 @@ WORKFLOW_BUDGET_STEPS = [
          loaded="startup and resume of the First Officer, and each Pilot ideation dispatch stage definition"),
     dict(delta=-30, why="the delivery record replaces FO hand-written factual summary fields"),
     dict(delta=-87, why="delivery preparation and reviewer disclosures share the delivery-record contract"),
+    dict(delta=-2, why="role_triggers.py holds a Pilot ideation dispatch past its bound, two by default; the README names the form"),
+    dict(delta=16, why="outside-gate questions carry an owner and stay open until an answer is recorded; the command lists open questions",
+         captain='「核准待決定事項紀錄的設計，五項都照建議」 (Captain, ideation gate, 2026-11-14); amendment 1 「待決定事項紀錄的說明句補上 --by "<session>"，啟動字數從 39 改成 41」 (Captain, chat, 2026-11-14)',
+         loaded="startup"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
