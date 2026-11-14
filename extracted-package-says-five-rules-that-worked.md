@@ -40,6 +40,20 @@ gates:
                 id: briefing:extracted-package-says-five-rules-that-worked:ideation:attempt-1:revision-1
                 digest: sha256:5a0887d0e6863fadfbd2740ac22ae43bd57c7db5e2886b3d522c173a8db4754c
                 room-ref: ./extracted-package-says-five-rules-that-worked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extracted-package-says-five-rules-that-worked:ideation:1
+                briefing: briefing:extracted-package-says-five-rules-that-worked:ideation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T13:03:10.680996Z"
+                decision: approve
+                reason: Design gate inside scope 3 under the Captain's grant; the reform session confirmed placement and proof and told FO to record the gate and dispatch implementation on the last pass's text; the two Captain-only decisions are answered first-hand in amendment 1.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item A from the reform session, Paseo messages 6dd41248-d90d-4c35-ba36-bc70f9e033d7, b82b5292-3b89-4832-bc08-940b26fa6812, 06055057-3766-4ec8-81a0-d4ad938c9a3d and 8cd30e54-34f7-4342-a49a-e0a1e6ce8cf5
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-11-14T12:18:22Z
 ---
 
