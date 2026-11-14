@@ -101,6 +101,7 @@ Alignment: not needed before ideation: outcome, caps and proof are stated in the
 Surfaces: none
 Visible change: none
 Release review: not needed: package tooling with no release on a journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer gpt-6-astra 2026-11-14 — after the fix, can the agent outlive the runner or its caps on any exit path, and may a paid run be asked of the Captain again? (run and attack the six stub proofs; record dispatch/engineering-reviewer-1.md)
 
 ## Design
 
