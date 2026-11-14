@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:extracted-package-real-use-routes-probe-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:extracted-package-real-use-routes-probe-poc-validation-1
+              briefing:
+                id: briefing:extracted-package-real-use-routes-probe-poc:validation:attempt-1:revision-1
+                digest: sha256:a52332b3a61ad2c4bd553880dc26269caafaa2f83c43478127d0285e7437b6b5
+                room-ref: ./extracted-package-real-use-routes-probe-poc/review/validation/briefing-1
 started: 2026-11-14T12:18:27Z
 ---
 

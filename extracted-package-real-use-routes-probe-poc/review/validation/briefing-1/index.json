@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extracted-package-real-use-routes-probe-poc:validation:attempt-1:revision-1",
+  "question": "Close this probe as answered, with its validation cycle skipped? Not asked of the Captain as a gate: decided by FO under his standing grant, on the reform session's ruling.",
+  "artifacts": [
+    {
+      "id": "artifact:extracted-package-real-use-routes-probe-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7718b78b090178779b65f595cdda2487acdad380/extracted-package-real-use-routes-probe-poc.md",
+      "rev": "sha256:b9e3af194473711fbeadd7696aee9cf83edd42088b1a4d0b9687dfc2d01b8f53",
+      "mediaType": "text/markdown",
+      "summary": "Options delivered: three routes each tried to its smallest step, plus two follow-up answers (project settings alone do not let a worker started through Paseo load the extracted package; a second provider entry carrying the plugin-directory flag works on the command line and was not tried through Paseo). The Captain chose the clean host; his words were relayed by the reform session in its message 05f7f3b7 and are not copied here because they name the private repository. Validation was skipped by the reform session's ruling: a probe's output is options, and re-running its steps tells the Captain nothing new; no independent worker checked the probe's steps. Nothing was built by this task. Left behind as reported: one archived Paseo workspace and agent, one small built-in plugin store file on the clean host."
+    }
+  ]
+}
