@@ -1,0 +1,44 @@
+{
+ "case": "tilde",
+ "steps_cli_exit": 0,
+ "steps_cli_last": "captain steps complete: 1 steps, 1 left to him",
+ "question_path_problems": [],
+ "bash_fresh_exit": 0,
+ "zsh_fresh_exit": 0,
+ "commit_exit": 0,
+ "guard_lines": [],
+ "home_hits_at_HEAD": 0,
+ "HEAD_subject": "state: tw-tilde"
+}
+{
+ "case": "absolute",
+ "steps_cli_exit": 0,
+ "steps_cli_last": "captain steps complete: 1 steps, 1 left to him",
+ "question_path_problems": [],
+ "bash_fresh_exit": 0,
+ "zsh_fresh_exit": 0,
+ "commit_exit": 1,
+ "guard_lines": [
+  "state guard: refused; \"tw-absolute.md\" adds a home identifier",
+  "state guard: refused; \"tw-absolute/captain-steps/1.md\" adds a home identifier",
+  "state guard: refused; \"tw-absolute/review/validation/briefing-1/index.json\" adds a home identifier"
+ ],
+ "home_hits_at_HEAD": 0,
+ "HEAD_subject": "state: tw-tilde"
+}
+{
+ "case": "mixed",
+ "steps_cli_exit": 0,
+ "steps_cli_last": "captain steps complete: 1 steps, 1 left to him",
+ "question_path_problems": [
+  "message S5: unrecorded command or link 'python3 /private/tmp/dev2/kc-claude-plugins-3042bb"
+ ],
+ "bash_fresh_exit": 0,
+ "zsh_fresh_exit": 0,
+ "commit_exit": 1,
+ "guard_lines": [
+  "state guard: refused; \"tw-mixed.md\" adds a home identifier"
+ ],
+ "home_hits_at_HEAD": 0,
+ "HEAD_subject": "state: tw-tilde"
+}

@@ -1,0 +1,1 @@
+scripts with home: 11; tilde sites after rewrite: 18; inside quotes or after =: 18

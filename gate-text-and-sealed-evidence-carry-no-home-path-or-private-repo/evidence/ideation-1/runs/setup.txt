@@ -1,0 +1,2 @@
+state guard: installed (home=refuse, email=warn, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)
+state guard: guarded (email=warn, home=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)
