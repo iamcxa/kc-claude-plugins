@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extracted-package-real-use-routes-probe-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile poc with the outcome, non-goals, stop condition, acceptance criteria and a budget of 1 implementation and 1 validation cycles as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave.",
+  "artifacts": [
+    {
+      "id": "artifact:extracted-package-real-use-routes-probe-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f14b12c92a7e6719a5f75e12a582b71192315b66/extracted-package-real-use-routes-probe-poc.md",
+      "rev": "sha256:f7f88f0f7959e51cdf80e67c2faaa77cd582bce0b313bb2220294dc14ffb6a8e",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: profile poc; scope 3 item from the reform session; outcome, Non-goals, Stop condition and acceptance criteria as filed; Budget 1 implementation and 1 validation cycles; a time box and a half-time check are in the Stop condition."
+    }
+  ]
+}

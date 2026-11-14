@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:extracted-package-real-use-routes-probe-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:extracted-package-real-use-routes-probe-poc-backlog-1
+              briefing:
+                id: briefing:extracted-package-real-use-routes-probe-poc:backlog:attempt-1:revision-1
+                digest: sha256:1f5a3a54febbff33d51a1a54505fee39d1a478bcaea3c95a0067c72569d2ed82
+                room-ref: ./extracted-package-real-use-routes-probe-poc/review/backlog/briefing-1
 ---
 
 Nine of the sixteen approved outcomes can only be measured in real use, and nobody uses the extracted package yet. The next real task of the reform should be run by a First Officer and workers that load the extracted package, not the installed one, with its task state in a private place from the first commit.
