@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:shared-assumption-replay-on-archived-tasks-poc:validation:attempt-1:revision-1",
+  "question": "Close this read-only POC with the measurement delivered and its reading recorded as: the retrospective cannot show the prompt helps; inputs leaked later work? (decided by FO under the Captain's grant; no merge, no pull request)",
+  "artifacts": [
+    {
+      "id": "artifact:shared-assumption-replay-on-archived-tasks-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/84cf494abe8b4aa33e0fa361f374ea27829e327a/shared-assumption-replay-on-archived-tasks-poc.md",
+      "rev": "sha256:7b5a9b2c5eef1bf10020fa4d0555921fdb20b3ac37b4e67e42f71af58efa7d7b",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED on the measurement (Claude Sonnet, independent of the Codex author): literal k=2 of 5, assumptions frozen at c24854032 before any dispatch 3 was read; FO ran evidence/validation-1/accept.sh: exit 0. Reading: the retrospective cannot show the prompt helps; inputs leaked later work (the allowed second reports already hold the later repair in four rows) and no counted row shows two failed fixes of the same check. 0 demonstrated blind predictions. One borderline row (prod-security-review-gates) would make k=3 and changes nothing. No product file changed; no pull request."
+    }
+  ]
+}

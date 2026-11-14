@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:shared-assumption-replay-on-archived-tasks-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:shared-assumption-replay-on-archived-tasks-poc-validation-1
+              briefing:
+                id: briefing:shared-assumption-replay-on-archived-tasks-poc:validation:attempt-1:revision-1
+                digest: sha256:2311160bba13404f39a55058c5a7275f9b3d9ea222188838558bf57ee1030b65
+                room-ref: ./shared-assumption-replay-on-archived-tasks-poc/review/validation/briefing-1
 started: 2026-11-14T02:35:18Z
 ---
 
