@@ -241,6 +241,13 @@ Asked: not asked of the Captain. Under that grant the reform session (Paseo 2621
 Supersedes: none
 Budget: 3 implementation cycles
 
+### Amendment 3 — 2026-11-14, chat (standing grant; scope amendment given by the reform session)
+Captain: 「改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。」 (chat with the second dev2 FO, 2026-11-14)
+Asked: not asked of the Captain by this FO. The reform session (Paseo 26215d96, message 734da3e8) relays his decision in its own conversation, 「先拿數字：用現成的回放工具加 Paseo 代理跑九次，限制事先寫明；啟動程式留在分支不合併，隔離環境留到第五階段。」 (relayed), and under the grant re-cuts this task: the endpoint is one result table for the one cell already designed, from nine ordinary Paseo agents (last released tag, candidate, no-skill control; three runs each), each given the stage dispatch rebuilt by the package's replay builder at that arm's package ref; no homemade launcher, no credential handed to anything, no isolated home; the limits and the reading are committed in the private working repository before the first run; a contaminated run is marked, not dropped; the table's first line says it is a first reading from a non-hermetic place and not release evidence; the launch-and-kill layer stays on its branch unmerged with the reviewer's hold findings beside it; one implementation cycle for glue and one independent check of the grading.
+Supersedes: AC-3 (no replacement: isolation is not claimed by this reading; each transcript is scanned and contamination is reported as a limit)
+Design: the `### Runner` launch and hard-stop paragraphs and `### Isolation`
+Budget: 4 implementation and 2 validation cycles
+
 ## Stage Report: ideation
 
 - DONE: A design for the thin runner (launch, hard stop, manifest, grade, table) that reuses scripts/replay_dispatch.py and the maintain-flow procedure, names every file it adds in the private working repository, and states how isolation is achieved and shown (empty home and config directory; no read of an installed skill copy or personal configuration)
