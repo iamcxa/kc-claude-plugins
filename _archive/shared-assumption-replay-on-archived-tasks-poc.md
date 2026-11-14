@@ -1,7 +1,7 @@
 ---
 id:
 title: Would naming the shared assumption after two failed fixes have found the later cause on 5 archived tasks (read-only replay)
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -50,9 +50,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item A from the reform session, Paseo messages 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e and a8df76d7-63cb-4352-9c4b-f44b6004d7f5
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T02:35:18Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T04:40:23Z
+archived: 2026-11-14T04:40:23Z
 ---
 
 Archived tasks reached 16, 14 and 9 implementation dispatches; 77 of 136 tasks had a repeat validation dispatch and 19 of 30 rejections showed no code defect (brief C6, figures from time-baseline.md and proposal.md, not re-measured here). The trial rule that stops before a third dispatch asks what the two attempts showed; it does not require a diagnosis, so the Captain gets a stop without a hypothesis.
