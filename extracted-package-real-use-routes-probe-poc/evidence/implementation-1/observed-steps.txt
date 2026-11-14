@@ -1,0 +1,39 @@
+Observed steps, 2026-11-14, 20:20-20:25 local. <PKG> = the package exported with `git archive` at the pinned
+commit 2b391a40f926646b6be949cb2cf07466005e277c into a scratch directory. <WF> = a scratch git repository
+with a local bare repository as its origin (no real remote touched). Output is trimmed; no path, host name or run id kept.
+
+LAPTOP (Claude Code 2.1.323, Spacedock 0.27.2)
+
+L1  claude plugin validate <PKG>                       -> "Validation passed" (one icon warning, advice on README)
+L2  CLAUDE_CONFIG_DIR=<scratch home> claude -p --plugin-dir <PKG> --no-session-persistence --max-turns 1 "say ok"
+      init event: plugins [kc-dev-flow-2@inline 0.41.0, builtin x2]; skills kc-dev-flow-2:* x12; no spacedock plugin
+      result: terminal_reason=api_error, apiKeySource=none, total_cost_usd=0   (no sign-in in a scratch home)
+L3  claude -p --plugin-dir <PKG> --no-session-persistence --max-turns 1 "say ok"      (real home, existing sign-in)
+      init event: kc-dev-flow-2@inline 0.41.0 listed; kc-dev-flow-2@kc-claude-plugins NOT listed (same name replaced);
+      spacedock@spacedock 0.27.3 and kc-dev-flow@kc-claude-plugins 4.6.0 still listed; result: completed
+L4  claude -p --model sonnet --plugin-dir <PKG> --allowedTools Skill 'Invoke Skill "kc-dev-flow-2:implementation"; print the Package root: line'
+      -> Package root: <PKG>
+L5  same as L4 with a copy of <PKG> whose plugin.json name was changed to kc-dev-flow-2-wip
+      -> Package root: ~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0   (the INSTALLED copy answered)
+L6  grep over <PKG>: 73 occurrences of "kc-dev-flow-2:<name>" in 39 files; 37 occurrences of "kc-dev-flow-2" in scripts/;
+      scripts compare a task's `variant` to the literal "kc-dev-flow-2"
+L7  in <WF>/fresh (fresh clone): spacedock state init --workflow-dir docs/dev2
+      -> Initialized state checkout at <WF>/fresh/docs/dev2/.spacedock-state (branch spacedock-state/dev2)
+L8  printf '---\ntitle: ...\nstatus: backlog\nvariant: kc-dev-flow-2\nprofile: poc\nmerge: pr\n---\n\nbody\n' | spacedock new probe-task --workflow-dir docs/dev2
+      -> created: .../.spacedock-state/probe-task.md id=probe-task ; `spacedock status` lists it; `git status` of the code repository is clean
+      (first attempt with a body lacking frontmatter: "Error: no frontmatter found in --new entity body")
+L9  in <WF>/fresh: spacedock claude "Reply with the single word ok" -- --plugin-dir <PKG> -p --model sonnet --no-session-persistence --max-turns 1
+      -> "launching claude as your first officer / Workflow: docs/dev2"; init event: kc-dev-flow-2@inline, kc-dev-flow@kc-claude-plugins,
+         spacedock@spacedock; agents include spacedock:first-officer; result: completed
+
+CLEAN HOST (Claude Code 2.1.311, Spacedock 0.28.0 plugin and binary; no kc-dev-flow-2 installed)
+
+H1  survey: claude, codex, git, python3, node, gh on PATH; spacedock binary in ~/.local/bin (not on a non-interactive PATH);
+      installed plugins: spacedock@spacedock 0.28.0 only
+H2  git archive of the host's clone at the pinned commit into a scratch directory -> 12 skill directories
+H3  claude -p --plugin-dir <host PKG> --no-session-persistence --max-turns 1 "say ok"   (the host's existing sign-in)
+      init event: plugins [kc-dev-flow-2@inline, spacedock@spacedock]; skills kc-dev-flow-2:* x12 and spacedock:*; result: ok
+H4  scratch <WF> as in L7/L8 with spacedock 0.28.0 -> state init, new, status all succeed (probe-task listed)
+H5  claude -p --model sonnet --plugin-dir <host PKG> ... Skill "kc-dev-flow-2:implementation" -> Package root: <host PKG>
+H6  Paseo list_hosts: the host is registered, status online, enabled (listing only; no agent created)
+Not tried on the host: any write to the private remote (the repository key is read-only; known from earlier probes).

@@ -59,3 +59,41 @@ Verified by: the report's list of what was created and removed, checked by the v
 
 Alignment: not needed before implementation: the questions and the stop are stated in the scope; the options go to the reform session and the Captain, who choose.
 Release review: not needed: a probe.
+
+## Stage Report: implementation
+
+- DONE: At most three routes for running a real task on the extracted package with private task state, each answered by trying its smallest step, not by reasoning: where the workflow and state branch live; how a session loads the extracted package without colliding with the installed package of the same skill names; laptop or clean host. For each: the command tried and its observed output, what it needs from the Captain, what breaks
+  Three routes in the table below; every step and its trimmed output is in evidence/implementation-1/observed-steps.txt (L1-L9 laptop, H1-H6 host), 20:20-20:26 local, finished inside the one-hour box so the 30-minute check was not reached.
+- DONE: A list of everything created, installed or registered during the probe and its removal, or the scratch location it stays in; no credential used beyond what the session already has, no plugin install on the Captain's laptop outside a scratch location, no write to a shared configuration: a step needing one is listed as what that route needs from him and not taken
+  See "Created and removed" below; nothing installed or registered, no credential read or copied, no shared configuration written by the probe.
+- DONE: A stage report in the task file with the options table and the limits of the probe; no recommendation acted on
+  Table and limits below; no route was built, chosen or migrated.
+
+### Options table
+
+State layout common to all three (tried in a scratch repository with a local bare repository as its origin, laptop and host): the workflow README stays in the code repository and the task files live in an orphan state branch's checkout. `spacedock state init --workflow-dir docs/dev2` on a fresh clone gave "Initialized state checkout ... (branch spacedock-state/dev2)"; `spacedock new` created the task there and the code repository's `git status` stayed clean (L7, L8, H4). So "private state from the first commit" means: the private repository's own remote holds the state branch. Not tried: a push to the real private remote.
+
+| | Route 1: laptop, same-name session plugin | Route 2: laptop, renamed copy beside the installed package | Route 3: clean host, same-name session plugin |
+|---|---|---|---|
+| Smallest step tried | `claude -p --plugin-dir <PKG>` then Skill `kc-dev-flow-2:implementation` (L3, L4); FO launch `spacedock claude "..." -- --plugin-dir <PKG>` (L9) | same Skill call with `<PKG>` copy named `kc-dev-flow-2-wip` (L5, L6) | `claude -p --plugin-dir <host PKG>` and the same Skill call (H3, H5), state steps (H4) |
+| Observed | Init lists `kc-dev-flow-2@inline 0.41.0`; the installed `kc-dev-flow-2@kc-claude-plugins` is not listed (replaced); Skill reports `Package root: <PKG>`; the launcher printed "Workflow: docs/dev2" and loaded spacedock and the inline package | `Package root:` came back as the INSTALLED copy; 73 plugin-qualified names in 39 files and a literal `variant == "kc-dev-flow-2"` check in scripts point at the original name | Init lists `kc-dev-flow-2@inline` and `spacedock@spacedock`; Skill reports `Package root: <host PKG>`; the host already has Spacedock 0.28.0 and a working sign-in |
+| Needs from the Captain | Nothing for a session on his sign-in. An isolated config home needs a login in it (L2: `api_error`, no sign-in), which was not taken. A write path from the laptop to the private remote for the state branch (not tried) | A decision to rename the package everywhere (not done) | A write credential on the host for the state branch push (not taken; known read-only), or state kept only on the host; the host is already registered and online in Paseo (H6, listing only) |
+| What breaks | The installed package is hidden in that session, so a session meant to use both cannot; every launcher must add the flag, and a worker started by another launcher (Paseo) was not tried and the provider list shows no plugin-directory option | The installed package answers to the original skill names, so workers load the wrong copy; renaming means editing the package | Host Claude Code is 2.1.311 and Spacedock 0.28.0, against laptop 2.1.323 and 0.27.2; the package text names Spacedock 0.27.2 report parsing, untested on 0.28.0; the key cannot push state |
+
+### Created and removed
+
+- Laptop scratch folder (named scratch location): kept for now, holds this draft, the evidence and the scratch workflow repository. The private package copies in it were deleted. `scratch.py close` was NOT run, see Summary.
+- Laptop real configuration home: two empty-or-one-file project directories created by my sessions; both removed. Checked: no entry for the scratch path in the user-level settings file; no launcher state written under the Spacedock home. Cache temp directories under the plugin cache belong to other sessions, not removed.
+- Host: scratch folder under the user's home and two project directories in the Claude home created by my sessions; all removed. Left: one 92-byte builtin-plugin store file created by Claude itself on the host at the first session (`plugins/store/cc-plugin-agents-md_builtin-*.json`), because the host runs other sessions and the file is shared state.
+- Nothing installed, no marketplace registered, no setting written, no credential printed or copied; model requests (L2-L5, L9, H3, H5) used the sign-in each machine's session already had, each one to four turns.
+
+### Limits of the probe
+
+- Non-interactive one-turn sessions; no dispatched worker, gate or merge was run on the extracted package, so no outcome among the nine measurable ones was measured.
+- Paseo-launched worker sessions were not tried: starting one would create an agent, and nothing here shows whether one can be given a plugin directory.
+- The private remote was never written to; the state branch was proven only against a local bare repository.
+- Laptop and host differ in two version numbers; whether that matters was not tested beyond `state init`, `new` and `status`.
+
+### Summary
+
+All three routes were tried to their smallest step in about six minutes, and the answers are in the table; no recommendation is made or acted on. This report is a draft held in the scratch folder, not in the task file: both attempts to write into the state checkout (a shell write and the Write tool) were denied by the permission classifier as "Unsanctioned Communication", so FO needs to place this report and the evidence file into the task folder, or tell me how to proceed, before `scratch.py close` is run.
