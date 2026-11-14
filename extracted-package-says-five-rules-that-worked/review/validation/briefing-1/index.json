@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extracted-package-says-five-rules-that-worked:validation:attempt-1:revision-1",
+  "question": "Close this task as delivered: validation PASSED at 17a4ff133f24 and that same commit is merged to the private working repository's main? Not asked of the Captain as a gate: decided by FO under his standing grant; his two decisions are recorded as Captain amendments 1 and 2.",
+  "artifacts": [
+    {
+      "id": "artifact:extracted-package-says-five-rules-that-worked:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5f3ca9777ed4510f0f2fdc6d547484b2e1d014f5/extracted-package-says-five-rules-that-worked.md",
+      "rev": "sha256:5c3ead62e40a68eb35c970d8791c1d02eb8158da4268eee21b708b2017f27e22",
+      "mediaType": "text/markdown",
+      "summary": "Validation-1 PASSED at 17a4ff133f24 (base 7e0f9c242e64): the five rules are each placed once where their reader loads them; the First Officer reads 34 more words and the workflow text 86 more, as amendment 2 accepts; the raise step quotes only the Captain. Independent fresh readers confirmed that the base lacks the stop question, the not-proposed commit loses the kept-results answer, and the candidate has both; controls do not trigger. Merged by fast-forward at the validated commit. After the merge the clean host's clone was fast-forwarded and a fresh worker started there through Paseo loaded the package from the marketplace folder that points at the clone and saw the new text; the two documented update commands reported nothing to update and left the plugin cache copy at the old text, differing in the five changed files. Known limits, not fixed: the three worth answers at a budget hold appear in no arm because they exist only in script output; readers were single runs per scenario on a smaller model and an older Claude Code, with only the lost-and-restored scenario repeated; no reader read the implementation or validation worker text; the word lint counts the workflow text alone; minutes to the first report and whether a message carried minutes stay not recorded; the prepared PR text still says the worker scenarios were not run on the candidate, which validation did run. Time: about 105 of 120 minutes at the merge, 34 of them waiting on a person; the host step ran past the box by the reform session's ruling. Follow-up listed, not done: the validation text should say acceptance scripts take paths as arguments or write the home directory as a tilde."
+    }
+  ]
+}

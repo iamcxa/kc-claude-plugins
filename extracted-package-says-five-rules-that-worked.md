@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:extracted-package-says-five-rules-that-worked:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:extracted-package-says-five-rules-that-worked-validation-1
+              briefing:
+                id: briefing:extracted-package-says-five-rules-that-worked:validation:attempt-1:revision-1
+                digest: sha256:a6be7836697361519513da244558c44adff0603aee4cfa0b307a874630bfd863
+                room-ref: ./extracted-package-says-five-rules-that-worked/review/validation/briefing-1
 started: 2026-11-14T12:18:22Z
 ---
 
