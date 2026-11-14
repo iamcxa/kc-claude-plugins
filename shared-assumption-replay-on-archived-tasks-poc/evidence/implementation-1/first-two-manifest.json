@@ -1,0 +1,170 @@
+{
+  "created_at": "2026-11-14T02:39:57.732999+00:00",
+  "code_head": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "code_branch": "spacedock-ensign/shared-assumption-replay-on-archived-tasks-poc",
+  "code_status": "",
+  "archive_head": "7af9ca4fc1d779cdafc436421f9f3b8c44764b76",
+  "archive_status_for_five": "",
+  "tasks": [
+    {
+      "task": "fo-lifecycle-mod",
+      "stage": "implementation",
+      "dispatches": [
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod/dispatch/implementation-1.md",
+          "sha256": "1044ba43a924929cc15cc64047d865f96b7bfcb098ba00be244556181f885fdb"
+        },
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod/dispatch/implementation-2.md",
+          "sha256": "734230561b505348aed20c776adf5b68799db22bb03c7115330ad7190c74be72"
+        }
+      ],
+      "reports": [
+        {
+          "ordinal": 1,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod.md",
+          "start_line": 458,
+          "end_line": 474,
+          "sha256": "7be2b322be3c27376989b4eee731674a17508fd4fa8239574914574c513a7777",
+          "heading": "## Stage Report: implementation"
+        },
+        {
+          "ordinal": 2,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/fo-lifecycle-mod.md",
+          "start_line": 475,
+          "end_line": 494,
+          "sha256": "e2be8e7b4da11d201589b803ab9b2dfac67810243cfaa94856c9e85272ae3e92",
+          "heading": "## Stage Report: implementation (cycle 2)"
+        }
+      ]
+    },
+    {
+      "task": "merge-gatekeeper",
+      "stage": "implementation",
+      "dispatches": [
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper/dispatch/implementation-1.md",
+          "sha256": "3c827e71969c3c4ec42effe942853302bcd66d5b40a8d780b40342fb7dd1557b"
+        },
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper/dispatch/implementation-2.md",
+          "sha256": "e5276bacb691910859e3b91edfa50f6d769b10525d4cfd296e12f08e35f4b918"
+        }
+      ],
+      "reports": [
+        {
+          "ordinal": 1,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper.md",
+          "start_line": 363,
+          "end_line": 376,
+          "sha256": "4dd2b6c79700280a7440c782289bf990cf6e2a56dba6be4e8c4e54194eca6f80",
+          "heading": "## Stage Report: implementation"
+        },
+        {
+          "ordinal": 2,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/merge-gatekeeper.md",
+          "start_line": 377,
+          "end_line": 387,
+          "sha256": "f0c506d4097e7480690a4e4dc43f1a4352ef5546bc3133a8a3f3601d7393ae14",
+          "heading": "## Stage Report: implementation (cycle 2)"
+        }
+      ]
+    },
+    {
+      "task": "prod-security-review-gates",
+      "stage": "implementation",
+      "dispatches": [
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates/dispatch/implementation-1.md",
+          "sha256": "7f7ffde2702ba9067492b7a84deac6fd947f6b4521fcee456caa73b3237b55a4"
+        },
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates/dispatch/implementation-2.md",
+          "sha256": "85c13bb5ee0aba93d17c0356a2279d1d71af8e06cfea8a46be870d7b9e5d2ad3"
+        }
+      ],
+      "reports": [
+        {
+          "ordinal": 1,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates.md",
+          "start_line": 371,
+          "end_line": 387,
+          "sha256": "41a232728412e09359fa2fa26468ebb82bfbec5d34c2b37dd2343315e5b3910d",
+          "heading": "## Stage Report: implementation"
+        },
+        {
+          "ordinal": 2,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/prod-security-review-gates.md",
+          "start_line": 388,
+          "end_line": 406,
+          "sha256": "9f81e9b1db05416306d59347f32a06208bc50801e861e01870f92b7f852d517b",
+          "heading": "## Stage Report: implementation (cycle 2)"
+        }
+      ]
+    },
+    {
+      "task": "dev2-laws-check",
+      "stage": "implementation",
+      "dispatches": [
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check/dispatch/implementation-1.md",
+          "sha256": "35731d753f2264f8f13772896460461b0644995b668dde21809fbea31198d79b"
+        },
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check/dispatch/implementation-2.md",
+          "sha256": "3a00428fe124f1cec47d681021716139ccdfe6b6dcd339cd94cb1f22516a0c84"
+        }
+      ],
+      "reports": [
+        {
+          "ordinal": 1,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check.md",
+          "start_line": 372,
+          "end_line": 394,
+          "sha256": "6bae574f12ca7545b18c1c03663c08b869869899ae1b0b68faa8cd6a83d8d731",
+          "heading": "## Stage Report: implementation"
+        },
+        {
+          "ordinal": 2,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/dev2-laws-check.md",
+          "start_line": 451,
+          "end_line": 469,
+          "sha256": "db63129cb63436b02b380df023e6fca32369efcdd3012991961927d1a28439e1",
+          "heading": "## Stage Report: implementation (cycle 1)"
+        }
+      ]
+    },
+    {
+      "task": "ui-design-review-in-ideation",
+      "stage": "implementation",
+      "dispatches": [
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/ui-design-review-in-ideation/dispatch/implementation-1.md",
+          "sha256": "27c6f17abad5c788235a7f8ea66868f672eedb886ee20589190dea38786031c0"
+        },
+        {
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/ui-design-review-in-ideation/dispatch/implementation-2.md",
+          "sha256": "7536b38a493d1c579a120569c944ed78e3b938b45e641b6ad36790e48353ebce"
+        }
+      ],
+      "reports": [
+        {
+          "ordinal": 1,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/ui-design-review-in-ideation.md",
+          "start_line": 339,
+          "end_line": 369,
+          "sha256": "6492f2648937a1021700f55ce9a4d96fb2ee34f8748cfaa425ca779683a9b70a",
+          "heading": "## Stage Report: implementation"
+        },
+        {
+          "ordinal": 2,
+          "path": ".context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/ui-design-review-in-ideation.md",
+          "start_line": 412,
+          "end_line": 434,
+          "sha256": "64148b62ab5d03447d31a3993f8e1c7f002b854e0d006f6ee7c5c8aafb3aed3b",
+          "heading": "## Stage Report: implementation (cycle 2)"
+        }
+      ]
+    }
+  ]
+}

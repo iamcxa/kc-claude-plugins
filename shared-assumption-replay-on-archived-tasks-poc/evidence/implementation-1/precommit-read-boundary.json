@@ -1,0 +1,9 @@
+{
+  "prepared_at": "2026-11-14T02:46:56.254375+00:00",
+  "phase": "first-two-only",
+  "dispatch_3_opened": false,
+  "later_archived_dispatches_opened": false,
+  "read_policy": "Dispatches implementation-1 and implementation-2 only. Stream each archived task body, returning only first two implementation reports. Directory filename inventory, source Git identity and status are metadata. Existing-code learning.md exposure and report temporal confounds are disclosed in assumptions.md.",
+  "no_product_edits": true,
+  "no_archive_edits": true
+}
