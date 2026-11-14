@@ -1,0 +1,35 @@
+Validation-1 checks, fresh clone of the private working repository's remote main (2026-11-14).
+HEAD 2b391a40f926646b6be949cb2cf07466005e277c, parent b61e8f4be42d50e605d4e011401dcfec1b4b28b2, origin has only main.
+Range b61e8f4..2b391a4: 93 paths (91 added, 2 modified), +1155/-26; clean tree after all runs (git status --porcelain: 0 lines).
+
+selfcheck exit codes (python3 -B behaviour/run_cell.py selfcheck <cell>):
+  ideation-flags-unprovable-criterion       exit 0, NOT CHECKED lines 0
+  ideation-flags-unprovable-criterion-v2    exit 0, NOT CHECKED lines 1 (the earlier cell; prints entries it could not check)
+  method-against-no-method                  exit 0, NOT CHECKED lines 0
+  method-against-no-method-2                exit 0, NOT CHECKED lines 0
+table_rule_check.py                         exit 0
+
+Present: both cells' READING.md, answer.json, cell.json, checklist.txt, mutation-proof.txt, falsifiers/;
+  behaviour/results/method-against-no-method/table.md     sha256 prefix 4d5ec7c2ca04
+  behaviour/results/method-against-no-method-2/table.md   sha256 prefix 9961adeff8e7
+  (both equal the carried digests in the implementation report; the run column reads arm-trial, e.g. N-1, M-3)
+Run-id shape in behaviour/results/: 0.
+
+Raw-output check of changed paths: no results/<run>/ folder, no run list, blind file, packet, key, collect or scan output.
+  13 paths named transcript.jsonl are synthetic falsifier fixtures under falsifiers/G*/ (264 bytes each, 3073 total),
+  described as synthetic in the reading's fixture section.
+
+Scan over added lines + commit message (1171 lines), counts only:
+  owner's identifier list: private-repo 0, private-slug 0, tailnet-host 0
+  real home path 0, any /Users/<name> path 0, configured git email 0, host name 0, .local/tailnet 0, IPv4 0, uuid 0,
+  private repository name 0, agent session directory 0
+  token shapes: GitHub 0, sk- keys 0, AWS 0, Slack 0, JWT 0, PEM private key 0, Clerk-shaped 0
+  read, not hits: 1 email = the model co-author attribution line in the commit message;
+    22 strings of 40+ chars = 7 git SHAs / sha256 pins, 13 synthetic /tmp placeholder paths, 2 package-cache path fragments.
+  Commit author/committer: the repository's configured identity (metadata, by the reform session's ruling).
+
+Package checks:
+  comment_ratio.py b61e8f4 2b391a4: exit 0, code 226, comment 1 (a shebang), 0.4%, max 5% met
+  adr_lint.py docs/adr --since b61e8f4: exit 2, the repository has no docs/adr folder; no ADR expected
+  dispatch_records.py <task folder>: exit 0, 2 dispatch records complete
+Not archived (private): file listing, scan input and the reading/table text; reproduce: clone the remote main and run the commands above.
