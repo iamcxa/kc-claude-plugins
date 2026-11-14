@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:first-method-against-no-method-reading:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile pilot with the outcome, non-goals, stop condition, acceptance criteria and a budget of 2 cycles per stage as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave; approving starts the design stage and merges nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:first-method-against-no-method-reading:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f095f810b92dd12831597e989bd0eadcfc7eeedd/first-method-against-no-method-reading.md",
+      "rev": "sha256:8d3f4b0ae695ce930084af2ec55b0e4fcf12d0d0c7ebf61a765e24dbe39ba3dd",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: variant kc-dev-flow-2, profile pilot; outcome, Non-goals, Stop condition and acceptance criteria as filed; Budget 2 cycles per stage; FO alignment not needed before ideation; Surfaces none; Visible change none; seed check exit 0 (FO run 2026-11-14)."
+    }
+  ]
+}

@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:first-method-against-no-method-reading:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:first-method-against-no-method-reading-backlog-1
+              briefing:
+                id: briefing:first-method-against-no-method-reading:backlog:attempt-1:revision-1
+                digest: sha256:7d2315e407bed6fe9152c8649add12156e82643aa362eaea82f2b9ef5f139855
+                room-ref: ./first-method-against-no-method-reading/review/backlog/briefing-1
 ---
 
 Two readings of one cell on the operator's laptop (archived task behaviour-baseline-first-cell) could not include a no-method arm: an installed copy of the package was one skill call away, and all three control runs loaded it. The question the Captain asks first, 「該怎麼知道用我的工作方法，確實比沒用較好？」 (outcome 零 of the reform's approved outcomes, as recorded in `.context/dev2-reform/結果定義.md`), is still unanswered by any run.
