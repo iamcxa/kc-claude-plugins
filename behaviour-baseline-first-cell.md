@@ -1,7 +1,7 @@
 ---
 id:
 title: One local command runs a real agent on a rebuilt stage dispatch at the released and the candidate package, for one cell, and reports what each arm did
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
