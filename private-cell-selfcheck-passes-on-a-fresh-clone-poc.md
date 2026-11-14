@@ -60,3 +60,19 @@ Verified by: the scan's counts over exactly the pushed range and a listing of th
 
 Alignment: not needed before implementation: the outcome is the reform session's sentence; the backlog gate records it under the grant.
 Release review: not needed: maintenance of a private measurement repository.
+
+## Stage Report: implementation
+
+- DONE: On a new branch from the private working repository's remote main: the second laptop cell's selfcheck exits 0 on a tree without the raw laptop outputs and prints, by name and count, which entries it could not check and why; with the raw outputs present (the laptop branch) it still checks every entry; a carried fixture with a wrong expected grade still makes it exit 1 (shown by a mutation in scratch)
+  Branch `selfcheck-fresh-clone` in the private repository, base a1068423, candidate a836cda26e38419ad4c138fb32ef7999b4d03eb9 (one commit, one file: `behaviour/run_cell.py`, +10/-1). A fresh clone of the candidate: all three cells exit 0; the second laptop cell prints `NOT CHECKED: 9 of 12 entries` and the nine names under `falsifiers/old-nine`; the other two print none.
+  Rule: an entry is not checked only when its whole fixture folder is absent from the tree; a missing file inside a present folder still errors, so a deleted carried fixture exits 1. Laptop case (old-nine copied from the laptop branch into a scratch copy): 9 old-nine entries graded, 0 NOT CHECKED lines, exit 0. Mutation 1 (flagged fixture's expected verdict set to FAIL in a scratch copy): prints EXPECTED, `selfcheck FAILED`, exit 1. Mutation 2 (carried `falsifiers/flagged.md` deleted in a scratch copy): exit 1.
+  Limit: `prepare` calls the same check, so on a fresh clone it passes with the nine unchecked; it already could not check them there.
+- DONE: The scan over exactly the range to be pushed reads zero in every identifier class and for token shapes, and the changed-path listing shows no raw run output; report the counts and the candidate SHA to FO, who pushes. Do not push
+  Range `origin/main..selfcheck-fresh-clone`, 10 added lines. Counts: private-repo 0 of 4 patterns, private-slug 0 of 1092, tailnet-host 0 of 1, home path 0, git email 0, host names 0, token shapes (key prefixes, PEM, JWT, long hex/base64) 0. Changed paths: `behaviour/run_cell.py` only. Scan reads commit author, committer and message as well as the diff.
+  Author and committer on the candidate are `Kent <noreply@invalid>`, not the configured git email: the configured email scanned as one hit, so I replaced it. FO may re-author if the configured address is acceptable on that remote. Not pushed; no pull request prepared. roborev not run: private repository.
+- DONE: Scratch closed
+  `scratch.py close` removed the scratch folder (11042144 bytes) and archived 0 evidence files; every run output is private, so `Not archived (private): selfcheck outputs and mutation runs; reproduce: run selfcheck on each cell in a fresh clone of the candidate`. My scratch worktree went with it; I pruned its entry, and the branch is intact at the candidate.
+
+### Summary
+
+The second laptop cell's `selfcheck` now exits 0 on a fresh clone, naming the nine entries it cannot check. It still grades all twelve when the raw outputs are present, and still fails on a wrong expected grade or a deleted carried fixture. Candidate a836cda is scanned clean and unpushed; FO pushes. AC-1's post-push fresh clone is the validator's.
