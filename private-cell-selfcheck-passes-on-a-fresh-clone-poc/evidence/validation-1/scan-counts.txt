@@ -1,0 +1,26 @@
+
+[patch+message] bytes=1832
+  private-repo: 0 of 4
+  private-slug: 0 of 1092
+  tailnet-host: 0 of 1
+  home-path: 0
+  configured-git-email: 0
+  host-names: 0 (of 4 names)
+  token key-prefix: 0
+  token pem: 0
+  token jwt: 0
+  token long-hex(>=48): 0
+  token long-base64(>=40): 0
+
+[author/committer metadata] bytes=48
+  private-repo: 0 of 4
+  private-slug: 0 of 1092
+  tailnet-host: 0 of 1
+  home-path: 0
+  configured-git-email: 2
+  host-names: 0 (of 4 names)
+  token key-prefix: 0
+  token pem: 0
+  token jwt: 0
+  token long-hex(>=48): 0
+  token long-base64(>=40): 0
