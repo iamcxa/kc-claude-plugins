@@ -372,3 +372,28 @@ Evidence: evidence/implementation-1/ (46 files, 211.7 KiB)
 ### Summary
 
 This report supersedes the earlier implementation report and corrects its measured comment ratio to 1.2%. Implemented new-write home-path rewriting, backward-compatible record checks and an opt-in per-checkout Git guard. Stage and special-role runtime prompts retain original paths; the real persistence, remote refusal and compatibility checks are retained with eight effective product mutations. The candidate is local only; FO owns publication, review and validation, and the Captain's live-install and commit-email decisions remain open.
+
+
+## Stage Report: implementation
+
+- DONE: Local review job 1864 on the candidate, finding 1: a changed text blob for which git emits a binary or no-hunk diff yields no added bytes, so a new listed identifier is not scanned at commit or push. Reproduce or refute on a throwaway checkout without changing the candidate: say which ordinary inputs produce such a diff (size threshold, attributes, a NUL byte, an encoding) and the guard's exit on each.
+  Reproduced with configured core.bigFileThreshold=64, global `* -diff`, old NUL/new UTF-8, and old UTF-16/new UTF-8: scan, commit and push each exit 0 and the remote contains the literal. Normal text, `*.txt -diff`, new NUL and new Latin-1/non-UTF-8 controls refuse with exit 1. `evidence/implementation-1/investigation-1864/{results.json,matrix.json,commands.json}` retains 16 content-boundary cases and commands; the default large-file threshold was not exercised.
+- DONE: Finding 2: identifier patterns are matched against file content and never against the path, so a task folder or file whose name is a listed identifier is committed and pushed in refuse mode. Reproduce or refute the same way, with a listed private-slug as a folder name, which is how a private task's files would arrive.
+  Reproduced for a new private-slug folder, basename and pure R100 rename: scan, commit and push each exit 0 and the remote contains the listed path. The rename produces zero entries from `changes()` because the blob id is unchanged; the same evidence records six path-boundary cases with clean content.
+- DONE: For each finding report: reproduced or not, the command and exit code, which acceptance criterion it touches, and the smallest fix inside kc-dev-flow-2/scripts/state_guard.py and kc-dev-flow-2/scripts/test_state_guard.py. Change nothing in the candidate; FO authorizes any fix separately.
+  `implementation/investigation-1864.md` gives exact reproduction, boundary results, acceptance mapping and proposed two-file repair. Finding 1 affects AC-1/AC-3; finding 2 affects Scope/AC-1 tree paths, while AC-3 currently names added lines rather than paths. Proposed: no-hunk fallback to the full differing new blob; match raw path bytes and retain same-id rename entries; return empty content for equal ids before gzip/binary handling to preserve archive renames. Add real commit/push regressions for these cases and retain controls.
+- DONE: Candidate immutability and public-evidence close-out
+  Candidate remains `0c68231ca9147a9833846b47a36e2fc27846cf66`, product tree clean; the probe asserts identical before/after HEAD, status and both source hashes. The owner-list artifact scan exits 0 with zero hits by class; only invented test identifiers and local remotes were used. No candidate, test, version, live hook, clone config or PR was changed.
+- SKIPPED: Repairing either finding, rerunning product acceptance as fixed, product publication or another review request
+  Investigation only; FO explicitly withholds repair authority until a separate message. No corrected-candidate claim is made; job 1864 is FO's review, not a review run by this worker.
+
+### Scratch close
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1 (120173 bytes)
+Evidence: evidence/implementation-1/ (52 files, 329.4 KiB)
+```
+
+### Summary
+
+Both High findings are reproduced on the unchanged candidate in 22 independent hook-boundary cases, with retained commands, outcomes and the smallest proposed repair. This report supersedes the earlier implementation report's readiness conclusion: two confirmed defects remain, and no fix is authorized or applied. Earlier passing checks remain bounded historical evidence; FO decides the separate repair authorization.

@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "high",
+    "title": "Changed UTF-8 blobs can produce zero scanned bytes",
+    "file": "kc-dev-flow-2/scripts/state_guard.py",
+    "line": 223,
+    "status": "confirmed",
+    "detail": "Configured size threshold, global -diff attribute, old NUL blob, and old UTF-16 blob each produced a binary/no-hunk diff. Direct scan, real commit and real push all returned 0; the remote contained the listed literal.",
+    "fix": "In added_bytes, preserve the unchanged-oid empty result, but scan the full new blob when differing blob oids produce no hunks. Add real commit/push tests for threshold, global attribute and binary-to-text transitions."
+  },
+  {
+    "severity": "high",
+    "title": "Listed identifiers in paths pass refuse mode",
+    "file": "kc-dev-flow-2/scripts/state_guard.py",
+    "line": 263,
+    "status": "confirmed",
+    "detail": "A new private-slug folder, a private-slug basename and a pure rename into the folder all committed and pushed with exit 0. Content was clean. changes() also drops R100 renames because the blob oid is unchanged.",
+    "fix": "Scan raw path bytes as well as content; retain non-deleted same-oid rename entries for path checking, while added_bytes returns empty on equal oids before gzip/binary handling. Test folder, basename, R100 rename and existing archive-rename compatibility."
+  }
+]

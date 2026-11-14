@@ -1,0 +1,3549 @@
+[
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-h4lk0z36/remote.git\n   24b40d4..bd2c828  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "dfc8ae5143fd3a285c74962fc48c902197f87e7d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "dfc8ae5143fd3a285c74962fc48c902197f87e7d"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/dfc8ae5143fd3a285c74962fc48c902197f87e7d\nindex 0925ab2..dfc8ae5 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/dfc8ae5143fd3a285c74962fc48c902197f87e7d\n@@ -1 +1 @@\n-public old\n+invented-be8fe3f5f3864e71afb8cb12bd4d60f1\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-h4lk0z36/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-82074s_l/remote.git\n   2d29f71..16696c8  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "a878dacbc07e2d275dd4d7a101f14af5db29d5f3\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "a878dacbc07e2d275dd4d7a101f14af5db29d5f3"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/a878dacbc07e2d275dd4d7a101f14af5db29d5f3\nindex 0925ab2..a878dac 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/a878dacbc07e2d275dd4d7a101f14af5db29d5f3\n@@ -1 +1 @@\n-public old\n+invented-9a05a58dceb6457396f42551512979b4\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "079855522b6bbb242d591173e3cbfa8ca44baedc\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "16696c889c12c7aa57d4f033491ccadb0786ecd6\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 079855522b6b; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 079855522b6b. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 079855522b6b; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 079855522b6b. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '/private$RUN_DIR/tmp/state-guard-82074s_l/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-82074s_l/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "public old\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/product",
+      "config",
+      "core.bigFileThreshold",
+      "64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-6i81ydv6/remote.git\n   8790125..f0dae6b  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "379e3c7c1638a2d122f353141258c67ccc12842d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "47b6b7b777c99e7ce7534011d759b8f7b99e08da\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "379e3c7c1638a2d122f353141258c67ccc12842d",
+      "47b6b7b777c99e7ce7534011d759b8f7b99e08da"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/379e3c7c1638a2d122f353141258c67ccc12842d b/47b6b7b777c99e7ce7534011d759b8f7b99e08da\nindex 379e3c7..47b6b7b 100644\nBinary files a/379e3c7c1638a2d122f353141258c67ccc12842d and b/47b6b7b777c99e7ce7534011d759b8f7b99e08da differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-6i81ydv6/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/product",
+      "config",
+      "core.bigFileThreshold",
+      "64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-0sfgrbep/remote.git\n   cd96ba0..814a905  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "379e3c7c1638a2d122f353141258c67ccc12842d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "7d780e9a4442596a6288a1e91c30d088098e44a1\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "379e3c7c1638a2d122f353141258c67ccc12842d",
+      "7d780e9a4442596a6288a1e91c30d088098e44a1"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/379e3c7c1638a2d122f353141258c67ccc12842d b/7d780e9a4442596a6288a1e91c30d088098e44a1\nindex 379e3c7..7d780e9 100644\nBinary files a/379e3c7c1638a2d122f353141258c67ccc12842d and b/7d780e9a4442596a6288a1e91c30d088098e44a1 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "47f5fe2a720b8a3dbb9a0d4db033c5ea3a750ad6\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "814a905c9e3e84ce942ab301d85dea6540573e20\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-0sfgrbep/remote.git\n   814a905..47f5fe2  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-0sfgrbep/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "public next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\npublic next\ninvented-8e160b87b00b4213904865ce758c61ec\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-vp34hydl/remote.git\n   d8c9dde..2b86ad7  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "6bd2a54d1e47ef294cb3bcd4a7e66ef7add33e59\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "6bd2a54d1e47ef294cb3bcd4a7e66ef7add33e59"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/6bd2a54d1e47ef294cb3bcd4a7e66ef7add33e59\nindex 0925ab2..6bd2a54 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/6bd2a54d1e47ef294cb3bcd4a7e66ef7add33e59\n@@ -1 +1 @@\n-public old\n+invented-f58a4ec3c2794706ae16496d1a40dca6\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-vp34hydl/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-zn_rv8tw/remote.git\n   2cfaec6..386088f  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "24a0fd73535aed571f81b4be954bdcbcbfb52a3e\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "24a0fd73535aed571f81b4be954bdcbcbfb52a3e"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/24a0fd73535aed571f81b4be954bdcbcbfb52a3e\nindex 0925ab2..24a0fd7 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/24a0fd73535aed571f81b4be954bdcbcbfb52a3e\n@@ -1 +1 @@\n-public old\n+invented-87059ec81177428f8310e8adcad930fc\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "c26a829e3851fcf44da1e77284dbc21dd2ea527d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "386088f64d70e2a2e30534b55327a62b768398ac\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit c26a829e3851; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: c26a829e3851. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit c26a829e3851; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: c26a829e3851. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '/private$RUN_DIR/tmp/state-guard-zn_rv8tw/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-zn_rv8tw/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "public old\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-p9_1bc1v/remote.git\n   f4f1aef..55241a6  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "7eefeb1b9661b0505b53220904874fca7a0a50fb\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "7eefeb1b9661b0505b53220904874fca7a0a50fb"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/7eefeb1b9661b0505b53220904874fca7a0a50fb\nindex 0925ab2..7eefeb1 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/7eefeb1b9661b0505b53220904874fca7a0a50fb differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-p9_1bc1v/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-rs5h44lh/remote.git\n   0a9dc7b..276fc6a  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "dc3c6b2216a75992c98a52b99ebba85fbc776376\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "dc3c6b2216a75992c98a52b99ebba85fbc776376"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/dc3c6b2216a75992c98a52b99ebba85fbc776376\nindex 0925ab2..dc3c6b2 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/dc3c6b2216a75992c98a52b99ebba85fbc776376 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "b9e6355a4f7af18b13e98bd3070856188e2e39bd\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "276fc6a01a015cb97e7f51155c98e6ed40ff9d75\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-rs5h44lh/remote.git\n   276fc6a..b9e6355  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-rs5h44lh/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-eef267b652e142d0afd6de726f18fa33\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-3hhq76sd/remote.git\n   3adae71..b09033a  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "a2ab642da2d3381f9149bcfafc8663de07cd3cda\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "e0a60a623039279947f56a823ae937e06e4b8b3c\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "a2ab642da2d3381f9149bcfafc8663de07cd3cda",
+      "e0a60a623039279947f56a823ae937e06e4b8b3c"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/a2ab642da2d3381f9149bcfafc8663de07cd3cda b/e0a60a623039279947f56a823ae937e06e4b8b3c\nindex a2ab642..e0a60a6 100644\nBinary files a/a2ab642da2d3381f9149bcfafc8663de07cd3cda and b/e0a60a623039279947f56a823ae937e06e4b8b3c differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3hhq76sd/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-1yhvskar/remote.git\n   3f2e0e9..437e890  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "a2ab642da2d3381f9149bcfafc8663de07cd3cda\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "ef8704e0dbd1ee6a850fc83d0f5325cad3ea77db\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "a2ab642da2d3381f9149bcfafc8663de07cd3cda",
+      "ef8704e0dbd1ee6a850fc83d0f5325cad3ea77db"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/a2ab642da2d3381f9149bcfafc8663de07cd3cda b/ef8704e0dbd1ee6a850fc83d0f5325cad3ea77db\nindex a2ab642..ef8704e 100644\nBinary files a/a2ab642da2d3381f9149bcfafc8663de07cd3cda and b/ef8704e0dbd1ee6a850fc83d0f5325cad3ea77db differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "d37e47af5eac029a86b54ee2f9f28732d59f4fc8\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "437e890caf727a5cec1e4647b2a7e75f60873b91\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-1yhvskar/remote.git\n   437e890..d37e47a  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1yhvskar/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-a2138aab796f47189ce62e17ca613812\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-qiypbcxl/remote.git\n   29a1acc..7cf4a5d  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "62faf1bafa84734e39beab63aa0a92364e9273f5\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "62faf1bafa84734e39beab63aa0a92364e9273f5"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/62faf1bafa84734e39beab63aa0a92364e9273f5\nindex 0925ab2..62faf1b 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/62faf1bafa84734e39beab63aa0a92364e9273f5 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qiypbcxl/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-mpy5y0z9/remote.git\n   6973722..3fbc885  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3a2d8c91fb20fd3fff32ebf91d8aac4f0015562e\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "3a2d8c91fb20fd3fff32ebf91d8aac4f0015562e"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/3a2d8c91fb20fd3fff32ebf91d8aac4f0015562e\nindex 0925ab2..3a2d8c9 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/3a2d8c91fb20fd3fff32ebf91d8aac4f0015562e differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "22d1472a02edde2d42ba68c7740bd5b880649fc1\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "3fbc885aef1d977856e11e91b15d56caaba4e894\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 22d1472a02ed; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 22d1472a02ed. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 22d1472a02ed; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 22d1472a02ed. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '/private$RUN_DIR/tmp/state-guard-mpy5y0z9/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-mpy5y0z9/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "public old\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-1aeov6dx/remote.git\n   e1b35a2..1a01958  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3e8a4a3efb4955b4aef9ab104f610d1800db773d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3dc78771d17637a18a5905b63103a2fca74496ef\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "3e8a4a3efb4955b4aef9ab104f610d1800db773d",
+      "3dc78771d17637a18a5905b63103a2fca74496ef"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/3e8a4a3efb4955b4aef9ab104f610d1800db773d b/3dc78771d17637a18a5905b63103a2fca74496ef\nindex 3e8a4a3..3dc7877 100644\nBinary files a/3e8a4a3efb4955b4aef9ab104f610d1800db773d and b/3dc78771d17637a18a5905b63103a2fca74496ef differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-1aeov6dx/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-urx0eh29/remote.git\n   9a78c1b..bfad3bb  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3e8a4a3efb4955b4aef9ab104f610d1800db773d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "ef6ec2aa93d1e48ae31cb5dae0a608691360148c\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "3e8a4a3efb4955b4aef9ab104f610d1800db773d",
+      "ef6ec2aa93d1e48ae31cb5dae0a608691360148c"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/3e8a4a3efb4955b4aef9ab104f610d1800db773d b/ef6ec2aa93d1e48ae31cb5dae0a608691360148c\nindex 3e8a4a3..ef6ec2a 100644\nBinary files a/3e8a4a3efb4955b4aef9ab104f610d1800db773d and b/ef6ec2aa93d1e48ae31cb5dae0a608691360148c differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "869f950e4251c6f18343bb15828204211e41e95f\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "bfad3bb0317955e6614d5f7e9f308682584999a8\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-urx0eh29/remote.git\n   bfad3bb..869f950  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-urx0eh29/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-c52ef8dab2b04396ac0d4be863e40f16\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-3y70wmqg/remote.git\n   e36edb4..401833c  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "25d11a05e924cdbdf15c887dd203f071a2b04c9b\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "25d11a05e924cdbdf15c887dd203f071a2b04c9b"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/25d11a05e924cdbdf15c887dd203f071a2b04c9b\nindex 0925ab2..25d11a0 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/25d11a05e924cdbdf15c887dd203f071a2b04c9b\n@@ -1 +1 @@\n-public old\n+\ufffd invented-959c3bede0bf44dc856f97b134645e35\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-3y70wmqg/state",
+      "commit",
+      "-qm",
+      "test: candidate commit probe"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-x2p01rdc/remote.git\n   0baaeba..3f62f1d  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3fe8a28f94b65be02a747367c3af3e2a8f932250\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "3fe8a28f94b65be02a747367c3af3e2a8f932250"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/3fe8a28f94b65be02a747367c3af3e2a8f932250\nindex 0925ab2..3fe8a28 100644\n--- a/0925ab26216dd71d243e201a537797042f7e7d83\n+++ b/3fe8a28f94b65be02a747367c3af3e2a8f932250\n@@ -1 +1 @@\n-public old\n+\ufffd invented-72b2b3c79abb4c86b9a954906598775a\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "commit",
+      "-qm",
+      "test: existing unpushed candidate"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "706244f85d4c6a3fe8b9369699d392280137868e\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "3f62f1de76182fa336f8078dd7b0aee2f0471d7d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 706244f85d4c; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 706244f85d4c. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 706244f85d4c; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 706244f85d4c. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '/private$RUN_DIR/tmp/state-guard-x2p01rdc/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-x2p01rdc/remote.git",
+      "show",
+      "spacedock-state/test:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "public old\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/state",
+      "add",
+      "--",
+      "invented-f7e464dca21242e888779f2427ae3ef6/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "A\u0000invented-f7e464dca21242e888779f2427ae3ef6/public.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qkq9_02b/state",
+      "commit",
+      "-qm",
+      "test: private path commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "add",
+      "--",
+      "invented-f01ab4f691654019a0bae2b8d8cfac77/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "A\u0000invented-f01ab4f691654019a0bae2b8d8cfac77/public.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "28d72013ff54c2f10db40508930f7cba02af459d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "baaac080d82ea1f6ee009e0a3480409182c04a5a\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-s6ksfyhq/remote.git\n   baaac08..28d7201  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-s6ksfyhq/remote.git",
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "invented-f01ab4f691654019a0bae2b8d8cfac77/public.md\nseed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/state",
+      "add",
+      "--",
+      "invented-b4d8f67dcd0c4d8aaef67106cce14e74.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "A\u0000invented-b4d8f67dcd0c4d8aaef67106cce14e74.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-wy38xt1i/state",
+      "commit",
+      "-qm",
+      "test: private path commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "add",
+      "--",
+      "invented-5d48c45f911644b584cc95350948c8d2.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "A\u0000invented-5d48c45f911644b584cc95350948c8d2.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "0730812628423b46ac5edc138ff56095969f4a81\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "eba1a57881b8efd168263a1f09896e30f196849b\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-af5dh419/remote.git\n   eba1a57..0730812  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-af5dh419/remote.git",
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "invented-5d48c45f911644b584cc95350948c8d2.md\nseed\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "add",
+      "--",
+      "public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-ue5r785o/remote.git\n   6d2cdd0..e317c37  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "mv",
+      "--",
+      "public.md",
+      "invented-576a0c7944cb4ff3a9ea9fd428b3bd7d/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "R100\u0000public.md\u0000invented-576a0c7944cb4ff3a9ea9fd428b3bd7d/public.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "--event",
+      "pre-commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-ue5r785o/state",
+      "commit",
+      "-qm",
+      "test: private path commit"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "add",
+      "--",
+      "public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-qjan9pav/remote.git\n   5c21e07..3e52560  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "mv",
+      "--",
+      "public.md",
+      "invented-68571a5d34ef4ac3b59443e25460cdc9/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M",
+      "-z"
+    ],
+    "exit": 0,
+    "stdout": "R100\u0000public.md\u0000invented-68571a5d34ef4ac3b59443e25460cdc9/public.md\u0000",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "1953bda38c13c1a0c1d72ecb6ad17d2129c1607d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "rev-parse",
+      "HEAD^"
+    ],
+    "exit": 0,
+    "stdout": "3e525601f959287c26e64d2a6ad7ff8a51f2c38d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/opt/homebrew/opt/python@3.15/bin/python3.15",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To /private$RUN_DIR/tmp/state-guard-qjan9pav/remote.git\n   3e52560..1953bda  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "/private$RUN_DIR/tmp/state-guard-qjan9pav/remote.git",
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "invented-68571a5d34ef4ac3b59443e25460cdc9/public.md\nseed\n",
+    "stderr": ""
+  }
+]

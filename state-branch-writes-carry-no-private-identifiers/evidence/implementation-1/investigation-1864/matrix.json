@@ -1,0 +1,90 @@
+[
+  {
+    "case": "small-utf8-control",
+    "diff": "hunk",
+    "scan_bytes": 41,
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_has_identifier": false
+  },
+  {
+    "case": "configured-size-threshold",
+    "diff": "binary",
+    "scan_bytes": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "path-specific-binary-attribute",
+    "diff": "hunk",
+    "scan_bytes": 41,
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_has_identifier": false
+  },
+  {
+    "case": "global-binary-attribute",
+    "diff": "binary",
+    "scan_bytes": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "old-nul-new-utf8",
+    "diff": "binary",
+    "scan_bytes": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "new-nul-control",
+    "diff": "binary",
+    "scan_bytes": 49,
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_has_identifier": false
+  },
+  {
+    "case": "old-utf16-new-utf8",
+    "diff": "binary",
+    "scan_bytes": 0,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "new-latin1-nonutf8-control",
+    "diff": "hunk",
+    "scan_bytes": 44,
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_has_identifier": false
+  },
+  {
+    "case": "new-private-folder",
+    "diff": "path",
+    "scan_bytes": null,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "new-private-basename",
+    "diff": "path",
+    "scan_bytes": null,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  },
+  {
+    "case": "pure-rename-private-folder",
+    "diff": "path",
+    "scan_bytes": null,
+    "commit_exit": 0,
+    "push_exit": 0,
+    "remote_has_identifier": true
+  }
+]
