@@ -87,7 +87,7 @@ Release review: not needed: package tooling with no release on a journey map.
 Before a kc-dev-flow-2 release, the maintainer runs one command in the private working repository. It rebuilds one real ideation dispatch from a frozen public task, runs a fresh Claude worker on it three times at the last released package, three times at the candidate, and three times with no package at all, each in an empty home with nothing of the operator's set-up. It grades what each worker left in the task file, not what it said, and prints one row: base k/n, candidate k/n, control k/n, valid/n, minutes, tool calls, tokens and the model as served.
 
 - Why this cell first? It aims at the largest measured problem (outcome 三: 50 of 155 approved designs later changed their criteria). Its case is a design that passed its gate with a criterion only a model run could prove, which validation later could not prove.
-- Why might it show nothing? Every arm could pass. The rule grep (evidence/ideation-1/rule-grep.txt) finds no arm whose ideation text asks for a proof run before approval, and the historical worker on the case-time package did not flag the criterion. That is why some arm is expected to fail. If none fails within the cap, the report says so and the cell is dropped (CE's rule: a cell must be seen to fail).
+- Why might it show nothing? The candidate is expected to pass and the others to fail, so the cell would show nothing only if the release or the control also passes. The rule grep (evidence/ideation-1/rule-grep.txt, third check) finds the answer at main only: `references/sd/workflow.md` lines 188-189 ("Every criterion's evidence command runs once on it ... unrunnable: `Not provable now`", added by #864), absent at kc-dev-flow-2-v0.41.0 and at the case-time v0.35.0, and the historical worker on the case-time package did not flag the criterion. If no arm fails within the cap, the report says so and the cell is dropped (CE's rule: a cell must be seen to fail).
 - What does it cost? At most 18 paid runs, counted by the runner; 9 scheduled. No dollar figure: minutes, tool calls and tokens of the first trials are recorded first.
 
 ### Flow
@@ -142,12 +142,12 @@ Shown by observation, not by the variables set (CE's lesson):
 - Name: `ideation-flags-unprovable-criterion`.
 - Case: `replay-cases.tsv` line 12 (header is line 1): outcome 三, cause class proof-needs-evidence-validator-cannot-produce, set tuning, confidence high, scrub light. It is the only row in that class that is tuning, high confidence and light scrub; the two other light rows are held-out and stay unused. Its pins (state commit = the `ideation_dispatch_cut` column, code commit, slug) live only in the private working repository's `cell.json`.
 - Arms: base = `kc-dev-flow-2-v0.41.0` (fa022a864, the last release); cand = origin/main `c2f035b66` today, re-read and pinned by SHA in the manifest of the first launch; control = the same dispatch with no package. Both refs build exit 0 (evidence/ideation-1/dispatch-build-probe.txt). `--readme-base-ref kc-dev-flow-2-v0.35.0`, the marker in the case's README.
-- Pin choice: the dispatch asked to pin the package to the case's `package_version` (0.35.0) so the arm has not seen the case's answer; the admitted outcome asks for the last release and a candidate. The design follows the outcome, because the diff from 0.35.0 to 0.41.0 and to main on every path an ideation worker reads or runs adds no rule on proving or flagging criteria (rule-grep.txt, second check). Put to FO as D2.
+- Pin choice (D2, decided by FO): base is the last release and candidate is main, as the outcome says; no case-time arm. The dispatch had asked to pin the package to the case's `package_version` (0.35.0) so an arm has not seen the case's answer; the base arm still has not (no such rule at v0.41.0, rule-grep.txt third check), while the candidate carries the answer on purpose, since it is the change under test.
 - Control arm: the base dispatch with its `Package root:` line, harness line and fetch-commands block removed and one control line added ("write the design and acceptance criteria into the task file; write your stage report in the state checkout only; do not push"), no package directory in the run, and a workflow README cut to its frontmatter, so nothing tells the worker to hold for a missing skill. Same task, checklist and Spacedock ensign contract as the other arms.
 - Checklist: the two items in the probe's `checklist.txt` (a design with criteria in the task file; a stage report naming each criterion with its current evidence). It names no rule under test (maintain-flow).
 - Grading: on artifacts, as in `### Runner`; the answer key is the case's own record (the criterion its amendment later superseded needed a model run). The grader reads no claim the worker makes about itself.
 - Caps per run, recorded before the first launch: wall clock 1500 s, 150 tool calls. Reason: the earlier attempt's Claude runs hit 1800 s twice, and that task's design note judged 1800 s too long. The first trial of each arm measures this; a change of caps is a new cell version, not an edit.
-- Why it should fail on some arm: the case-time package let this design through; the rule grep finds no arm that asks a Pilot design to prove or flag each criterion; the control has no rule. The candidate's new Probe section ("falsify the riskiest assumption first") is the one change that could make the candidate differ.
+- Expected reading: base FAIL on most trials (v0.41.0, like the case-time package that let this design through, asks no Pilot design to run or flag each criterion's proof); candidate PASS on most trials (main's workflow.md, which the worker reads through the fetched stage definition, tells it to run each criterion's evidence command once and mark the unrunnable ones `Not provable now`; no `claude`, `codex` or `gh` is on its PATH, so a model-run proof cannot run and must be flagged or replaced); control FAIL (no rule). A candidate at or above 2 of 3 with base at or below 1 of 3 reads as the change working; base passing as often as the candidate reads as the rule not being the cause. The grader's flag word is the candidate's own phrase, so a candidate pass shows the rule was followed, not that the flag was judged well; the validator's read of each graded file (AC-2) is the check on that.
 
 ### Files added in the private working repository
 
@@ -164,6 +164,7 @@ Case directories, the marker list and the credential stay outside every reposito
 
 ### Run plan and spend
 
+- First implementation step, no credential: start the isolated launch exactly as `### Runner` describes, with no `CLAUDE_CODE_OAUTH_TOKEN`, and read the stream's init event for the exported Spacedock plugin and its `ensign` skill. If no init event appears without a login, record that and continue; no paid run before the Captain answers D1.
 - Before any paid run: `selfcheck` (AC-5), `run --dry-run` (AC-6), `scan` on the fixtures (AC-3 falsifier).
 - Step 1, 3 runs: `run --trials 1`, one per arm; read minutes, tool calls and tokens; stop if any arm is INVALID for a harness reason.
 - Step 2, 6 runs: `run --trials 3`.
@@ -176,7 +177,7 @@ Checked: the package's `replay_dispatch.py` (used as is) and the maintain-flow p
 ### Worth questions
 
 - Runner. Serves 「先做行為基準」 and 「該測試的是 skill 是否真的造成想要的結果」. Without it the replay stays hand-built per change and the earlier attempt's failures repeat. Premise that would make it unneeded: an existing runner already does this; checked, none does (above).
-- First cell. Serves outcome 三, 「設計階段提出的規劃要真的可行」. Without it the runner proves only that it launches. Premise: every arm already passes; the rule grep says no arm has the rule, and the first 3 runs test it.
+- First cell. Serves outcome 三, 「設計階段提出的規劃要真的可行」. Without it the runner proves only that it launches. Premise that would make it unneeded: the release already passes; the rule grep says the release lacks the rule the candidate adds, and the first 3 runs test it.
 - Control arm. Serves outcome 零, 「該怎麼知道用我的工作方法，確實比沒用較好？」. Without it a pass on both package arms cannot be told from a strong model passing alone.
 - Isolation. Serves outcome 十五, 「隔離個人設定與技能組合影響」. Without it a result depends on whose machine ran it. Premise: the empty home inherits nothing; the auth probe shows it inherits not even the login.
 - Caps and halt. Serve the Stop condition the reform session set (18 runs, two invalid). No Captain words of his own; kept because the Stop condition is part of the admitted scope.
@@ -192,7 +193,7 @@ Checked: the package's `replay_dispatch.py` (used as is) and the maintain-flow p
 ### Needs decision
 
 - D1 (Captain): the credential. Recommended: a subscription token he makes himself with `claude setup-token` (his browser login), kept in his secret store and handed to the runner by his wrapper, local only. Without it no isolated run can authenticate (auth probe). Worse under it: a long-lived token for his subscription exists until he revokes it. The alternative is a Console API key, which bills separately.
-- D2 (FO, inside the granted scope): the base ref. Recommended: last release and candidate as the outcome says, with the case-time package not run. Alternative: add a fourth arm at `kc-dev-flow-2-v0.35.0`, as the dispatch asked; 3 more runs, 12 scheduled, at most 13 of 18. Worse under the recommendation: if a later rule outside the paths diffed does carry the answer, both package arms pass and only the control can fail.
+- D2 (FO): decided. Base is the last release, candidate is main, no fourth arm (FO follow-up, `dispatch/ideation-1-message-1.md`). The cell's expected reading under it is in `### First cell`.
 
 ### Batch overlap
 
@@ -241,3 +242,22 @@ Designed the thin runner (`behaviour/run_cell.py`: selfcheck, run, grade, table,
 Supersedes the earlier ideation report. The design now builds each case repository from the single pinned tree, because a full clone exposed the case's later amendment and every later package; it states what every arm can still read (the case-time package as the code under design) and has the scan label a control run that read it. It names the departure from the dispatch's case-time pin and puts it to FO as D2, with a fourth-arm alternative inside the 18-run cap; D1, the credential, stays the Captain's. No paid run happened.
 
 Scratch close (`scratch.py close <task folder> ideation-1`, exit 0): `Scratch removed: <scratch root>/ideation-1 (84566127 bytes)`; `Evidence: evidence/ideation-1/ (5 files, 6.3 KiB)`.
+
+## Stage Report: ideation
+
+- DONE: A design for the thin runner (launch, hard stop, manifest, grade, table) that reuses scripts/replay_dispatch.py and the maintain-flow procedure, names every file it adds in the private working repository, and states how isolation is achieved and shown (empty home and config directory; no read of an installed skill copy or personal configuration)
+  Unchanged from the previous report: `### Runner`, `### Isolation`, `### Files added in the private working repository`; one-commit case repositories; both refs build exit 0 (dispatch-build-probe.txt); empty home shows `loggedIn: false` (auth-probe.txt).
+- DONE: The first cell chosen: which archived public package task and cut point it uses (named only by its row in the case inventory, never by content), the package refs for base and candidate, the no-skill control arm, the grading rule on artifacts the model cannot author, and the wall-clock and tool-call caps per run, with the reason the cell is expected to fail on some arm
+  Corrected: the candidate (main c2f035b66) carries the answer in references/sd/workflow.md lines 188-189, absent at v0.41.0 and v0.35.0 (rule-grep-third-check.txt: 0, 0, 2 hits). Expected reading in `### First cell`: base FAIL, candidate PASS, control FAIL; D2 decided by FO: base last release, candidate main, no fourth arm.
+- DONE: Each acceptance criterion with its proof run once now where it can be or listed under `Not provable now` with the reason; the run plan showing the count stays within 18 paid agent runs; the decisions only the Captain can make named; kc-dev-flow-2/scripts/design_surfaces.py check on the task exits 0
+  Run plan: first step is a no-credential launch smoke reading the init event for the exported Spacedock plugin and its ensign skill; 9 runs scheduled, at most 10, runner refuses the 19th; D1 (credential) is the Captain's; design_surfaces.py check exit 0 on the corrected design (design-surfaces-check-message-1.txt).
+- DONE: AC-1 (table from real runs): not yet verified; needs paid runs. Run now: the dispatch build both package arms rest on, exit 0 twice.
+- DONE: AC-2 (cell fails on some arm or NO-FAIL reported): not yet verified; needs paid runs. Run now: the corrected grep, which predicts base and control fail and the candidate passes.
+- DONE: AC-3 (isolation): not yet verified; needs transcripts. Run now: empty-home auth probe; the no-credential launch smoke (implementation's first step) checks the plugin and skill load before any paid run.
+- DONE: AC-4 (nothing private public): not yet verified; markers exist only after runs. The task file and folder hold no case slug, pin or run output.
+- DONE: AC-5 (grader falsifiers): not yet verified; the runner is implementation's. Premise checked: the case's approved design carries the model-run criterion unflagged.
+- DONE: AC-6 (spend boundary before launch): not yet verified; implementation's, provable without a paid run.
+
+### Summary
+
+Supersedes the earlier ideation reports. FO's correction holds: the candidate's workflow.md asks for each criterion's evidence to run once and for unrunnable ones to be marked `Not provable now`, so the cell now expects the candidate to pass and the release and control to fail; my first grep had left that file out. D2 is recorded as FO's decision (no fourth arm), and a no-credential launch smoke is the first implementation step. Scratch close for ideation-1-message-1, exit 0: `Evidence: evidence/ideation-1/ (7 files, 7.9 KiB)`.

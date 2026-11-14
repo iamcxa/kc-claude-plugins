@@ -1,0 +1,9 @@
+Third check (correction, after FO's follow-up; the first check omitted references/sd/workflow.md, the second diffed only 0.35.0 to 0.41.0):
+  per ref, git grep -i -E 'not provable|provable now|evidence command runs once|runs once|proof run|run once now' <ref> -- \
+    kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/skills/ideation kc-dev-flow-2/references/profiles/pilot.md \
+    kc-dev-flow-2/scripts/design_surfaces.py kc-dev-flow-2/README.md | wc -l
+  kc-dev-flow-2-v0.35.0: 0; kc-dev-flow-2-v0.41.0: 0; origin/main (c2f035b66): 2.
+  The two hits: references/sd/workflow.md:188-189 "Every criterion's evidence command runs once on it, recording command,
+  exit and output path per criterion, provenance included; unrunnable: `Not provable now`." Added by 6a1eaf837 (#864,
+  `git log -S'Not provable now' kc-dev-flow-2-v0.41.0..origin/main`). The candidate carries the cell's answer; the release and the case-time package do not.
+  The first check's line "none asks ... to flag one it cannot run" is wrong for the candidate.
