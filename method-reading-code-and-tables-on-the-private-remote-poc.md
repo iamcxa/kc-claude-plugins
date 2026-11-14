@@ -18,6 +18,20 @@ gates:
                 id: briefing:method-reading-code-and-tables-on-the-private-remote-poc:backlog:attempt-1:revision-1
                 digest: sha256:125693f82a1edae00b251f22e6788ba7575120b39c7a03d48948b97c8f9e7a9f
                 room-ref: ./method-reading-code-and-tables-on-the-private-remote-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:method-reading-code-and-tables-on-the-private-remote-poc:backlog:1
+                briefing: briefing:method-reading-code-and-tables-on-the-private-remote-poc:backlog:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T11:51:34.787271Z"
+                decision: approve
+                reason: Ordered by the reform session under the Captain's grant; small private-repository maintenance; no public merge or outward action.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 as continued by the reform session, Paseo message 94ecfb61-4305-4483-8e9c-e321382c5ac2
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The day's main result, two readings of whether an agent given the method does better than one given the task in plain words, exists on one machine only: its cell, grader changes, readings and final tables were committed after the push that carried the earlier code, and live on a laptop-only branch beside the raw runs.
