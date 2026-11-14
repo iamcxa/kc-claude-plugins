@@ -62,6 +62,20 @@ gates:
                 id: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:attempt-1:revision-1
                 digest: sha256:264cdad6357db5bf7a1ebbffdd53de65cd3ca60e891ceae240f8866e69082eda
                 room-ref: ./gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:1
+                briefing: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T12:40:06.142684Z"
+                decision: approve
+                reason: 'Approves closing as stopped with verdict rejected, not delivery: the reform session ruled to stop the line inside the scope it gave under the Captain''s grant; no merge, no PR closed, no outward action beyond recording the finding in the Draft PR body.'
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 2 item 3 from the reform session, stop ruling in Paseo message 6bc7ea41-57b4-42cb-bcd9-9ba4398b8b1c
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T09:53:13Z
 ---
 
