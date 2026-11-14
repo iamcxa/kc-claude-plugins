@@ -1,0 +1,125 @@
+FFFFFFFF
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-73at2xu2/remote.git
+   395c144..9f94d99  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-tu167dh5/remote.git
+   1c4ed8f..d87b2af  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-0gl5dz60/remote.git
+   855571a..3c938e4  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-no-hunk-fallback/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-yx63qput/remote.git
+   4176b0e..49034f8  spacedock-state/test -> spacedock-state/test
+
+
+----------------------------------------------------------------------
+Ran 1 test in 9.946s
+
+FAILED (failures=8)

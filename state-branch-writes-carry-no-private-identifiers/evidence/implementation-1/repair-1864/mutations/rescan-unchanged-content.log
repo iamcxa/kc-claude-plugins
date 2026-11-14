@@ -1,0 +1,24 @@
+F
+======================================================================
+FAIL: test_public_archive_renames_preserve_old_text_gzip_and_binary_content (test_state_guard.StateGuardTests.test_public_archive_renames_preserve_old_text_gzip_and_binary_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/rescan-unchanged-content/scripts/test_state_guard.py", line 193, in test_public_archive_renames_preserve_old_text_gzip_and_binary_content
+    self.git(self.state, 'commit', '-qm', 'test: archive unchanged evidence')
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/rescan-unchanged-content/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/rescan-unchanged-content/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : state guard: refused; "archive/old.bin" adds a private-slug identifier
+state guard: refused; "archive/old.gz" adds a private-slug identifier
+state guard: refused; "archive/old.txt" adds a private-slug identifier
+Write the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.
+
+
+----------------------------------------------------------------------
+Ran 1 test in 1.130s
+
+FAILED (failures=1)

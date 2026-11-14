@@ -1,0 +1,18 @@
+test_path_boundaries_preserve_other_homes_and_line_endings (test_state_guard.HomeRewriteTests.test_path_boundaries_preserve_other_homes_and_line_endings) ... ok
+test_gzip_and_binary_blobs_refuse_and_file_names_are_safe (test_state_guard.StateGuardTests.test_gzip_and_binary_blobs_refuse_and_file_names_are_safe) ... ok
+test_installer_refuses_repository_list_and_unenabled_worktree_config (test_state_guard.StateGuardTests.test_installer_refuses_repository_list_and_unenabled_worktree_config) ... ok
+test_missing_list_still_checks_derived_classes_and_check_detects_drift (test_state_guard.StateGuardTests.test_missing_list_still_checks_derived_classes_and_check_detects_drift) ... ok
+test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) ... ok
+test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) ... ok
+test_path_warn_mode_and_deletions_preserve_installed_modes (test_state_guard.StateGuardTests.test_path_warn_mode_and_deletions_preserve_installed_modes) ... ok
+test_public_archive_renames_preserve_old_text_gzip_and_binary_content (test_state_guard.StateGuardTests.test_public_archive_renames_preserve_old_text_gzip_and_binary_content) ... ok
+test_push_scans_every_commit_even_after_deletion (test_state_guard.StateGuardTests.test_push_scans_every_commit_even_after_deletion) ... ok
+test_real_commit_refusals_keep_staged_bytes_and_clean_push_passes (test_state_guard.StateGuardTests.test_real_commit_refusals_keep_staged_bytes_and_clean_push_passes) ... ok
+test_rename_does_not_recheck_old_lines_and_added_plus_lines_are_scanned (test_state_guard.StateGuardTests.test_rename_does_not_recheck_old_lines_and_added_plus_lines_are_scanned) ... ok
+test_shared_install_preserves_hooks_and_skips_nonstate_branch (test_state_guard.StateGuardTests.test_shared_install_preserves_hooks_and_skips_nonstate_branch) ... ok
+test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree (test_state_guard.StateGuardTests.test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 31.799s
+
+OK

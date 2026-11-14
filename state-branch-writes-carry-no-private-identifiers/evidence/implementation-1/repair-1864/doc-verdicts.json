@@ -1,0 +1,78 @@
+[
+  {
+    "doc": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py"
+    ],
+    "verdict": "unaffected: validation ruling order and history predicates are unchanged"
+  },
+  {
+    "doc": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py"
+    ],
+    "verdict": "unaffected: Paseo completion and FO publication ownership are unchanged"
+  },
+  {
+    "doc": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected: record/check/build ordering remains; ADR 0087 governs the new saved path representation"
+  },
+  {
+    "doc": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected: role write/check/commit and model floor remain; ADR 0087 governs the saved/runtime path distinction"
+  },
+  {
+    "doc": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected: saved Budget header, counters and holds are unchanged"
+  },
+  {
+    "doc": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/scratch.py"
+    ],
+    "verdict": "unaffected: retention, compression threshold, cap and matching old digests remain; ADR 0087 governs new text sealing"
+  },
+  {
+    "doc": "docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_stage.py"
+    ],
+    "verdict": "unaffected: ideation budget and special-role predicates are unchanged"
+  },
+  {
+    "doc": "docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "state": "updated",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py",
+      "kc-dev-flow-2/scripts/dispatch_stage.py",
+      "kc-dev-flow-2/scripts/scratch.py",
+      "kc-dev-flow-2/scripts/state_guard.py",
+      "record_text"
+    ],
+    "verdict": "updated in original candidate; unchanged by this authorized repair, which enforces its identifier and sanitized-refusal ruling"
+  },
+  {
+    "doc": "learning.md",
+    "state": "review",
+    "terms": [
+      "kc-dev-flow-2/scripts/dispatch_records.py"
+    ],
+    "verdict": "unaffected: no README shortening and no new --names output kind; folder-mode wording has no parsed caller"
+  }
+]

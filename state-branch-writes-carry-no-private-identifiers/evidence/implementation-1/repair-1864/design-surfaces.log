@@ -1,0 +1,2 @@
+state-branch-writes-carry-no-private-identifiers.md: design surfaces presentable
+scope check not run: stage is implementation, not ideation

@@ -1,0 +1,98 @@
+{
+  "candidate": "d2d5bec640f0a61d3e044877b8443cdfdc03faa7",
+  "parent": "0c68231ca9147a9833846b47a36e2fc27846cf66",
+  "red": {
+    "methods": 2,
+    "failed_subcases": 14,
+    "errors": 0
+  },
+  "green": {
+    "tests": 13,
+    "passed": 13,
+    "skipped": 0
+  },
+  "mutation_tests": [
+    {
+      "name": "remove-no-hunk-fallback",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push",
+      "exit": 1,
+      "evidence": "remove-no-hunk-fallback.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "remove-path-matching",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files",
+      "exit": 1,
+      "evidence": "remove-path-matching.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "drop-same-oid-renames",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files",
+      "exit": 1,
+      "evidence": "drop-same-oid-renames.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "rescan-unchanged-content",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_public_archive_renames_preserve_old_text_gzip_and_binary_content",
+      "exit": 1,
+      "evidence": "rescan-unchanged-content.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    }
+  ],
+  "acceptance": [
+    {
+      "name": "AC-3 clean remote history paths and blobs",
+      "status": "passed",
+      "blobs": 10,
+      "hits": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      }
+    },
+    {
+      "name": "AC-3 test_real_commit_refusals_keep_staged_bytes_and_clean_push_passes",
+      "status": "passed"
+    },
+    {
+      "name": "AC-3 test_push_scans_every_commit_even_after_deletion",
+      "status": "passed"
+    },
+    {
+      "name": "AC-3 test_no_hunk_changed_text_refuses_commit_and_push",
+      "status": "passed"
+    },
+    {
+      "name": "AC-3 test_path_identifiers_refuse_new_and_renamed_files",
+      "status": "passed"
+    },
+    {
+      "name": "AC-3 test_missing_list_still_checks_derived_classes_and_check_detects_drift",
+      "status": "passed"
+    },
+    {
+      "name": "AC-5 test_warn_then_refuse_home_and_email_and_do_not_scan_product_worktree",
+      "status": "passed"
+    },
+    {
+      "name": "AC-5 test_shared_install_preserves_hooks_and_skips_nonstate_branch",
+      "status": "passed"
+    },
+    {
+      "name": "AC-5 test_public_archive_renames_preserve_old_text_gzip_and_binary_content",
+      "status": "passed"
+    },
+    {
+      "name": "AC-5 test_path_warn_mode_and_deletions_preserve_installed_modes",
+      "status": "passed"
+    }
+  ]
+}

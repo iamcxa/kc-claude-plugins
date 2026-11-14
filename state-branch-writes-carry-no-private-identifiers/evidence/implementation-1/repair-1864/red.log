@@ -1,0 +1,231 @@
+test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) ... 
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='commit') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='push') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='commit') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='push') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='commit') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='push') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='commit') ... FAIL
+  test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='push') ... FAIL
+test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) ... 
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='commit') ... FAIL
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='push') ... FAIL
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='commit') ... FAIL
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='push') ... FAIL
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='commit') ... FAIL
+  test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='push') ... FAIL
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='size', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-s3wqss6k/remote.git
+   6c2faba..9be3ad1  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='attribute', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-kxa29cs7/remote.git
+   b687e18..c20b5a5  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-nul', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-5xyieyl9/remote.git
+   c29c381..2271f92  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 134, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: changed text', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_no_hunk_changed_text_refuses_commit_and_push (test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push) (case='old-utf16', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 139, in test_no_hunk_changed_text_refuses_commit_and_push
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-m1x400sy/remote.git
+   b201e50..4c73ae8  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-ciu__6kl/remote.git
+   1b806f0..f0e6369  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-ews2llbq/remote.git
+   879c254..a894f3a  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/red/kc-dev-flow-2/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-tjstb_wt/remote.git
+   2ff17a8..e34ff47  spacedock-state/test -> spacedock-state/test
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 19.249s
+
+FAILED (failures=14)

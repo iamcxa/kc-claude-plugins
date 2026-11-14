@@ -1,0 +1,95 @@
+FFFFFF
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='folder', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-3vnokiuz/remote.git
+   c3fa2ef..80e9a9d  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='basename', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-g5sqqo_1/remote.git
+   2012c53..091e2b6  spacedock-state/test -> spacedock-state/test
+
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='commit')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 169, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'commit', '-qm', 'test: private path', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : 
+
+======================================================================
+FAIL: test_path_identifiers_refuse_new_and_renamed_files (test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files) (case='rename', event='push')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 174, in test_path_identifiers_refuse_new_and_renamed_files
+    result = fixture.git(fixture.state, 'push', 'origin', 'spacedock-state/test', expected=1)
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 57, in git
+    return self.run_command(['git', '-C', root, *args], expected, data)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/mutations/remove-path-matching/scripts/test_state_guard.py", line 53, in run_command
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1 : To /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1/repair-1864/tmp/state-guard-t8we_v5m/remote.git
+   1be5cdb..adab1b2  spacedock-state/test -> spacedock-state/test
+
+
+----------------------------------------------------------------------
+Ran 1 test in 6.587s
+
+FAILED (failures=6)

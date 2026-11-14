@@ -397,3 +397,41 @@ Evidence: evidence/implementation-1/ (52 files, 329.4 KiB)
 ### Summary
 
 Both High findings are reproduced on the unchanged candidate in 22 independent hook-boundary cases, with retained commands, outcomes and the smallest proposed repair. This report supersedes the earlier implementation report's readiness conclusion: two confirmed defects remain, and no fix is authorized or applied. Earlier passing checks remain bounded historical evidence; FO decides the separate repair authorization.
+
+
+## Stage Report: implementation
+
+- DONE: FO's two Material findings repaired within the two authorized files only
+  Candidate `d2d5bec640f0a61d3e044877b8443cdfdc03faa7`, parent `0c68231ca9147a9833846b47a36e2fc27846cf66`, base `c2f035b6612f5edb42220576b3414e993531ffd6`; `state_guard.py` scans the full differing new blob when Git supplies no hunk, matches raw path bytes, retains same-blob renames for path checks, and skips their unchanged content. Only it and `test_state_guard.py` changed; product tree clean.
+- DONE: Each fix fails on the old candidate, passes on the new candidate, and has an effective removal mutation; path diagnostics disclose no matched text
+  `evidence/implementation-1/repair-1864/` pins exact old guard/current test hashes in `red-source.json`: two regression methods fail with 14 subcase failures and zero errors on the old guard; all 13 guard tests pass with zero skips on the new candidate. Four actual mutations fail their named tests: removing fallback, path matching, same-id rename retention, or unchanged-content exclusion; `mutations/results.json` and logs retain exits. Path tests assert the class and masked path, absence of the literal, refusal exit 1 and unchanged remote.
+- DONE: AC-3, AC-5 and the required repository checks rerun; local commit and PR text updated, with no product push
+  `repair-1864/acceptance/{results.json,commands.json}`: ten groups pass through real commit/push hooks, including no-hunk variants, folder/basename/R100 paths, transient pushed history, clean remote path/blob scan, unguarded detection, warn/refuse isolation, shared hooks, old archive renames and deletions. Removing the named repairs makes these boundary tests fail. Repository lint-skills, adr_lint since base requiring 0087, number_guards, comment_ratio, doc_impact and design_surfaces all exit 0 at the candidate; ratio 1.1% against 5%. `implementation/pr.md` names this candidate and bounded evidence. CI cost per PR not measured; CI configuration unchanged.
+- DONE: Complete superseding report and public-evidence close-out
+  New proof is retained under `repair-1864/`; existing matching evidence digests remain preserved. Scratch close below sealed 79 files and removed the scratch root. The owner-list scan command is `python3 -B "$EVIDENCE/scan_artifacts.py" "$WT" "$BASE" "$TASK" "$PR_TEXT" "$EVIDENCE/repair-1864"`: exit 0, home/email/private-repo/private-slug/tailnet-host counts all zero; no owner-list entry retained. List limit: four adopters' names-only slug lists, excluding the fifth adopter and hostnames outside the supplied pattern.
+- SKIPPED: Rerunning unchanged writer and historical-compatibility acceptance, independent review/validation, product publication and live installation
+  AC-1/AC-2 evidence remains historical at the parent candidate: seven folders, 3,154 digests and one unchanged pre-existing mismatch. This repair reruns AC-3/AC-5 only. FO owns the next RoboRev run, product push, Draft PR and hosted CI; no live repository hook/config, version, or unrelated product file changed.
+
+### Affected documents
+
+`repair-1864/doc-verdicts.json` records the fresh document-impact review:
+- `docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md`: unaffected; ruling order/history unchanged.
+- `docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md`: unaffected; completion and FO publication ownership unchanged.
+- `docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md`: unaffected; record/check/build ordering retained.
+- `docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md`: unaffected; role ordering/model floor retained; ADR 0087 governs saved/runtime paths.
+- `docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md`: unaffected; budget counters/holds unchanged.
+- `docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md`: unaffected; retention, thresholds, cap and matching old digests retained.
+- `docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md`: unaffected; ideation budget/role predicates unchanged.
+- `docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md`: updated in the original candidate, unchanged in this repair; the repair enforces its identifier and sanitized-refusal ruling.
+- `learning.md`: unaffected; no README shortening or new --names output kind.
+
+### Scratch close
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/implementation-1 (12825945 bytes)
+Evidence: evidence/implementation-1/ (79 files, 622.6 KiB)
+```
+
+### Summary
+
+This report supersedes every earlier implementation report and the investigation's readiness conclusion. Both Material defects are repaired and verified locally on the new candidate, with old-candidate failures and effective mutations; earlier writer/history evidence is retained with its stated limits. The product candidate remains local only; independent FO review, validation and publication remain outstanding, as do the Captain's live-install and commit-email decisions.

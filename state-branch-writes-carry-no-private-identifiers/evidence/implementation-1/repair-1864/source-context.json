@@ -1,0 +1,11 @@
+{
+  "base": "c2f035b6612f5edb42220576b3414e993531ffd6",
+  "parent": "0c68231ca9147a9833846b47a36e2fc27846cf66",
+  "candidate": "d2d5bec640f0a61d3e044877b8443cdfdc03faa7",
+  "branch": "spacedock-ensign/state-branch-writes-carry-no-private-identifiers",
+  "changed_files": {
+    "kc-dev-flow-2/scripts/state_guard.py": "2768ca0e9b9d244a418fc63a19cc256ff3ce53c5a8930317cb55b67485bf4c03",
+    "kc-dev-flow-2/scripts/test_state_guard.py": "e3dc2c7a5b3a391b668aa5e65c7798c6ed1a7983f057fa18fc818185a8cce5cf"
+  },
+  "product_status": "clean"
+}
