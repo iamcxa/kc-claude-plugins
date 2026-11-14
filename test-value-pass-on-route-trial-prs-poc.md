@@ -37,6 +37,20 @@ gates:
                 id: briefing:test-value-pass-on-route-trial-prs-poc:validation:attempt-1:revision-1
                 digest: sha256:0447ebd3462942945e1176c8677c3bcb1d6d6e482594b9db536b71ade9477047
                 room-ref: ./test-value-pass-on-route-trial-prs-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:test-value-pass-on-route-trial-prs-poc:validation:1
+                briefing: briefing:test-value-pass-on-route-trial-prs-poc:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-11-14T04:39:39.397717Z"
+                decision: approve
+                reason: Independent validation passed and FO re-ran its count script (exit 0, N=37); AC-1 is met with the stated limits; read-only measurement, nothing merged.
+                conn:
+                    quote: 改革工作階段（Paseo 代理 26215d96，就是開你出來的那一個）可以替我給你工作範圍。它給的範圍內，進場、設計、預算、結案這些關卡你不必停下來等我，記為「依艦長授權」，一路做到它指定的終點。
+                    source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 1 item A from the reform session, Paseo message 6ee7ee5b-9ccc-4ef2-8cb6-35f25bfd4e1e
+              application:
+                target-stage: done
+                state: pending
 started: 2026-11-14T02:35:14Z
 ---
 
