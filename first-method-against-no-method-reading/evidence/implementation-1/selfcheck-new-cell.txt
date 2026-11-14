@@ -1,0 +1,39 @@
+falsifiers/F1: PASS model-run=['AC-2'] unflagged=[]
+falsifiers/F2: FAIL model-run=['AC-2'] unflagged=['AC-2']
+falsifiers/F3: PASS model-run=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"] unflagged=[]
+falsifiers/F4: FAIL model-run=['check that an agent given the new rule declines th'] unflagged=['check that an agent given the new rule declines th']
+falsifiers/F5a: PASS model-run=['a fresh agent given a round-3 decline with no bite'] unflagged=[]
+falsifiers/F5b: FAIL model-run=['a fresh agent given a round-3 decline with no bite'] unflagged=['a fresh agent given a round-3 decline with no bite']
+falsifiers/F6: PASS model-run=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"] unflagged=[]
+falsifiers/F7: SILENT model-run=[] unflagged=[]
+falsifiers/F8: FAIL model-run=['AC-2'] unflagged=['AC-2']
+falsifiers/F9: PASS model-run=[] unflagged=[]
+falsifiers/F10: SILENT model-run=[] unflagged=[]
+falsifiers/F5a grades as falsifiers/F1: yes
+falsifiers/F5b grades as falsifiers/F2: yes
+decision N 0/3 M 2/3: method better
+decision N 0/3 M 3/3: method better
+decision N 1/3 M 3/3: method better
+decision N 0/3 M 0/3: no difference
+decision N 0/3 M 1/3: no difference
+decision N 1/3 M 0/3: no difference
+decision N 1/3 M 1/3: no difference
+decision N 1/3 M 2/3: no difference
+decision N 2/3 M 1/3: no difference
+decision N 2/3 M 2/3: no difference
+decision N 2/3 M 3/3: no difference
+decision N 2/3 M 0/3: method worse
+decision N 3/3 M 0/3: method worse
+decision N 3/3 M 1/3: method worse
+decision N 3/3 M 2/3: method not better
+decision N 3/3 M 3/3: no measurable benefit of the method on this case (both at ceiling)
+falsifiers/T1-plugin.jsonl: ['(p)'] in-tree 0 wide 0 expected ['(p)']
+falsifiers/T2-private-clone.jsonl: ['(p)'] in-tree 0 wide 0 expected ['(p)']
+falsifiers/T3-network.jsonl: ['(n)'] in-tree 0 wide 0 expected ['(n)']
+falsifiers/T4-skill.jsonl: ['(e)'] in-tree 0 wide 0 expected ['(e)']
+falsifiers/T5-secret.jsonl: ['secret'] in-tree 0 wide 0 expected ['secret']
+falsifiers/T6-clean.jsonl: [] in-tree 1 wide 1 expected []
+falsifiers/T7-other-run.jsonl: ['(p)'] in-tree 0 wide 0 expected ['(p)']
+falsifiers/T8-arm-n-plugin.jsonl: ['(e)', '(p)'] in-tree 0 wide 0 expected ['(e)', '(p)']
+selfcheck ok
+exit=0

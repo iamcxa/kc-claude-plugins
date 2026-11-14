@@ -1,0 +1,1 @@
+Not archived (private): the eight run folders, run list, manifests and the fifteen-output regression (regression.txt, raw earlier outputs); reproduce: run_cell.py prepare / regress_v3.py in the private working repository on the laptop-only branch.

@@ -1,0 +1,9 @@
+Transcribed from the terminal output of `hostfix.py check` run on the clean host at 18:24 local (ssh, after extraction and `hostfix.py fix`); labels shortened, exit codes as printed. Not re-run since: the six agents were running in these folders afterwards and `git status` could touch their index.
+ok  exit 1: grep -rlIF -e /private/tmp/nm- <root>/runs   (1 = no file holds the laptop build prefix)
+ok  exit 1: grep -lF -e <laptop home> over 36 harness-written files (dispatch, replay, checklist, task, README, .git pointers, gitdir)   (1 = none)
+info exit 0: grep -rlIF -e <laptop home> over every carried folder: 16960 files, all in case content copied from the public state and code trees
+ok  exit 0 (x12): git -C <run>/code and <run>/wf/.spacedock-state rev-parse HEAD equals the pin recorded at preparation (code 082ea073d in all 8 folders, state dd16d66a7 in the 4 arm-M folders)
+ok  exit 0 (x4): <root>/bin/spacedock dispatch show-stage-def --workflow-dir <run>/wf --stage ideation, each arm-M folder (host Spacedock 0.28.0; dispatch built with 0.27.2)
+ok  exit 0 (x12): git -C <checkout> status --porcelain, every code and state checkout; follow-up: output line count 0 for one M and one N folder
+names only: ~/.agents/skills = paseo*; ~/.claude/plugins/cache and marketplaces = spacedock; find by name kc-dev-flow or kc-claude-plugins under ~/.claude ~/.agents ~/.codex ~/.pi: nothing (exit 0, empty)
+check-exit=0

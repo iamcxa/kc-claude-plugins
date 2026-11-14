@@ -1,0 +1,11 @@
+## plain said-so patterns deleted: selfcheck exit 1
+  falsifiers/F3: FAIL model-run=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"] unflagged=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"]  EXPECTED PASS
+  falsifiers/F6: FAIL model-run=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"] unflagged=['check that an agent given the new rule declines th', "we can't check this one automatically; it would ne"]  EXPECTED PASS
+  falsifiers/F9: SILENT model-run=[] unflagged=[]  EXPECTED PASS
+## normalisation disabled: selfcheck exit 1
+  falsifiers/F1: FAIL model-run=['AC-2'] unflagged=['AC-2']  EXPECTED PASS
+  falsifiers/F5a grades as falsifiers/F1: NO
+## SILENT branch dropped: selfcheck exit 1
+  falsifiers/F7: PASS model-run=[] unflagged=[]  EXPECTED SILENT
+  falsifiers/F10: PASS model-run=[] unflagged=[]  EXPECTED SILENT
+mutation proofs hold

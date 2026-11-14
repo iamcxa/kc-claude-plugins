@@ -1,0 +1,12 @@
+range origin/main..tip, blobs changed in the range:
+home path: 0 line(s) in 0 file(s)
+host name or address: 0 line(s) in 0 file(s)
+private repository name: 0 line(s) in 0 file(s)
+private task slug: 0 line(s) in 0 file(s)
+email address: 0 line(s) in 0 file(s)
+agent session directory: 0 line(s) in 0 file(s)
+token shape: 0 line(s) in 0 file(s)
+exit=0
+commit messages and patches (git log -p) of the 2 commits: 0 lines in every class (same seven classes).
+every blob of the tip tree, including untouched seed files: private repository name 9 lines in 1 file, email address 2 lines in 2 files (seed README.md and VALIDATION.md, not in the range); every other class 0.
+Not archived (private): the pattern list and the scan script; reproduce: ask the owner of the list for it and run the scan over origin/main..tip.
