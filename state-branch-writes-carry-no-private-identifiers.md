@@ -1,7 +1,7 @@
 ---
 id:
 title: A dispatch, its record and sealed evidence reach the public state branch without personal or private identifiers, and a hook refuses a push that carries one
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
