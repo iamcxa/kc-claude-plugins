@@ -11,7 +11,8 @@ root.mkdir(parents=True, exist_ok=True)
 scripts = code / 'kc-dev-flow-2/scripts'
 original = (scripts / 'state_guard.py').read_text()
 mutants = {'discard_headers': original.replace("return b'\\n'.join(contents)", 'return data'),
-           'discard_inner_headers': original.replace('                contents.append(data)\n', '').replace("return b'\\n'.join(contents)", "return b'\\n'.join([*contents, data])")}
+           'discard_inner_headers': original.replace('                contents.append(data)\n', '').replace("return b'\\n'.join(contents)", "return b'\\n'.join([*contents, data])"),
+           'replay_only_tip': original.replace('commits = list(dict.fromkeys(commits))', 'commits = list(dict.fromkeys(commits))[-1:]')}
 results = []
 for name, source in mutants.items():
     target = root / name
@@ -19,8 +20,10 @@ for name, source in mutants.items():
     (target / 'state_guard.py').write_text(source)
     shutil.copyfile(scripts / 'test_state_guard.py', target / 'test_state_guard.py')
     shutil.rmtree(target / '__pycache__', ignore_errors=True)
+    test = ('test_push_scans_every_commit_even_after_deletion' if name == 'replay_only_tip'
+            else 'test_gzip_header_identifiers_refuse_and_clean_gzip_commits')
     p = subprocess.run([sys.executable, '-B', '-m', 'unittest',
-                        'test_state_guard.StateGuardTests.test_gzip_header_identifiers_refuse_and_clean_gzip_commits'],
+                        'test_state_guard.StateGuardTests.' + test],
                        cwd=target, env=dict(os.environ, PYTHONDONTWRITEBYTECODE='1'), capture_output=True, text=True)
     assert p.returncode == 1, p.stderr
     (output / (name + '.log')).write_text((p.stdout + p.stderr).replace(str(Path.home()), '~'))

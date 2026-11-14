@@ -1,0 +1,13 @@
+{
+  "branch": "spacedock-ensign/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo",
+  "base": "c9b2c240078238b66c98179c4ddc686eac0e3918",
+  "candidate": "d8ce3421219a8ff6112628de7cbf5f46274c634a",
+  "changed_files": [
+    "kc-dev-flow-2/scripts/state_guard.py",
+    "kc-dev-flow-2/scripts/test_state_guard.py",
+    "kc-dev-flow-2/skills/validation/principles.md"
+  ],
+  "working_tree": "",
+  "product_push": "not run; FO owns publication",
+  "pr": "not opened; FO owns Draft PR"
+}

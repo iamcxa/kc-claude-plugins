@@ -77,8 +77,8 @@
       "<fixture-home>/product/docs/dev2/.spacedock-state"
     ],
     "exit": 0,
-    "stdout": "HEAD is now at 2b44b2b test: seed\n",
-    "stderr": "Preparing worktree (detached HEAD 2b44b2b)\n"
+    "stdout": "HEAD is now at 9e18bc4 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 9e18bc4)\n"
   },
   {
     "argv": [
@@ -295,7 +295,7 @@
       "<fixture-home>/product/docs/dev2"
     ],
     "exit": 0,
-    "stdout": "room=<fixture-home>/product/docs/dev2/.spacedock-state/probe/review/validation/briefing-1\nbriefing=briefing:probe:validation:attempt-1:revision-1\ndigest=sha256:cfc202eb37c8d343ed6028f2755de2a93ff4616d3c6a9d7bad408951d79db372\nstate=open\n",
+    "stdout": "room=<fixture-home>/product/docs/dev2/.spacedock-state/probe/review/validation/briefing-1\nbriefing=briefing:probe:validation:attempt-1:revision-1\ndigest=sha256:c1fc5d5a4e412f24cceea862556d08480b5d31fd3882fde6562255d5a8a43483\nstate=open\n",
     "stderr": ""
   },
   {
@@ -339,7 +339,7 @@
     ],
     "exit": 0,
     "stdout": "",
-    "stderr": "To <scratch>/remote.git\n   0ca47d9..e741ee7  spacedock-state/dev2 -> spacedock-state/dev2\n"
+    "stderr": "To <scratch>/remote.git\n   d388a92..3cfa046  spacedock-state/dev2 -> spacedock-state/dev2\n"
   },
   {
     "argv": [
@@ -350,7 +350,7 @@
       "HEAD"
     ],
     "exit": 0,
-    "stdout": "e741ee7a93151a0be60f48df7b7a667eb3b1a767\n",
+    "stdout": "3cfa046cd469cbff5e9678af1cedde2dc802f648\n",
     "stderr": ""
   },
   {
@@ -360,10 +360,10 @@
       "<fixture-home>/product/docs/dev2/.spacedock-state",
       "ls-tree",
       "-r",
-      "e741ee7a93151a0be60f48df7b7a667eb3b1a767"
+      "3cfa046cd469cbff5e9678af1cedde2dc802f648"
     ],
     "exit": 0,
-    "stdout": "100644 blob 3b3e10ad1090f3e47631bb5cf2ab91eaa222c81a\tprobe.md\n100644 blob b778c7b90e35c1319768b133aba0c9346f179f9f\tprobe/captain-steps/1.md\n100644 blob bc543606093c1449399688128f0c3d285049827a\tprobe/dispatch/validation-1.md\n100644 blob bf0fe84712cca2cf39b7039c6445b812a65181a2\tprobe/evidence/validation-1/SHA256SUMS\n100644 blob 677c4761f8c8c79aa9818c12cd2db0bb77809276\tprobe/evidence/validation-1/argument.py\n100644 blob 18b87f21c04546aa5d6749653d8f79f17af2816e\tprobe/question.md\n100644 blob 5edc18604c40457751f22f6572f1812fc91aa68f\tprobe/review.md\n100644 blob c38711928a56e5f620f747008864049f0cacac01\tprobe/review/validation/briefing-1/index.json\n100644 blob 38f4b698a46d5404b6ee5cdd850a4f52beaaa810\tprobe/summary.md\n100644 blob bf08a6125f07e3a3853486dc4385c10cb57e292d\tseed\n",
+    "stdout": "100644 blob 89c1eb30947699b9be7e9992b0c1301e0682b35f\tprobe.md\n100644 blob b778c7b90e35c1319768b133aba0c9346f179f9f\tprobe/captain-steps/1.md\n100644 blob bc543606093c1449399688128f0c3d285049827a\tprobe/dispatch/validation-1.md\n100644 blob bf0fe84712cca2cf39b7039c6445b812a65181a2\tprobe/evidence/validation-1/SHA256SUMS\n100644 blob 677c4761f8c8c79aa9818c12cd2db0bb77809276\tprobe/evidence/validation-1/argument.py\n100644 blob 18b87f21c04546aa5d6749653d8f79f17af2816e\tprobe/question.md\n100644 blob 5edc18604c40457751f22f6572f1812fc91aa68f\tprobe/review.md\n100644 blob dcdaa3126ab31349203289e0beeb9ab9f8791b87\tprobe/review/validation/briefing-1/index.json\n100644 blob 38f4b698a46d5404b6ee5cdd850a4f52beaaa810\tprobe/summary.md\n100644 blob bf08a6125f07e3a3853486dc4385c10cb57e292d\tseed\n",
     "stderr": ""
   },
   {
@@ -429,7 +429,7 @@
       "<fixture-home>/product/docs/dev2"
     ],
     "exit": 1,
-    "stdout": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nCaptain steps record fails: message S5: unrecorded command or link 'python3 <fixture-home>/prod'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n",
+    "stdout": "next: each number or factual claim in this text and the PR body names the command and date that produced it, or says `<whose> report, not run`.\ncounts: 0 checked, 0 unchecked\nCaptain steps record fails: message S5: unrecorded command or link 'python3 <fixture-home>/'\nnext: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.\n",
     "stderr": ""
   },
   {
@@ -547,7 +547,7 @@
     ],
     "exit": 0,
     "stdout": "",
-    "stderr": "To <scratch>/remote.git\n   e741ee7..a98cb6b  spacedock-state/dev2 -> spacedock-state/dev2\n"
+    "stderr": "To <scratch>/remote.git\n   3cfa046..066d6fa  spacedock-state/dev2 -> spacedock-state/dev2\n"
   },
   {
     "argv": [

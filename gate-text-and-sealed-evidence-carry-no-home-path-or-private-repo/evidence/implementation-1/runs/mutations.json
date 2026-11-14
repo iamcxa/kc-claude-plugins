@@ -10,6 +10,11 @@
     "exit": 1
   },
   {
+    "name": "replay_only_tip",
+    "expected_failure": true,
+    "exit": 1
+  },
+  {
     "name": "rule_present",
     "expected_exit": 0,
     "exit": 0

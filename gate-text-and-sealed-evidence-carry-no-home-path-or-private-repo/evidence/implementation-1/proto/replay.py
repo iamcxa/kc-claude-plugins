@@ -40,7 +40,7 @@ for entry in guard.git(state, 'ls-tree', '-r', '-z', end).split(b'\0'):
             raw_only[kind] += 1
 assert not raw_only
 commits = guard.git(state, 'rev-list', '--reverse', start + '..' + end).decode().splitlines()
-counts, per_commit = collections.Counter(), []
+counts, per_commit = collections.Counter(dict.fromkeys(guard.CLASSES, 0)), []
 for commit in commits:
     classes, routes = set(), set()
     for name, before, after in guard.changes(state, commit):

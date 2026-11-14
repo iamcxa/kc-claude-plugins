@@ -1,0 +1,12 @@
+{
+  "start_exclusive": "c59f13d255f7bed028e68e7ba3b04a1bb0c9295e",
+  "end_inclusive": "c59f13d255f7bed028e68e7ba3b04a1bb0c9295e",
+  "commit_count": 0,
+  "counts_by_class": {},
+  "no_way_forward": 0,
+  "gzip_blobs": 110,
+  "named_or_commented_headers": 92,
+  "raw_only_class_hits": {},
+  "commits": [],
+  "limit": "Only this bounded post-candidate public state window; no future dispatch or live rollout claim."
+}

@@ -76,5 +76,101 @@
     "status": "passed",
     "exit": 0,
     "log": "ci-13.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-14.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_validation_security.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-15.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_pr_watch.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-16.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-17.log"
+  },
+  {
+    "name": "python3 -B kc-dev-flow-2/scripts/test_task_timeline.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-18.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-19.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_package_version.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-20.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-21.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_observer_check.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-22.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_merge_audit.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-23.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_role_triggers.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-24.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_laws_check.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-25.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_learning.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-26.log"
+  },
+  {
+    "name": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-27.log"
+  },
+  {
+    "name": "python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root \"$GITHUB_WORKSPACE/.sd-plugin-root\"",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-28.log"
+  },
+  {
+    "name": "SPACEDOCK_BIN=\"$HOME/.local/bin/spacedock\" python3 kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "status": "passed",
+    "exit": 0,
+    "log": "ci-29.log"
   }
 ]

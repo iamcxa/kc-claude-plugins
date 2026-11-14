@@ -11,3 +11,19 @@
 11/29 passed python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
 12/29 passed python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
 13/29 passed python3 kc-dev-flow-2/scripts/test_dispatch_records.py
+14/29 passed python3 kc-dev-flow-2/scripts/test_delivery_gate.py
+15/29 passed python3 kc-dev-flow-2/scripts/test_validation_security.py
+16/29 passed python3 kc-dev-flow-2/scripts/test_pr_watch.py
+17/29 passed python3 kc-dev-flow-2/scripts/test_replay_dispatch.py
+18/29 passed python3 -B kc-dev-flow-2/scripts/test_task_timeline.py
+19/29 passed python3 kc-dev-flow-2/scripts/test_decision_ledger.py
+20/29 passed python3 kc-dev-flow-2/scripts/test_package_version.py
+21/29 passed python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
+22/29 passed python3 kc-dev-flow-2/scripts/test_observer_check.py
+23/29 passed python3 kc-dev-flow-2/scripts/test_merge_audit.py
+24/29 passed python3 kc-dev-flow-2/scripts/test_role_triggers.py
+25/29 passed python3 kc-dev-flow-2/scripts/test_laws_check.py
+26/29 passed python3 kc-dev-flow-2/scripts/test_learning.py
+27/29 passed SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_dispatch_stage.py
+28/29 passed python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+29/29 passed SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py

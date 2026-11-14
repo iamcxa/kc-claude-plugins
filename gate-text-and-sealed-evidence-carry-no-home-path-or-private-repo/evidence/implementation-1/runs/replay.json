@@ -1,0 +1,25 @@
+{
+  "start_exclusive": "c59f13d255f7bed028e68e7ba3b04a1bb0c9295e",
+  "end_inclusive": "180ee2461a0af267e545467c71fc0e195aaee961",
+  "commit_count": 1,
+  "counts_by_class": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "no_way_forward": 0,
+  "gzip_blobs": 110,
+  "named_or_commented_headers": 92,
+  "raw_only_class_hits": {},
+  "commits": [
+    {
+      "commit": "180ee2461a0af267e545467c71fc0e195aaee961",
+      "guard_exit": 0,
+      "classes": [],
+      "way_forward": []
+    }
+  ],
+  "limit": "Only this bounded post-candidate public state window; no future dispatch or live rollout claim."
+}

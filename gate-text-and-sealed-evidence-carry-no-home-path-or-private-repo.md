@@ -267,3 +267,43 @@ Evidence: evidence/ideation-1/ (20 files, 25.4 KiB)
 ### Summary
 
 The delivery-gate checks never demanded an absolute path: they accept `~/`. The absolute form came from the validation acceptance rule and the steps check's verbatim copying, and PR 869's record route removes FO's gate summary. The design adds one validation sentence and makes the guard read gzip headers (three files, no workflow text, no ADR); sealed private evidence uses ADR 0079's existing route. A 200-commit replay shows `private-repo` can refuse at this task's release, while `home` waits on the releases carrying PR 871 and this change, plus a clean in-flight check; the release order and who flips are Captain decisions D1 and D2.
+
+## Stage Report: implementation
+
+- DONE: One candidate on the assigned branch off origin/main, implementing only the three approved files; no versions, ADRs, live installations or guard modes changed.
+  Branch `spacedock-ensign/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo`; base `c9b2c240078238b66c98179c4ddc686eac0e3918`; candidate `d8ce3421219a8ff6112628de7cbf5f46274c634a`; clean product worktree in `evidence/implementation-1/runs/artifact.json`.
+- DONE: AC-1 — gate summary and Captain-steps record pass without a home prefix or private repository name.
+  `runs/probe.json` and `runs/probe-commands.json`: real steps, question, Spacedock 0.27.2 gate prepare and guarded commit/push exit 0; committed blobs have zero home/private-repo hits; fresh bash/zsh exit 0; absolute-home mutation is refused (1), mixed command forms fail S5 (1).
+- DONE: AC-2 — sealed private evidence has a guarded way forward.
+  `runs/probe.json`: sealed private evidence and a reproduce line retaining its name each refuse (1); dropping the file, recording a placeholder and re-sealing commits/pushes (0), removes its manifest entry and prints no matched name.
+- DONE: AC-3 — bounded post-candidate state replay has no refusal without a way forward.
+  `runs/replay.json`: c59f13d255f7bed028e68e7ba3b04a1bb0c9295e..180ee2461a0af267e545467c71fc0e195aaee961, one commit, zero hits in each class, guard exit 0; `runs/replay_only_tip.log` fails (1) when a mutation skips transient earlier commits. This window contains this task's evidence commit, not a subsequent dispatch or live rollout.
+- DONE: AC-4 — gzip header-only identifiers refuse and clean gzip commits.
+  `runs/guard-tests-candidate.log` and `runs/probe.json`: filename/comment/extra fields refuse, including concatenated and nested gzip; clean gzip commits/pushes. `runs/replay.json`: all 110 gzip blobs at the pinned state tip scanned, 92 named/commented headers, zero raw-only class hits.
+- DONE: AC-5 — the approved acceptance-rule sentence and sealed argument-taking script work.
+  `runs/mutations.json`: candidate sentence check 0, removed-sentence mutation 1; `runs/probe.json`: candidate scratch sealing followed by fresh zsh gives argument script 0, literal-home script 1.
+- DONE: Every acceptance criterion has candidate evidence and its falsifier exercised with Python -B and fresh mutation directories.
+  `runs/header-before.log` has nine pre-fix failures; `runs/discard_headers.log` and `runs/discard_inner_headers.log` fail on their mutations. An initial post-fix test fixture reused byte-identical clean content and hit empty commits (`runs/guard-tests.log`); distinct clean bytes corrected it, and the committed candidate's 14 tests pass (`runs/guard-tests-candidate.log`).
+- DONE: The repository's complete CI Python list and the required lint/ADR/number/comment checks pass.
+  `runs/ci.json`, `runs/ci.xml`: all 29 listed entries pass locally with Spacedock 0.27.2 and plugin root 4d158a484ec73e184861067f8ed1e20087fdc26a; `runs/lint.log`, `runs/adr-lint.log`, `runs/number-guards.log` exit 0; `runs/comment-ratio.log`: 20 code lines, zero comment lines, 0% within 5%. CI cost per PR not measured; no CI file changed.
+- DONE: Existing sources, ownership and retained-document impact checked within approved scope.
+  FO's post-design ruling (message b80281f6) authorizes current main without waiting for PR 869, superseding that design-order line for these three files; AC-1 uses main's current question route. `runs/doc-impact.log`: ADR 0087 unaffected because its raw-byte/decompression and opt-in boundaries remain; ADR 0079's private-evidence route and ADR 0054's steps rule remain. No new decision record.
+- DONE: PR title/body and release conditions prepared for FO.
+  `implementation/pr.md` says home stays at warn and lists all four flip conditions, with condition (a)'s release already going out under the Captain's ruling; private-repo waits for this release's README sync and FO reinstall. PR 869's later record route removes FO's handwritten summary. Broad owner regexes can match compressed bytes, the design's stated limit.
+- SKIPPED: Product push, Draft PR creation, RoboRev and hosted CI.
+  Not run by the worker; FO owns all four. No PR opened: no push grant.
+- SKIPPED: Final state commit and sync by this worker.
+  The real state commit failed creating the shared index.lock (Operation not permitted); no git-add fallback. FO committed/pushed the initial evidence as 180ee2461a0af267e545467c71fc0e195aaee961 through the live guard with no warning/refusal; final report, PR text and evidence updates await FO's path-scoped commit/sync.
+- DONE: Public evidence retained and dispatch scratch closed.
+  `runs/evidence-scan.json`: no live-list class hits before sealing; all cited run outputs are under `evidence/implementation-1/` (large files use gzip). The pinned package's required close command exited 0; exact output follows.
+
+### Scratch close
+
+```text
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/implementation-1 (975814397 bytes)
+Evidence: evidence/implementation-1/ (67 files, 158.9 KiB)
+```
+
+### Summary
+
+The candidate scans raw bytes at every gzip layer and adds the one approved validation sentence, with all five criteria exercised on throwaway checkouts and all 29 CI-listed entries passing locally. Implementation is complete; FO retains final state commit/sync, product publication, Draft PR, RoboRev and hosted CI, and the one-commit replay does not satisfy the later live-home-flip conditions.

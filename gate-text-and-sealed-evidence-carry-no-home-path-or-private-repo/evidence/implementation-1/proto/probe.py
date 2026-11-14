@@ -22,9 +22,9 @@ env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
 env.update(HOME=str(home), KC_DEV2_IDENTIFIERS=str(identifiers), PYTHONDONTWRITEBYTECODE='1',
            GIT_CONFIG_GLOBAL='/dev/null', GIT_CONFIG_NOSYSTEM='1',
            GIT_AUTHOR_NAME='Fixture', GIT_COMMITTER_NAME='Fixture',
-           GIT_AUTHOR_EMAIL='fixture@example.invalid', GIT_COMMITTER_EMAIL='fixture@example.invalid',
+           GIT_AUTHOR_EMAIL='fixture-identity', GIT_COMMITTER_EMAIL='fixture-identity',
            GIT_CONFIG_COUNT='2', GIT_CONFIG_KEY_0='commit.gpgsign', GIT_CONFIG_VALUE_0='false',
-           GIT_CONFIG_KEY_1='user.email', GIT_CONFIG_VALUE_1='fixture@example.invalid')
+           GIT_CONFIG_KEY_1='user.email', GIT_CONFIG_VALUE_1='fixture-identity')
 os.environ.update(env)
 sys.path.insert(0, str(code / 'kc-dev-flow-2/scripts'))
 import scratch
