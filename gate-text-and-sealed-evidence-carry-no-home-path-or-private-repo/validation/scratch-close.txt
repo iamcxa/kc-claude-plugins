@@ -1,0 +1,2 @@
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/validation-1 (915613312 bytes)
+Evidence: evidence/validation-1/ (49 files, 105.6 KiB)

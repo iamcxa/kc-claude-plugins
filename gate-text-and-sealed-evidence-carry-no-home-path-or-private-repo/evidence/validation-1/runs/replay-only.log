@@ -1,0 +1,204 @@
+command completed; exit=0
+command completed; exit=0
+command completed; exit=0
+command completed; exit=0
+command completed; exit=0
+command completed; exit=0
+replay commit completed: 180ee2461a0af267e545467c71fc0e195aaee961
+command completed; exit=0
+replay commit completed: 7169a8bd40ae410e1a7c7e130b6876867352d42e
+command completed; exit=0
+replay commit completed: 79672c1a01cf64b1ea611dc36353794c17588ceb
+command completed; exit=0
+replay commit completed: 2e1107788a4f4e79d50e41e4d55e7fa8d1a595f4
+command completed; exit=1
+replay commit completed: 20583625de6a25faa75672c2f2094a8676a1d97c
+command completed; exit=0
+replay commit completed: dbf8a368cab6abb5fb8c04e8e896f96ce4488f54
+command completed; exit=0
+replay commit completed: 84eb330aa4ab5aae14f54648710dc3efabad799f
+command completed; exit=0
+replay commit completed: b8b1bf899e841a92fc97e0efc5f63e5786368d31
+command completed; exit=0
+replay commit completed: 52533375e5ec8e5ba41041580138f584ec26a907
+{
+  "mode": "replay-only",
+  "start_exclusive": "c59f13d255f7bed028e68e7ba3b04a1bb0c9295e",
+  "end_inclusive": "52533375e5ec8e5ba41041580138f584ec26a907",
+  "commits": 9,
+  "counts_by_class": {
+    "home": 1,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "no_way_forward": 0,
+  "gzip": {
+    "files": 0,
+    "task_files": 0,
+    "raw_only": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    },
+    "scanned_hits": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    },
+    "task_scanned_hits": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    }
+  },
+  "per_commit": [
+    {
+      "commit": "180ee2461a0af267e545467c71fc0e195aaee961",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "7169a8bd40ae410e1a7c7e130b6876867352d42e",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "79672c1a01cf64b1ea611dc36353794c17588ceb",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "2e1107788a4f4e79d50e41e4d55e7fa8d1a595f4",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "20583625de6a25faa75672c2f2094a8676a1d97c",
+      "guard_exit": 1,
+      "classes": [
+        "home"
+      ],
+      "changed_files_by_class": {
+        "home": 1,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [
+        "write home as ~; retain existing sealed bytes unchanged when already committed"
+      ],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "dbf8a368cab6abb5fb8c04e8e896f96ce4488f54",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "84eb330aa4ab5aae14f54648710dc3efabad799f",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "b8b1bf899e841a92fc97e0efc5f63e5786368d31",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    },
+    {
+      "commit": "52533375e5ec8e5ba41041580138f584ec26a907",
+      "guard_exit": 0,
+      "classes": [],
+      "changed_files_by_class": {
+        "home": 0,
+        "email": 0,
+        "private-repo": 0,
+        "private-slug": 0,
+        "tailnet-host": 0
+      },
+      "way_forward": [],
+      "unresolved": 0,
+      "printed_identifier_classes": []
+    }
+  ],
+  "limit": "Pinned post-candidate public state interval only; no live flip or future-writer acceptance."
+}

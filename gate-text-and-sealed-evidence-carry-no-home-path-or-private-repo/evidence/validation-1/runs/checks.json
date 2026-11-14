@@ -1,0 +1,86 @@
+[
+  {
+    "name": "role-triggers",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/role_triggers.py",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo"
+    ],
+    "log": "role-triggers.log"
+  },
+  {
+    "name": "adr-lint",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "c9b2c240078238b66c98179c4ddc686eac0e3918"
+    ],
+    "log": "adr-lint.log"
+  },
+  {
+    "name": "doc-impact",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/doc_impact.py",
+      "c9b2c240078238b66c98179c4ddc686eac0e3918",
+      "d8ce3421219a8ff6112628de7cbf5f46274c634a"
+    ],
+    "log": "doc-impact.log"
+  },
+  {
+    "name": "comment-ratio",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/comment_ratio.py",
+      "c9b2c240078238b66c98179c4ddc686eac0e3918",
+      "d8ce3421219a8ff6112628de7cbf5f46274c634a",
+      "--workflow-dir",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "log": "comment-ratio.log"
+  },
+  {
+    "name": "design-surfaces",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/design_surfaces.py",
+      "check",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo.md"
+    ],
+    "log": "design-surfaces.log"
+  },
+  {
+    "name": "dispatch-records",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.41.0/scripts/dispatch_records.py",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo"
+    ],
+    "log": "dispatch-records.log"
+  },
+  {
+    "name": "lint",
+    "exit": 0,
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "log": "lint.log"
+  }
+]

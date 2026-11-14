@@ -307,3 +307,54 @@ Evidence: evidence/implementation-1/ (67 files, 158.9 KiB)
 ### Summary
 
 The candidate scans raw bytes at every gzip layer and adds the one approved validation sentence, with all five criteria exercised on throwaway checkouts and all 29 CI-listed entries passing locally. Implementation is complete; FO retains final state commit/sync, product publication, Draft PR, RoboRev and hosted CI, and the one-commit replay does not satisfy the later live-home-flip conditions.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict at PR 872 against the admitted pilot outcome and approved design: REJECTED; F1 below fails AC-4. Product bytes remain unchanged.
+  Branch `spacedock-ensign/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo`; base `c9b2c240078238b66c98179c4ddc686eac0e3918`; candidate `d8ce3421219a8ff6112628de7cbf5f46274c634a`; exactly the approved three files and a clean product tree (`evidence/validation-1/runs/artifact.json`). Existing prepared PR text remains `implementation/pr.md`.
+- DONE: AC-1 — real delivery-gate steps and question checks, gate preparation, guarded commit and push on an invented linked state checkout with its own remote.
+  All exit 0, committed home/private-repo counts are 0, and fresh bash/zsh run the clean command; the absolute-home counterexample refuses and mixed forms fail S5 (`evidence/validation-1/runs/probe.json`, `probe-commands.json`). This uses main's current route, as the reform ruling requires.
+- DONE: AC-2 — sealed private evidence is refused, then accepted through the recorded drop-and-reproduce route without bypassing the guard.
+  Private evidence and a reproduction line retaining its invented name each refuse (1); dropping it, using a placeholder and resealing commits/pushes (0), removes the stale manifest entry and prints no matched name (`evidence/validation-1/runs/probe.json`).
+- DONE: AC-3 — independently replayed every commit in the bounded post-candidate interval with home/private-repo at refuse on an owned copy and remote.
+  `c59f13d255f7bed028e68e7ba3b04a1bb0c9295e..52533375e5ec8e5ba41041580138f584ec26a907`: 9 commits, home 1, every other class 0, no unhandled refusal; the home change is clear after rewriting to `~` (`evidence/validation-1/runs/replay-replay-only.json`, `replay-replay-only-commands.json`). This is not a live-home-flip proof; the old writer still emits home once.
+- DONE: AC-4 attack assessment — REJECTED by the combined-member counterexample; ordinary header cases and diagnostic privacy hold.
+  14 invented cases: clean gzip/binary commit and push; name/comment/extra, combined fields, header CRC, concatenated members, simple nesting, damaged trailer/deflate and a 2 MiB header refuse; two nested-second-member variants commit and push with exit 0; matched-text output count is 0 (`evidence/validation-1/runs/gzip-probe.json`, `gzip-commands.json`).
+- DONE: Raw-byte false-positive scan and this task's existing sealed-evidence scan, with explicit class limits.
+  All 110 gzip blobs and 89 task evidence files at the pinned state tip were evaluated; home/private-repo have 0 raw-only hits, and own evidence has 0 observed hits. Existing gzip home/private-repo hits are 40/6 and already in decoded content. Tailnet-host remains unverified on 11 files after a per-search limit; do not read its displayed 0 raw-only count as a complete pass (`evidence/validation-1/runs/corpus-final.json`). Earlier stopped attempts are retained in `scan-attempts.json` and are not acceptance evidence.
+- DONE: AC-5 — the candidate's acceptance-rule sentence is present and its candidate scratch sealer preserves the argument-taking route.
+  After sealing, fresh zsh runs the argument script (0), while the literal-home script fails (1); the retained acceptance command also runs from a fresh shell and reproduces F1 (`evidence/validation-1/runs/probe.json`, `retained-acceptance.log`).
+- DONE: Read every current PR conversation comment, review and inline review comment, and verify hosted CI against this candidate.
+  PR remains open/Draft at the dispatched head; all three comment/review counts are 0. Five hosted checks succeeded and docs deployment was skipped; the Python job's 29 listed checks succeeded at this head (`evidence/validation-1/runs/pr-final.json`, `review-comments-final.json`, `ci.json`). Local state-guard tests independently passed 14 tests (`guard-tests.log`); the full green CI suite was not repeated locally.
+- DONE: Required ADR, retained-document, added-comment, design and dispatch checks, and candidate lint.
+  Installed 0.41.0 `adr_lint.py docs/adr --since c9b2c240078238b66c98179c4ddc686eac0e3918` exits 0; role, doc-impact, comment, design, dispatch-record and candidate lint checks all exit 0 (`evidence/validation-1/runs/checks.json` and its named logs). Added comments: 0 of 20 code lines. ADR 0087 is unaffected: its obligation remains; F1 shows an incomplete implementation. No reserved number, migration or added ADR requires a number-guard check.
+- DONE: Goal sufficiency, minimum necessity and the minimal acceptance script assessed at the same candidate.
+  Sufficiency fails at F1. Raw header scanning is needed by the header-only negative, and the wording is needed by the sealed literal-path negative; no extra product surface was added. The command below runs three observable steps (identity, gate/recovery, gzip attacks) in less than five minutes; current exits are 0 then 1 for the behavioral steps (`evidence/validation-1/runs/retained-acceptance.log`). No UI surface exists.
+- SKIPPED: Local RoboRev, publication, review requests, readiness, merge, installations and live mode changes.
+  RoboRev was not run by this validator; job 1866 is FO-reported only. Those actions remain FO-owned; no CI configuration changed and CI cost per PR was not measured. Release/README synchronization and the design's four home-flip conditions remain future obligations.
+- SKIPPED: State commit and sync after the sandbox refused the supported state command.
+  `spacedock state commit` exited 1: shared `index.lock` creation was denied with `Operation not permitted` (`validation/state-commit.json`). No git-add, alternate commit or escalation fallback was used; FO must commit the task report, evidence folder and validation receipts path-scoped, then sync.
+- DONE: Public evidence retained and the required installed-package scratch close completed.
+  Live-list scan before sealing found 0 hits in each class across 48 files (`evidence/validation-1/runs/privacy-final.json`); `validation/scratch-close.txt` records close exit 0. Exact close output follows; all scratch clones and probes were removed.
+
+### Findings
+
+- F1 Material: `kc-dev-flow-2/scripts/state_guard.py:215` loses gzip member boundaries. Released user/workflow: a worker commits sealed gzip on a guarded linked state branch. Observable harm: an invented listed private name reaches its own remote with commit/push both 0. Boundary: `value-ac[AC-4]` requires header-only refusal; `contract[docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md#decision]` requires refusal before push. Trigger: a clean text member followed by `gzip(gzip(header-bearing gzip))`; joined decoded output starts with text, so the recursive loop stops. The nested-body companion is the same defect. Return through implementation feedback; assess without repairing. Evidence and a suggested correction are in `evidence/validation-1/runs/findings.json`.
+
+### Minimal acceptance script
+
+Run the command as written: step 1 verifies the pinned candidate; step 2 must pass the real gate and sealed-evidence recovery; step 3 must refuse all invented gzip identifiers. A repaired candidate should pass its updated script; this candidate deliberately returns 1 and names the two unexpected acceptances. It proves no live installation, future writer, complete historical tailnet scan, hosted review or merge.
+
+```sh
+python3 -B ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/evidence/validation-1/proto/acceptance.py ~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo /tmp/dev2/kc-claude-plugins-3042bb224e995ded/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/validation-1/captain-check ~/.local/bin/spacedock
+```
+
+### Scratch close
+
+Scratch removed: /private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/validation-1 (915613312 bytes)
+Evidence: evidence/validation-1/ (49 files, 105.6 KiB)
+
+### Summary
+
+REJECTED at the dispatched candidate: the combined nested gzip member lets a listed private identifier through both hooks, despite the simple header cases and existing tests passing. AC-1, AC-2, bounded AC-3 and AC-5 have independent runtime evidence; the historical tailnet-host comparison remains partly unverified. FO owns the refused state commit/sync and the material-finding disposition before any implementation repair or delivery.

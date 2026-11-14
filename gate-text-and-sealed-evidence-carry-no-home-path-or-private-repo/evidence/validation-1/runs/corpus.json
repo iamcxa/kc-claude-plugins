@@ -1,0 +1,57 @@
+{
+  "tip": "52533375e5ec8e5ba41041580138f584ec26a907",
+  "gzip_blobs": 25,
+  "own_evidence_files": 0,
+  "raw_only": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "gzip_hits": {
+    "home": 9,
+    "email": 0,
+    "private-repo": 2,
+    "private-slug": 4,
+    "tailnet-host": 0
+  },
+  "own_evidence_hits": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "timeouts": {
+    "raw": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    },
+    "plain": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 4
+    },
+    "scanned": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 4
+    },
+    "own": {
+      "home": 0,
+      "email": 0,
+      "private-repo": 0,
+      "private-slug": 0,
+      "tailnet-host": 0
+    }
+  },
+  "limit": "One second per expression search. Timed-out class/phase comparisons remain unverified; no identifier or filename is retained."
+}

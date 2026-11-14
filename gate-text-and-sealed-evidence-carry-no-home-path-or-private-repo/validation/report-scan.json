@@ -1,0 +1,10 @@
+{
+  "files": 3,
+  "counts_by_class": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  }
+}

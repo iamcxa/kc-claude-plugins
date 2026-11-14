@@ -1,0 +1,7 @@
+role-triggers: exit 0
+adr-lint: exit 0
+doc-impact: exit 0
+comment-ratio: exit 0
+design-surfaces: exit 0
+dispatch-records: exit 0
+lint: exit 0

@@ -1,0 +1,2 @@
+docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md	review	kc-dev-flow-2/scripts/state_guard.py
+1 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

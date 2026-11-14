@@ -1,0 +1,5 @@
+{
+  "exit": 143,
+  "result": "Stopped own worker after about five minutes without progress receipts; no acceptance result.",
+  "next": "Same predicates retried with per-blob progress and a five-minute deadline."
+}

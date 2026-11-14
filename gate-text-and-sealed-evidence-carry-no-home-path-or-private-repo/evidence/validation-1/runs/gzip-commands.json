@@ -1,0 +1,621 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "<scratch>/product"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/product",
+      "commit",
+      "--allow-empty",
+      "-qm",
+      "test: fixture seed"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "<scratch>/remote.git"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/product",
+      "remote",
+      "add",
+      "origin",
+      "<scratch>/remote.git"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/product",
+      "worktree",
+      "add",
+      "-b",
+      "spacedock-state/probe",
+      "<scratch>/state"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "push",
+      "-q",
+      "origin",
+      "spacedock-state/probe"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "<scratch>/state",
+      "--shared",
+      "--refuse",
+      "private-repo,home"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "<candidate>/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "<scratch>/state"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: clean_gzip"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "push",
+      "-q",
+      "origin",
+      "spacedock-state/probe"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.bin"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: ordinary_binary"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "push",
+      "-q",
+      "origin",
+      "spacedock-state/probe"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: header_name"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: header_comment"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: header_extra"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: combined_header_fields"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: header_crc"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: concatenated_header"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: nested_header"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: corrupt_trailer"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: corrupt_deflate"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: large_header"
+    ],
+    "exit": 1,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "reset",
+      "--hard",
+      "-q",
+      "HEAD"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: nested_second_member_header"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "push",
+      "-q",
+      "origin",
+      "spacedock-state/probe"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "add",
+      "--",
+      "evidence.gz"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "commit",
+      "-qm",
+      "test: nested_second_member_body"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "<scratch>/state",
+      "push",
+      "-q",
+      "origin",
+      "spacedock-state/probe"
+    ],
+    "exit": 0,
+    "matched_text_printed": false
+  }
+]

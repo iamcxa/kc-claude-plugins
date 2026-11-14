@@ -1,0 +1,9 @@
+{
+  "unbounded_replay_exit": 143,
+  "instrumented_replay_exit": 143,
+  "sequential_corpus_exit": 143,
+  "unbounded_parallel_corpus_exit": 143,
+  "reason": "Stopped own redundant scans; bounded full corpus identifies tailnet-host searches needing more time. No stopped run is acceptance evidence.",
+  "per_commit_replay_exit": 0,
+  "bounded_full_corpus_exit": 1
+}

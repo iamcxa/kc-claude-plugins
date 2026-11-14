@@ -1,0 +1,169 @@
+[
+  {
+    "command": [
+      "git",
+      "clone",
+      "--quiet",
+      "--bare",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state",
+      "<scratch>/remote.git"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "git",
+      "clone",
+      "--quiet",
+      "--no-checkout",
+      "<scratch>/remote.git",
+      "<scratch>/product"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "<scratch>/product",
+      "worktree",
+      "add",
+      "-b",
+      "spacedock-state/replay",
+      "<scratch>/state",
+      "52533375e5ec8e5ba41041580138f584ec26a907"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "<scratch>/state",
+      "--shared",
+      "--refuse",
+      "home,private-repo"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "<scratch>/state"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 1
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/kc-dev-flow-2/scripts/state_guard.py",
+      "scan",
+      "<scratch>/state",
+      "--event",
+      "pre-push"
+    ],
+    "exit": 0
+  }
+]

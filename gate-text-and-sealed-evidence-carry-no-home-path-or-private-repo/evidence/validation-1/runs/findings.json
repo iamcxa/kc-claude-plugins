@@ -1,0 +1,11 @@
+[
+  {
+    "severity": "high",
+    "title": "A nested gzip in the second member passes both refusing hooks",
+    "file": "kc-dev-flow-2/scripts/state_guard.py",
+    "line": 215,
+    "detail": "Material. Released user and workflow: a worker commits gzip evidence on a linked spacedock-state branch with private-repo and home at refuse. Observable harm: an invented listed private name reaches the throwaway remote; commit and push each exit 0. Affected value: value-ac[AC-4] requires a header-only private name to refuse, and contract[docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md#decision] requires listed identifiers to be refused before push. Trigger: gzip(public text) concatenated with gzip(gzip(a gzip whose filename header contains the identifier)). gzip.decompress joins member bodies; the result begins with public text, so the startswith loop stops before the nested member is decoded. Independent candidate and fresh-shell acceptance runs both reproduce this. The companion nested-body case reaches the same defect, not a second finding. Existing simple nested and concatenated cases pass.",
+    "fix": "Return to implementation: preserve gzip member boundaries when recursively examining nested members, or explicitly refuse the undecodable mixed form; add the combined-member regression while keeping clean gzip and ordinary binary accepted.",
+    "status": "open"
+  }
+]

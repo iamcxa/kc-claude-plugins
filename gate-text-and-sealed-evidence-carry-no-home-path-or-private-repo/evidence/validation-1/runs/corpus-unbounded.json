@@ -1,0 +1,36 @@
+{
+  "tip": "52533375e5ec8e5ba41041580138f584ec26a907",
+  "expected_files": 199,
+  "completed_files": 19,
+  "gzip_blobs": 19,
+  "own_evidence_files": 0,
+  "identifier_counts_by_class": {
+    "home": 1,
+    "email": 1,
+    "private-repo": 4,
+    "private-slug": 1092,
+    "tailnet-host": 1
+  },
+  "raw_only": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "gzip_hits": {
+    "home": 8,
+    "email": 0,
+    "private-repo": 2,
+    "private-slug": 4,
+    "tailnet-host": 0
+  },
+  "own_evidence_hits": {
+    "home": 0,
+    "email": 0,
+    "private-repo": 0,
+    "private-slug": 0,
+    "tailnet-host": 0
+  },
+  "limit": "Pinned public-state tip; exact candidate added_bytes and each owner expression. Existing decompressed hits are not raw-byte false positives."
+}

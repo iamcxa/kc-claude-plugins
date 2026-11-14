@@ -1,0 +1,156 @@
+[
+  {
+    "name": "clean_gzip",
+    "bytes": 32,
+    "expected": "accepted",
+    "actual": "accepted",
+    "commit_exit": 0,
+    "passed": true,
+    "private_class_reported": false,
+    "matched_text_printed": false,
+    "push_exit": 0
+  },
+  {
+    "name": "ordinary_binary",
+    "bytes": 1024,
+    "expected": "accepted",
+    "actual": "accepted",
+    "commit_exit": 0,
+    "passed": true,
+    "private_class_reported": false,
+    "matched_text_printed": false,
+    "push_exit": 0
+  },
+  {
+    "name": "header_name",
+    "bytes": 76,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "header_comment",
+    "bytes": 76,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "header_extra",
+    "bytes": 77,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "combined_header_fields",
+    "bytes": 165,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "header_crc",
+    "bytes": 78,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "concatenated_header",
+    "bytes": 140,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "nested_header",
+    "bytes": 117,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "corrupt_trailer",
+    "bytes": 76,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": false,
+    "matched_text_printed": false
+  },
+  {
+    "name": "corrupt_deflate",
+    "bytes": 76,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": false,
+    "matched_text_printed": false
+  },
+  {
+    "name": "large_header",
+    "bytes": 2097228,
+    "expected": "refused",
+    "actual": "refused",
+    "commit_exit": 1,
+    "passed": true,
+    "private_class_reported": true,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false
+  },
+  {
+    "name": "nested_second_member_header",
+    "bytes": 149,
+    "expected": "refused",
+    "actual": "accepted",
+    "commit_exit": 0,
+    "passed": false,
+    "private_class_reported": false,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false,
+    "push_exit": 0
+  },
+  {
+    "name": "nested_second_member_body",
+    "bytes": 113,
+    "expected": "refused",
+    "actual": "accepted",
+    "commit_exit": 0,
+    "passed": false,
+    "private_class_reported": false,
+    "matched_text_printed": false,
+    "plain_first_layer_contains_identifier": false,
+    "push_exit": 0
+  }
+]

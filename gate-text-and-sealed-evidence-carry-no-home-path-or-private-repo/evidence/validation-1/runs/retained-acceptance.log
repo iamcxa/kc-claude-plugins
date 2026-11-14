@@ -1,0 +1,8 @@
+Step 1: candidate identity: d8ce3421219a8ff6112628de7cbf5f46274c634a
+Step 2: clean gate, refused sealed evidence, recorded recovery, fresh shells: expect exit 0
+Step 2 exit: 0
+Step 3: adversarial gzip members: expect all private identifiers refused
+Step 3 exit: 1
+Unexpected acceptance: nested_second_member_header, nested_second_member_body
+Evidence retained under caller scratch: acceptance-souommk4
+Limit: no live install, hosted review, state replay, or future rollout is proved.

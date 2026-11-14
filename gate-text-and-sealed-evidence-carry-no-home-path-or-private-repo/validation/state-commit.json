@@ -1,0 +1,13 @@
+{
+  "command": [
+    "~/.local/bin/spacedock",
+    "state",
+    "commit",
+    "gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo",
+    "--workflow-dir",
+    "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "spacedock state commit: git commit failed:\ngit commit failed:\nfatal: Unable to create '~/Project/kc-claude-workspace/kc-claude-plugins/.git/worktrees/-spacedock-state3/index.lock': Operation not permitted\n\n"
+}
