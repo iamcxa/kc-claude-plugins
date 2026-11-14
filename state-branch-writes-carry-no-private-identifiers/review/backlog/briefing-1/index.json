@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:state-branch-writes-carry-no-private-identifiers:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile pilot with the outcome, non-goals, stop condition, acceptance criteria and a budget of 2 cycles per stage as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave; approving starts the design stage and merges nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:state-branch-writes-carry-no-private-identifiers:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/40e05ebf14259a8f80425c92d930fef3a2f1bc97/state-branch-writes-carry-no-private-identifiers.md",
+      "rev": "sha256:6fd525b84722d5ee9f58318dc950febccabbaa14b5466a3c8b11da8a8ceec91e",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: variant kc-dev-flow-2, profile pilot; outcome, Non-goals, Stop condition and AC-1 to AC-4 as filed; Budget 2 cycles per stage; FO alignment not needed before ideation; Surfaces none; Visible change none; seed check exit 0."
+    }
+  ]
+}

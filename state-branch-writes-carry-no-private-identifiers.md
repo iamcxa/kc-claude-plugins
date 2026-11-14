@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:state-branch-writes-carry-no-private-identifiers:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:state-branch-writes-carry-no-private-identifiers-backlog-1
+              briefing:
+                id: briefing:state-branch-writes-carry-no-private-identifiers:backlog:attempt-1:revision-1
+                digest: sha256:731d2188c766ca0b5a6139d4f2fedb5dac6ab173a3b7c338175ad078ae428247
+                room-ref: ./state-branch-writes-carry-no-private-identifiers/review/backlog/briefing-1
 ---
 
 The workflow state branch of this public repository receives new personal and private identifiers with every dispatch from two First Officers. An audit on 2026-11-14 (`.context/dev2-reform/phase1-version-and-path-audit.md` Part B, a research output; its counts are not re-measured here) reports a home-directory prefix in 4,646 files, names of private adopter repositories in up to 1,055 files each, private task slugs in 488, a personal email in 25 and tailnet hostnames in 6, and no token-like hit for the patterns it ran.
