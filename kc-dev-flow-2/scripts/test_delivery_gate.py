@@ -3465,7 +3465,7 @@ class ScopeDisclosureTests(unittest.TestCase):
 
 class ObservedFactsTests(unittest.TestCase):
     def test_contract_examples_supply_the_forms_required_by_the_shared_guards(self):
-        examples = "\n".join(re.findall(r"```text\n(.*?)\n```", CONTRACT.read_text(), re.S))
+        examples = "\n".join(re.findall(r"^```text\n(.*?)^```", CONTRACT.read_text(), re.M | re.S))
         with tempfile.TemporaryDirectory() as d:
             task = Path(d, "task.md")
             task.write_text(TASK)
