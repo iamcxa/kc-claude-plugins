@@ -1,0 +1,8 @@
+# counts at 17a4ff1 (branch five-rules-restore-default); base 7e0f9c2
+FO    11756
+ideation      724
+implementation     1398
+validation     1552
+references/sd/workflow.md     6199
+peers     1334
+skills/dev/SKILL.md      763
