@@ -7,6 +7,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:shared-assumption-replay-on-archived-tasks-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:shared-assumption-replay-on-archived-tasks-poc-backlog-1
+              briefing:
+                id: briefing:shared-assumption-replay-on-archived-tasks-poc:backlog:attempt-1:revision-1
+                digest: sha256:8e469c63b3df70a051a4f7e499b8fb5a9c8fb1dce1842726c43850048d7a8cb7
+                room-ref: ./shared-assumption-replay-on-archived-tasks-poc/review/backlog/briefing-1
 ---
 
 Archived tasks reached 16, 14 and 9 implementation dispatches; 77 of 136 tasks had a repeat validation dispatch and 19 of 30 rejections showed no code defect (brief C6, figures from time-baseline.md and proposal.md, not re-measured here). The trial rule that stops before a third dispatch asks what the two attempts showed; it does not require a diagnosis, so the Captain gets a stop without a hypothesis.
