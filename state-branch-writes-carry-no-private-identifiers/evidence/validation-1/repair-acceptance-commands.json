@@ -1,0 +1,6119 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-9hv5_es1/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-9hv5_es1/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-9hv5_es1/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-9hv5_es1/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at eb5b205 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD eb5b205)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-9hv5_es1/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "--refuse",
+      "private-slug,tailnet-host,private-repo"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-9hv5_es1/state"
+    ],
+    "exit": 0,
+    "stdout": "state guard: guarded (email=warn, home=warn, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "slug.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"slug.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "show",
+      ":slug.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-5ef803b8a4bc4413aa969b91369df072",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "slug.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "host.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"host.txt\" adds a tailnet-host identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "show",
+      ":host.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-5b5fd721f5f64072aca8a030f75cde6d",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "host.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "regex.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"regex.txt\" adds a private-repo identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "show",
+      ":regex.txt"
+    ],
+    "exit": 0,
+    "stdout": "invented-6cd8207030ef45ec8b2f8a96c457e57c42",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "add",
+      "--",
+      "regex.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-9hv5_es1/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-9hv5_es1/remote.git\n   d6e8970..459ff87  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "clone",
+      "-q",
+      "--branch",
+      "spacedock-state/test",
+      "$SCRATCH/state-guard-9hv5_es1/remote.git",
+      "$SCRATCH/state-guard-9hv5_es1/fresh-clone"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-9hv5_es1/fresh-clone"
+    ],
+    "exit": 1,
+    "stdout": "state guard: unguarded: pre-commit missing\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-okk3gde7/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-okk3gde7/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-okk3gde7/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-okk3gde7/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 3d48074 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 3d48074)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-okk3gde7/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "add",
+      "--",
+      "transient.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "8a5847d6fbb075dfb29c338a5670e2d5c786aa32\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "add",
+      "--",
+      "transient.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "a68ad2874a198c52003c8eb90da484cc917e8826\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "--refuse",
+      "tailnet-host,private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 8a5847d6fbb0; \"transient.txt\" adds a private-slug identifier\nstate guard: refused; commit 8a5847d6fbb0; \"transient.txt\" adds a tailnet-host identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 8a5847d6fbb0 c878c4c80323. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-okk3gde7/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-okk3gde7/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "a68ad2874a198c52003c8eb90da484cc917e8826\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-ikhrqnob/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-ikhrqnob/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-ikhrqnob/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-ikhrqnob/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at d3d861c test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD d3d861c)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ikhrqnob/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-ikhrqnob/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-8je_uq8d/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-8je_uq8d/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-8je_uq8d/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-8je_uq8d/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at a5e0d92 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD a5e0d92)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-8je_uq8d/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "config",
+      "core.bigFileThreshold",
+      "64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-8je_uq8d/remote.git\n   6d7b4e5..d7074f3  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "379e3c7c1638a2d122f353141258c67ccc12842d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "1740b7bc5a22f68af3de66d0977ff9c7135eb136\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "379e3c7c1638a2d122f353141258c67ccc12842d",
+      "1740b7bc5a22f68af3de66d0977ff9c7135eb136"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/379e3c7c1638a2d122f353141258c67ccc12842d b/1740b7bc5a22f68af3de66d0977ff9c7135eb136\nindex 379e3c7..1740b7b 100644\nBinary files a/379e3c7c1638a2d122f353141258c67ccc12842d and b/1740b7bc5a22f68af3de66d0977ff9c7135eb136 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8je_uq8d/state",
+      "commit",
+      "-qm",
+      "test: changed text"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-6t7nlzeb/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-6t7nlzeb/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-6t7nlzeb/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-6t7nlzeb/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at fc75e06 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD fc75e06)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-6t7nlzeb/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "config",
+      "core.bigFileThreshold",
+      "64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-6t7nlzeb/remote.git\n   3f90c67..413bccf  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "379e3c7c1638a2d122f353141258c67ccc12842d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "84ca8067df2ff25f4f0f9cc0d4900ea8775eca84\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "379e3c7c1638a2d122f353141258c67ccc12842d",
+      "84ca8067df2ff25f4f0f9cc0d4900ea8775eca84"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/379e3c7c1638a2d122f353141258c67ccc12842d b/84ca8067df2ff25f4f0f9cc0d4900ea8775eca84\nindex 379e3c7..84ca806 100644\nBinary files a/379e3c7c1638a2d122f353141258c67ccc12842d and b/84ca8067df2ff25f4f0f9cc0d4900ea8775eca84 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "commit",
+      "-qm",
+      "test: changed text before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "413bccfd68604b9dd57907d3225995045c280e3b\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 8ca0f4cc19aa; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 8ca0f4cc19aa. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-6t7nlzeb/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-6t7nlzeb/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "413bccfd68604b9dd57907d3225995045c280e3b\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-hr1h0eb5/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-hr1h0eb5/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-hr1h0eb5/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-hr1h0eb5/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 53b5fbc test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 53b5fbc)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-hr1h0eb5/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-hr1h0eb5/remote.git\n   c533ef1..9f6e46e  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "aff56a8e6fc70a6741020f92af8ce3c79972f2be\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "aff56a8e6fc70a6741020f92af8ce3c79972f2be"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/aff56a8e6fc70a6741020f92af8ce3c79972f2be\nindex 0925ab2..aff56a8 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/aff56a8e6fc70a6741020f92af8ce3c79972f2be differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-hr1h0eb5/state",
+      "commit",
+      "-qm",
+      "test: changed text"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-y9519qn2/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-y9519qn2/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-y9519qn2/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-y9519qn2/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 760102e test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 760102e)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-y9519qn2/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "add",
+      "--",
+      ".gitattributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-y9519qn2/remote.git\n   115172a..31efa19  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0925ab26216dd71d243e201a537797042f7e7d83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "7e237a2e686de9dc0c07a8ab974b5fedfd0b930a\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "0925ab26216dd71d243e201a537797042f7e7d83",
+      "7e237a2e686de9dc0c07a8ab974b5fedfd0b930a"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/0925ab26216dd71d243e201a537797042f7e7d83 b/7e237a2e686de9dc0c07a8ab974b5fedfd0b930a\nindex 0925ab2..7e237a2 100644\nBinary files a/0925ab26216dd71d243e201a537797042f7e7d83 and b/7e237a2e686de9dc0c07a8ab974b5fedfd0b930a differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "commit",
+      "-qm",
+      "test: changed text before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "31efa19ce80c24b75cb280e44d8df6f7e9afeee7\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit d1aa9bda6958; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: d1aa9bda6958. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-y9519qn2/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y9519qn2/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "31efa19ce80c24b75cb280e44d8df6f7e9afeee7\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-3wt9tny0/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-3wt9tny0/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-3wt9tny0/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-3wt9tny0/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at d1899d1 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD d1899d1)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-3wt9tny0/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-3wt9tny0/remote.git\n   eb489db..38160f1  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "928a150de22929acb8c7aa454f5359f96dfeb1f4\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "34ddd41ed57aad3fad61ad598bef405e83d8025f\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "928a150de22929acb8c7aa454f5359f96dfeb1f4",
+      "34ddd41ed57aad3fad61ad598bef405e83d8025f"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/928a150de22929acb8c7aa454f5359f96dfeb1f4 b/34ddd41ed57aad3fad61ad598bef405e83d8025f\nindex 928a150..34ddd41 100644\nBinary files a/928a150de22929acb8c7aa454f5359f96dfeb1f4 and b/34ddd41ed57aad3fad61ad598bef405e83d8025f differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-3wt9tny0/state",
+      "commit",
+      "-qm",
+      "test: changed text"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-a85fjqzo/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-a85fjqzo/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-a85fjqzo/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-a85fjqzo/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 9100412 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 9100412)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-a85fjqzo/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-a85fjqzo/remote.git\n   7f71c3e..dcbff17  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "928a150de22929acb8c7aa454f5359f96dfeb1f4\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "0e5e83406da0f0e8c3bac0f7d49805435dfa0e83\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "928a150de22929acb8c7aa454f5359f96dfeb1f4",
+      "0e5e83406da0f0e8c3bac0f7d49805435dfa0e83"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/928a150de22929acb8c7aa454f5359f96dfeb1f4 b/0e5e83406da0f0e8c3bac0f7d49805435dfa0e83\nindex 928a150..0e5e834 100644\nBinary files a/928a150de22929acb8c7aa454f5359f96dfeb1f4 and b/0e5e83406da0f0e8c3bac0f7d49805435dfa0e83 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "commit",
+      "-qm",
+      "test: changed text before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "dcbff17cb210c669cf945ee5ef7c101c31bd86fb\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 1f3cd8cd320d; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 1f3cd8cd320d. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-a85fjqzo/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-a85fjqzo/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "dcbff17cb210c669cf945ee5ef7c101c31bd86fb\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-4y0zaa4t/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-4y0zaa4t/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-4y0zaa4t/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-4y0zaa4t/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 0d73ea3 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 0d73ea3)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-4y0zaa4t/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-4y0zaa4t/remote.git\n   ef66ee3..0579958  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3e8a4a3efb4955b4aef9ab104f610d1800db773d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "e9b04f4250a0e8dce98633a05d54575454819919\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "3e8a4a3efb4955b4aef9ab104f610d1800db773d",
+      "e9b04f4250a0e8dce98633a05d54575454819919"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/3e8a4a3efb4955b4aef9ab104f610d1800db773d b/e9b04f4250a0e8dce98633a05d54575454819919\nindex 3e8a4a3..e9b04f4 100644\nBinary files a/3e8a4a3efb4955b4aef9ab104f610d1800db773d and b/e9b04f4250a0e8dce98633a05d54575454819919 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-4y0zaa4t/state",
+      "commit",
+      "-qm",
+      "test: changed text"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-ah_5dm6f/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-ah_5dm6f/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-ah_5dm6f/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-ah_5dm6f/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at c6593db test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD c6593db)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-ah_5dm6f/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-ah_5dm6f/remote.git\n   760f720..99dbc60  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "rev-parse",
+      "HEAD:payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "3e8a4a3efb4955b4aef9ab104f610d1800db773d\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "rev-parse",
+      ":payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "6ec9f4e3444723f5839ffca25b5a7de54e414ef0\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "diff",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--no-color",
+      "-U0",
+      "3e8a4a3efb4955b4aef9ab104f610d1800db773d",
+      "6ec9f4e3444723f5839ffca25b5a7de54e414ef0"
+    ],
+    "exit": 0,
+    "stdout": "diff --git a/3e8a4a3efb4955b4aef9ab104f610d1800db773d b/6ec9f4e3444723f5839ffca25b5a7de54e414ef0\nindex 3e8a4a3..6ec9f4e 100644\nBinary files a/3e8a4a3efb4955b4aef9ab104f610d1800db773d and b/6ec9f4e3444723f5839ffca25b5a7de54e414ef0 differ\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "commit",
+      "-qm",
+      "test: changed text before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "99dbc604e807f59df6ad7f6d7699ca094cb8ca70\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 7798b557f43a; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 7798b557f43a. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-ah_5dm6f/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-ah_5dm6f/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "99dbc604e807f59df6ad7f6d7699ca094cb8ca70\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-fzd0avi6/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-fzd0avi6/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-fzd0avi6/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-fzd0avi6/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at d6c14b2 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD d6c14b2)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-fzd0avi6/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-fzd0avi6/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-lyrzzgve/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-lyrzzgve/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-lyrzzgve/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-lyrzzgve/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at fc0e29d test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD fc0e29d)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-lyrzzgve/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "add",
+      "--",
+      "invented-2e418e3b0f81423ea8ae41c6cb4aed32/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-lyrzzgve/state",
+      "commit",
+      "-qm",
+      "test: private path"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug]/public.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-xee6ctzp/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-xee6ctzp/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-xee6ctzp/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-xee6ctzp/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 7990651 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 7990651)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-xee6ctzp/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "add",
+      "--",
+      "invented-3cff60bdc4134d2ba0cd9cf2de054ec3/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "cd97c092180c37a17233f40b4d926ce1614a79a6\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 4a1d5346dd30; \"[private-slug]/public.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 4a1d5346dd30. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-xee6ctzp/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-xee6ctzp/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "cd97c092180c37a17233f40b4d926ce1614a79a6\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-12mvvqhv/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-12mvvqhv/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-12mvvqhv/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-12mvvqhv/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at af81603 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD af81603)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-12mvvqhv/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "add",
+      "--",
+      "invented-672438a06187440eaca967bc3837648a.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-12mvvqhv/state",
+      "commit",
+      "-qm",
+      "test: private path"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-wue62ovg/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-wue62ovg/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-wue62ovg/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-wue62ovg/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 030c98f test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 030c98f)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-wue62ovg/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "add",
+      "--",
+      "invented-f7b9447e33f441f2a1d63a5d68ada9a4.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "ae18735421e8c470af0e60129855f71145a2de9a\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 405987cfdb19; \"[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 405987cfdb19. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-wue62ovg/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-wue62ovg/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "ae18735421e8c470af0e60129855f71145a2de9a\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-zhheg1bh/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-zhheg1bh/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-zhheg1bh/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-zhheg1bh/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 3051e8a test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 3051e8a)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-zhheg1bh/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "add",
+      "--",
+      "public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-zhheg1bh/remote.git\n   e9888f7..a7b51be  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "mv",
+      "--",
+      "public.md",
+      "invented-941ddc64b8b74d138d6dffb9f1e1b554/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M"
+    ],
+    "exit": 0,
+    "stdout": "R100\tpublic.md\tinvented-941ddc64b8b74d138d6dffb9f1e1b554/public.md\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-zhheg1bh/state",
+      "commit",
+      "-qm",
+      "test: private path"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug]/public.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-iktusqs0/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-iktusqs0/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-iktusqs0/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-iktusqs0/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 18b0ae0 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 18b0ae0)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-iktusqs0/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "add",
+      "--",
+      "public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-iktusqs0/remote.git\n   c068fc0..b8d52ae  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "mv",
+      "--",
+      "public.md",
+      "invented-9574a56445354beaa1876f1da17f7723/public.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "diff",
+      "--cached",
+      "--name-status",
+      "-M"
+    ],
+    "exit": 0,
+    "stdout": "R100\tpublic.md\tinvented-9574a56445354beaa1876f1da17f7723/public.md\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "commit",
+      "-qm",
+      "test: private path before install"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "b8d52ae8b6ef34eaa0098260fb4700c0cc2666be\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 568dd664851d; \"[private-slug]/public.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 568dd664851d. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$SCRATCH/state-guard-iktusqs0/remote.git'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-iktusqs0/state",
+      "ls-remote",
+      "origin"
+    ],
+    "exit": 0,
+    "stdout": "b8d52ae8b6ef34eaa0098260fb4700c0cc2666be\trefs/heads/spacedock-state/test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-y6qdjz17/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-y6qdjz17/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-y6qdjz17/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-y6qdjz17/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at f19fd12 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD f19fd12)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-y6qdjz17/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-y6qdjz17/state"
+    ],
+    "exit": 1,
+    "stdout": "state guard: unguarded: pre-commit missing\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "--refuse",
+      "home"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-y6qdjz17/state"
+    ],
+    "exit": 1,
+    "stdout": "state guard: partial: identifier list absent\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "add",
+      "--",
+      "derived.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: partial: identifier list absent\nstate guard: refused; \"derived.txt\" adds a home identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-y6qdjz17/state",
+      "config",
+      "--get",
+      "core.hooksPath"
+    ],
+    "exit": 0,
+    "stdout": "$SCRATCH/state-guard-y6qdjz17/product/.git/worktrees/state/state-guard\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-y6qdjz17/state"
+    ],
+    "exit": 1,
+    "stdout": "state guard: stale: installed copy differs from this package\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-99ricd6o/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-99ricd6o/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-99ricd6o/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-99ricd6o/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at b1d3dc3 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD b1d3dc3)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-99ricd6o/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-path",
+      "hooks"
+    ],
+    "exit": 0,
+    "stdout": "$SCRATCH/state-guard-99ricd6o/product/.git/hooks\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-99ricd6o/state"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "add",
+      "--",
+      "home.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "shared-hook-ranstate guard: warning; \"home.txt\" adds a email identifier\nstate guard: warning; \"home.txt\" adds a home identifier\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "--refuse",
+      "home,email"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "add",
+      "--",
+      "home.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "shared-hook-ranstate guard: refused; \"home.txt\" adds a email identifier\nstate guard: refused; \"home.txt\" adds a home identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "add",
+      "private.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "commit",
+      "-qm",
+      "test: product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "shared-hook-ran"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-99ricd6o/product",
+      "config",
+      "--get",
+      "core.hooksPath"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-_o3i76e5/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-_o3i76e5/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-_o3i76e5/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-_o3i76e5/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at da70fa2 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD da70fa2)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-_o3i76e5/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-path",
+      "hooks"
+    ],
+    "exit": 0,
+    "stdout": "$SCRATCH/state-guard-_o3i76e5/product/.git/hooks\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "--shared",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "check",
+      "$SCRATCH/state-guard-_o3i76e5/state"
+    ],
+    "exit": 0,
+    "stdout": "state guard: guarded (email=warn, home=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Everything up-to-date\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "add",
+      "unchecked.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/product",
+      "commit",
+      "-qm",
+      "test: product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "add",
+      "--",
+      "refused.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-_o3i76e5/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"refused.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-2cn7ecc4/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-2cn7ecc4/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-2cn7ecc4/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-2cn7ecc4/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 2bd06bf test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 2bd06bf)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-2cn7ecc4/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "add",
+      "--",
+      "old.txt",
+      "old.gz",
+      "old.bin"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "commit",
+      "-qm",
+      "test: old evidence"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-2cn7ecc4/remote.git\n   646aa76..b0cc35e  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "mv",
+      "--",
+      "old.txt",
+      "archive/old.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "mv",
+      "--",
+      "old.gz",
+      "archive/old.gz"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "mv",
+      "--",
+      "old.bin",
+      "archive/old.bin"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "commit",
+      "-qm",
+      "test: archive unchanged evidence"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-2cn7ecc4/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-2cn7ecc4/remote.git\n   b0cc35e..15e728d  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$SCRATCH/state-guard-8p506hut/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$SCRATCH/state-guard-8p506hut/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "remote",
+      "add",
+      "origin",
+      "$SCRATCH/state-guard-8p506hut/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$SCRATCH/state-guard-8p506hut/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 0ff8bb6 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 0ff8bb6)\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-8p506hut/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-8p506hut/state"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "add",
+      "--",
+      "invented-a37752eb43384f0ba5779275586418d1.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"[private-slug].md\" adds a private-slug identifier\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; commit 7ce46a1a8b0f; \"[private-slug].md\" adds a private-slug identifier\nTo $SCRATCH/state-guard-8p506hut/remote.git\n   e5b01bd..7ce46a1  spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "~/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-state-branch-writes-carry-no-private-identifiers/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "--refuse",
+      "private-slug"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=refuse, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "rm",
+      "--",
+      "invented-a37752eb43384f0ba5779275586418d1.md"
+    ],
+    "exit": 0,
+    "stdout": "rm 'invented-a37752eb43384f0ba5779275586418d1.md'\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "commit",
+      "-qm",
+      "test: remove private path"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "$SCRATCH/state-guard-8p506hut/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $SCRATCH/state-guard-8p506hut/remote.git\n   7ce46a1..8bd7060  spacedock-state/test -> spacedock-state/test\n"
+  }
+]

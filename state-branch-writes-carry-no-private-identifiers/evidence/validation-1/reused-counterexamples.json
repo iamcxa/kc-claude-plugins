@@ -1,0 +1,40 @@
+{
+  "rerun": false,
+  "source": "evidence/implementation-1/repair-1864/mutations/results.json",
+  "cases": [
+    {
+      "name": "remove-no-hunk-fallback",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_no_hunk_changed_text_refuses_commit_and_push",
+      "exit": 1,
+      "evidence": "remove-no-hunk-fallback.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "remove-path-matching",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files",
+      "exit": 1,
+      "evidence": "remove-path-matching.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "drop-same-oid-renames",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_path_identifiers_refuse_new_and_renamed_files",
+      "exit": 1,
+      "evidence": "drop-same-oid-renames.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    },
+    {
+      "name": "rescan-unchanged-content",
+      "status": "passed",
+      "test": "test_state_guard.StateGuardTests.test_public_archive_renames_preserve_old_text_gzip_and_binary_content",
+      "exit": 1,
+      "evidence": "rescan-unchanged-content.log",
+      "claim": "Removing the named repair makes the real hook-boundary test fail."
+    }
+  ],
+  "original_writer_mutations": "evidence/implementation-1/falsifiers.json",
+  "reason": "Existing negative evidence is applicable; all named behavior at candidate rerun separately."
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "name": "folder",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "basename",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "newline-name",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "case-folded-folder",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "same-blob-rename",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "no-hunk-old-binary",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "no-hunk-size",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "no-hunk-global-attributes",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "binary",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "nested-gzip",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "symlink-target",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "transient-deletion",
+    "status": "passed",
+    "commit_exit": 1,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true
+  },
+  {
+    "name": "merge-commit",
+    "status": "passed",
+    "merge_exit": 0,
+    "push_exit": 1,
+    "remote_unchanged": true,
+    "matched_text_absent": true,
+    "limit": "Git merge creates a local commit without pre-commit; pre-push refuses both incoming and merge commits."
+  }
+]

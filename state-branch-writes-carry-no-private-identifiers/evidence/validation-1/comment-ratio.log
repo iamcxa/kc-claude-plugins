@@ -1,0 +1,7 @@
+code lines 666, comment lines 7, 1.1%
+   3/ 268 kc-dev-flow-2/scripts/state_guard.py
+   1/   5 kc-dev-flow-2/scripts/dispatch_records.py
+   1/  11 kc-dev-flow-2/scripts/dispatch_stage.py
+   1/  16 kc-dev-flow-2/scripts/scratch.py
+   1/ 285 kc-dev-flow-2/scripts/test_state_guard.py
+maximum 5% (package default) met

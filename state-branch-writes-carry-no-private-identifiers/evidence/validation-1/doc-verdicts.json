@@ -1,0 +1,47 @@
+[
+  {
+    "file": "docs/adr/0045-validation-reruns-require-a-later-recorded-captain-ruling.md",
+    "verdict": "unaffected",
+    "reason": "Ruling/history predicates unchanged."
+  },
+  {
+    "file": "docs/adr/0048-paseo-stage-workers-complete-by-final-reply-and-hand-publication-to-fo.md",
+    "verdict": "unaffected",
+    "reason": "Final-reply and publication authority unchanged."
+  },
+  {
+    "file": "docs/adr/0070-stage-worker-dispatches-are-built-by-a-package-script-that-writes-their-record.md",
+    "verdict": "unaffected",
+    "reason": "Write/check/build and stamp ordering preserved; representation is governed by ADR 0087."
+  },
+  {
+    "file": "docs/adr/0074-special-role-calls-are-built-by-the-stage-dispatch-script.md",
+    "verdict": "unaffected",
+    "reason": "Commit-before-prompt and model floor preserved; ADR 0087 explicitly splits saved record and runtime prompt."
+  },
+  {
+    "file": "docs/adr/0077-a-task-budget-counts-cycles-and-past-it-the-question-returns-to-the-captain.md",
+    "verdict": "unaffected",
+    "reason": "Budget counting unchanged."
+  },
+  {
+    "file": "docs/adr/0079-dispatch-close-out-retains-public-evidence-and-removes-scratch.md",
+    "verdict": "unaffected",
+    "reason": "Preservation, thresholds and close-out boundaries preserved; changed text sealing is governed by ADR 0087."
+  },
+  {
+    "file": "docs/adr/0085-a-budget-may-bound-ideation-rounds-and-the-timeline-prints-each-round.md",
+    "verdict": "unaffected",
+    "reason": "Ideation counting unchanged."
+  },
+  {
+    "file": "docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "verdict": "updated",
+    "reason": "New writer and opt-in guard ruling, live-install and metadata limits documented."
+  },
+  {
+    "file": "learning.md",
+    "verdict": "unaffected",
+    "reason": "No README shortening or new --names output kind; parser entry points remain unchanged."
+  }
+]

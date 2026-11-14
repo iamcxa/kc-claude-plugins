@@ -1,0 +1,39 @@
+[
+  {
+    "name": "AC-1 real dispatch and sealed remote bytes",
+    "status": "passed",
+    "evidence": "acceptance-acceptance.json"
+  },
+  {
+    "name": "AC-2 historical compatibility",
+    "status": "passed",
+    "note": "Seven record checks pass at baseline and candidate; 3153 digests match, one pre-existing mismatch remains.",
+    "evidence": "acceptance-acceptance.json"
+  },
+  {
+    "name": "AC-3 refusal, accepted push and unguarded detection",
+    "status": "passed",
+    "evidence": "repair-acceptance-results.json"
+  },
+  {
+    "name": "AC-4 external owner-list scan",
+    "status": "passed",
+    "note": "Owner-list completeness remains its stated limit.",
+    "evidence": "ac4.log"
+  },
+  {
+    "name": "AC-5 state modes and product isolation",
+    "status": "passed",
+    "evidence": "repair-acceptance-results.json"
+  },
+  {
+    "name": "Independent attack matrix",
+    "status": "passed",
+    "evidence": "adversarial-results.json"
+  },
+  {
+    "name": "Live installation and metadata decision",
+    "status": "untested",
+    "note": "Reserved to the Captain; no live config or hook writes."
+  }
+]

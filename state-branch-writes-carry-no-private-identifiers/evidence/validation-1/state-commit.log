@@ -1,0 +1,5 @@
+Command: spacedock state commit state-branch-writes-carry-no-private-identifiers --workflow-dir "$WORKFLOW"
+Exit: 1
+spacedock state commit: git commit failed:
+fatal: Unable to create "$GIT_COMMON_DIR/worktrees/-spacedock-state3/index.lock": Operation not permitted
+No fallback, escalation, retry or push attempted; FO commits and syncs the scoped state paths.

@@ -1,0 +1,18 @@
+{
+  "reviewed": true,
+  "product_comment_verdict": "Seven ADR references explain the binding decision; no prohibited narrative found.",
+  "lines": [
+    "+# 0087. Public state writes carry no personal or private identifiers, and a per-checkout git guard refuses them",
+    "+## Status",
+    "+## Context",
+    "+## Decision",
+    "+## Consequences",
+    "+# see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "+    # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "+        # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "+#!/usr/bin/env python3",
+    "+    # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "+    # see docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md",
+    "+#!/usr/bin/env python3"
+  ]
+}

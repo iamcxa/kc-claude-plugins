@@ -1,0 +1,4564 @@
+[
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at b88a0d5 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD b88a0d5)\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "c0f7f59f7fbd2e09687a4088d1c67aa33099793b\n",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-491d650aefd4429183d92a5ce7783a81/record.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug]/record.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-491d650aefd4429183d92a5ce7783a81/record.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"[private-slug]/record.md\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit e5354bcc9a7e; \"[private-slug]/record.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: e5354bcc9a7e. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "c0f7f59f7fbd2e09687a4088d1c67aa33099793b\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 03d57b2 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 03d57b2)\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "090d41c7b50439bd024c240d0c20d363d0016e54\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-8f83154cc41f43a9a85118005e904fb9.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-8f83154cc41f43a9a85118005e904fb9.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"[private-slug].md\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 871065aee646; \"[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 871065aee646. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "basename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "090d41c7b50439bd024c240d0c20d363d0016e54\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 9927594 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 9927594)\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "f4132cc8561fbe13a41d3515ab46976831b2ef2c\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "prefix\ninvented-c84dd575e4ea4594af25a27802436454.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"prefix\\n[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "prefix\ninvented-c84dd575e4ea4594af25a27802436454.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"prefix\\n[private-slug].md\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 07eafa6ae2ba; \"prefix\\n[private-slug].md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 07eafa6ae2ba. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "newline-name",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "f4132cc8561fbe13a41d3515ab46976831b2ef2c\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 88a6ff3 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 88a6ff3)\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "old.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "91e1a259d984516fd39abc725fea6bf4dc1925d4\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "mv",
+      "old.txt",
+      "INVENTED-6E675F821E704603B721D91D3564AFBC/record.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "INVENTED-6E675F821E704603B721D91D3564AFBC/record.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug]/record.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "INVENTED-6E675F821E704603B721D91D3564AFBC/record.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"[private-slug]/record.md\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 4e1af4392331; \"[private-slug]/record.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 417d548c6a02 4e1af4392331. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "case-folded-folder",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "91e1a259d984516fd39abc725fea6bf4dc1925d4\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 6f6e173 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 6f6e173)\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "old.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "b8af7d23200bd60b115a58853524e6bb7c8e1d60\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "mv",
+      "old.txt",
+      "invented-74a25440e64c4a2888e26b2e9b5b2201/renamed.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-74a25440e64c4a2888e26b2e9b5b2201/renamed.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"[private-slug]/renamed.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "invented-74a25440e64c4a2888e26b2e9b5b2201/renamed.md"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"[private-slug]/renamed.md\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 99043d840313; \"[private-slug]/renamed.md\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: c3a1a7987560 99043d840313. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "same-blob-rename",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "b8af7d23200bd60b115a58853524e6bb7c8e1d60\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 3d3207c test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 3d3207c)\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "dd1bcf21ca1cf4eaa3488c3c63d01d1857caf9e9\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.txt\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 46945d5117b4; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: a1107c4a7c00 46945d5117b4. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "no-hunk-old-binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "dd1bcf21ca1cf4eaa3488c3c63d01d1857caf9e9\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at c07e72a test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD c07e72a)\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "core.bigFileThreshold",
+      "64"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "fa1a3154b88f04e4e6f3209fd57a051033f77afa\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.txt\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit b2e1c402b92b; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: bfbc35016289 b2e1c402b92b. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "no-hunk-size",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "fa1a3154b88f04e4e6f3209fd57a051033f77afa\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 4dc75c0 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 4dc75c0)\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "core.attributesFile",
+      "$CASE/attributes"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "b2663d44b7494da53753c6b45cbb76250a08b177\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.txt\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 5cbe0db4accf; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 33cf3d836751 5cbe0db4accf. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "no-hunk-global-attributes",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "b2663d44b7494da53753c6b45cbb76250a08b177\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 95acfa2 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 95acfa2)\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "d3c4595eabc4df521207991b68e59f04be512f99\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.bin"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.bin\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.bin"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.bin\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 31ba0b306ce8; \"payload.bin\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 31ba0b306ce8. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "binary",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "d3c4595eabc4df521207991b68e59f04be512f99\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at e5890ef test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD e5890ef)\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "a31cbc8d564cec7e67b6bf8e28c108909dbb539c\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.gz"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.gz\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.gz"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.gz\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 544335583c03; \"payload.gz\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 544335583c03. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "nested-gzip",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "a31cbc8d564cec7e67b6bf8e28c108909dbb539c\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 4f96eb9 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 4f96eb9)\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "f67879fb3b4806a6605b48949a0c3de27cbf9168\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "evidence-link"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"evidence-link\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "evidence-link"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"evidence-link\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 8d4b7cbac940; \"evidence-link\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 8d4b7cbac940. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "symlink-target",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "f67879fb3b4806a6605b48949a0c3de27cbf9168\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 45b2769 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 45b2769)\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "caedc3d8ac593fd6e178f9e97379595f700301b2\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--warn",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=warn, email=warn, private-repo=warn, private-slug=warn, tailnet-host=warn)\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "state guard: warning; \"payload.txt\" adds a private-slug identifier\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "payload.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 0cd17005906c; \"payload.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 0cd17005906c bc5086d2a613. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "transient-deletion",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "caedc3d8ac593fd6e178f9e97379595f700301b2\n",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "-b",
+      "main",
+      "$CASE/product"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "--bare",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "remote",
+      "add",
+      "origin",
+      "$CASE/remote.git"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "add",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "commit",
+      "-qm",
+      "test: seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "worktree",
+      "add",
+      "--detach",
+      "$CASE/state"
+    ],
+    "exit": 0,
+    "stdout": "HEAD is now at 78ebdf1 test: seed\n",
+    "stderr": "Preparing worktree (detached HEAD 78ebdf1)\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "--orphan",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "rm",
+      "-rf",
+      "."
+    ],
+    "exit": 0,
+    "stdout": "rm 'seed'\n",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "seed"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To $CASE/remote.git\n * [new branch]      spacedock-state/test -> spacedock-state/test\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/product",
+      "config",
+      "extensions.worktreeConfig",
+      "true"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "~/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "$CODE/kc-dev-flow-2/scripts/state_guard.py",
+      "install",
+      "$CASE/state",
+      "--refuse",
+      "home,email,private-repo,private-slug,tailnet-host"
+    ],
+    "exit": 0,
+    "stdout": "state guard: installed (home=refuse, email=refuse, private-repo=refuse, private-slug=refuse, tailnet-host=refuse)\n",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "1a2a6430a4cb19aab7c9ba40e38c2ad2eca0a4ee\n",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "-b",
+      "synthetic-side"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to a new branch 'synthetic-side'\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "add",
+      "--",
+      "merge.txt"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "commit",
+      "-qm",
+      "test: state"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "checkout",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "Switched to branch 'spacedock-state/test'\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "merge",
+      "--no-ff",
+      "synthetic-side",
+      "-m",
+      "test: merge"
+    ],
+    "exit": 0,
+    "stdout": "Merge made by the 'ort' strategy.\n merge.txt | 1 +\n 1 file changed, 1 insertion(+)\n create mode 100644 merge.txt\n",
+    "stderr": ""
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/state",
+      "push",
+      "origin",
+      "spacedock-state/test"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": "state guard: refused; commit 0c877365c17d; \"merge.txt\" adds a private-slug identifier\nstate guard: refused; commit cb1af36ac25e; \"merge.txt\" adds a private-slug identifier\nWrite the home directory as ~ or a state-relative path; drop private names, or record Not archived (private): <what>; reproduce: <command>. Then commit again.\nUnpushed commits checked: 0c877365c17d cb1af36ac25e. Rewrite locally only when all are yours; if any belongs to a peer, stop and ask FO.\nerror: failed to push some refs to '$CASE/remote.git'\n"
+  },
+  {
+    "case": "merge-commit",
+    "argv": [
+      "git",
+      "-C",
+      "$CASE/remote.git",
+      "rev-parse",
+      "spacedock-state/test"
+    ],
+    "exit": 0,
+    "stdout": "1a2a6430a4cb19aab7c9ba40e38c2ad2eca0a4ee\n",
+    "stderr": ""
+  }
+]

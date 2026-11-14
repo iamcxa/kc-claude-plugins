@@ -1,0 +1,101 @@
+{
+  "pr": {
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/871",
+    "number": 871,
+    "state": "open",
+    "merged": false,
+    "mergeable": true,
+    "draft": true,
+    "body": "Merging stops the home directory being written by the package's dispatch records and newly sealed text evidence. No push is refused until the guard is installed; every class defaults to warn.\n\nStage and special-role runtime prompts retain real paths. Existing absolute records and new `~/` records both verify, and evidence matching its existing digest is preserved. New or changed UTF-8 evidence, including supplied gzip text, is rewritten before hashing and compression.\n\nThe optional installer puts pre-commit and pre-push hooks on one linked state worktree, using an identifier list outside repositories. Hooks scan path names, added text, binary bytes and gzip content; push checks examine each commit, so a later deletion cannot hide a transient identifier. Refusals name the file, class and commit without printing matched text. A changed blob with no Git text hunks is scanned whole. Same-blob renames have their paths checked without rescanning inherited content. Missing, stale or partial protection is reported before dispatch. The shared-hook alternative preserves existing hooks and limits the identifier scan to state branches.\n\nValidation at `d2d5bec640f0a61d3e044877b8443cdfdc03faa7`: all 13 guard tests pass, with no skips; AC-3 and AC-5 were replayed through real installed hooks and local remotes. Two new regression methods fail on the exact old guard at `0c68231ca` (14 commit/push cases), and four mutations remove the new protections or break archive-rename compatibility and are caught. Path refusals assert that diagnostics contain the class and a sanitized path, with no matched literal. The repair changes only the guard and its test. Original dispatch, seal and seven-folder compatibility evidence is retained at the prior candidate; its one historical digest mismatch remains unchanged. No live installation, product push or PR creation was performed by the worker. No version bump.\n\nKnown residuals:\n- Gate summaries are stored verbatim by Spacedock (inferred from stored bytes, not traced in its source).\n- Commit-metadata email is unchanged.\n- The Captain still decides live installation and initial refusing classes; warn-mode classes can still reach the remote.\n- The owner's list covers four adopters' names-only slug lists; the fifth adopter's names and hostnames outside its pattern are absent.\n- Rewriting retained patches may prevent verbatim application. Binary evidence is left unchanged for the guard to inspect.\n\nCI cost per PR: not measured; CI configuration is unchanged.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n",
+    "title": "feat(kc-dev-flow-2): sanitize public state writes and add opt-in git guards",
+    "base": "main",
+    "base_sha": "c2f035b6612f5edb42220576b3414e993531ffd6",
+    "head": "spacedock-ensign/state-branch-writes-carry-no-private-identifiers",
+    "head_sha": "d2d5bec640f0a61d3e044877b8443cdfdc03faa7",
+    "head_repo_id": 1176993017,
+    "head_repo_full_name": "iamcxa/kc-claude-plugins",
+    "merge_commit_sha": "8a81470b5d4243c0f2584827e69e9d40b4878c40",
+    "user": {
+      "login": "iamcxa",
+      "name": "iamcxa",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/1522808?v=4",
+      "id": 1522808
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-11-14T06:20:07Z",
+    "updated_at": "2026-11-14T06:20:07Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 2,
+    "changed_files": 9,
+    "additions": 815,
+    "deletions": 21,
+    "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/871",
+    "display_title": "feat(kc-dev-flow-2): sanitize public state writes and add opt-in git guards"
+  },
+  "comments": {
+    "comments": [],
+    "url": "https://github.com/iamcxa/kc-claude-plugins/pull/871",
+    "title": "iamcxa/kc-claude-plugins PR #871 comments",
+    "display_url": "https://github.com/iamcxa/kc-claude-plugins/pull/871",
+    "display_title": "iamcxa/kc-claude-plugins PR #871 comments"
+  },
+  "runs": {
+    "workflow_runs": [
+      {
+        "id": 43565829892,
+        "name": "kc-dev-flow release gate",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 1663,
+        "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829892/jobs",
+        "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829892/logs",
+        "workflow_id": 340605043
+      },
+      {
+        "id": 43565829858,
+        "name": "adr-path-check",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 141,
+        "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829858/jobs",
+        "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829858/logs",
+        "workflow_id": 392075364
+      },
+      {
+        "id": 43565829950,
+        "name": "docs site",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 225,
+        "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829950/jobs",
+        "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829950/logs",
+        "workflow_id": 405868116
+      },
+      {
+        "id": 43565829835,
+        "name": "marketplace version parity",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 2348,
+        "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829835/jobs",
+        "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829835/logs",
+        "workflow_id": 286621000
+      },
+      {
+        "id": 43565829925,
+        "name": "kc-dev-flow-2 tests",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 786,
+        "jobs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829925/jobs",
+        "logs_url": "https://api.github.com/repos/iamcxa/kc-claude-plugins/actions/runs/43565829925/logs",
+        "workflow_id": 365763085
+      }
+    ]
+  }
+}
