@@ -1,7 +1,7 @@
 ---
 id:
 title: Would naming the shared assumption after two failed fixes have found the later cause on 5 archived tasks (read-only replay)
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
