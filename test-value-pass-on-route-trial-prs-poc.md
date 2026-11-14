@@ -18,6 +18,17 @@ gates:
                 id: briefing:test-value-pass-on-route-trial-prs-poc:backlog:attempt-1:revision-1
                 digest: sha256:972af36056bc1bb6e9b282a445450aeb28a2fa15a197ef3688edc3957f7c9e91
                 room-ref: ./test-value-pass-on-route-trial-prs-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:test-value-pass-on-route-trial-prs-poc:backlog:1
+                briefing: briefing:test-value-pass-on-route-trial-prs-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-11-14T02:33:33.561421Z"
+                decision: approve
+                reason: 'Captain 「三張都准入，預算照你的提議」 (chat with this FO, 2026-11-14) to the bound backlog question: selects profile poc and accepts outcome, Non-goals, Stop condition, AC-1 and the Budget of 1 implementation and 1 validation cycles as filed.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 The package holds 1,455 test functions in 24,684 test lines against 10,728 product lines; 258 use mocks or fakes and 21 are text containment; two tasks were blocked by text-shape assertions in one file in one evening (brief C3, figures from test-audit.md and proposal.md, not re-measured here). Nothing at write time asks whether a new test fails when the behaviour breaks.
