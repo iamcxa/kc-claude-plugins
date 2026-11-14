@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:attempt-1:revision-1",
+  "question": "Approve this three-file design, with the release-order decision D1 left to the Captain and the later class flips run by FO under the reform session's ruling? Not asked of the Captain: decided by FO under his standing grant inside the reform session's scope; approving allows implementation and installs or flips nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0b359591d03ac1a42e8eb5fb2bb5e46181e1c0e6/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo.md",
+      "rev": "sha256:411501fda72a5ffcd89dfb061aaf5a119651a38ee040ad608416b53053f2d659",
+      "mediaType": "text/markdown",
+      "summary": "Design gate under the Captain's grant; design check exit 0 (FO run 2026-11-14). Premise corrected by the design: the delivery-gate checks accept a home directory written as a tilde; the absolute form came from the validation stage's acceptance rule. Change: one sentence in the validation principles, the state guard reads gzip header names, and its test; no workflow text, no word budget change, no ADR; no file shared with open pull request 869 (the other First Officer was sent the list). By the design's 200-commit replay the private-repo class can be set to refuse once this change's release is synced; the home class stays at warn after this merges and needs four conditions the design lists. Carved out: D1, the order of the held release against this change, is the Captain's and the reform session is asking him; FO takes no step on that release. D2: FO runs each later reinstall when its condition is met, telling the other First Officer first and sending the reform session the check line and the replay count before the flip. Confirmed by the reform session (message 77b18f0b)."
+    }
+  ]
+}

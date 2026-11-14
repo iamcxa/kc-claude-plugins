@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo-ideation-1
+              briefing:
+                id: briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:ideation:attempt-1:revision-1
+                digest: sha256:ada38ecbe7b84eb3b3fac33923eff2307eac2534c444ff85a55ae7e2da247b8f
+                room-ref: ./gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo/review/ideation/briefing-1
 started: 2026-11-14T09:53:13Z
 ---
 
