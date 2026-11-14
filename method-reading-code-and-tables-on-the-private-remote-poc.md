@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-method-reading-code-and-tables-on-the-private-remote-poc
-pr:
+pr: local-merge:2b391a40f926646b6be949cb2cf07466005e277c
 gates:
     version: 1
     records:
@@ -55,6 +55,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-11-14T11:51:42Z
+mod-block: merge:pr-merge
 ---
 
 The day's main result, two readings of whether an agent given the method does better than one given the task in plain words, exists on one machine only: its cell, grader changes, readings and final tables were committed after the push that carried the earlier code, and live on a laptop-only branch beside the raw runs.
