@@ -32,6 +32,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-11-14T12:18:22Z
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
