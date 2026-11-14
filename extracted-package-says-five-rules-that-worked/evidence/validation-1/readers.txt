@@ -1,0 +1,7 @@
+Fresh readers run by the validator on the clean host, 2026-11-14 22:00 to 22:01 local, Claude Code 2.1.311, claude-sonnet-5-5,
+files given as an explicit folder, only Read and Glob allowed, Bash/Skill/Write/Edit/web disallowed.
+Contamination check (parsed every tool_use in each transcript): every run made 1 Glob and 6 Read calls, all inside its own folder; 0 Skill calls; 0 reads of the plugin cache.
+Runs kept: S6 at base x2, at not-proposed x2, at candidate x2; full First Officer scenario set at candidate x1; worker set plus one added control (W2-control: 8 of 60 minutes, on track) at candidate x1. None discarded.
+S6 tally (answer mentions kept results / shared assumption / re-cut-continue-close / the three worth answers):
+  base 2/2, 0/2, 0/2, 0/2;  not-proposed 0/2, 2/2, 2/2, 0/2;  candidate 2/2, 2/2, 2/2, 0/2.
+Not archived (private): reader answers, transcripts, prompts and reader folders quote package text; reproduce: build the six-file First Officer folder and the six-file ideation worker folder from git archive of each SHA, then claude -p with the author's fo-prompt, worker-prompt or s6-prompt, --allowedTools Read Glob.

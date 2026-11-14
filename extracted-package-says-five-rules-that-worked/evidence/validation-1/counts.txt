@@ -1,0 +1,14 @@
+Word counts measured by the validator, 2026-11-14, at base 7e0f9c2, not-proposed cff6d61, candidate 17a4ff1.
+Commands: wc -w over the First Officer's six-file set (workflow text as README.md, package README, peers and learn extensions, the kc-dev-flow-2 mod, the dev skill);
+spacedock dispatch show-stage-def --stage <stage> | wc -w over the workflow text; scripts/lint-skills.py run from a scratch layout with the package under kc-dev-flow-2/ beside scripts/skill-frontmatter-lint.sh.
+
+reader                 base   not-proposed  candidate  change(base->candidate)
+workflow text (lint)   6113   6186          6199       +86
+peers extension        1348   1334          1334       -14
+dev skill               801    763           763       -38
+First Officer total   11722  11743         11756       +34
+ideation stage text     694    724           724       +30
+implementation stage   1371   1398          1398       +27
+validation stage       1525   1552          1552       +27
+lint exit                 0      0             0
+Raise step at candidate: delta 86; captain field holds one quoted sentence only (the Captain's amendment 2 sentence).
