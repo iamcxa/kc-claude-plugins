@@ -1,0 +1,10 @@
+Checks on the stored runs at commit c4f37b507347bf969cb9b76d7963aee5d4270df7 (branch behaviour-first-reading, private working repository); exit codes only, no run content.
+Not archived (private): the stored runs, their transcripts, the table and the limits file; reproduce: the commands below in the private working repository at that commit.
+
+$ python3 -B behaviour/run_cell.py table behaviour/cells/ideation-flags-unprovable-criterion   (twice, outputs compared)
+cmp with the committed table.md: exit=0
+$ python3 -B behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion : exit=0
+suspected-key lines: 0
+$ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion : exit=0
+manifests in the results folder:       10 of cap 18
+git status of tracked files:        0 changed
