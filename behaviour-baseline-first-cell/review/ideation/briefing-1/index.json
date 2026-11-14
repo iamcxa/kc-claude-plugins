@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:behaviour-baseline-first-cell:ideation:attempt-1:revision-1",
+  "question": "Approve this design for building the runner and its one cell, with decision D1 (the credential for isolated runs) left to the Captain and no paid run before he answers? Not asked of the Captain: decided by FO under his standing grant inside the reform session's scope; approving starts implementation in the private working repository and merges nothing public.",
+  "artifacts": [
+    {
+      "id": "artifact:behaviour-baseline-first-cell:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/377e48309a66a2f438783e98292b56c2b389cf3a/behaviour-baseline-first-cell.md",
+      "rev": "sha256:e1dac4c244b5e18c8e3d017e34e0413c939d6e30438f3117778b7f0a8a0ee811",
+      "mediaType": "text/markdown",
+      "summary": "Design gate under the Captain's grant. kc-dev-flow-2/scripts/design_surfaces.py check: exit 0, design surfaces presentable. One runner file plus one cell in the private working repository; base = last release, candidate = main (D2, FO), no-package control; 9 runs scheduled, at most 10 of the cap of 18; caps 1500 s and 150 tool calls per run; graded on the task file bytes; first implementation step is a no-credential launch smoke. FO correction before the gate (ideation-1-message-1): the candidate carries the rule under test and the release does not, so base and control are expected to fail and the candidate to pass. AC-1 to AC-6 are Not provable now and say why. Carved out: D1, the credential, is the Captain's and was asked of him (asks.jsonl ask 1); no paid run before his answer."
+    }
+  ]
+}

@@ -32,6 +32,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:behaviour-baseline-first-cell:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:behaviour-baseline-first-cell-ideation-1
+              briefing:
+                id: briefing:behaviour-baseline-first-cell:ideation:attempt-1:revision-1
+                digest: sha256:9a3e4f21c2dfbc53d2e78f9dd0496eb5da10265d776a02899bdf5cc7090ea12f
+                room-ref: ./behaviour-baseline-first-cell/review/ideation/briefing-1
 started: 2026-11-14T04:43:45Z
 ---
 
