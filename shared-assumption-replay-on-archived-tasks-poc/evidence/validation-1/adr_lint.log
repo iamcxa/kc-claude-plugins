@@ -1,0 +1,3 @@
+79 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+exit=0
+adr_lint also run from the product worktree on docs/adr: exit 0 (79 files)
