@@ -1,7 +1,7 @@
 ---
 id:
 title: The extracted package says five rules that already worked, each once, where its reader loads it
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -53,7 +53,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item A from the reform session, Paseo messages 6dd41248-d90d-4c35-ba36-bc70f9e033d7, b82b5292-3b89-4832-bc08-940b26fa6812, 06055057-3766-4ec8-81a0-d4ad938c9a3d and 8cd30e54-34f7-4342-a49a-e0a1e6ce8cf5
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-11-14T12:18:22Z
 ---
 
