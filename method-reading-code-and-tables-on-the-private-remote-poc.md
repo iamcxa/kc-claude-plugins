@@ -1,7 +1,7 @@
 ---
 id:
 title: Tonight's method-against-no-method cell, both readings and both final tables are on the private working repository's remote, with the raw runs left on the laptop
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
