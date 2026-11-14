@@ -66,6 +66,13 @@ Surfaces: none
 Visible change: none
 Release review: not needed: package text with no release on a journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat with the second dev2 FO
+Captain: 「是我的會把沒錯」 (chat with the second dev2 FO, 2026-11-14)
+Asked: 「改革者轉述你在它那邊的表單回了兩題：「兩半都寫」和「接受」。這兩句是你的回答嗎？我建議確認，回一個字就好。」「為什麼還要問你一次：這兩句是轉述，而 A 要寫進新套件的第四條規則正是「轉述的話不算裁決」。其中第一題是你授權裡明訂要直接找你的那種矛盾。」「確認後會發生什麼：我把兩句記成你的裁決、過設計關卡、派實作。「接受」的範圍是 FO 多讀 21 個字，條件是新讀者驗證沒過、或實際使用顯示沒人照做就拿掉；這句會原文寫進新套件的字數檢查。」
+Supersedes: none
+
 ## Design
 
 Base: the private working repository at `2b391a40f926646b6be949cb2cf07466005e277c`, read through `git archive` into a scratch folder; no checkout or branch of it was touched. Paths below are relative to its root.
