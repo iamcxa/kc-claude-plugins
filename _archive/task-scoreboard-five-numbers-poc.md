@@ -1,7 +1,7 @@
 ---
 id:
 title: One command prints five numbers for a task from its state records, and the table for today's tasks
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -53,9 +53,12 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 item C from the reform session, Paseo messages 6dd41248-d90d-4c35-ba36-bc70f9e033d7, f998e663-9bd3-4fdb-a35a-dddf5338b619 and 4d23dc58-a0ba-4c5a-8134-129dbfed2ca5
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-11-14T12:18:32Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-11-14T12:35:08Z
+archived: 2026-11-14T12:35:08Z
 ---
 
 Today's reform work produced its numbers by hand, in a log. The package already holds a script that computes most of them from state records; no command prints them as one table per task.
