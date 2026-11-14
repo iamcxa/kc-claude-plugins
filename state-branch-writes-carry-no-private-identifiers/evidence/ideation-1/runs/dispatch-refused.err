@@ -1,0 +1,2 @@
+dispatch build --stamp: state sync failed: git commit failed: state guard: refused; tw-task/dispatch/ideation-2.md adds a home identifier
+state guard: rewrite the line without it (a repository-relative path or <home>), then commit again

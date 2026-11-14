@@ -1,0 +1,2 @@
+state guard: push refused; commit b57583def tw-task.md adds a tailnet-host identifier
+error: failed to push some refs to '/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/ideation-1/tw/remote.git'

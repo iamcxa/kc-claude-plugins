@@ -63,9 +63,144 @@ Verified by: one real refused push and one real accepted push, the refusal's out
 **AC-4**: The package, its fixtures, this task file and the pull request contain no private identifier, including as a pattern.
 Verified by: the same out-of-repository list scanned over the candidate diff and the pull request text, exit code recorded. Limit: the list is only as complete as its owner keeps it.
 
+**AC-5**: On the same throwaway clone, a commit carrying a listed identifier in a worktree that is not on a `spacedock-state/*` branch is not scanned; in the state checkout a line carrying the home directory is warned and committed while the guard runs with the home class at warn, and refused once it is installed with the home class at refuse.
+Verified by: real commits in both worktrees and in both modes, with their exit codes and output.
+
 ## FO alignment
 
 Alignment: not needed before ideation: outcome, constraints and proof are stated in the scope the reform session gave under the Captain's grant; the open design points return at the ideation gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance with no release.
+
+## Design
+
+### PRFAQ
+
+**Proposition.** From the release that carries this change, a dispatch record the package builds and sealed evidence write the home directory as `~`, while the prompt the worker reads keeps the real path. A git guard installed on the state checkout refuses a commit or push that adds a private repository name, a private task slug, a personal email or a tailnet hostname, and warns on the home directory until the remaining writers stop emitting it. A checkout without the guard is reported as unguarded at every dispatch.
+
+- **Who uses it?** The two First Officers and their workers on `spacedock-state/dev2`, and any adopter whose state branch is public.
+- **What does the worker lose?** Nothing: `dispatch_stage.py` builds the prompt from the unredacted scope notes; only the saved record is rewritten.
+- **Do existing records stop verifying?** No. The record check accepts `Package root: /…` and `Package root: ~/…`; nothing already on the branch is rewritten, so every saved digest stays as it is.
+- **Why not refuse the home directory now?** Every record the 0.41.0 tools write carries it, and so do validation Captain-steps paths that `delivery_gate.py` must resolve. A refusing home class today stops every dispatch (observed below). It switches to refuse in a later step, named under Order.
+- **What does a refusal print?** The file, the class and, for a push, the commit; never the matched text. The way forward is to rewrite the line; there is no bypass flag.
+- **Where is the list?** In one file under the user's config directory, outside every repository; the installer refuses a list path inside a git work tree.
+
+```mermaid
+flowchart TD
+  FO[First Officer] -->|scope notes, real paths| DS[dispatch_stage.py]
+  DS -->|record text, home written as ~| REC[task/dispatch/stage-N.md]
+  DS -->|scope notes unchanged| SB[spacedock dispatch build]
+  SB -->|prompt in /tmp, real paths| WK[Worker]
+  SB -->|stamp commit: record and started line| PC{pre-commit guard}
+  WK -->|evidence files| SC[scratch.py close]
+  SC -->|home rewritten as ~ before hashing and gzip| EV[task/evidence/record]
+  EV -->|path-scoped state commit| PC
+  FO -->|hand-saved message record, task text| PC
+  PC -->|listed class in an added line or gzip blob| R1[refused: file and class, change stays staged]
+  PC -->|home class while at warn| W1[warning printed, commit made]
+  PC -->|clean| CM[commit]
+  W1 --> PP
+  CM --> PP{pre-push guard, each commit in the range}
+  PP -->|listed class in any pushed commit| R2[refused: commit, file and class; remote unchanged]
+  PP -->|clean| RM[origin spacedock-state/dev2]
+  DS -->|state_guard.py check| UG[unguarded or stale: warning, dispatch continues]
+```
+
+### Before new work
+
+- **This repository at origin/main (c2f035b66, fetched 2026-11-14).** No identifier scan exists in `kc-dev-flow-2/scripts`; `scratch.py` carries the privacy rule as prose only (`notes_for`). The shared hooks directory of the live clone holds only `.sample` files, so the guard replaces no active hook. Uses and extends `dispatch_stage.py`, `dispatch_records.py` and `scratch.py`; adds `state_guard.py`.
+- **Spacedock 0.27.2 (installed binary; source read at `internal/dispatch/build.go` in a local clone at v0.25.1-35).** `dispatch build` makes the entity path and workflow dir absolute and writes them only to the prompt file under `/tmp/spacedock-dispatch/`; its stamp commit adds the record and one `started:` line. `spacedock state commit` and the stamp commit both run git hooks (observed below). `gate prepare` writes FO-authored summary text verbatim into `review/<stage>/briefing-N/index.json`; that is Spacedock's writer of FO text, reported here and covered by the guard, not patched.
+- **Siblings.** Not read: the adopters' state branches are private repositories, so their exposure is not this branch's; the writer change applies to them through the package.
+- **In-force ADRs.** ADR 0070 (dispatch records are written by a package script): kept; the script now rewrites the home prefix. ADR 0079 (close-out keeps public evidence, never private evidence): kept and enforced by the guard instead of prose alone. ADR 0003 (the package ships no secret-read hook): its reasons were that a plugin `PreToolUse` hook fires in every project, is Claude-only and cannot carry per-adopter patterns. This guard is a git hook that an explicit command installs on one state worktree, runs under every host, and reads a per-machine list, so none of the three reasons applies; the Captain asked for this hook in his own words. ADR 0003 stays in force for secret reads.
+- **Override lines.** `git grep -n 'Override:'` on the state branch, filtered for hook, path, private, home, identifier and Package root: none rules against a git guard or a rewritten record path.
+
+### Writers verified at origin/main (c2f035b66)
+
+| Writer | Line that writes the class | Reaches the state branch |
+|---|---|---|
+| `dispatch_stage.py` `record_text` | `return "\n".join(header) + ... + "\n## Scope notes\n" + notes`: FO scope notes saved verbatim, so `Package root: <home>/…` lands | Yes. Throwaway stamp commit added `tw-task/dispatch/ideation-1.md` with one home hit; the live record of this task carries three. |
+| `scratch.py` `notes_for` | `command = shlex.join(['python3', str(package / 'scripts/scratch.py'), 'close', str(folder), record])`: the package path and task folder, both absolute, appended to the notes | Yes, through `record_text` (line 33 of this task's `dispatch/ideation-1.md`). |
+| `dispatch_records.py` `PARTS` and `ROOT` | `^Package root:[ \t]*/\S` and `ROOT = re.compile(r"^Package root:[ \t]*(/\S+)", re.M)`: a rule that demands the absolute form; `instruction_error` matches `base + '/' + path` textually | Forces the writer above; reads the record only, never the prompt. |
+| `scratch.py` `evidence` | hashes and gzips whatever the worker copied; no scan | Yes; the worker's or FO's state commit adds `evidence/<record>/`. 110 `.gz` files are on the branch today and a line-diff scan does not see inside them (observed). |
+| `scratch.py` `close` | `scratch-removed.txt` line with the derived root under `/tmp/dev2/<origin name>-<digest>/` | Yes, but carries none of the five classes for this repository. |
+| `replay_dispatch.py` `start` | copies the full prompt into its run folder as `dispatch.md` | Only when a worker copies it into evidence; then `evidence` is the writer. |
+| Worker harness output | `cwd`, `argv[0]`, pytest `rootdir:` and traceback frames | Through `evidence` only. |
+| `spacedock dispatch build` | `filepath.Abs(entityPath)`, `filepath.Abs(workflowDir)`, then `os.WriteFile(dispatchFilePath, …)` under `/tmp/spacedock-dispatch/` | No: the stamp commit holds the record and `started:` only. |
+| `spacedock gate prepare` | briefing `summary` from FO text, verbatim | Yes, when FO writes a home path into a gate summary (52 briefing `index.json` files today). Spacedock's own writer of FO text: reported, covered by the guard. |
+| git commit identity | author and committer email from the user's git identity, on every state commit | Yes, as commit metadata, not file bytes. A Captain decision (D1). |
+
+No writer of a private repository name, a private task slug or a tailnet hostname is a package or Spacedock tool: those come from text FO and workers write and from evidence they copy.
+
+### Mechanism
+
+**W1. Records write the home directory as `~`.** `dispatch_stage.record_text` passes its text through one function that replaces the home prefix (`Path.home()`, not preceded by a path character, followed by `/` or the end of the path) with `~`. The prompt keeps the real path, because `dispatch_stage` writes the unredacted notes to the scratch `scope-notes.md` that `dispatch build` reads. `select_record` compares against the same rewritten text, so a re-run still reuses the record. Prototype in scratch: a real dispatch committed `Package root: ~/.claude/plugins/cache/…`, the prompt held the real path twice, the added-line scan of the commit and of the remote exited 0, and the patched record check exited 0.
+
+**W2. The record check accepts both forms.** `PARTS` and `ROOT` in `dispatch_records.py` accept `Package root:` followed by `/` or `~/`; `instruction_error` keeps its textual match, which holds because the rewrite is applied to the whole record. Old records keep passing (AC-2 baseline below). Compatibility hazard: the 0.41.0 check refuses a `~` record (observed: `needs a 'Package root:' line with an absolute path`), and it scans every record of a task folder. Both First Officers drive one workflow, and the README's `package_version.py` hold already stops a session older than the synced README, so the release that writes `~` reaches both sessions through the README sync before either writes one.
+
+**W3. Sealed evidence writes the home directory as `~`.** In `scratch.evidence`, before hashing, each file that is new or whose digest differs from the existing `SHA256SUMS` line has the home prefix rewritten as `~` in its bytes; a file whose digest still matches its line is left alone, so re-closing an archived folder changes nothing. The rewrite runs before the 256 KiB gzip step, so compressed evidence is rewritten too. A worker-supplied `.gz` is decompressed, rewritten and recompressed only when it holds the prefix.
+
+Limit: a follow-up `-message-N.md` record is saved by FO by hand, not by `dispatch_stage`, so it is FO text: the guard warns on its home path until the home class refuses.
+
+**G1. The guard.** New `kc-dev-flow-2/scripts/state_guard.py` with three commands:
+
+- `install <state checkout> [--home warn|refuse]` refuses unless the checkout is a linked worktree on a `spacedock-state/*` branch and the clone has `extensions.worktreeConfig` set (the live clone has it; the installer reports and stops otherwise, since enabling it is a clone-wide config write for the Captain to approve). It writes `pre-commit` and `pre-push` plus a copy of `state_guard.py` into a `state-guard` folder inside that worktree's own git directory, then sets `core.hooksPath` with `git config --worktree`, so the shared hooks directory and every other worktree are untouched. Each hook runs the shared directory's same-name hook first when one is executable, and checks the branch again. Default `--home warn`.
+- `check <state checkout>` prints `state guard: guarded (<mode>)`, or `unguarded: <hook> missing`, `stale: installed copy differs from this package`, or `partial: identifier list absent`, exit 0 only when guarded. `dispatch_stage.py` runs it before building and prints its line to stderr when not guarded; it does not refuse, so adopters who never install are unaffected.
+- `scan` is what the hooks run. Pre-commit scans the staged diff's added lines; pre-push scans each commit in each pushed `spacedock-state/*` range one by one, not the net diff, because a later commit that deletes a line leaves the earlier commit on the remote (observed: the net diff was clean and the per-commit scan still refused). In both, an added or changed blob that is gzip is decompressed and scanned whole, and a binary blob is scanned as bytes.
+
+**G2. Classes and the list.** `home` and `email` are derived on each run: the home directory, and the checkout's `git config user.email` matched in file content. `private-repo`, `private-slug` and `tailnet-host` come from `${XDG_CONFIG_HOME:-$HOME/.config}/kc-dev-flow-2/identifiers.tsv`, or the path in `KC_DEV2_IDENTIFIERS`, one `<class><TAB><literal>` or `<class><TAB>re:<pattern>` per line. The package and its tests carry no entry; tests build their own list from invented names. When the file is absent the guard still checks the derived classes, prints `partial`, and does not refuse for the missing file. The existing names-only lists sit under the product worktree's `.context/`, which git ignores but which is inside a work tree; FO moves them into the config file before installing, and the installer refuses a list path inside a git work tree.
+
+**G3. What a refusal prints and the way forward.** Pre-commit: `state guard: refused; <file> adds a <class> identifier` per hit, then one line: write the home directory as `~` or a path relative to the state checkout, drop a private name, or record `Not archived (private): <what>; reproduce: <command>` (ADR 0079), then commit again. The refused change stays staged (observed), and `dispatch_stage` refuses the next dispatch of that task until it is committed, which keeps the fix in the same turn. Pre-push: the same line with the short commit id, and the unpushed commits listed; when they are all the caller's own, rewrite them locally before pushing; when any is a peer's, stop and ask FO. The guard prints no matched text (observed: zero occurrences of the home path or the hostname in the refusal output) and offers no bypass; `--no-verify` is not a way forward.
+
+### Order
+
+1. **This task's release.** W1–W3 and G1–G2 ship together. Nothing is installed by the release.
+2. **After the README sync to that release, with both First Officers on it:** FO moves the list, runs `state_guard.py install` on `spacedock-state/dev2` with `--home warn`. The list classes refuse from install: no released tool writes them (table above), so a refusal only ever stops authored text or copied evidence, which is the intent. Last-300-commits count of what each class would have refused: see `### Install evidence`.
+3. **Home class to refuse:** a later task, once validation Captain-steps paths and acceptance scripts can name a path relative to the state checkout (`delivery_gate.py` resolves them today; PR 869 is changing that file, so the follow-up waits for it). Then `install --home refuse`.
+
+### Files this design changes
+
+- `kc-dev-flow-2/scripts/dispatch_stage.py` (W1, the `check` call) — not in PR 869's list.
+- `kc-dev-flow-2/scripts/dispatch_records.py` (W2, docstring) — not in PR 869's list.
+- `kc-dev-flow-2/scripts/scratch.py` (W3) — not in PR 869's list.
+- `kc-dev-flow-2/scripts/state_guard.py` (new, G1–G3).
+- `kc-dev-flow-2/scripts/test_dispatch_stage.py`, `test_dispatch_records.py`, `test_scratch.py`, `test_state_guard.py` (new) — none in PR 869's list.
+- One ADR under `docs/adr/`, short title "Public state writes carry no personal or private identifiers, and a per-checkout git guard refuses them"; FO reserves the number.
+
+No change to `references/sd/workflow.md`, `delivery_gate.py`, `lint-skills.py`, `test_sd_dispatch.py` or any other file in PR 869's list: the workflow sentence that scope notes carry an absolute `Package root:` stays true (the scope notes and the prompt keep it; only the saved record changes), so the workflow word budget is not raised. `test_sd_dispatch.py` asserts the real path in the prompt body, which is kept.
+
+### ADR draft
+
+**Title:** Public state writes carry no personal or private identifiers, and a per-checkout git guard refuses them.
+**Context:** the 2026-11-14 audit of `spacedock-state/dev2` (public) and the writer table above; ADR 0003's reasons against a shipped `PreToolUse` hook.
+**Decision:** package writers record the home directory as `~` while prompts keep real paths; `state_guard.py install` puts a pre-commit and pre-push guard on one state worktree through `git config --worktree core.hooksPath`; the identifier list lives outside every repository; refusals print file and class only; the home class warns until a later task turns it to refuse.
+**Protects:** `dispatch_stage.record_text`, `dispatch_records.PARTS`/`ROOT`, `scratch.evidence`, `state_guard.py`.
+**Words:** to be filled from the ideation gate resolution.
+
+### Worth questions
+
+- **W1–W3 (writers).** Serves 「先做甲止血」 (option 2 of the audit, stop new writes). Without it every dispatch adds three home-path lines and every sealed run adds more, and the guard can never turn the home class to refuse. Premise that makes it unneeded: the newest records no longer carry the home path. Cheap test, run: this task's own `dispatch/ideation-1.md` has three hits.
+- **G1–G3 (guard).** Serves 「綁定一個hook，裡面過濾掉關鍵字，出現就不準推」. Without it nothing stops a private name typed into a task, a report or copied evidence; the writers cannot rewrite those. Premise that makes it unneeded: no new commit adds a listed class. Cheap test: the last-300-commit count in `### Install evidence`.
+- **G2 (list outside repositories).** Serves the same words and the Non-goal that no private name enters the package, a fixture, this task or a pull request. Without it the patterns themselves would have to live in a public file. Premise: the list could be derived. Checked: only `home` and `email` are derivable; repository names and slugs are not.
+- No part serves no Captain words.
+
+### Install evidence
+
+(filled below from the replay count)
+
+### Proof plan per criterion
+
+- **AC-1:** at the candidate, the throwaway workflow from this ideation (bare remote, product repo, orphan `spacedock-state/dev2` worktree) with the package under the home directory, so `notes_for` writes a home path; one real `dispatch_stage.py` dispatch plus one `scratch.py close` with a home-path log file and one over 256 KiB; the scan of the stamp commit's and the evidence commit's blobs (gzip decompressed) exits 0, and the prompt under `/tmp/spacedock-dispatch/` holds the real path. Commit metadata is outside AC-1 (D1).
+- **AC-2:** at the candidate, `dispatch_records.py <folder>` and the scratch-compatible digest check over the same seven task folders (the five archived and two active folders that have both `dispatch/` and `evidence/*/SHA256SUMS`), compared with this baseline.
+- **AC-3:** the throwaway with a remote; a listed `tailnet-host` and a listed `private-slug` line refused at commit and at push, a clean push accepted, the refusal output scanned for the matched text, the remote's history scanned, and `check` on a fresh clone printing `unguarded`.
+- **AC-4:** the candidate diff and the PR text scanned with the out-of-repository list, exit recorded.
+- **AC-5:** a commit with a listed identifier in the product worktree of the same clone is not scanned; in the state checkout a home-path line is warned and committed at `--home warn` and refused at `--home refuse`.
+
+### Decisions for the Captain
+
+- **D1. The email in commit metadata.** Every state commit carries the git identity's personal email as author and committer; the guard sees file content only, and refusing on metadata would stop every push. Options: (a) leave it, since history already exposes it on every commit (recommended for this task; what gets worse: new commits keep adding it); (b) set a GitHub noreply address for the state worktree only with `git config --worktree user.email`, a write to the clone the Captain approves. This task delivers (a) unless he chooses (b); (b) is one command and no code.
+
+### Batch overlap
+
+PR 869 (open, the other First Officer): no shared file (list above). Live tasks whose task file names a file this design changes (named there, not confirmed as their change): `design-check-reads-each-pilot-criterion-for-its-proof-record` (implementation; `dispatch_records.py`, `dispatch_stage.py`); `merge-guard-stops-unasked-merges` (validation; `dispatch_records.py`); `adoption-asks-which-extensions`, `comment-check-reaches-delivery-gate`, `dispatch-carries-reserved-adr-number`, `seed-check-requires-alignment-result`, `step-back-answer-has-a-record-line` (ideation; `dispatch_records.py`); `delivery-gate-s4-skips-removed-scratch` (ideation; `scratch.py`). Shared numbered record: one ADR number from FO's reservation list. The test files `test_dispatch_records.py` and `test_dispatch_stage.py` are the likeliest textual conflicts.
+Recommended order: after `design-check-reads-each-pilot-criterion-for-its-proof-record` merges (the only one past ideation that changes both scripts), and independent of PR 869.

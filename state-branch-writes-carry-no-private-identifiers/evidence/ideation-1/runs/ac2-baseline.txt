@@ -1,0 +1,7 @@
+records=0 digests=1 digests: 334 checked, 1 differ
+records=0 digests=0 digests: 380 checked, 0 differ
+records=0 digests=0 digests: 519 checked, 0 differ
+records=0 digests=0 digests: 536 checked, 0 differ
+records=0 digests=0 digests: 32 checked, 0 differ
+records=0 digests=0 digests: 340 checked, 0 differ
+records=0 digests=0 digests: 1013 checked, 0 differ

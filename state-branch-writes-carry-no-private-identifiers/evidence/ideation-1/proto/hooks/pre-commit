@@ -1,0 +1,20 @@
+#!/bin/sh
+# prototype guard: refuse staged added lines that hold a listed identifier
+branch=$(git symbolic-ref --short -q HEAD)
+case "$branch" in spacedock-state/*) ;; *) exit 0;; esac
+git diff --cached -U0 --no-color --no-ext-diff > "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/ideation-1/out/.staged.diff"
+python3 -I - "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/ideation-1/ids.tsv" "/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/ideation-1/out/.staged.diff" <<'PY'
+import re, sys
+sys.argv = sys.argv
+exec(open("/private/tmp/dev2/kc-claude-plugins-3042bb224e995ded/state-branch-writes-carry-no-private-identifiers/ideation-1/proto/scan.py").read().split("def main")[0])
+pats = load(sys.argv[1]); cur=None; hits=set()
+for raw in open(sys.argv[2], encoding="utf-8", errors="replace"):
+    raw = raw.rstrip("\n")
+    if raw.startswith("+++ "): cur = raw[6:]
+    elif raw.startswith("+") and cur:
+        for k in classes(pats, raw[1:]): hits.add((cur, k))
+for f, k in sorted(hits): print(f"state guard: refused; {f} adds a {k} identifier", file=sys.stderr)
+if hits:
+    print("state guard: rewrite the line without it (a repository-relative path or <home>), then commit again", file=sys.stderr)
+sys.exit(1 if hits else 0)
+PY

@@ -1,0 +1,14 @@
+84c84
+<         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
+---
+>         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*~?/\S", re.M),
+96c96
+< ROOT = re.compile(r"^Package root:[ \t]*(/\S+)", re.M)
+---
+> ROOT = re.compile(r"^Package root:[ \t]*(~?/\S+)", re.M)
+815c815,817
+<     return "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
+---
+>     text = "\n".join(header) + "\n\n## Checklist\n" + checklist + "\n## Scope notes\n" + notes
+>     home = str(Path.home()).rstrip("/") + "/"
+>     return re.sub(r"(?<![\w.~-])" + re.escape(home), "~/", text)
