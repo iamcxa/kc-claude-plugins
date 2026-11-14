@@ -95,6 +95,7 @@ Alignment: not needed before ideation: the outcome, the ranking, the cap and the
 Surfaces: none
 Visible change: none
 Release review: not needed: a measurement with no release on a journey map.
+Reviewer: kc-dev-flow-2:chief-engineer not run: each follow-up after the first implementation dispatch was a step the reform session ruled under the Captain's grant (Paseo messages 984e93a3, 69f222ea, 046fefe6, eb57d49c, 416ecb3c), including the step back on the grading rule and the last allowed cycle; the smallest next step is already fixed by its order: the second reading's blind check
 
 ## Design
 
