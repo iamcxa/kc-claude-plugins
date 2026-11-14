@@ -1,0 +1,70 @@
+Unpaid checks on the runner at candidate 758cdd90140c37e394ebc527137ee42842641ae5 (branch behaviour-first-cell, base c1e6a401b345ba86db9cc696c5cefce2a930ee97, private working repository).
+Run from the repository root, 2026-11-14, no model call, no credential. Case ids in the fixtures are shown as counts. The fixture transcript's home path is a made-up placeholder.
+Not archived (private): runner source, case fixtures, the two stored result folders; reproduce: the commands below at that commit.
+
+$ python3 -B behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+selfcheck ok
+exit=0
+
+# falsifier: answer.json with the model-run patterns deleted (a copy outside the repository)
+$ python3 -B <copy outside the repository>/behaviour/run_cell.py selfcheck <copy outside the repository>/behaviour/cells/ideation-flags-unprovable-criterion
+falsifiers/approved.md: PASS model-run=[] unflagged=[]  EXPECTED FAIL [2 ids] [2 ids]
+falsifiers/flagged.md: PASS model-run=[] unflagged=[]  EXPECTED PASS [2 ids] []
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+selfcheck FAILED
+exit=1
+
+$ python3 -B behaviour/run_cell.py run behaviour/cells/ideation-flags-unprovable-criterion --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/capped
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+cap reached: 18 launch records, cap 18
+exit=1
+
+$ python3 -B behaviour/run_cell.py run behaviour/cells/ideation-flags-unprovable-criterion --dry-run --results behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/halted
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+cell halted: 2 INVALID trials
+exit=1
+
+# no process started: subprocess.Popen/run patched to raise, then both dry runs
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+cap reached: 18 launch records, cap 18
+RESULT capped 1
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+cell halted: 2 INVALID trials
+RESULT halted 1
+
+$ python3 -B behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion/falsifiers/leaky-transcript.jsonl
+breach (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+read line 4: <home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md
+exit=1
+
+$ (env without the credential) run <cell>
+falsifiers/approved.md: FAIL model-run=[2 ids] unflagged=[2 ids]
+falsifiers/flagged.md: PASS model-run=[2 ids] unflagged=[]
+falsifiers/provable.md: PASS model-run=[] unflagged=[]
+falsifiers/leaky-transcript.jsonl: 1 breach(es)
+  (b) line 4: tool input names {"file_path": "<home>/.claude/plugins/cache/some-marketplace/some-plugin/1.0.0/skills/ideation/SKILL.md"}
+refused before any launch: CLAUDE_CODE_OAUTH_TOKEN is not set in the environment
+exit=1

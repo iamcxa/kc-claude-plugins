@@ -1,0 +1,5 @@
+The one command the operator runs for the first paid step (3 runs: one per arm), in the private working repository on branch behaviour-first-cell, with the credential supplied by the operator's own secret wrapper:
+  <operator secret wrapper that exports CLAUDE_CODE_OAUTH_TOKEN> python3 behaviour/run_cell.py run behaviour/cells/ideation-flags-unprovable-criterion --trials 1
+Before it (free): python3 behaviour/run_cell.py selfcheck behaviour/cells/ideation-flags-unprovable-criterion
+After it: python3 behaviour/run_cell.py table behaviour/cells/ideation-flags-unprovable-criterion ; python3 behaviour/run_cell.py scan behaviour/cells/ideation-flags-unprovable-criterion
+Then, if no arm is INVALID for a harness reason: the same command with --trials 3 (runs only the missing trials).

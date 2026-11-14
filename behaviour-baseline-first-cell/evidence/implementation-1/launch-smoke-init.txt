@@ -1,0 +1,46 @@
+Launch smoke, no credential (CLAUDE_CODE_OAUTH_TOKEN unset), run through the runner's own launch function: 'run <cell> --smoke'. Empty HOME and config dir, allowlisted environment, 60 s cap, process group killed after the init event.
+Reading: an init event DOES appear without a login. It lists the exported Spacedock plugin (version 0.27.2, source spacedock@inline, path inside the run's own export) and its skills spacedock:ensign, spacedock:first-officer, spacedock:commission, spacedock:debrief, spacedock:refit, spacedock:survey; four more plugins whose path is 'builtin' (bundled in the CLI); 18 bare-name skills (the CLI's bundled set, now the cell's baseline); no MCP server; apiKeySource none; no personal agents.
+Not shown by it: whether a credentialed init adds skills or connectors (the runner checks that before any counted run); whether the exported plugin's hooks fire (the process was killed at init).
+{
+ "init_event": true,
+ "killed_after_init": true,
+ "exit_code": -9,
+ "apiKeySource": "none",
+ "model": "claude-opus-5-5",
+ "claude_code_version": "2.1.323",
+ "mcp_servers": [],
+ "plugins": [
+  "spacedock",
+  "cc-plugin-agents-md",
+  "cc-plugin-telemetry",
+  "cc-plugin-privacy",
+  "cc-plugin-plugin-authoring"
+ ],
+ "breaches": [],
+ "skills": [
+  "batch",
+  "claude-api",
+  "code-review",
+  "dataviz",
+  "debug",
+  "deep-research",
+  "design",
+  "design-sync",
+  "doctor",
+  "fewer-permission-prompts",
+  "loop",
+  "plugin-authoring",
+  "run",
+  "run-skill-generator",
+  "simplify",
+  "spacedock:commission",
+  "spacedock:debrief",
+  "spacedock:ensign",
+  "spacedock:first-officer",
+  "spacedock:refit",
+  "spacedock:survey",
+  "update-config",
+  "verify",
+  "workflow-authoring"
+ ]
+}

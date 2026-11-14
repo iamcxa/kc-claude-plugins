@@ -225,6 +225,13 @@ Checked: the package's `replay_dispatch.py` (used as is) and the maintain-flow p
 - Other live tasks: none share a file, check, table or numbered record with this one.
 Recommended order: run this cell's paid runs after the proof-record task merges or is closed, so the candidate ref is the change it measures; implementation of the runner can start now.
 
+## Captain amendments
+
+### Amendment 1 — 2026-11-14, chat
+Captain: 「行為基準實跑用訂閱權杖，我自己產生後放進密碼庫」 (chat with the second dev2 FO, 2026-11-14)
+Asked: asks.jsonl ask 1 in this task's folder (the credential for isolated runs, decision D1 of the design)
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: A design for the thin runner (launch, hard stop, manifest, grade, table) that reuses scripts/replay_dispatch.py and the maintain-flow procedure, names every file it adds in the private working repository, and states how isolation is achieved and shown (empty home and config directory; no read of an installed skill copy or personal configuration)
@@ -283,3 +290,28 @@ Scratch close (`scratch.py close <task folder> ideation-1`, exit 0): `Scratch re
 ### Summary
 
 Supersedes the earlier ideation reports. FO's correction holds: the candidate's workflow.md asks for each criterion's evidence to run once and for unrunnable ones to be marked `Not provable now`, so the cell now expects the candidate to pass and the release and control to fail; my first grep had left that file out. D2 is recorded as FO's decision (no fourth arm), and a no-credential launch smoke is the first implementation step. Scratch close for ideation-1-message-1, exit 0: `Evidence: evidence/ideation-1/ (7 files, 7.9 KiB)`.
+
+## Stage Report: implementation
+
+- DONE: First, before anything else is built on it: a launch smoke with no credential in the isolated environment the design describes, reading the init event for the exported Spacedock plugin and its ensign skill; record what appears, and if no init event appears without a login, record that and continue
+  An init event DOES appear without a login: exported Spacedock 0.27.2 (`spacedock@inline`, path inside the run's own export) with `spacedock:ensign` listed, 4 CLI-bundled `builtin` plugins, 18 bare bundled skills, no MCP server, `apiKeySource: none` (evidence/implementation-1/launch-smoke-init.txt). My first attempt (a hand-written launch line) was refused by the session's permission check and not retried; the second ran through the runner's own launch function (`run <cell> --smoke`). Not shown: whether a credentialed init adds skills or connectors, and whether the plugin's hooks fire (killed at init).
+- DONE: The runner and the one cell as the approved design names them, in the private working repository on a branch you create from its main: the five subcommands, the cell files and the falsifier fixtures; AC-5 (grader falsifiers) and AC-6 (spend boundary refuses before launch) shown by commands that cost nothing, with exit codes
+  Branch `behaviour-first-cell`, base `c1e6a401b345ba86db9cc696c5cefce2a930ee97`, candidate `758cdd90140c37e394ebc527137ee42842641ae5`: `behaviour/run_cell.py` (selfcheck, run, grade, table, scan), `behaviour/cells/ideation-flags-unprovable-criterion/` (cell.json, checklist.txt, answer.json, three grader fixtures, one leaky transcript, `capped/` with 18 manifests, `halted/` with 2). Local commit only; not pushed. roborev not run (different repository).
+  AC-5: `selfcheck` exit 0 prints FAIL, PASS, PASS and the matched criterion ids per fixture (2 model-run criteria in the approved design, 0 in the script-proved one); the same command on a copy with the model-run patterns deleted exits 1 (both grade PASS). `run` calls it first. AC-6: `run <cell> --dry-run --results <fixture>` exits 1 with `cap reached` (18 records) and `cell halted` (2 INVALID); with `subprocess.Popen` and `run` patched to raise, both dry runs still return 1, so no process starts. `run` without the credential variable exits 1 before any record. AC-3 falsifier: `scan` on the leaky transcript exits 1 naming line 4. Evidence: evidence/implementation-1/unpaid-checks.txt.
+  Also run at no cost: case build, dispatch build and cleanup for all three arms on one-commit case repositories, exit 0 each, no dispatch names the home directory (case-build-probe.txt); `table`, `grade` and `scan` on six hand-made runs in scratch (not stored).
+- DONE: No paid agent run: the Captain has not yet answered decision D1 (the credential). Stop after the unpaid steps and report the exact command the operator runs for the first paid step, the branch, base and candidate SHA, and what remains for AC-1 to AC-4
+  First paid step, 3 runs, one per arm: `<operator secret wrapper that exports CLAUDE_CODE_OAUTH_TOKEN> python3 behaviour/run_cell.py run behaviour/cells/ideation-flags-unprovable-criterion --trials 1` (evidence/implementation-1/first-paid-step.txt). Remaining: AC-1, AC-2 and AC-3 need those runs and their real streams; AC-4 needs the marker list and a fresh clone after runs exist. Open risks: the stream parser was checked against an earlier real stream and the no-login init, not a graded run; a credentialed init may add skills or connectors (the runner's init check before the first counted run refuses on that and costs no record; whether that launch makes any API call is not measured).
+
+### Departures from the design, for FO to rule on
+
+- Added `--smoke` and an init-only check inside `run` before any counted launch; added `--results DIR` on `run`, `table`, `scan` (AC-6 needs it to point at fixtures).
+- scan (a): the 4 `builtin` plugins and the 18 bundled bare skills (now `bundled_skills` in cell.json) are allowed; any other plugin, namespaced skill or MCP server is a breach, as is a bare skill outside that list.
+- scan (b): tool inputs are matched on `.claude/<plugins|skills|CLAUDE.md|settings|projects|agents|commands>` or the operator's home; tool results only on the operator's concrete home (outside the Python runtime prefix), because the case's own CLAUDE.md quotes `~/.claude/plugins` text.
+- Both model-run criteria of the approved design match, so the flagged fixture flags both; the design says "the offending criterion" in the singular.
+- Tool cap kills when the unique tool_use count exceeds 150; a control run that read a skill stays a valid trial, shown apart.
+
+Scratch close (`scratch.py close <task folder> implementation-1`, exit 0): `Scratch removed: <scratch root>/implementation-1 (199069399 bytes)`; `Evidence: evidence/implementation-1/ (4 files, 8.8 KiB)`.
+
+### Summary
+
+Built the runner and the one cell in the private working repository (branch `behaviour-first-cell`, candidate `758cdd90140c37e394ebc527137ee42842641ae5`, base `c1e6a401b345ba86db9cc696c5cefce2a930ee97`, local only). The no-credential smoke shows an init event with the exported Spacedock plugin and its ensign skill; the grader falsifiers (AC-5) and the spend-boundary refusals (AC-6) pass at no cost. No paid run happened; the state branch carries no case, run or private-repository content, and the task file and evidence are not committed by me (FO commits).
