@@ -1,7 +1,7 @@
 ---
 id:
 title: Three or fewer tried ways to run the next real task on the extracted package with private state, each with what it costs the Captain
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -31,7 +31,7 @@ gates:
                     source: the Captain, chat with the second dev2 FO, 2026-11-14; scope 3 from the reform session, Paseo message 6dd41248-d90d-4c35-ba36-bc70f9e033d7
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Nine of the sixteen approved outcomes can only be measured in real use, and nobody uses the extracted package yet. The next real task of the reform should be run by a First Officer and workers that load the extracted package, not the installed one, with its task state in a private place from the first commit.
