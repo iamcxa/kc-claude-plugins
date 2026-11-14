@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "d2d5bec640f0a61d3e044877b8443cdfdc03faa7",
+  "merge_result": null,
+  "model": "not run",
+  "necessity": "three package scripts, one new guard script, their four test files and ADR 0087 change against the PR's base, and nothing else (gh pr view 871 file list and git diff --stat origin/main, FO read 2026-1",
+  "next": "next: ask for merge with this text: there is no effective Captain validation approval quoting its bound question as `answering \u300c\u2026\u300d`, so no merge grant applies. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'FO declines Codex P2 Deferred risk'",
+    "point: path: 'docs/adr/0087-public-state-writes-and-an-opt-in-git-guard.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/scratch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/state_guard.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_stage.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_scratch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_state_guard.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#871",
+  "sufficiency": "at the candidate a real dispatch's saved record and sealed text evidence carry no home-directory prefix while the stage and role prompts keep real paths; records written before the change still pass t",
+  "time": "2026-11-14T08:01:03Z",
+  "verdict": "ask"
+}
