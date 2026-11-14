@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:test-value-pass-on-route-trial-prs-poc:validation:attempt-1:revision-1",
+  "question": "Close this read-only POC as passed? (decided by FO under the Captain's grant; no merge, no pull request, nothing deleted)",
+  "artifacts": [
+    {
+      "id": "artifact:test-value-pass-on-route-trial-prs-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e5d03ccf3bdec981b9aa3c38ddd0f2ed3d5f3438/test-value-pass-on-route-trial-prs-poc.md",
+      "rev": "sha256:98f7763e66d93c684f42c27077162c965218b780efbc03524b6cf8f16620f1f9",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED (Claude Sonnet, independent of the Codex author): N=37 test methods re-derived for all five PRs, F=1, F_ok=1; the flagged test in PR 870 still passes with the blank-question rejection removed. FO ran evidence/validation-1/count.py: exit 0, N=37. Limits: the validator ran 14 of 37 methods; five PRs from one trial. No product file changed; no pull request."
+    }
+  ]
+}

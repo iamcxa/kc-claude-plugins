@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:test-value-pass-on-route-trial-prs-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:test-value-pass-on-route-trial-prs-poc-validation-1
+              briefing:
+                id: briefing:test-value-pass-on-route-trial-prs-poc:validation:attempt-1:revision-1
+                digest: sha256:0447ebd3462942945e1176c8677c3bcb1d6d6e482594b9db536b71ade9477047
+                room-ref: ./test-value-pass-on-route-trial-prs-poc/review/validation/briefing-1
 started: 2026-11-14T02:35:14Z
 ---
 
