@@ -1,0 +1,8 @@
+base ideation-worker inlined:      694
+base implementation-worker inlined:     1371
+base validation-worker inlined:     1525
+base FO:    11722
+cand ideation-worker inlined:      732
+cand implementation-worker inlined:     1406
+cand validation-worker inlined:     1560
+cand FO:    11838
