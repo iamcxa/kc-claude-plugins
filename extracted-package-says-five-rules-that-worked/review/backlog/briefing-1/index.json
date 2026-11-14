@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extracted-package-says-five-rules-that-worked:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile pilot with the outcome, non-goals, stop condition, acceptance criteria and a budget of 2 cycles per stage as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave.",
+  "artifacts": [
+    {
+      "id": "artifact:extracted-package-says-five-rules-that-worked:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/dbf8a368cab6abb5fb8c04e8e896f96ce4488f54/extracted-package-says-five-rules-that-worked.md",
+      "rev": "sha256:fa33ac035817430b3023d474c1a32e5bdc0c85367f3a65087f4f3482c9dc0c4e",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: profile pilot; scope 3 item from the reform session; outcome, Non-goals, Stop condition and acceptance criteria as filed; Budget 2 cycles per stage; a time box and a half-time check are in the Stop condition."
+    }
+  ]
+}

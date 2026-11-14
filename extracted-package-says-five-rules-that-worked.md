@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:extracted-package-says-five-rules-that-worked:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:extracted-package-says-five-rules-that-worked-backlog-1
+              briefing:
+                id: briefing:extracted-package-says-five-rules-that-worked:backlog:attempt-1:revision-1
+                digest: sha256:03e73b4c8212876c34bc292de0dc1cf0b0c6253b7d5d3d5c046e64f72ba111c3
+                room-ref: ./extracted-package-says-five-rules-that-worked/review/backlog/briefing-1
 ---
 
 Five rules were followed by hand today and worked; the extracted package's text does not carry them. Until it does, a First Officer or worker that loads the package cannot follow them, and the package cannot be put into real use with them.
