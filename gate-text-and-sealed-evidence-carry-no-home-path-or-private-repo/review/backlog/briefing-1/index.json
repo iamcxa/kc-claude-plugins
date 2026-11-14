@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:backlog:attempt-1:revision-1",
+  "question": "Admit this task as profile pilot with the outcome, non-goals, stop condition, acceptance criteria and a budget of 2 cycles per stage as filed? Not asked of the Captain: decided by FO under his standing grant, inside the scope the reform session gave; approving starts the design stage and merges nothing.",
+  "artifacts": [
+    {
+      "id": "artifact:gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ec1e0296a296b9eee756356c0cfdf266399d9e37/gate-text-and-sealed-evidence-carry-no-home-path-or-private-repo.md",
+      "rev": "sha256:b0bff8365f2781ed96f712eef2c9bc42d54f3558340062b3fe13955ac5cc9888",
+      "mediaType": "text/markdown",
+      "summary": "Backlog admission under the Captain's grant: variant kc-dev-flow-2, profile pilot; outcome, Non-goals, Stop condition and acceptance criteria as filed; Budget 2 cycles per stage; FO alignment not needed before ideation; Surfaces none; Visible change none; seed check exit 0 (FO run 2026-11-14)."
+    }
+  ]
+}
