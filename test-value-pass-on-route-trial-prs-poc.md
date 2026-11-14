@@ -1,7 +1,7 @@
 ---
 id:
 title: Does a test-value pass flag tests that give false confidence in the tests of PRs 858 to 861 plus one (read-only findings)
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
