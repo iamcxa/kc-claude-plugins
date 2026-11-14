@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Check what FO is about to ask the Captain to merge.
 
+Record route: see references/delivery-record.md for the format, recipe and reader
+obligations. The text-based routes below remain legacy compatibility behavior.
+
 Usage: delivery_gate.py check <task file or task folder> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--sibling-pr <owner/repo>#<N>]... [--workflow-dir <dir>]
 
 A task is `<slug>.md` or `<slug>/index.md`; a folder argument means its `index.md`. Records are read and saved in the task's own folder `<slug>/`.
@@ -83,6 +86,8 @@ Usage: delivery_gate.py merge-run <task> --pr owner/repo#N [--workflow-dir <dir>
 Runs the README `merge-test:` command on an archived merge tree and saves result-N.json and its log beside the task. Missing commit objects are fetched; conflicts exit 2. The temporary tree is removed after the run.
 """
 import argparse
+import hashlib
+import importlib.util
 import datetime
 import json
 import re
@@ -359,7 +364,13 @@ def reviewer_config(scalars, lists):
     return second, extensions
 
 
-def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None):
+def copilot_retry_problems(text):
+    if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
+        return ["copilot not run needs the conditional retry offer"]
+    return []
+
+
+def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None, observations=None):
     problems = []
     if second:
         rows = re.findall(r"(?i)\bsecond reviewer:[ \t]*([^\n]*)", text)
@@ -372,6 +383,21 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None, hea
                 problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
         elif not re.match(re.escape(second) + r"[ \t]+because[ \t]+\S", rows[0], re.I):
             problems.append(f"second reviewer declaration must name {second} because <nonempty trigger>, or not triggered")
+    if observations is not None:
+        plain = "\n".join(outside_fences(text))
+        if {row["reviewer"] for row in observations if row.get("scope") == "pr"} != set(extensions) & {"codex", "copilot"}:
+            problems.append("configured remote reviewers differ from the delivery observation")
+        for row in observations:
+            reviewer, outcome, identity = row["reviewer"], row["outcome"], row.get("evidence")
+            if outcome in {"findings", "answered"}:
+                decisions = re.findall(rf"^Review decision:[ \t]*{re.escape(reviewer)}[ \t]+{re.escape(identity or '')}[ \t]+(clean|disposed):[ \t]+(\S.*)$", plain, re.M | re.I)
+                if not identity or len(decisions) != 1 or (outcome == "findings" and decisions[0][0].lower() != "disposed"):
+                    problems.append(f"{reviewer} needs one FO review decision at {identity or 'a missing evidence identity'}")
+            if reviewer == "copilot" and outcome == "not-run":
+                if not re.search(r"(?im)^Copilot (?:not read|not run):[ \t]*\S", plain):
+                    problems.append("the question needs the Copilot unread decision")
+                problems += copilot_retry_problems(plain)
+        return problems, (["next: hold the ask; record the FO review decision or unread/retry decision in the question."] if problems else [])
     if "copilot" in extensions:
         for skipped in re.finditer(r"(?i)\bcopilot skipped:[ \t]*([^\n]*)", text):
             kind = re.fullmatch(r"([a-z]+) PR[.]?[ \t]*", skipped[1], re.I)
@@ -400,8 +426,7 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None, hea
                 disclosure = f'Copilot not read: {head.lower()}; last refusal: {source["head"]}'
                 if not re.search(rf"(?im)^{re.escape(disclosure)}[.]?[ \t]*$", text):
                     problems.append(f"Copilot refusal is for {source['head']}, not PR head {head.lower()}; add a separate '{disclosure}' line")
-            if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
-                problems.append("copilot not run needs the conditional retry offer")
+            problems += copilot_retry_problems(text)
     return problems, (["next: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer."] if problems else [])
 
 
@@ -509,18 +534,18 @@ def required_problem(checks):
     return f"required check without a pass on this head: {' '.join(tok(n, words=3, chars=40) for n in bad[:5])}" if bad else None
 
 
-def write_record(task, rec):
+def write_record(task, rec, kind="ask"):
     folder = task_folder(task) / "merge"
     folder.mkdir(parents=True, exist_ok=True)
-    taken = [int(m.group(1)) for p in folder.glob("ask-*.json") if (m := re.fullmatch(r"ask-(\d+)\.json", p.name))]
-    path = folder / f"ask-{max(taken, default=0) + 1}.json"
+    taken = [int(m.group(1)) for p in folder.glob("*.json") if (m := re.fullmatch(r"(?:ask|observation)-(\d+)\.json", p.name))]
+    path = folder / f"{kind}-{max(taken, default=0) + 1}.json"
     path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
     return path
 
 
-def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
+def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None, confirmations=True):
     problems, nexts = [], []
-    for reviewer in unstated_second_reviewers(gate_text if reviewer_text is None else reviewer_text):
+    for reviewer in unstated_second_reviewers(gate_text if reviewer_text is None else reviewer_text) if confirmations else []:
         nexts.append("next: hold the ask until each second reviewer has an outcome.")
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
@@ -533,7 +558,7 @@ def text_problems(task_text, gate_text, at_gate=False, reviewer_text=None):
         problems.append(why)
         nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
 
-    for label in unstated_confirmations(gate_text):
+    for label in unstated_confirmations(gate_text) if confirmations else []:
         problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
         nexts.append("next: hold the ask; add the missing clause to the question or summary.")
     if at_gate and grant_without_hold_out(gate_text):
@@ -650,6 +675,9 @@ def check(args):
         return 2
     repo, number = pr.groups()
     problems, holds, nexts, sibling_notes = [], [], [], []
+    observed = bool(getattr(args, "record_facts", False))
+    reviewers = []
+    trunk_observation = None
     try:
         workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
         if not workflow_dir:
@@ -659,6 +687,14 @@ def check(args):
         emit(f"cannot read reviewer configuration: {error}")
         return 2
 
+    if observed:
+        try:
+            if json.loads(gh("repo", "view", repo, "--json", "visibility"))["visibility"] != "PUBLIC":
+                emit("facts not saved: public repository visibility required")
+                return 2
+        except (RuntimeError, ValueError, KeyError) as error:
+            emit("facts not saved: cannot verify public visibility")
+            return 2
     candidates, record = dispatched_candidates(task)
     if not candidates:
         holds.append(f"no latest validation dispatch record under {task_folder(task)}/dispatch has a 'Candidate: <40-hex head>' line")
@@ -687,15 +723,16 @@ def check(args):
         required = required_checks(repo, number)
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
-    try:
-        body = (facts or {}).get("body") or ""
-        copies = scope_pr_copies(task_folder(task), body)
-        count_text = "\n".join(line for line in gate_text.splitlines() if line not in copies)
-        gate_text = count_disclosure(task_folder(task), count_text + "\n" + body, text_file, gate_text)
-        gate_text, = scope_disclosure(task_folder(task), [(text_file, gate_text)], body)
-    except (OSError, UnicodeDecodeError) as error:
-        emit(f"cannot write count disclosure: {error}")
-        return 2
+    if not observed:
+        try:
+            body = (facts or {}).get("body") or ""
+            copies = scope_pr_copies(task_folder(task), body)
+            count_text = "\n".join(line for line in gate_text.splitlines() if line not in copies)
+            gate_text = count_disclosure(task_folder(task), count_text + "\n" + body, text_file, gate_text)
+            gate_text, = scope_disclosure(task_folder(task), [(text_file, gate_text)], body)
+        except (OSError, UnicodeDecodeError) as error:
+            emit(f"cannot write count disclosure: {error}")
+            return 2
     if facts is not None:
         full = str(facts.get("headRefOid", "")).lower()
         if head and not full.startswith(head):
@@ -722,6 +759,7 @@ def check(args):
         if scalars.get("trunk") and head and full.startswith(head):
             try:
                 status, trunk_sha = trunk_position(repo, scalars["trunk"], full)
+                trunk_observation = {"head": full, "trunk": trunk_sha, "position": status}
                 why, merge_result = merge_result_problem(task, gate_text, full, status, trunk_sha, scalars.get("merge-test"))
             except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
                 holds.append(f"cannot compare the trunk with {full[:12]}: {error}")
@@ -767,19 +805,33 @@ def check(args):
         problems.append(error)
         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
 
-    found, wanted = text_problems(task_text, gate_text)
+    found, wanted = text_problems(task_text, gate_text, confirmations=not observed)
     for value in re.findall(r"^Captain steps:[ \t]*(.*)$", "\n".join(outside_fences(gate_text)), re.M):
         found += captain_steps_path_problems(named_file(task_folder(task), value.strip().strip("`\"")), task_folder(task))
     problems += found
     nexts += wanted
-    try:
-        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions,
-                                         (facts or {}).get("title"), (facts or {}).get("headRefOid"))
-    except OSError as error:
-        emit(*problems, str(error))
-        return 2
-    problems += found
-    nexts += wanted
+    if observed:
+        try:
+            reviewers = reviewer_facts(repo, number, extensions, str((facts or {}).get("headRefOid", "")))
+            found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions, observations=reviewers)
+            problems += found
+            nexts += wanted
+            untriggered = bool(second and re.search(r"(?im)^Second reviewer:[ \t]*not triggered[.; \t]*$", gate_text))
+            if any(row["outcome"] == "error" for row in reviewers):
+                holds.append("cannot read a configured reviewer")
+            if any(row["outcome"] == "pending" and not (untriggered and row["reviewer"] == second) for row in reviewers):
+                problems.append("a configured reviewer has not returned a verdict")
+        except (OSError, RuntimeError, ValueError):
+            holds.append("cannot read configured reviewers")
+    else:
+        try:
+            found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions,
+                                             (facts or {}).get("title"), (facts or {}).get("headRefOid"))
+        except OSError as error:
+            emit(*problems, str(error))
+            return 2
+        problems += found
+        nexts += wanted
 
     try:
         code, said = owed_role_calls(task)
@@ -794,10 +846,59 @@ def check(args):
         nexts.extend(line for line in said if line.startswith("next:"))
 
     # see docs/adr/0051-the-merge-ask-check-requires-the-round-count.md
-    missing = summary_round_problems("\n".join(outside_fences(gate_text)))
+    missing = [] if observed else summary_round_problems("\n".join(outside_fences(gate_text)))
     problems += missing
     if missing:
         nexts.append("next: hold the ask; record the external round count in the summary.")
+
+    if observed:
+        verdict = validation_facts(task, task_text, record)
+        try:
+            steps = observed_steps(task, (facts or {}).get("headRefOid"))
+        except (OSError, UnicodeDecodeError):
+            steps = None
+            holds.append("cannot read Captain steps")
+        if not steps or not steps["candidate_matches"]:
+            problems.append("Captain steps are absent or for another candidate")
+        else:
+            try:
+                problems += captain_step_problems(task, gate_text, "Captain steps: " + steps["path"])
+            except (OSError, UnicodeDecodeError):
+                holds.append("cannot read Captain steps")
+        snapshot = {"schema": "delivery-facts/v1", "pr": args.pr, "head": (facts or {}).get("headRefOid"),
+                    "tool_version": json.loads((Path(__file__).resolve().parents[1] / ".claude-plugin/plugin.json").read_text())["version"],
+                    "trunk": trunk_observation, "role_calls": {"exit": code},
+                    "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"), "public": True,
+                    "question_sha256": hashlib.sha256(text_file.read_bytes()).hexdigest(),
+                    **disclosure_facts(task_folder(task), gate_text, (facts or {}).get("body") or ""),
+                    "candidate": [c for c in candidates if c == (facts or {}).get("headRefOid")], "validation": verdict,
+                    "ci": [{k: row.get(k) for k in ("status", "conclusion", "state")} for row in (facts or {}).get("statusCheckRollup", [])],
+                    "workflow_runs": [{k: row.get(k) for k in ("id", "status", "conclusion")} for row in runs or []],
+                    "required_checks": [{"bucket": row.get("bucket")} for row in required or []],
+                    "reviewers": reviewers,
+                    "round_scope": "distinct saved PR verdicts; no local jobs; not a reconstruction of unobserved history",
+                    "captain_steps": steps,
+                    "merge_result": merge_result[0] if merge_result else None,
+                    "pr_state": {k: (facts or {}).get(k) for k in ("isDraft", "mergeable", "baseRefName")},
+                    "result": {"exit": 1 if problems else 2 if holds else 0, "problems": len(problems), "unreadable": len(holds)}}
+        try:
+            snapshot["external_rounds"] = saved_rounds(task, reviewers)
+        except (OSError, UnicodeDecodeError, ValueError, KeyError, TypeError, AttributeError):
+            holds.append("cannot count prior reviewer observations")
+            snapshot["external_rounds"] = None
+            snapshot["result"] = {"exit": 1 if problems else 2, "problems": len(problems), "unreadable": len(holds)}
+        try:
+            saved = write_record(task, snapshot, "ask" if snapshot["result"]["exit"] == 0 else "observation")
+        except OSError:
+            emit("facts not saved: cannot write this observation")
+            return 2
+        emit(f"record: {task_folder(task).name}/merge/{saved.name}")
+        emit(*problems, *holds)
+        if problems or holds:
+            emit("next: hold delivery; the saved record describes the observations, not approval.")
+            return snapshot["result"]["exit"]
+        emit("next: check the FO question with --facts-record, then commit and bind that JSON as the gate summary and reference.")
+        return 0
 
     emit(*problems, *holds)
     if problems:
@@ -997,6 +1098,15 @@ def scope_disclosure(folder, sources, extra=""):
     return results
 
 
+def disclosure_facts(folder, text, extra):
+    copies = scope_pr_copies(folder, extra)
+    text = "\n".join(line for line in text.splitlines() if line not in copies)
+    _, unchecked = count_problems(folder, text + "\n" + extra)
+    claims = scope_claims(folder, text) + scope_claims(folder, extra)
+    return {"unchecked_counts": len(unchecked),
+            "scope_disclosure": {"cited": sum(row[2] for row in claims), "marked": sum(not row[2] for row in claims), "mark": SCOPE_MARK}}
+
+
 def count_disclosure(folder, text, destination, declared):
     # see docs/adr/0072-counts-cite-saved-output-and-learn-checks-referenced-evidence.md
     checked, unchecked = count_problems(folder, text)
@@ -1120,6 +1230,11 @@ def captain_step_problems(task, gate_text, summary):
     return []
 
 
+def merge_head_matches(head, text):
+    grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
+    return bool(grants) and all(head.startswith(sha) for sha in grants)
+
+
 def matching_delivery_record(task, text):
     records = [(int(m[1]), path) for path in (task_folder(task) / "merge").glob("ask-*.json")
                if (m := re.fullmatch(r"ask-(\d+)\.json", path.name))]
@@ -1133,73 +1248,160 @@ def matching_delivery_record(task, text):
     if not isinstance(record, dict) or not isinstance(head := record.get("head"), str) or not re.fullmatch(r"[0-9a-f]{7,40}", head):
         return None
     candidates, _ = dispatched_candidates(task)
-    grants = re.findall(r"--match-head-commit\s+([0-9a-f]{7,40})\b", text)
-    if not any(candidate.startswith(head) for candidate in candidates) or not grants or not all(head.startswith(sha) for sha in grants):
+    if not any(candidate.startswith(head) for candidate in candidates) or not merge_head_matches(head, text):
         return None
     if any(record.get(label.lower()) != clean(clause(text, label) or "")[:200] for label in CONFIRMATIONS):
         return None
     return path
 
 
+def read_summary_question(task, args, text):
+    # see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md
+    reviewer_text = None
+    summary = None
+    if args.summary_file is not None:
+        summary = Path(args.summary_file).read_text()
+        text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), text), (Path(args.summary_file), summary)])
+        summary = count_disclosure(task_folder(task), text + "\n" + summary, Path(args.summary_file), summary)
+        reviewer_text = "\n".join(outside_fences(summary))
+        text += "\n" + summary
+    else:
+        text, = scope_disclosure(task_folder(task), [(Path(args.text_file), text)])
+        text = count_disclosure(task_folder(task), text, Path(args.text_file), text)
+    path = matching_delivery_record(task, text) if GRANT.search(text) else None
+    return dict(text=text, reviewer_text=reviewer_text, observations=None, steps=summary if summary is not None else text,
+                path=path, record=json.loads(path.read_text()) if path else None)
+
+
+def read_facts_question(task, args, text):
+    path = Path(args.facts_record)
+    data = json.loads(path.read_text())
+    return dict(text=text, reviewer_text=None, observations=data["reviewers"],
+                steps="Captain steps: " + (data.get("captain_steps") or {}).get("path", ""), path=path, record=data)
+
+
 def question(args):
     emit(CLAIM_SOURCE)
+    facts = bool(getattr(args, "facts_record", None))
     task = Path(args.task)
-    if task.is_dir():
-        task = task / "index.md"
+    task = task / "index.md" if task.is_dir() else task
+    code = 0
     try:
-        task_text, gate_text = task.read_text(), Path(args.text_file).read_text()
-        question_text = gate_text
+        task_text, question_text = task.read_text(), Path(args.text_file).read_text()
         workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
         if not workflow_dir:
             raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
         second, extensions = reviewer_config(scalars, lists)
-        # see docs/adr/0044-delivery-gate-summaries-carry-review-facts-with-legacy-call-compatibility.md
-        reviewer_text = None
-        if args.summary_file is not None:
-            summary = Path(args.summary_file).read_text()
-            gate_text, summary = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text), (Path(args.summary_file), summary)])
-            summary = count_disclosure(task_folder(task), gate_text + "\n" + summary, Path(args.summary_file), summary)
-            reviewer_text = "\n".join(outside_fences(summary))
-            gate_text += "\n" + summary
-        else:
-            gate_text, = scope_disclosure(task_folder(task), [(Path(args.text_file), gate_text)])
-            gate_text = count_disclosure(task_folder(task), gate_text, Path(args.text_file), gate_text)
-        found, wanted = reviewer_problems(task, task_text,
-                                         gate_text if reviewer_text is None else reviewer_text, second, extensions)
+        source = (read_facts_question if facts else read_summary_question)(task, args, question_text)
+        text, reviewer_text, data, path = source["text"], source["reviewer_text"], source["record"], source["path"]
+        problems, nexts = text_problems(task_text, text, at_gate=True, reviewer_text=reviewer_text, confirmations=not facts)
+        found, wanted = reviewer_problems(task, task_text, text if reviewer_text is None else reviewer_text,
+                                         second, extensions, observations=source["observations"])
+        problems += found
+        nexts += wanted
         if reviewer_text is not None:
             missing = summary_round_problems(reviewer_text)
-            found += missing
+            problems += missing
             if missing:
-                wanted.append("next: hold preparation; record the external round count in the summary.")
-        missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)
-        found += missing
+                nexts.append("next: hold preparation; record the external round count in the summary.")
+        missing = captain_step_problems(task, text, source["steps"])
+        problems += missing
         if missing:
-            wanted.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
-    except (OSError, UnicodeDecodeError, ValueError) as error:
-        emit(f"cannot read input: {error}")
-        return 2
-    problems, nexts = text_problems(task_text, gate_text, at_gate=True, reviewer_text=reviewer_text)
-    delivery_record = None
-    # see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md
-    if GRANT.search(gate_text):
-        delivery_record = matching_delivery_record(task, gate_text)
-        if delivery_record is None:
+            nexts.append("next: hold preparation; run the Captain steps, record the observations at the dispatched head, and check again.")
+        # see docs/adr/0071-the-merge-question-carries-its-delivery-check-record.md
+        if facts:
+            candidates, dispatch = dispatched_candidates(task)
+            known = [(int(m[1]), p) for p in (task_folder(task) / "merge").glob("*.json")
+                     if (m := re.fullmatch(r"(?:ask|observation)-(\d+)\.json", p.name))]
+            if (data.get("schema") != "delivery-facts/v1" or data.get("public") is not True
+                    or not known or max(known)[1].resolve() != path.resolve()
+                    or data.get("head") not in candidates
+                    or data.get("question_sha256") != hashlib.sha256(Path(args.text_file).read_bytes()).hexdigest()
+                    or data.get("captain_steps") != observed_steps(task, data.get("head"))
+                    or not data.get("captain_steps")
+                    or data.get("validation") != validation_facts(task, task_text, dispatch)
+                    or data.get("result", {}).get("exit") != 0):
+                problems.append("facts record cannot be bound: missing, changed or held evidence")
+        elif GRANT.search(text) and path is None:
             problems.append("the newest delivery check record is missing, unreadable or differs from the dispatched head, merge head or clauses")
             nexts.append("next: hold preparation; run delivery_gate.py check on this question and summary, then this check again.")
-        elif json.loads(delivery_record.read_text()).get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
+        if GRANT.search(text):
+            if data is not None and not merge_head_matches(data["head"], text):
+                problems.append("delivery is held or the merge head differs")
+            if not WORKTREE_REMOVAL.search(question_text):
+                problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
+                nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
+        if data is not None and data.get("merge_result") == "not run" and not MERGE_NOT_RUN.search("\n".join(outside_fences(question_text))):
             problems.append("the question itself needs Merge result: not run: <reason>")
             nexts.append("next: hold preparation; put the merge-result not-run line in the question the Captain reads.")
-    if GRANT.search(gate_text) and not WORKTREE_REMOVAL.search(question_text):
-        problems.append("the gate text names the merge with --match-head-commit but its question does not name removing its clean, pushed worktree")
-        nexts.append("next: hold the gate; add 'and removing its clean, pushed worktree' to the question, then run this check again.")
-    problems += found
-    nexts += wanted
-    emit(*problems, *dict.fromkeys(nexts))
-    if not problems:
-        emit("gate text complete", ASK_FORM)
-        if delivery_record is not None:
-            emit(f"next: run `spacedock state commit {task_folder(task).name} --workflow-dir {workflow_dir}`, then run `gate prepare` with `--reference {delivery_record}`.")
-    return 1 if problems else 0
+        emit(*problems, *dict.fromkeys(nexts))
+        code = 1 if problems else 0
+        if not problems:
+            emit("gate text complete", ASK_FORM)
+            if facts:
+                emit(f"reference: {path}", "summary: use the saved JSON bytes unchanged; FO writes no factual summary.")
+            elif path is not None:
+                emit(f"next: run `spacedock state commit {task_folder(task).name} --workflow-dir {workflow_dir}`, then run `gate prepare` with `--reference {path}`.")
+    except (OSError, UnicodeDecodeError, ValueError, KeyError, TypeError, AttributeError) as error:
+        if not facts and isinstance(error, (KeyError, TypeError, AttributeError)):
+            raise
+        emit("facts record cannot be bound: missing, changed or held evidence" if facts else f"cannot read input: {error}")
+        code = 1 if facts else 2
+    return code
+
+
+
+def observed_steps(task, head):
+    paths = [(int(p.stem), p) for p in (task_folder(task) / "captain-steps").glob("*.md") if re.fullmatch(r"[1-9][0-9]*", p.stem)]
+    if not paths:
+        return None
+    _, path = max(paths)
+    matches = CANDIDATE.findall(path.read_text().split("### Step", 1)[0])
+    return {"path": "captain-steps/" + path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "candidate_matches": matches == [head]}
+
+
+def reviewer_facts(repo, number, extensions, head):
+    rows = []
+    for name in sorted(set(extensions) & {"codex", "copilot"}):
+        path = Path(__file__).resolve().parents[1] / "extensions" / name / (name + "_review.py")
+        spec = importlib.util.spec_from_file_location("delivery_" + name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        code, said = module.state(repo, number)
+        token = re.search(r"(?<!answer=)evidence=((?:summary|review|comment):[0-9]+(?:@[0-9a-f]+)?)", said)
+        outcome = "clean" if name == "codex" and code == 0 else "answered" if code == 0 else "findings" if code == 1 else "not-run" if name == "copilot" and code == 5 else "error" if code == 2 else "pending"
+        rows.append({"reviewer": name, "head": head, "exit": code, "outcome": outcome,
+                     "evidence": token[1] if token else None, "scope": "pr"})
+    if "roborev" in extensions:
+        rows.append({"reviewer": "roborev", "scope": "local", "outcome": "not-observed", "evidence": None, "head": head})
+    return rows
+
+
+def saved_rounds(task, rows):
+    prior = []
+    for path in (task_folder(task) / "merge").glob("*.json"):
+        if not re.fullmatch(r"(?:ask|observation)-[0-9]+\.json", path.name):
+            continue
+        entry = json.loads(path.read_text())
+        if entry.get("schema") == "delivery-facts/v1":
+            prior += entry.get("reviewers", [])
+    keys = {(r["reviewer"], r["head"], r["evidence"]) for r in prior + rows
+            if r.get("scope") == "pr" and r.get("outcome") in {"clean", "answered", "findings"}
+            and all(isinstance(r.get(key), str) and r[key] for key in ("reviewer", "head", "evidence"))}
+    return len(keys)
+
+
+def validation_facts(task, text, dispatch):
+    reports = VALIDATION_SECTION.findall(text)
+    report = reports[-1] if reports else ""
+    summary = report.split("### Summary", 1)[-1]
+    found = re.search(r"\b(PASSED|REJECTED)\b", summary)
+    candidates, _ = dispatched_candidates(task)
+    bound = any(head.startswith(token) for token in re.findall(r"\b[0-9a-f]{7,40}\b", report) for head in candidates)
+    return {"verdict": found[1] if found and bound else "not-observed", "rounds": sum(bool(RECORD.fullmatch(p.name)) for p in (task_folder(task) / "dispatch").glob("validation-*.md")),
+            "report_sha256": hashlib.sha256(report.encode()).hexdigest(), "dispatch": dispatch.name if dispatch else None}
+
 
 
 def main(argv=None):
@@ -1213,11 +1415,13 @@ def main(argv=None):
     sub.add_argument("--head")
     sub.add_argument("--sibling-pr", action="append", default=[])
     sub.add_argument("--workflow-dir")
+    sub.add_argument("--record-facts", action="store_true")
     ask = commands.add_parser("question")
     ask.add_argument("task")
     ask.add_argument("--text-file", required=True)
     ask.add_argument("--workflow-dir")
     ask.add_argument("--summary-file")
+    ask.add_argument("--facts-record")
     run_merge = commands.add_parser("merge-run")
     run_merge.add_argument("task")
     run_merge.add_argument("--pr", required=True)

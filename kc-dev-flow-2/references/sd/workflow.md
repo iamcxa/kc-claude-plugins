@@ -237,8 +237,7 @@ repair is dispatched under the lane in Stages.
   and limits, and the user's pending delivery decision. For a `ui` task FO runs
   `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
   output. Before the gate, FO runs the stage's minimal acceptance script under
-  Captain steps, names its record on the summary's `Captain steps:` line, and
-  returns an output that differs from the script through feedback.
+  Captain steps and returns an output that differs from the script through feedback.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
   approval replace neither condition; approval is not merge. When a POC report
@@ -335,8 +334,8 @@ consequential FO quick work and rejected gates.
    materiality, ownership and disposition. Missing required evidence or unresolved
    classification requires investigation or hold.
 2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk or
-   Polish in the existing committed gate summary, naming the finding, reason, candidate
-   revision and the lines or evidence it rests on. When that summary is already
+   Polish in the question, naming the finding, reason, candidate
+   revision and the lines or evidence it rests on. When that gate is already
    consumed, FO writes the decline under `### FO declines` in the task file, committed
    with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate
    lists each entry there. This FO-authored decision requires no live worker or reviewer
@@ -348,14 +347,13 @@ consequential FO quick work and rejected gates.
    changes require the Captain. Material findings cannot use the record-only lane;
    hold/route-for-decision forbids repair and reviewer rerun.
 5. A round is one verdict of an external reviewer of the delivery on the PR head (Codex
-   on the PR, RoboRev or another); FO counts rounds and records the count in the
-   committed gate summary. A reviewer that a listed extension covers is read the way its
+   on the PR, RoboRev or another); the delivery check counts distinct saved PR verdicts; local RoboRev jobs do not count. A reviewer that a listed extension covers is read the way its
    `EXTENSION.md` says (`## Extensions`). A finding assessed Material, or labelled P1 by
    the reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or
    waived by the Captain with the reason recorded (step 4). For an external reviewer
    that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds
    1 and 2 follow steps 1 to 4. From round 3 a finding that is neither does not start a
-   repair cycle: FO declines it in the committed gate summary, naming the finding and
+   repair cycle: FO declines it in the question, naming the finding and
    its reason. Only an observed failure naming who it hurts, a repeat in a later round
    or task, or a Captain ask makes it a backlog task (`spacedock new`, or the one
    holding it); it never enters an open task's Scope. The terminal gate lists each
@@ -560,10 +558,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
---pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
-
-FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question file> --summary-file <summary file>`; nonzero holds `gate prepare`, which takes `--reference <check record>`. The summary declares `External rounds: N` and the configured second-reviewer outcome. Use it unchanged; callers omitting `--summary-file` retain combined-text checks.
+For delivery preparation and reviewer disclosures, FO follows
+`<package>/references/delivery-record.md`, the shared record contract.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
@@ -580,14 +576,11 @@ frontmatter `extensions:` lists the ones this repository uses; an unlisted exten
 not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
 worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
 FO step FO reads the result as the file says. A listed extension that cannot run, or that FO does not request because a ruling says not to, is
-reported as `<name> not run: <reason>` in the stage report or gate summary, and never
-counts as a clean result. A merge ask names each listed reviewer that was not read, and
-the Captain decides. Where two remote reviewers are listed, frontmatter `second-reviewer:`
+reported as `<name> not run: <reason>` in the stage report, and never
+counts as a clean result. Where two remote reviewers are listed, frontmatter `second-reviewer:`
 names the one that joins only when a trigger holds: the task's `Surfaces:` include `db`,
 its profile is `prod`, a dispatch said its design is hard to reverse, the change touches authority,
-approval, merge or review rules, or the Captain asks. FO records `second reviewer: <name>
-because <trigger>` or `second reviewer: not triggered` in the gate summary, and an
-untriggered second reviewer is not named as unread.
+approval, merge or review rules, or the Captain asks. Delivery disclosures follow the record contract.
 
 ## Workflow State
 

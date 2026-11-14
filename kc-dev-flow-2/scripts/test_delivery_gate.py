@@ -4,6 +4,7 @@ import io
 import json
 import os
 import re
+import shlex
 from pathlib import Path
 import stat
 import subprocess
@@ -20,6 +21,41 @@ spec.loader.exec_module(gate)
 
 HEAD40 = "40c714a6" + "0" * 32
 S1, S2 = HEAD40, "7679ab7a" + "1" * 32
+CONTRACT = Path(__file__).resolve().parents[1] / "references/delivery-record.md"
+
+
+def assert_record_contract(case, value, schema=None):
+    schema = schema if schema is not None else json.loads(re.search(r"```json\n(.*?)\n```", CONTRACT.read_text(), re.S)[1])
+    case.assertFalse(schema.keys() - {"$schema", "type", "additionalProperties", "required", "properties", "items",
+                                     "const", "enum", "pattern", "minimum", "description"})
+    types = {"object": dict, "array": list, "string": str, "integer": int, "boolean": bool, "null": type(None)}
+    if "type" in schema:
+        allowed = schema["type"] if isinstance(schema["type"], list) else [schema["type"]]
+        case.assertIn(type(value), [types[name] for name in allowed])
+    if "const" in schema:
+        case.assertEqual((type(value), value), (type(schema["const"]), schema["const"]))
+    if "enum" in schema:
+        case.assertIn((type(value), value), [(type(v), v) for v in schema["enum"]])
+    if isinstance(value, dict):
+        case.assertFalse(set(schema.get("required", [])) - value.keys())
+        if schema.get("additionalProperties") is False:
+            case.assertFalse(value.keys() - schema["properties"].keys())
+        for key, item in value.items():
+            assert_record_contract(case, item, schema["properties"][key])
+    if isinstance(value, list):
+        for item in value:
+            assert_record_contract(case, item, schema["items"])
+    if isinstance(value, str) and "pattern" in schema:
+        case.assertRegex(value, schema["pattern"])
+    if type(value) is int and "minimum" in schema:
+        case.assertGreaterEqual(value, schema["minimum"])
+
+
+def delivery_commands(source):
+    root = CONTRACT.parents[1]
+    for path in set(re.findall(r"<package>/([\w/.-]+\.md)", source)):
+        source += "\n" + (root / path).read_text()
+    return re.findall(r"`python3 <package>/scripts/delivery_gate\.py ([^`]+)`", source)
 
 
 def record(*heads, body="## Checklist\n\n- one\n"):
@@ -46,7 +82,9 @@ open(os.path.join(d, "calls.log"), "a").write(" ".join(a) + "\\n")
 if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
     sys.stderr.write(os.environ.get("STUB_GH_FAIL", ""))
     sys.exit(1)
-if a[:2] == ["pr", "view"]:
+if a[:2] == ["repo", "view"]:
+    print('{{"visibility": "PUBLIC"}}')
+elif a[:2] == ["pr", "view"]:
     own = os.path.join(d, "pr-" + a[2] + ".json")
     data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
@@ -1085,7 +1123,7 @@ class RecordTests(unittest.TestCase):
 
     def test_a_hold_writes_no_record_and_writing_on_exit_1_would_be_caught(self):
         self.assertEqual(run_check(facts=dict(isDraft=True)).written, {})
-        module = variant_of("    emit(*problems, *holds)\n", "    emit(*problems, *holds)\n    write_record(task, {})\n")
+        module = variant_of("    emit(*problems, *holds)\n    if problems:", "    emit(*problems, *holds)\n    write_record(task, {})\n    if problems:")
         self.assertEqual(list(run_variant(module, facts=dict(isDraft=True)).written), ["ask-1.json"])
 
 
@@ -1380,7 +1418,7 @@ class ConfirmationTests(unittest.TestCase):
         self.assertEqual(saved["necessity"], "x" * 200)
 
     def test_dropping_the_check_changes_exactly_the_missing_clause_cases(self):
-        module = variant_of("    for label in unstated_confirmations(gate_text):", "    for label in []:")
+        module = variant_of("    for label in unstated_confirmations(gate_text) if confirmations else []:", "    for label in []:")
 
         def outcome(run, text):
             try:
@@ -2100,7 +2138,7 @@ class CaptainGateTests(CaptainStepFixture):
             self.assertEqual(code, 1, out)
             self.assertIn("differs from latest dispatched Candidate", out)
             self.assertEqual(self.ask_gate(summary=summary), (0, CLAIM_SOURCE + "\n" + EMPTY_COUNTS + "gate text complete\n" + gate.ASK_FORM + "\n"))
-        no_clause = variant_of('missing = captain_step_problems(task, gate_text, summary if args.summary_file is not None else gate_text)', 'missing = []')
+        no_clause = variant_of('missing = captain_step_problems(task, text, source["steps"])', 'missing = []')
         self.assertEqual(self.ask_gate(declaration=False, module=no_clause)[0], 0)
         no_binding = variant_of('if candidate not in candidates:', 'if False:')
         self.assertEqual(self.ask_gate(candidate="e623efd2" + "0" * 32, module=no_binding)[0], 0)
@@ -2712,7 +2750,7 @@ class QuestionTests(unittest.TestCase):
         out = run_check(text=text).out
         self.assertNotIn("keep the merge", out)
         self.assertNotIn("worktree", out)
-        gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
+        gated = variant_of("found, wanted = text_problems(task_text, gate_text, confirmations=not observed)", "found, wanted = text_problems(task_text, gate_text, at_gate=True, confirmations=not observed)")
         self.assertIn("keep the merge", run_variant(gated, text=text).out)
 
 
@@ -3220,7 +3258,7 @@ class SummaryTests(unittest.TestCase):
     def test_summary_boundaries_have_mutation_falsifiers(self):
         no_count = variant_of('return ["summary needs one top-level External rounds: N line (nonnegative integer)"]', 'return []')
         mixed = variant_of('reviewer_text = "\\n".join(outside_fences(summary))',
-                           'reviewer_text = gate_text + "\\n" + "\\n".join(outside_fences(summary))')
+                           'reviewer_text = text + "\\n" + "\\n".join(outside_fences(summary))')
         for summary, mutant in ((DECLARATION + "Copilot review:18.\n", no_count),
                                 ("External rounds: 0\n" + DECLARATION, mixed)):
             self.assertEqual(self.ask(summary)[0], 1)
@@ -3422,6 +3460,239 @@ class ScopeDisclosureTests(unittest.TestCase):
             self.assertEqual(self.ask(claim, saved=changed, module=mutant)[0], 0)
             self.assertIn(gate.SCOPE_MARK, normal["text"])
             self.assertNotIn(gate.SCOPE_MARK, changed["text"])
+
+
+
+class ObservedFactsTests(unittest.TestCase):
+    def test_contract_examples_supply_the_forms_required_by_the_shared_guards(self):
+        examples = "\n".join(re.findall(r"^```text\n(.*?)^```", CONTRACT.read_text(), re.M | re.S))
+        with tempfile.TemporaryDirectory() as d:
+            task = Path(d, "task.md")
+            task.write_text(TASK)
+            captain_record(task)
+            problems, _ = gate.reviewer_problems(task, TASK.replace("profile: pilot", "profile: prod"),
+                                                examples, "copilot", {"codex", "copilot"})
+            self.assertEqual(problems, [])
+            self.assertEqual(gate.unstated_second_reviewers(examples), [])
+            self.assertEqual(gate.summary_round_problems(examples), [])
+            self.assertEqual(gate.captain_step_problems(task, "Review this candidate.", examples), [])
+
+    def test_documented_delivery_commands_use_the_tools_argument_parser(self):
+        root = CONTRACT.parents[1]
+        for path in (CONTRACT, root / "references/sd/workflow.md", root / "skills/observer/SKILL.md",
+                     root / "extensions/copilot/EXTENSION.md"):
+            for command in delivery_commands(path.read_text()):
+                with self.subTest(path=path.name, command=command), contextlib.ExitStack() as stack:
+                    for handler in ("check", "question", "steps", "merge_run"):
+                        stack.enter_context(mock.patch.object(gate, handler, return_value=0))
+                    self.assertEqual(gate.main(shlex.split(re.sub(r"<[^>]+>", "fixture", command))), 0)
+
+    def test_nonpublic_or_unknown_visibility_saves_no_record(self):
+        for visibility in ({"visibility": "PRIVATE"}, {}, {"visibility": "INTERNAL", "isPrivate": False}):
+            with self.subTest(visibility=visibility), tempfile.TemporaryDirectory() as d:
+                task, question = Path(d, "task.md"), Path(d, "question")
+                task.write_text(TASK)
+                question.write_text("Review this candidate.\n")
+                readme(Path(d))
+                with mock.patch.object(gate, "gh", return_value=json.dumps(visibility)), contextlib.redirect_stdout(io.StringIO()):
+                    self.assertEqual(gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"]), 2)
+                self.assertFalse(list((gate.task_folder(task) / "merge").glob("*.json")))
+
+    def test_record_route_checks_steps_not_just_candidate_header(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK)
+            question.write_text("Review this candidate.\n")
+            readme(root, "extensions: []\n")
+            captain_record(task)
+            step = gate.task_folder(task) / "captain-steps/1.md"
+            step.write_text(step.read_text().replace("Observed: checks passed", "Observed:"))
+            with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 1)
+
+    def test_untriggered_second_reviewer_and_unreadable_reader_stay_distinct(self):
+        for outcome, expected in (("pending", 0), ("error", 2)):
+            with self.subTest(outcome=outcome), tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                task, question = root / "task.md", root / "question.txt"
+                task.write_text(TASK)
+                question.write_text("Review this candidate.\nSecond reviewer: not triggered\n")
+                readme(root, "extensions: [codex, copilot]\nsecond-reviewer: copilot\n")
+                captain_record(task)
+                rows = [dict(reviewer="codex", head=HEAD40, outcome="clean", evidence="review:1", scope="pr"),
+                        dict(reviewer="copilot", head=HEAD40, outcome=outcome, evidence=None, scope="pr")]
+                with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=rows), contextlib.redirect_stdout(io.StringIO()):
+                    code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+                self.assertEqual(code, expected)
+
+    def test_question_only_records_observed_facts_and_no_manual_summary(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK + f"\n## Stage Report: validation\n- DONE: actual candidate {HEAD40}\n### Summary\nPASSED at {HEAD40}.\n")
+            question.write_text("Review this candidate. Accept the recorded observations?\n")
+            readme(root, "extensions: []\n")
+            captain_record(task)
+            original = question.read_bytes()
+            with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 0)
+            path = next((gate.task_folder(task) / "merge").glob("ask-*.json"))
+            data = json.loads(path.read_text())
+            assert_record_contract(self, data)
+            for broken in ({k: v for k, v in data.items() if k != "ci"}, data | {"body": "repository content"},
+                           data | {"external_rounds": "two"}, data | {"validation": data["validation"] | {"rounds": -1}}):
+                with self.assertRaises(AssertionError):
+                    assert_record_contract(self, broken)
+            self.assertEqual(data["validation"]["verdict"], "PASSED")
+            self.assertEqual(data["validation"]["rounds"], 1)
+            self.assertEqual(data["head"], HEAD40)
+            self.assertEqual(data["result"]["exit"], 0)
+            self.assertEqual(question.read_bytes(), original)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(gate.main(["question", str(task), "--text-file", str(question), "--facts-record", str(path)]), 0)
+            dispatch = gate.task_folder(task) / "dispatch/validation-2.md"
+            dispatch.write_text(record(S2))
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(gate.main(["question", str(task), "--text-file", str(question), "--facts-record", str(path)]), 1)
+
+    def test_live_held_observation_is_not_a_successful_ask_for_the_merge_audit(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            task, question = root / "task.md", root / "question.txt"
+            task.write_text(TASK)
+            question.write_text("Inspect pending observations?\n")
+            readme(root, "extensions: []\n")
+            captain_record(task)
+            pr = pr_json(statusCheckRollup=[dict(status="IN_PROGRESS", conclusion="")])
+            with stubbed(root, pr=pr), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()):
+                code = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question), "--record-facts"])
+            self.assertEqual(code, 1)
+            self.assertFalse(list((gate.task_folder(task) / "merge").glob("ask-*.json")))
+            held = list((gate.task_folder(task) / "merge").glob("observation-*.json"))
+            self.assertEqual(len(held), 1)
+            data = json.loads(held[0].read_text())
+            assert_record_contract(self, data)
+            self.assertEqual(data["result"]["exit"], 1)
+
+    def test_recorded_local_jobs_do_not_inflate_three_real_round_counts(self):
+        for pr, declared, ids in ((854, 4, ["review:5873421269", "summary:6821181686@c429ab181"]),
+                                  (856, 3, ["summary:6844239189@5859c3ccd"]),
+                                  (861, 3, ["summary:6841024641@97fe3d6ff"])):
+            with self.subTest(pr=pr), tempfile.TemporaryDirectory() as d:
+                task = Path(d, "task.md")
+                task.write_text(TASK)
+                folder = gate.task_folder(task) / "merge"
+                folder.mkdir(parents=True)
+                rows = [dict(reviewer="codex", head=HEAD40, evidence=ident, scope="pr", outcome="clean") for ident in ids]
+                rows += [dict(reviewer="roborev", head=HEAD40, evidence="roborev:1810", scope="local", outcome="clean")]
+                (folder / "ask-1.json").write_text(json.dumps(dict(schema="delivery-facts/v1", reviewers=rows)))
+                self.assertEqual(gate.saved_rounds(task, rows), len(ids))
+                self.assertNotEqual(gate.saved_rounds(task, rows), declared)
+
+
+class RecordRouteParityTests(unittest.TestCase):
+    def paired(self, *, rows=None, declaration=DECLARATION, decisions=True, outcome=True,
+               extra="", head=HEAD40, profile="pilot", after_config=False, refusal=False):
+        rows = rows if rows is not None else [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                                              dict(reviewer="copilot", head=HEAD40, exit=0, outcome="answered", evidence="review:2", scope="pr")]
+        result = {}
+        for route in ("legacy", "record"):
+            with tempfile.TemporaryDirectory() as d:
+                root = Path(d)
+                task, question, summary, combined = [root / name for name in ("task.md", "question.txt", "summary.txt", "combined.txt")]
+                task.write_text(TASK.replace("profile: pilot", "profile: " + profile))
+                readme(root, REVIEWERS.replace("roborev, ", "").replace("second-reviewer: copilot", "second-reviewer: codex" if declaration.startswith("Second reviewer: codex") else "second-reviewer: copilot"))
+                proof = captain_record(task)
+                if profile != "pilot":
+                    security = gate.task_folder(task) / "security/validation-1.yaml"
+                    security.parent.mkdir()
+                    security.write_text("tob_security_review:\n  pr: 9\n  findings: []\n")
+                    task.write_text(task.read_text() + f"\nSecurity review (validation): security/validation-1.yaml at {HEAD40}\n")
+                judgment = "".join(f"Review decision: {r['reviewer']} {r['evidence']} {'disposed' if r['outcome'] == 'findings' else 'clean'}: Read this review and applied workflow dispositions.\n"
+                                   for r in rows if decisions and r["outcome"] in {"findings", "answered"})
+                ask = f"Review this candidate. Merge with --match-head-commit {head}, and removing its clean, pushed worktree, unless he says he merges or holds.\n"
+                question.write_text(ask + extra + judgment + (declaration if route == "record" else ""))
+                evidence = "Copilot review:2. Codex review:5.\n" if outcome else ""
+                if refusal:
+                    saved, evidence = globals()["refusal"]("Copilot quota limit.", head=HEAD40)
+                    source = gate.task_folder(task) / "review/copilot-not-run.txt"
+                    source.parent.mkdir(); source.write_text(saved)
+                summary.write_text(CLAUSES + ROUNDS + declaration + evidence + proof + (RETRY + "\n" if refusal and RETRY in extra else ""))
+                combined.write_text(question.read_text() + summary.read_text())
+                original = question.read_bytes()
+                with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=rows), contextlib.redirect_stdout(io.StringIO()):
+                    check = gate.main(["check", str(task), "--pr", "o/r#9", "--text-file", str(question if route == "record" else combined)] + (["--record-facts"] if route == "record" else []))
+                    records = list((gate.task_folder(task) / "merge").glob("*.json"))
+                    data = json.loads(records[0].read_text()) if records else None
+                    if after_config:
+                        (root / "README.md").write_text((root / "README.md").read_text().replace("second-reviewer: copilot", "second-reviewer: invalid"))
+                    code = gate.main(["question", str(task), "--text-file", str(question)] +
+                                     (["--facts-record", str(records[0])] if route == "record" else ["--summary-file", str(summary)]))
+                result[route] = dict(check=check, question=code, data=data, text=question.read_text(), summary=summary.read_text(), unchanged=question.read_bytes() == original)
+        return result
+
+    def test_review_findings_need_the_fo_decision_missing_from_observations(self):
+        for reviewer, outcome in (("codex", "findings"), ("copilot", "answered")):
+            rows = [dict(reviewer=reviewer, head=HEAD40, exit=1 if reviewer == "codex" else 0, outcome=outcome, evidence="review:5", scope="pr")]
+            # The text route also needs an outcome for its configured second reviewer.
+            rows += [dict(reviewer="copilot" if reviewer == "codex" else "codex", head=HEAD40, exit=0, outcome="answered" if reviewer == "codex" else "clean", evidence="review:2", scope="pr")]
+            with self.subTest(reviewer=reviewer):
+                pair = self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n", decisions=False, outcome=False)
+                self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+                self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+                passing = self.paired(rows=rows, declaration=f"Second reviewer: {reviewer} because review policy changes.\n")
+                self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
+
+    def test_known_quota_refusal_needs_unread_and_retry_in_question(self):
+        rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                dict(reviewer="copilot", head=HEAD40, exit=5, outcome="not-run", evidence=None, scope="pr")]
+        pair = self.paired(rows=rows, refusal=True)
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+        self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+        for extra in ("Copilot not read: Captain decides whether to proceed.\n", RETRY + "\n"):
+            pair = self.paired(rows=rows, refusal=True, extra=extra)
+            self.assertEqual(pair["record"]["question"], 1)
+        passing = self.paired(rows=rows, refusal=True, extra="Copilot not read: Captain decides whether to proceed.\n" + RETRY + "\n")
+        self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
+
+    def test_configured_trigger_guard_includes_quoted_prod_profiles(self):
+        for declaration in ("", DECLARATION * 2, "Second reviewer: other because policy.\n", "Second reviewer: copilot because \n"):
+            pair = self.paired(declaration=declaration)
+            self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+        rows = [dict(reviewer="codex", head=HEAD40, exit=0, outcome="clean", evidence="review:5", scope="pr"),
+                dict(reviewer="copilot", head=HEAD40, exit=3, outcome="pending", evidence=None, scope="pr")]
+        for profile in ('"prod"', "'prod'"):
+            pair = self.paired(profile=profile, declaration="Second reviewer: not triggered.\n", rows=rows)
+            self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [1, 1])
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+        self.assertEqual(self.paired(declaration="Second reviewer: not triggered.\n", rows=rows)["record"]["question"], 0)
+
+    def test_merge_head_token_must_be_nonempty_and_bounded(self):
+        for head in ("", "not-a-sha", "a" * 41):
+            pair = self.paired(head=head)
+            self.assertEqual([pair[r]["question"] for r in ("legacy", "record")], [1, 1])
+        passing = self.paired(head=HEAD40[:9])
+        self.assertEqual([passing[r]["question"] for r in ("legacy", "record")], [0, 0])
+
+    def test_question_reloads_current_reviewer_configuration(self):
+        pair = self.paired(after_config=True)
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+        for route in ("legacy", "record"):
+            self.assertNotEqual(pair[route]["question"], 0)
+
+    def test_computed_disclosures_are_record_fields_without_question_mutation(self):
+        pair = self.paired(extra="There are 17 checks. Existing tasks are not affected.\n")
+        self.assertEqual([pair[r]["check"] for r in ("legacy", "record")], [0, 0])
+        self.assertIn("Unchecked counts: 1", pair["legacy"]["summary"])
+        self.assertIn("（未對過紀錄）", pair["legacy"]["text"])
+        self.assertEqual(pair["record"]["data"].get("unchecked_counts"), 1)
+        self.assertEqual(pair["record"]["data"]["scope_disclosure"], {"cited": 0, "marked": 1, "mark": "（未對過紀錄）"})
+        self.assertTrue(pair["record"]["unchanged"])
+        assert_record_contract(self, pair["record"]["data"])
 
 
 if __name__ == "__main__":

@@ -1,13 +1,18 @@
+import contextlib
+import io
 import importlib.util
+import json
 from pathlib import Path
 import re
 import shlex
-import subprocess
 import sys
 import tempfile
 import unittest
 
+from unittest import mock
+
 from test_sd_dispatch import TEAM_RULE, assert_team
+from test_delivery_gate import gate, TASK, captain_record, readme, stubbed, quiet_roles, delivery_commands, assert_record_contract
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("poc_readme", ROOT / "scripts/poc_readme.py")
@@ -17,67 +22,49 @@ SOURCE = (ROOT / "references/sd/workflow.md").read_text()
 
 
 class DeriveTests(unittest.TestCase):
-    def recipe(self, source, summary="External rounds: 0\n", *, mode="valid", omit=False, ignore=False, swap=False):
-        commands = re.findall(r"FO runs `(python3 <package>/scripts/delivery_gate.py question [^`]+)`", source)
-        self.assertEqual(len(commands), 1)
-        command = commands[0]
-        self.assertIn("--summary-file <summary file>", command)
+    def recipe(self, source, *, mode="valid", ignore=False, swap=False):
+        commands = delivery_commands(source)
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            task, question, proposed, prepared = [root / name for name in ("task.md", "question", "summary", "prepared")]
-            task.write_text("---\nprofile: pilot\n---\n\n## FO alignment\nSurfaces: none\n")
-            head = "a" * 40
-            dispatch = root / "task/dispatch"
-            dispatch.mkdir(parents=True)
-            (dispatch / "validation-1.md").write_text(f"Candidate: {head}\n")
-            steps = root / "task/captain-steps/1.md"
-            steps.parent.mkdir()
-            steps.write_text(f"Candidate: {head}\n\n### Step 1\nAsked: Review this candidate.\n"
-                             "Ran: fresh shell, 2026-11-03T00:00:00Z\nObserved: checks passed\n")
-            proof = f"Captain steps: {steps}\n"
-            checked = (summary + proof).encode()
-            question.write_text("Sufficiency: accepted criteria.\nNecessity: summary location.\nReview this candidate.\n" +
-                                (proof if omit else ""))
-            proposed.write_bytes(checked)
-            (root / "README.md").write_text("---\ntrunk: main\nsecond-reviewer: ''\nextensions: []\n---\n")
-            if mode == "unreadable":
-                proposed.unlink()
-            if mode == "bad-config":
-                (root / "README.md").write_text("---\ntrunk: main\nsecond-reviewer: copilot\nextensions: []\n---\n")
-            if omit:
-                command = command.replace(" --summary-file <summary file>", "")
-            for token, value in (("python3", shlex.quote(sys.executable) + " -B"), ("<package>", shlex.quote(str(ROOT))),
-                                 ("<task>", shlex.quote(str(task))), ("<question file>", shlex.quote(str(question))),
-                                 ("<summary file>", shlex.quote(str(proposed)))):
-                command = command.replace(token, value)
-            recorder = root / "prepare.py"
-            recorder.write_text("from pathlib import Path\nimport sys\nPath(sys.argv[2]).write_bytes(Path(sys.argv[1]).read_bytes())\n")
-            forward = question if swap else proposed
-            script = command + "\ncode=$?\n" + ("" if ignore else 'test "$code" -eq 0 || exit "$code"\n')
-            script += shlex.join([sys.executable, "-B", str(recorder), str(forward), str(prepared)])
-            done = subprocess.run(["/bin/sh", "-c", script], cwd=d, capture_output=True, text=True)
-            expected = b"Unchecked counts: 0\n" + checked if not omit else checked
-            return done.returncode, prepared.read_bytes() if prepared.exists() else None, done.stdout, expected
+            task, question = root / "task.md", root / "question"
+            task.write_text(TASK)
+            question.write_text("Review this candidate. Accept these observations?\n")
+            readme(root, "extensions: [learn, peers]\n")
+            captain_record(task)
+            values = {"task": str(task), "question": str(question), "owner/repo": "o/r", "N": "9"}
+            with stubbed(root), quiet_roles(), mock.patch.object(gate, "reviewer_facts", return_value=[]), contextlib.redirect_stdout(io.StringIO()) as out:
+                code = 0
+                for name in ("check", "question"):
+                    command = next(c for c in commands if shlex.split(c)[0] == name)
+                    if name == "question":
+                        path = next((gate.task_folder(task) / "merge").glob("*.json"))
+                        values["record"] = str(path)
+                        if mode == "changed":
+                            question.write_text(question.read_text() + "Changed after check.\n")
+                        if mode == "unreadable":
+                            path.unlink()
+                    args = shlex.split(re.sub(r"<([^>]+)>", lambda m: shlex.quote(values[m[1]]), command))
+                    code = gate.main(args)
+                    if code and not ignore:
+                        return code, None, out.getvalue()
+                data = path.read_bytes()
+                assert_record_contract(self, json.loads(data))
+                prepared = (question if swap else path).read_bytes()
+                self.assertEqual(prepared, data)
+                return code, prepared, out.getvalue()
 
-    def test_delivery_recipe_holds_nonzero_and_forwards_checked_summary_in_both_routes(self):
+    def test_delivery_recipe_binds_the_record_and_holds_changed_sources_in_both_routes(self):
         for source in (SOURCE, poc.derive(SOURCE)):
-            for summary, mode, expected in (("External rounds: 0\n", "valid", 0), ("", "valid", 1),
-                                             ("External rounds: -1\n", "valid", 1),
-                                             ("External rounds: 0\n", "unreadable", 2),
-                                             ("External rounds: 0\n", "bad-config", 2)):
-                with self.subTest(mode=mode, summary=summary):
-                    code, prepared, out, checked = self.recipe(source, summary, mode=mode)
+            for mode, expected in (("valid", 0), ("changed", 1), ("unreadable", 1)):
+                with self.subTest(mode=mode):
+                    code, prepared, out = self.recipe(source, mode=mode)
                     self.assertEqual(code, expected, out)
-                    self.assertEqual(prepared, checked if expected == 0 else None)
-            self.assertEqual(self.recipe(source, omit=True)[0], 0)
-            for mutant in (source.replace("FO runs `python3 <package>/scripts/delivery_gate.py question", "FO skips `python3 <package>/scripts/delivery_gate.py question"),
-                           source.replace(" --summary-file <summary file>", "")):
-                with self.assertRaises(AssertionError):
-                    self.recipe(mutant)
-            self.assertIsNotNone(self.recipe(source, "", omit=True)[1])
-            self.assertIsNotNone(self.recipe(source, "", ignore=True)[1])
-            swapped = self.recipe(source, swap=True)
-            self.assertNotEqual(swapped[1], swapped[3])
+                    self.assertEqual(prepared is not None, expected == 0)
+            with self.assertRaises(AssertionError):
+                self.recipe(source, swap=True)
+            code, prepared, _ = self.recipe(source, mode="changed", ignore=True)
+            self.assertEqual(code, 1)
+            self.assertIsNotNone(prepared)
 
     def test_the_source_derives_to_four_stages_that_never_route_through_ideation(self):
         derived = poc.derive(SOURCE)

@@ -193,7 +193,7 @@ FIXES = {
         need=("committed with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate",
               "FO writes the decline under `### FO declines`",),
         old=(),
-        swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
+        swaps=((r"When that gate is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
     "repair-push-grant": dict(
         need=("approval also covers later external-review rounds on the same PR",
               "a Needs decision and a scope change go to him"),
@@ -237,14 +237,11 @@ FIXES = {
     "readme-keeps-delivery-rules": dict(
         need=("the sentinel waits for a committed observer report",
               "that grant stands in for a presented body",
-              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`",
-              "Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask",
-              "as does a head other than the latest `Candidate:`"),
+              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`"),
         old=(),
         swaps=((r"Where `learn` is listed, the sentinel waits for a committed observer report\. ", ""),
                (r" that grant stands in for a presented body", ""),
-               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
-               (r"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
+               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""))),
     "delivery-question-carries-merge": dict(
         need=("merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds",
               "removing its clean, pushed worktree."),
@@ -273,10 +270,9 @@ FIXES = {
     "extensions-core": dict(
         need=("This README's frontmatter `extensions:` lists the ones this repository uses",
               "an unlisted extension is not probed and adds nothing",
-              "never counts as a clean result",
-              "A merge ask names each listed reviewer that was not read"),
+              "never counts as a clean result"),
         old=(),
-        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?the Captain decides\. ", ""),)),
+        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?counts as a clean result\. ", ""),)),
     "codex-round": dict(
         file="extensions/codex/EXTENSION.md",
         need=("FO reads each round with `python3 <package>/extensions/codex/codex_review.py <owner/repo> <pr>`",
@@ -304,10 +300,9 @@ FIXES = {
         old=(),
         swaps=((r" Before each worker dispatch FO runs `python3 <package>/scripts/package_version\.py <this README>`;.*?the session runs the newer one\.", ""),)),
     "second-reviewer": dict(
-        need=("frontmatter `second-reviewer:` names the one that joins only when a trigger holds",
-              "an untriggered second reviewer is not named as unread"),
+        need=("frontmatter `second-reviewer:` names the one that joins only when a trigger holds",),
         old=(),
-        swaps=((r" Where two remote reviewers are listed, frontmatter `second-reviewer:`.*?is not named as unread\.", ""),)),
+        swaps=((r" Where two remote reviewers are listed, frontmatter `second-reviewer:`.*?or the Captain asks\.", ""),)),
     "precedent": dict(
         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
               "an ADR on one of them is never a `Precedent:` line",
