@@ -1,7 +1,7 @@
 ---
 id:
 title: The private working repository's second laptop cell passes its selfcheck on a fresh clone and says which entries it could not check
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
