@@ -136,6 +136,8 @@ Captain 2026-10-29 (chat): 「開始 r1 上線」. FO outward action the same da
 
 Captain 2026-11-09 (chat): 「剛才那個轉簡報需求的沒錯，等於讓他接手完成 metric 設計，然後把 inbox 一樣放到我的 plugin repo 但是讓 relay adopt」. Handoff written to `ops-inbox-r1-setup-and-isolation/handoff-2026-11-09.md`; the kc-ops-inbox FO session (Paseo 46c2ebdf) closes after handing over.
 
+Captain 2026-11-17 (chat): 「把這件事寫回任務內，這件事先 hold 改天再繼續做」. On hold; nothing dispatched. State, the open decision and the evidence location are in `ops-inbox-r1-setup-and-isolation/hold-2026-11-17.md`.
+
 ## Number guards
 
 ADR: 0040
